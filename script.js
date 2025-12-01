@@ -630,11 +630,23 @@ function shootArrow2() {
 
 // 風船との当たり判定
 function checkBalloonCollision(arrowX, arrowY) {
+    // balloonAreaの位置を取得
+    const balloonAreaRect = balloonArea.getBoundingClientRect();
+    const containerRect = game2Container.getBoundingClientRect();
+    
+    // balloonAreaの左端と上端のオフセット
+    const areaOffsetX = balloonAreaRect.left - containerRect.left;
+    const areaOffsetY = balloonAreaRect.top - containerRect.top;
+    
     for (let balloon of game2State.balloons) {
         if (balloon.element.classList.contains('hit')) continue;
         
-        const balloonCenterX = balloon.x + balloon.size / 2;
-        const balloonCenterY = balloon.y + balloon.size / 2;
+        // 風船の絶対位置を計算（balloonAreaのオフセットを加算）
+        const balloonAbsoluteX = balloon.x + areaOffsetX;
+        const balloonAbsoluteY = balloon.y + areaOffsetY;
+        
+        const balloonCenterX = balloonAbsoluteX + balloon.size / 2;
+        const balloonCenterY = balloonAbsoluteY + balloon.size / 2;
         const radius = balloon.size / 2;
         
         const distance = Math.sqrt(
