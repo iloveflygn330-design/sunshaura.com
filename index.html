@@ -72,6 +72,32 @@
                 <button id="retry-btn" class="retry-button">もう一度挑戦する</button>
             </div>
         </div>
+        
+        <!-- ゲーム2: 風船射撃 -->
+        <div class="game-container game2-container" id="game2-container" style="display: none;">
+            <!-- 左側：弓 -->
+            <div class="balloon-bow">
+                <div class="bow-icon">🏹</div>
+            </div>
+            
+            <!-- 中央：風船エリア -->
+            <div class="balloon-area" id="balloon-area">
+                <!-- JavaScriptで風船を生成 -->
+            </div>
+            
+            <!-- Canvas for arrow (Game 2) -->
+            <canvas id="balloon-arrow-canvas"></canvas>
+            
+            <!-- 発射ボタン -->
+            <button class="shoot-btn" id="shoot-btn">発射！</button>
+            
+            <!-- ゲームオーバー画面 (Game 2) -->
+            <div class="game-over" id="game-over-2" style="display: none;">
+                <h2>ゲームオーバー！</h2>
+                <p>残念！風船を外してしまいました。</p>
+                <button id="retry-btn-2" class="retry-button">もう一度挑戦する</button>
+            </div>
+        </div>
     </footer>
 
     <script src="script.js"></script>

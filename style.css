@@ -346,6 +346,148 @@ main {
     transform: translateY(0);
 }
 
+/* ============================================
+   ゲーム2: 風船射撃
+   ============================================ */
+
+.game2-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.balloon-bow {
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    z-index: 2;
+}
+
+.bow-icon {
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.balloon-area {
+    width: 700px;
+    height: 300px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.balloon {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+    cursor: default;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.1s ease;
+    user-select: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.balloon::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    width: 20px;
+    height: 25px;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    transform: rotate(-45deg);
+}
+
+.balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 15px;
+    background: #666;
+}
+
+.balloon.color-1 { background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); }
+.balloon.color-2 { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); }
+.balloon.color-3 { background: linear-gradient(135deg, #FFE66D 0%, #FFCA3A 100%); }
+.balloon.color-4 { background: linear-gradient(135deg, #95E1D3 0%, #38B2AC 100%); }
+.balloon.color-5 { background: linear-gradient(135deg, #C779D0 0%, #A855F7 100%); }
+
+.balloon.hit {
+    animation: balloon-pop 0.4s ease forwards;
+}
+
+@keyframes balloon-pop {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+#balloon-arrow-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.shoot-btn {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+.shoot-btn:hover:not(:disabled) {
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.shoot-btn:active:not(:disabled) {
+    transform: translateX(-50%) translateY(-1px);
+}
+
+.shoot-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     #game-footer {
@@ -402,6 +544,28 @@ main {
         font-size: 0.9rem;
         padding: 0.8rem 1rem;
     }
+    
+    /* ゲーム2のレスポンシブ */
+    .balloon-area {
+        width: 350px;
+        height: 250px;
+    }
+    
+    .balloon-bow {
+        left: 0.5rem;
+        font-size: 60px;
+    }
+    
+    .balloon {
+        width: 60px;
+        height: 60px;
+        font-size: 0.75rem;
+    }
+    
+    .shoot-btn {
+        font-size: 1.2rem;
+        padding: 0.8rem 2rem;
+    }
 }
 
 @media (max-width: 400px) {
@@ -417,5 +581,22 @@ main {
     .target-box {
         font-size: 0.8rem;
         padding: 0.6rem 0.8rem;
+    }
+    
+    /* ゲーム2の小さいスマホ対応 */
+    .balloon-area {
+        width: 320px;
+        height: 220px;
+    }
+    
+    .balloon {
+        width: 50px;
+        height: 50px;
+        font-size: 0.7rem;
+    }
+    
+    .shoot-btn {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
     }
 }
