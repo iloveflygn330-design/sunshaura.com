@@ -4,17 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sunshaura's Portfolio</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to Sunshaura's Site</h1>
-    <p>HTML学習中です。少しずつ更新していきます！</p>
+    <header>
+        <h1>Sunshaura's Portfolio</h1>
+        <p>ようこそ！弓を放ってページを探検しよう</p>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <h2>Welcome!</h2>
+            <p>下のボタンからゲームを開始して、各ページにアクセスしてください。</p>
+        </section>
+    </main>
+
+    <!-- フッターの折りたたみボタン（固定位置） -->
+    <button id="toggle-footer" class="toggle-btn">
+        <span class="arrow">▲</span>
+    </button>
+
+    <!-- ゲームフッター -->
+    <footer id="game-footer" class="collapsed">
+        <div class="game-container">
+            <!-- 左側：キャラクターとパワーゲージ -->
+            <div class="character-section">
+                <div class="character-container">
+                    <!-- キャラクター画像（後で差し替え） -->
+                    <div class="character" id="character">
+                        <div class="bow-character">🏹</div>
+                    </div>
+                </div>
+                
+                <!-- パワーゲージ -->
+                <div class="power-gauge-container">
+                    <div class="power-gauge">
+                        <div class="power-fill" id="power-fill"></div>
+                    </div>
+                    <div class="power-label">POWER</div>
+                </div>
+            </div>
+
+            <!-- 右側：ターゲットボックス -->
+            <div class="target-section" id="target-section">
+                <!-- JavaScriptでランダム配置されるボックス -->
+            </div>
+
+            <!-- Canvas for arrow -->
+            <canvas id="arrow-canvas"></canvas>
+
+            <!-- ゲームオーバー画面 -->
+            <div class="game-over" id="game-over" style="display: none;">
+                <h2>ゲームオーバー！</h2>
+                <p>残念！矢が外れてしまいました。</p>
+                <button id="retry-btn" class="retry-button">もう一度挑戦する</button>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
