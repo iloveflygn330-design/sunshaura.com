@@ -4,30 +4,85 @@
     box-sizing: border-box;
 }
 
+/* ============================================
+   共通ヘッダー
+   ============================================ */
+
+.site-header {
+    background: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.site-logo:hover {
+    opacity: 0.8;
+}
+
+.current-page {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .site-header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .site-logo {
+        font-size: 1.2rem;
+    }
+    
+    .current-page {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .site-logo {
+        font-size: 1rem;
+    }
+    
+    .current-page {
+        font-size: 0.8rem;
+    }
+}
+
+/* ============================================
+   既存のスタイル
+   ============================================ */
+
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #333;
     min-height: 100vh;
     padding-bottom: 80px;
-}
-
-header {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    font-size: 2.5rem;
-    color: #667eea;
-    margin-bottom: 0.5rem;
-}
-
-header p {
-    color: #666;
-    font-size: 1.1rem;
 }
 
 main {
