@@ -24,9 +24,63 @@ const targetSection = document.getElementById('target-section');
 const arrowCanvas = document.getElementById('arrow-canvas');
 const gameOver = document.getElementById('game-over');
 const retryBtn = document.getElementById('retry-btn');
+const gameTitle = document.getElementById('game-title');
+const gameSwitchBtns = document.querySelectorAll('.game-switch-btn');
 
 // Canvas設定
 const ctx = arrowCanvas.getContext('2d');
+
+// 現在のゲームモード
+let currentGame = 'arrow';
+
+// ゲーム切り替えボタンのイベント
+gameSwitchBtns.forEach(btn => {
+    const gameType = btn.dataset.game;
+    
+    // 弓矢以外のゲームは未実装なのでdisabled
+    if (gameType !== 'arrow') {
+        btn.disabled = true;
+        btn.title = '準備中...';
+    }
+    
+    btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        
+        // アクティブボタンの切り替え
+        gameSwitchBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // ゲームモードの変更
+        currentGame = gameType;
+        switchGame(gameType);
+    });
+});
+
+// ゲーム切り替え処理
+function switchGame(gameType) {
+    // 現在は弓矢ゲームのみ実装
+    if (gameType === 'arrow') {
+        gameTitle.textContent = '🏹 弓矢チャレンジ';
+        initializeGame();
+    }
+    // 他のゲームは後で実装
+    else if (gameType === 'game2') {
+        gameTitle.textContent = '🎮 ゲーム2';
+        // TODO: Game2の初期化
+    }
+    else if (gameType === 'game3') {
+        gameTitle.textContent = '🎮 ゲーム3';
+        // TODO: Game3の初期化
+    }
+    else if (gameType === 'game4') {
+        gameTitle.textContent = '🎮 ゲーム4';
+        // TODO: Game4の初期化
+    }
+    else if (gameType === 'game5') {
+        gameTitle.textContent = '🎮 ゲーム5';
+        // TODO: Game5の初期化
+    }
+}
 
 // フッターの折りたたみ/展開
 toggleBtn.addEventListener('click', () => {
