@@ -4,30 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>コンタクト - Sunshaura</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
+        .page-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
         }
-        .container {
+        .content-box {
             background: rgba(255, 255, 255, 0.95);
             padding: 3rem;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
             text-align: center;
         }
-        h1 {
+        .content-box h1 {
             color: #667eea;
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
-        p {
+        .content-box p {
             color: #666;
             font-size: 1.2rem;
             line-height: 1.8;
@@ -49,11 +45,44 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>✉️ コンタクト</h1>
-        <p>おめでとうございます！コンタクトページにたどり着きました。</p>
-        <p>ここに連絡先やお問い合わせフォームを載せることができます。</p>
-        <a href="index.html" class="back-btn">← トップに戻る</a>
+    <div class="page-container">
+        <div class="content-box">
+            <h1>✉️ コンタクト</h1>
+            <p>おめでとうございます！コンタクトページにたどり着きました。</p>
+            <p>ここに連絡先やお問い合わせフォームを載せることができます。</p>
+            <a href="index.html" class="back-btn">← トップに戻る</a>
+        </div>
     </div>
+
+    <button id="toggle-footer" class="toggle-btn">
+        <span class="arrow">▲</span>
+    </button>
+
+    <footer id="game-footer" class="collapsed">
+        <div class="game-container">
+            <div class="character-section">
+                <div class="character-container">
+                    <div class="character" id="character">
+                        <div class="bow-character">🏹</div>
+                    </div>
+                </div>
+                <div class="power-gauge-container">
+                    <div class="power-gauge">
+                        <div class="power-fill" id="power-fill"></div>
+                    </div>
+                    <div class="power-label">POWER</div>
+                </div>
+            </div>
+            <div class="target-section" id="target-section"></div>
+            <canvas id="arrow-canvas"></canvas>
+            <div class="game-over" id="game-over" style="display: none;">
+                <h2>ゲームオーバー！</h2>
+                <p>残念！矢が外れてしまいました。</p>
+                <button id="retry-btn" class="retry-button">もう一度挑戦する</button>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -193,6 +193,7 @@ main {
     height: 300px;
     position: relative;
     margin-left: 3rem;
+    min-width: 700px; /* PCでの最小幅 */
 }
 
 .target-box {
@@ -208,6 +209,7 @@ main {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     user-select: none;
+    white-space: nowrap; /* テキストを1行に */
 }
 
 .target-box:hover {
@@ -302,6 +304,7 @@ main {
         margin-left: 0;
         height: 200px;
         width: 100%;
+        min-width: 350px; /* SPでの最小幅 */
     }
 
     .power-gauge {
@@ -311,5 +314,21 @@ main {
     .game-over {
         min-width: 300px;
         padding: 2rem;
+    }
+    
+    .target-box {
+        font-size: 0.9rem;
+        padding: 0.8rem 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .target-section {
+        min-width: 320px; /* 小さいスマホ対応 */
+    }
+    
+    .target-box {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.8rem;
     }
 }

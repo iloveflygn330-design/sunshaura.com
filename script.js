@@ -59,7 +59,7 @@ function initializeGame() {
     placeTargets();
 }
 
-// ターゲットボックスのランダム配置
+// ターゲットボックスのランダム配置（横一列、縦のずれなし）
 function placeTargets() {
     targetSection.innerHTML = '';
     gameState.targets = [];
@@ -67,30 +67,41 @@ function placeTargets() {
     const sectionWidth = targetSection.offsetWidth;
     const sectionHeight = targetSection.offsetHeight;
     
+    // ボックスを横一列に配置（中央の高さ）
+    const fixedY = (sectionHeight - 60) / 2; // 中央に配置
+    
+    // 利用可能な横幅を計算
+    const boxWidth = 120; // ボックスの平均幅
+    const spacing = 30; // ボックス間の最小スペース
+    const totalWidth = sectionWidth - boxWidth;
+    
+    // X座標の候補を作成（重ならないように）
+    const xPositions = [];
+    const numBoxes = targetPages.length;
+    const segment = totalWidth / numBoxes;
+    
+    for (let i = 0; i < numBoxes; i++) {
+        // 各セグメント内でランダムな位置を選択
+        const minX = i * segment;
+        const maxX = minX + segment - boxWidth - spacing;
+        const x = minX + Math.random() * (maxX - minX);
+        xPositions.push(x);
+    }
+    
+    // Fisher-Yatesシャッフルでランダム化
+    for (let i = xPositions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [xPositions[i], xPositions[j]] = [xPositions[j], xPositions[i]];
+    }
+    
     targetPages.forEach((page, index) => {
         const box = document.createElement('div');
         box.className = 'target-box';
         box.textContent = page.name;
         box.dataset.url = page.url;
         
-        // ランダムな位置を計算（重ならないように配置）
-        let attempts = 0;
-        let x, y;
-        let overlapping;
-        
-        do {
-            x = Math.random() * (sectionWidth - 150);
-            y = Math.random() * (sectionHeight - 60);
-            
-            overlapping = gameState.targets.some(target => {
-                const dx = x - target.x;
-                const dy = y - target.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                return distance < 150; // 最小距離
-            });
-            
-            attempts++;
-        } while (overlapping && attempts < 50);
+        const x = xPositions[index];
+        const y = fixedY;
         
         box.style.left = `${x}px`;
         box.style.top = `${y}px`;
@@ -173,8 +184,8 @@ function shootArrow(power) {
     const startY = characterRect.top - footerRect.top + characterRect.height / 2;
     
     // 矢の初速度を計算（パワーに応じて変化）
-    const velocityX = (power / 100) * 15; // 最大速度
-    const velocityY = -8 - (power / 100) * 5; // 上方向の初速度
+    const velocityX = (power / 100) * 25; // 最大速度を増加（15→25）
+    const velocityY = -8 - (power / 100) * 6; // 上方向の初速度も少し増加
     const gravity = 0.5; // 重力加速度
     
     let x = startX;
