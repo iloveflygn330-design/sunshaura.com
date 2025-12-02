@@ -543,6 +543,203 @@ main {
     cursor: not-allowed;
 }
 
+/* ============================================
+   ゲーム3: カーリング
+   ============================================ */
+
+.game3-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem 1rem 2rem;
+}
+
+.curling-area {
+    width: 100%;
+    max-width: 900px;
+    height: 250px;
+    position: relative;
+    background: linear-gradient(to right, 
+        rgba(200, 230, 255, 0.3) 0%, 
+        rgba(220, 240, 255, 0.5) 50%, 
+        rgba(200, 230, 255, 0.3) 100%);
+    border-radius: 10px;
+    overflow: visible;
+}
+
+.stone {
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    z-index: 3;
+}
+
+.stone-circle {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset -5px -5px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.stone-circle::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 20%;
+    width: 40%;
+    height: 40%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.brush {
+    position: absolute;
+    left: 130px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 50px;
+    z-index: 2;
+    transition: transform 0.1s ease;
+}
+
+.brush.sweeping {
+    animation: sweep 0.2s ease-in-out;
+}
+
+@keyframes sweep {
+    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+    50% { transform: translateY(-50%) rotate(-15deg); }
+}
+
+.tee {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 300px;
+}
+
+.tee-circles {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.tee-targets {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tee-target {
+    position: absolute;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: default;
+    user-select: none;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+}
+
+.tee-target.hit {
+    animation: tee-hit 0.6s ease;
+    background: #FFD700;
+    border-color: #FFA500;
+}
+
+@keyframes tee-hit {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1); 
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); 
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.2); 
+        box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0); 
+    }
+}
+
+.curling-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.curling-btn {
+    padding: 0.8rem 2.5rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+.curling-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.curling-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.curling-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.curling-btn.sweep-mode {
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+}
+
+.curling-power-gauge {
+    width: 100%;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 15px;
+    border: 2px solid #666;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.curling-power-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50 0%, #FFC107 50%, #F44336 100%);
+    border-radius: 15px;
+    transition: left 0.05s linear;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     #game-footer {
@@ -621,6 +818,43 @@ main {
         font-size: 1.2rem;
         padding: 0.8rem 2rem;
     }
+    
+    /* ゲーム3のレスポンシブ */
+    .curling-area {
+        max-width: 100%;
+        height: 200px;
+    }
+    
+    .stone {
+        width: 50px;
+        height: 50px;
+        left: 30px;
+    }
+    
+    .brush {
+        left: 90px;
+        font-size: 40px;
+    }
+    
+    .tee {
+        width: 220px;
+        height: 220px;
+        right: 30px;
+    }
+    
+    .tee-target {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .curling-btn {
+        font-size: 1.1rem;
+        padding: 0.6rem 2rem;
+    }
+    
+    .curling-controls {
+        max-width: 300px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -653,5 +887,37 @@ main {
     .shoot-btn {
         font-size: 1rem;
         padding: 0.6rem 1.5rem;
+    }
+    
+    /* ゲーム3の小さいスマホ対応 */
+    .curling-area {
+        height: 180px;
+    }
+    
+    .stone {
+        width: 40px;
+        height: 40px;
+        left: 20px;
+    }
+    
+    .brush {
+        left: 70px;
+        font-size: 35px;
+    }
+    
+    .tee {
+        width: 180px;
+        height: 180px;
+        right: 20px;
+    }
+    
+    .tee-target {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .curling-btn {
+        font-size: 1rem;
+        padding: 0.5rem 1.5rem;
     }
 }

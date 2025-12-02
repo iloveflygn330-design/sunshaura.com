@@ -93,6 +93,51 @@
                 <button id="retry-btn-2" class="retry-button">もう一度挑戦する</button>
             </div>
         </div>
+        
+        <!-- ゲーム3: カーリング -->
+        <div class="game-container game3-container" id="game3-container" style="display: none;">
+            <!-- カーリング場 -->
+            <div class="curling-area">
+                <!-- ストーン -->
+                <div class="stone" id="stone">
+                    <div class="stone-circle"></div>
+                </div>
+                
+                <!-- ブラシ -->
+                <div class="brush" id="brush">
+                    🧹
+                </div>
+                
+                <!-- ティー（同心円とターゲット） -->
+                <div class="tee" id="tee">
+                    <!-- SVGで同心円を描画 -->
+                    <svg class="tee-circles" viewBox="0 0 300 300">
+                        <circle cx="150" cy="150" r="140" fill="none" stroke="#E53935" stroke-width="3"/>
+                        <circle cx="150" cy="150" r="110" fill="none" stroke="#E53935" stroke-width="3"/>
+                        <circle cx="150" cy="150" r="80" fill="none" stroke="#E53935" stroke-width="3"/>
+                        <circle cx="150" cy="150" r="50" fill="none" stroke="#E53935" stroke-width="3"/>
+                        <circle cx="150" cy="150" r="20" fill="none" stroke="#E53935" stroke-width="3"/>
+                    </svg>
+                    <!-- ターゲットボタン（JavaScriptで配置） -->
+                    <div class="tee-targets" id="tee-targets"></div>
+                </div>
+            </div>
+            
+            <!-- パワーゲージとボタン -->
+            <div class="curling-controls">
+                <button class="curling-btn" id="curling-btn">発射！</button>
+                <div class="curling-power-gauge">
+                    <div class="curling-power-indicator" id="curling-power-indicator"></div>
+                </div>
+            </div>
+            
+            <!-- ゲームオーバー画面 (Game 3) -->
+            <div class="game-over" id="game-over-3" style="display: none;">
+                <h2>ゲームオーバー！</h2>
+                <p>残念！ストーンがティーを外れてしまいました。</p>
+                <button id="retry-btn-3" class="retry-button">もう一度挑戦する</button>
+            </div>
+        </div>
     </footer>
 
     <script src="header-common.js"></script>

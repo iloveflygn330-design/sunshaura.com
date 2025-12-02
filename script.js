@@ -35,6 +35,17 @@ const shootBtn = document.getElementById('shoot-btn');
 const gameOver2 = document.getElementById('game-over-2');
 const retryBtn2 = document.getElementById('retry-btn-2');
 
+// ゲーム3の要素
+const game3Container = document.getElementById('game3-container');
+const stone = document.getElementById('stone');
+const brush = document.getElementById('brush');
+const tee = document.getElementById('tee');
+const teeTargets = document.getElementById('tee-targets');
+const curlingBtn = document.getElementById('curling-btn');
+const curlingPowerIndicator = document.getElementById('curling-power-indicator');
+const gameOver3 = document.getElementById('game-over-3');
+const retryBtn3 = document.getElementById('retry-btn-3');
+
 // Canvas設定
 const ctx = arrowCanvas.getContext('2d');
 const ctx2 = balloonArrowCanvas ? balloonArrowCanvas.getContext('2d') : null;
@@ -49,12 +60,25 @@ const game2State = {
     animationFrameId: null
 };
 
+// ゲーム3の状態
+const game3State = {
+    power: 0,
+    powerDirection: 1, // 1: 右, -1: 左
+    powerInterval: null,
+    isLaunched: false,
+    stoneX: 50,
+    stoneVelocity: 0,
+    friction: 0.98, // 摩擦係数
+    targets: [],
+    animationFrameId: null
+};
+
 // ゲーム切り替えボタンのイベント
 gameSwitchBtns.forEach(btn => {
     const gameType = btn.dataset.game;
     
-    // 弓矢とゲーム2は実装済み、それ以外は未実装
-    if (gameType !== 'arrow' && gameType !== 'game2') {
+    // 弓矢、ゲーム2、ゲーム3は実装済み、それ以外は未実装
+    if (gameType !== 'arrow' && gameType !== 'game2' && gameType !== 'game3') {
         btn.disabled = true;
         btn.title = '準備中...';
     }
@@ -83,7 +107,7 @@ function switchGame(gameType) {
     
     if (gameType === 'arrow') {
         gameTitle.textContent = '🏹 弓矢チャレンジ';
-        document.querySelector('.game-container:not(.game2-container)').style.display = 'flex';
+        document.querySelector('.game-container:not(.game2-container):not(.game3-container)').style.display = 'flex';
         initializeGame();
     }
     else if (gameType === 'game2') {
@@ -91,11 +115,12 @@ function switchGame(gameType) {
         game2Container.style.display = 'flex';
         initializeGame2();
     }
-    // 他のゲームは後で実装
     else if (gameType === 'game3') {
-        gameTitle.textContent = '🎮 ゲーム3';
-        // TODO: Game3の初期化
+        gameTitle.textContent = '🥌 カーリング';
+        game3Container.style.display = 'flex';
+        initializeGame3();
     }
+    // 他のゲームは後で実装
     else if (gameType === 'game4') {
         gameTitle.textContent = '🎮 ゲーム4';
         // TODO: Game4の初期化
@@ -701,6 +726,260 @@ function showGameOver2() {
 // リトライボタン（ゲーム2）
 retryBtn2.addEventListener('click', () => {
     initializeGame2();
+});
+
+// ============================================
+// 既存のコード（ゲーム1）
+// ============================================
+
+// ============================================
+// ゲーム3: カーリング
+// ============================================
+
+// ゲーム3の初期化
+function initializeGame3() {
+    game3State.power = 0;
+    game3State.powerDirection = 1;
+    game3State.isLaunched = false;
+    game3State.stoneX = 50;
+    game3State.stoneVelocity = 0;
+    game3State.friction = 0.98;
+    
+    gameOver3.style.display = 'none';
+    curlingBtn.disabled = false;
+    curlingBtn.textContent = '発射！';
+    curlingBtn.classList.remove('sweep-mode');
+    
+    // ストーンの位置をリセット
+    stone.style.left = '50px';
+    
+    // ターゲットを配置
+    placeTeeTargets();
+    
+    // パワーゲージを開始
+    startPowerGauge();
+}
+
+// ティー内にターゲットを配置
+function placeTeeTargets() {
+    teeTargets.innerHTML = '';
+    game3State.targets = [];
+    
+    // 各ページを同心円上にランダム配置
+    const rings = [
+        { radius: 10, pages: [targetPages[0]] }, // 中心
+        { radius: 40, pages: [targetPages[1]] },
+        { radius: 70, pages: [targetPages[2]] },
+        { radius: 100, pages: [targetPages[3]] },
+        { radius: 130, pages: [targetPages[4]] }
+    ];
+    
+    rings.forEach((ring, ringIndex) => {
+        ring.pages.forEach(page => {
+            // ランダムな角度
+            const angle = Math.random() * Math.PI * 2;
+            
+            const x = 150 + ring.radius * Math.cos(angle);
+            const y = 150 + ring.radius * Math.sin(angle);
+            
+            const target = document.createElement('div');
+            target.className = 'tee-target';
+            target.textContent = page.name;
+            target.dataset.url = page.url;
+            target.style.left = `${x}px`;
+            target.style.top = `${y}px`;
+            
+            teeTargets.appendChild(target);
+            
+            game3State.targets.push({
+                element: target,
+                x: x,
+                y: y,
+                radius: ring.radius,
+                url: page.url
+            });
+        });
+    });
+}
+
+// パワーゲージを開始
+function startPowerGauge() {
+    game3State.powerInterval = setInterval(() => {
+        game3State.power += game3State.powerDirection * 2;
+        
+        if (game3State.power >= 100) {
+            game3State.power = 100;
+            game3State.powerDirection = -1;
+        } else if (game3State.power <= 0) {
+            game3State.power = 0;
+            game3State.powerDirection = 1;
+        }
+        
+        const gaugeWidth = document.querySelector('.curling-power-gauge').offsetWidth;
+        const indicatorPosition = (game3State.power / 100) * (gaugeWidth - 30);
+        curlingPowerIndicator.style.left = `${indicatorPosition}px`;
+    }, 20);
+}
+
+// 発射ボタン
+curlingBtn.addEventListener('click', () => {
+    if (!game3State.isLaunched) {
+        // パワー確定、ストーン発射
+        launchStone();
+    } else {
+        // 磨く
+        sweepStone();
+    }
+});
+
+// ストーン発射
+function launchStone() {
+    // パワーゲージ停止
+    clearInterval(game3State.powerInterval);
+    
+    // 初速度を決定（パワーに比例）
+    game3State.stoneVelocity = (game3State.power / 100) * 8 + 2; // 最小2、最大10
+    
+    game3State.isLaunched = true;
+    
+    // ボタンを「磨く」モードに変更
+    curlingBtn.textContent = '磨く！';
+    curlingBtn.classList.add('sweep-mode');
+    
+    // ストーンのアニメーション開始
+    animateStone();
+}
+
+// ストーンのアニメーション
+function animateStone() {
+    if (currentGame !== 'game3') return;
+    
+    // 速度を減衰
+    game3State.stoneVelocity *= game3State.friction;
+    
+    // 位置を更新
+    game3State.stoneX += game3State.stoneVelocity;
+    stone.style.left = `${game3State.stoneX}px`;
+    
+    // ティーの中心位置を取得
+    const teeRect = tee.getBoundingClientRect();
+    const stoneRect = stone.getBoundingClientRect();
+    const curlingAreaRect = document.querySelector('.curling-area').getBoundingClientRect();
+    
+    const stoneCenterX = stoneRect.left + stoneRect.width / 2 - curlingAreaRect.left;
+    const teeCenterX = teeRect.left + teeRect.width / 2 - curlingAreaRect.left;
+    
+    // ティーの範囲内か判定
+    const distanceToTee = Math.abs(stoneCenterX - teeCenterX);
+    
+    // 速度が十分小さくなったら停止
+    if (game3State.stoneVelocity < 0.1) {
+        endCurling(distanceToTee < 150); // ティー内かどうか
+        return;
+    }
+    
+    // 画面外に出たら終了
+    if (game3State.stoneX > curlingAreaRect.width) {
+        endCurling(false);
+        return;
+    }
+    
+    game3State.animationFrameId = requestAnimationFrame(animateStone);
+}
+
+// 磨く機能
+function sweepStone() {
+    // ブラシのアニメーション
+    brush.classList.add('sweeping');
+    setTimeout(() => {
+        brush.classList.remove('sweeping');
+    }, 200);
+    
+    // 摩擦を一時的に減らす（滑りやすくする）
+    game3State.friction = Math.min(0.995, game3State.friction + 0.005);
+    
+    // 0.5秒後に摩擦を戻す
+    setTimeout(() => {
+        game3State.friction = Math.max(0.98, game3State.friction - 0.005);
+    }, 500);
+}
+
+// カーリング終了
+function endCurling(inTee) {
+    if (game3State.animationFrameId) {
+        cancelAnimationFrame(game3State.animationFrameId);
+    }
+    
+    curlingBtn.disabled = true;
+    
+    if (inTee) {
+        // ティー内で停止→当たり判定
+        const hit = checkTeeTarget();
+        if (hit) {
+            // ヒットエフェクト
+            hit.element.classList.add('hit');
+            
+            setTimeout(() => {
+                window.location.href = hit.url;
+            }, 700);
+        } else {
+            showGameOver3();
+        }
+    } else {
+        // ティー外→ゲームオーバー
+        setTimeout(() => {
+            showGameOver3();
+        }, 500);
+    }
+}
+
+// ティーターゲットの当たり判定
+function checkTeeTarget() {
+    const stoneRect = stone.getBoundingClientRect();
+    const teeRect = tee.getBoundingClientRect();
+    
+    const stoneCenterX = stoneRect.left + stoneRect.width / 2;
+    const stoneCenterY = stoneRect.top + stoneRect.height / 2;
+    
+    const teeCenterX = teeRect.left + teeRect.width / 2;
+    const teeCenterY = teeRect.top + teeRect.height / 2;
+    
+    // ティー座標系でのストーン位置
+    const relativeX = stoneCenterX - teeCenterX;
+    const relativeY = stoneCenterY - teeCenterY;
+    const stoneAngle = Math.atan2(relativeY, relativeX);
+    const stoneDistance = Math.sqrt(relativeX * relativeX + relativeY * relativeY);
+    
+    // ティーのスケール（300pxが実際のサイズ）
+    const teeScale = teeRect.width / 300;
+    
+    for (let target of game3State.targets) {
+        // ターゲットの位置（ティー中心からの距離）
+        const targetAngle = Math.atan2(target.y - 150, target.x - 150);
+        const targetDistance = target.radius * teeScale;
+        
+        // 角度と距離の差
+        let angleDiff = Math.abs(stoneAngle - targetAngle);
+        if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+        
+        const distanceDiff = Math.abs(stoneDistance - targetDistance);
+        
+        // 優しめの判定
+        if (distanceDiff < 40 * teeScale && angleDiff < 0.8) {
+            return target;
+        }
+    }
+    return null;
+}
+
+// ゲームオーバー表示（ゲーム3）
+function showGameOver3() {
+    gameOver3.style.display = 'block';
+}
+
+// リトライボタン（ゲーム3）
+retryBtn3.addEventListener('click', () => {
+    initializeGame3();
 });
 
 // ============================================
