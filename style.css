@@ -643,40 +643,7 @@ main {
     height: 100%;
 }
 
-.tee-target {
-    position: absolute;
-    background: white;
-    border: 2px solid #333;
-    border-radius: 8px;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    cursor: default;
-    user-select: none;
-    white-space: nowrap;
-    transform: translate(-50%, -50%);
-}
-
-.tee-target.hit {
-    animation: tee-hit 0.6s ease;
-    background: #FFD700;
-    border-color: #FFA500;
-}
-
-@keyframes tee-hit {
-    0%, 100% { 
-        transform: translate(-50%, -50%) scale(1); 
-        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); 
-    }
-    50% { 
-        transform: translate(-50%, -50%) scale(1.2); 
-        box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0); 
-    }
-}
-
-.curling-controls {
+.tee-label {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -733,14 +700,47 @@ main {
     position: absolute;
     left: 0;
     top: 0;
-    width: 30px;
+    width: 0%;
     height: 100%;
     background: linear-gradient(90deg, #4CAF50 0%, #FFC107 50%, #F44336 100%);
     border-radius: 15px;
-    transition: left 0.05s linear;
+    transition: width 0.05s linear;
 }
 
-/* レスポンシブ対応 */
+.tee-label {
+    position: absolute;
+    background: white;
+    border: 3px solid #E53935;
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: default;
+    user-select: none;
+    white-space: nowrap;
+    transform: translateY(-50%);
+}
+
+.tee-label.hit {
+    animation: tee-hit 0.6s ease;
+    background: #FFD700;
+    border-color: #FFA500;
+}
+
+@keyframes tee-hit {
+    0%, 100% { 
+        transform: translateY(-50%) scale(1); 
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); 
+    }
+    50% { 
+        transform: translateY(-50%) scale(1.2); 
+        box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0); 
+    }
+}
+
+.curling-controls {
 @media (max-width: 768px) {
     #game-footer {
         height: 420px; /* SPでも調整 */
@@ -842,7 +842,7 @@ main {
         right: 30px;
     }
     
-    .tee-target {
+    .tee-label {
         font-size: 0.75rem;
         padding: 0.4rem 0.6rem;
     }
@@ -911,7 +911,7 @@ main {
         right: 20px;
     }
     
-    .tee-target {
+    .tee-label {
         font-size: 0.65rem;
         padding: 0.3rem 0.5rem;
     }

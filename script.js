@@ -750,8 +750,9 @@ function initializeGame3() {
     curlingBtn.textContent = '発射！';
     curlingBtn.classList.remove('sweep-mode');
     
-    // ストーンの位置をリセット
+    // ストーンとブラシの位置をリセット
     stone.style.left = '50px';
+    brush.style.left = '130px';
     
     // ターゲットを配置
     placeTeeTargets();
@@ -760,44 +761,40 @@ function initializeGame3() {
     startPowerGauge();
 }
 
-// ティー内にターゲットを配置
+// ティー内にターゲットを配置（リングベース、右側外に表示）
 function placeTeeTargets() {
     teeTargets.innerHTML = '';
     game3State.targets = [];
     
-    // 各ページを同心円上にランダム配置
+    // 各ページを同心円のリング（範囲）に割り当て
     const rings = [
-        { radius: 10, pages: [targetPages[0]] }, // 中心
-        { radius: 40, pages: [targetPages[1]] },
-        { radius: 70, pages: [targetPages[2]] },
-        { radius: 100, pages: [targetPages[3]] },
-        { radius: 130, pages: [targetPages[4]] }
+        { name: '中心', innerRadius: 0, outerRadius: 20, page: targetPages[0], color: '#E53935' },
+        { name: 'リング2', innerRadius: 20, outerRadius: 50, page: targetPages[1], color: '#E53935' },
+        { name: 'リング3', innerRadius: 50, outerRadius: 80, page: targetPages[2], color: '#E53935' },
+        { name: 'リング4', innerRadius: 80, outerRadius: 110, page: targetPages[3], color: '#E53935' },
+        { name: 'リング5', innerRadius: 110, outerRadius: 140, page: targetPages[4], color: '#E53935' }
     ];
     
-    rings.forEach((ring, ringIndex) => {
-        ring.pages.forEach(page => {
-            // ランダムな角度
-            const angle = Math.random() * Math.PI * 2;
-            
-            const x = 150 + ring.radius * Math.cos(angle);
-            const y = 150 + ring.radius * Math.sin(angle);
-            
-            const target = document.createElement('div');
-            target.className = 'tee-target';
-            target.textContent = page.name;
-            target.dataset.url = page.url;
-            target.style.left = `${x}px`;
-            target.style.top = `${y}px`;
-            
-            teeTargets.appendChild(target);
-            
-            game3State.targets.push({
-                element: target,
-                x: x,
-                y: y,
-                radius: ring.radius,
-                url: page.url
-            });
+    // 右側外にラベルを配置
+    rings.forEach((ring, index) => {
+        // ラベルを右側に配置
+        const labelY = 150 - 60 + (index * 30); // 縦に並べる
+        
+        const label = document.createElement('div');
+        label.className = 'tee-label';
+        label.textContent = ring.page.name;
+        label.dataset.url = ring.page.url;
+        label.style.left = '320px'; // ティーの右側
+        label.style.top = `${labelY}px`;
+        label.style.borderColor = ring.color;
+        
+        teeTargets.appendChild(label);
+        
+        game3State.targets.push({
+            element: label,
+            innerRadius: ring.innerRadius,
+            outerRadius: ring.outerRadius,
+            url: ring.page.url
         });
     });
 }
@@ -815,9 +812,8 @@ function startPowerGauge() {
             game3State.powerDirection = 1;
         }
         
-        const gaugeWidth = document.querySelector('.curling-power-gauge').offsetWidth;
-        const indicatorPosition = (game3State.power / 100) * (gaugeWidth - 30);
-        curlingPowerIndicator.style.left = `${indicatorPosition}px`;
+        // パワーゲージを塗りつぶす（左から）
+        curlingPowerIndicator.style.width = `${game3State.power}%`;
     }, 20);
 }
 
@@ -860,6 +856,9 @@ function animateStone() {
     // 位置を更新
     game3State.stoneX += game3State.stoneVelocity;
     stone.style.left = `${game3State.stoneX}px`;
+    
+    // ブラシをストーンに追従させる
+    brush.style.left = `${game3State.stoneX + 80}px`;
     
     // ティーの中心位置を取得
     const teeRect = tee.getBoundingClientRect();
@@ -933,7 +932,7 @@ function endCurling(inTee) {
     }
 }
 
-// ティーターゲットの当たり判定
+// ティーターゲットの当たり判定（リングベース）
 function checkTeeTarget() {
     const stoneRect = stone.getBoundingClientRect();
     const teeRect = tee.getBoundingClientRect();
@@ -944,31 +943,24 @@ function checkTeeTarget() {
     const teeCenterX = teeRect.left + teeRect.width / 2;
     const teeCenterY = teeRect.top + teeRect.height / 2;
     
-    // ティー座標系でのストーン位置
-    const relativeX = stoneCenterX - teeCenterX;
-    const relativeY = stoneCenterY - teeCenterY;
-    const stoneAngle = Math.atan2(relativeY, relativeX);
-    const stoneDistance = Math.sqrt(relativeX * relativeX + relativeY * relativeY);
+    // ティー中心からの距離
+    const distanceX = stoneCenterX - teeCenterX;
+    const distanceY = stoneCenterY - teeCenterY;
+    const distanceFromCenter = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
     
-    // ティーのスケール（300pxが実際のサイズ）
+    // ティーのスケール（300pxが基準サイズ）
     const teeScale = teeRect.width / 300;
     
+    // どのリングに入っているか判定
     for (let target of game3State.targets) {
-        // ターゲットの位置（ティー中心からの距離）
-        const targetAngle = Math.atan2(target.y - 150, target.x - 150);
-        const targetDistance = target.radius * teeScale;
+        const innerRadius = target.innerRadius * teeScale;
+        const outerRadius = target.outerRadius * teeScale;
         
-        // 角度と距離の差
-        let angleDiff = Math.abs(stoneAngle - targetAngle);
-        if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
-        
-        const distanceDiff = Math.abs(stoneDistance - targetDistance);
-        
-        // 優しめの判定
-        if (distanceDiff < 40 * teeScale && angleDiff < 0.8) {
+        if (distanceFromCenter >= innerRadius && distanceFromCenter <= outerRadius) {
             return target;
         }
     }
+    
     return null;
 }
 
