@@ -1,0 +1,27 @@
+リポジトリ TOP
+  ├─ index.html
+  ├─ avatars.json               ← 全アバターデータ（ここだけ編集）
+  └─ assets/
+      └─ images/
+          ├─ avatar01/
+          │   ├─ thumbnail/
+          │   │   ├─ main.png        ← mainImg（アバター表示領域メイン画像）
+          │   │   ├─ mini_pc.png     ← miniImgPC（PC用サムネ 2:1.5）
+          │   │   └─ mini_sp.png     ← miniImgSP（SP用サムネ 1:1）
+          │   ├─ bg.png              ← 背景画像
+          │   ├─ pattern.png         ← ループパターン画像
+          │   ├─ frame_c_top.png     ← 枠C上側の斜め装飾
+          │   ├─ frame_c_bottom.png  ← 枠C下側の斜め装飾
+          │   ├─ photos/             ← ★拡張予定（ランダム表示用）
+          │   │   ├─ photo_01.png
+          │   │   └─ photo_02.png
+          │   └─ refs/               ← OrgAvt参照用画像
+          │       ├─ ref_01.png
+          │       └─ ref_02.png
+          ├─ avatar02/
+          │   └─ ...                 ← 同じ構成で追加
+          └─ categories/
+              ├─ mame_hinata.png     ← カテゴリボタン用画像
+              ├─ foshunya.png
+              ├─ sharo.png
+              └─ other.png
