@@ -474,7 +474,7 @@
         12.5% 88%, 12.5% 100%, 0% 100%
       );
     }
-    #avt-door-top.door-closed    { height: calc(55% + 5px); } /* +5px オーバーラップで中央の隙間を塞ぐ */
+    #avt-door-top.door-closed    { height: calc(50% + 5px); } /* +5px オーバーラップで中央の隙間を塞ぐ */
     #avt-door-bottom {
       bottom: 0;
       height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h));
@@ -487,7 +487,7 @@
         100% 100%, 0% 100%
       );
     }
-    #avt-door-bottom.door-closed { height: calc(55% + 5px); }
+    #avt-door-bottom.door-closed { height: calc(50% + 5px); }
 
     /* ① 枠A */
     .avt-frame-a {
@@ -819,14 +819,14 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       updateNavArrows();
-      avtLoadData();
+      // avtLoadData() はモジュールscript側で呼び出します
     });
   </script>
 
 
-  <script>
+  <script type="module">
     const AVT_CONFIG = {
-      DATA_PATH:   'avatars.json',
+      DATA_PATH:   './avatars.js', // ★ アバターデータのパス（jsファイル）
       DOOR_DUR_MS: 400,  // ★ CSS の --avt-door-dur: 0.4s と合わせること
     };
 
@@ -837,9 +837,8 @@
     async function avtLoadData() {
       if (avtLoaded) return;
       try {
-        const res = await fetch(AVT_CONFIG.DATA_PATH);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        avtData = await res.json();
+        const module = await import(AVT_CONFIG.DATA_PATH); // JSONのfetch()からJS importに変更
+        avtData = module.default;
         avtLoaded = true;
         if (avtData.length > 0) {
           avtShowAvatar(avtData[Math.floor(Math.random() * avtData.length)], false);
@@ -960,6 +959,9 @@
 
       if (updateThumb) avtRenderThumbs();
     }
+
+    // モジュールscriptはDOMが準備されてから実行されるため、直接呼び出しでOK
+    avtLoadData();
   </script>
 </body>
 </html>
