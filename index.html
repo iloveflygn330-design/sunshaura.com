@@ -627,13 +627,22 @@
     }
     #avt-frame-c-top    { top: 0; }
     #avt-frame-c-bottom { bottom: 0; }
+    /* SP: PC比率（15vw = 45% × 画面幅/3）に固定して画像の歪みを防ぐ */
+    @media (max-width: 759px) {
+      #avt-frame-c-top, #avt-frame-c-bottom {
+        height: 15vw;
+      }
+    }
 
     /* ⑤ 情報テキスト枠 (z-index:30) */
     #avt-info {
       position: absolute; top: 0; bottom: 0; left: 0; width: 55%;
       z-index: 30; display: flex; flex-direction: column;
       justify-content: center; padding: 12px 28px;
-      background: var(--avt-info-bg);
+      /* infoImg が設定されていない場合のデフォルト背景 */
+      background-color: var(--avt-info-bg);
+      background-size: cover;
+      background-position: center;
     }
     @media (max-width: 759px) { #avt-info { width: 65%; padding: 10px 16px; } }
     #avt-name-wrap { position: relative; margin-bottom: 6px; }
@@ -1469,6 +1478,20 @@
       /* ⑤ 情報テキスト */
       document.getElementById('avt-name').textContent = avatar.name || '';
       document.getElementById('avt-desc').textContent = avatar.desc || '';
+
+      /* ⑤ 情報テキスト枠の背景画像
+         infoImg が設定されている場合:
+           半透明オーバーレイ（--avt-info-bg）を前面に重ね、
+           背景画像をその後ろに表示する（CSS多重背景）
+         未設定の場合:
+           CSS の background-color（--avt-info-bg）のみ表示       */
+      const infoEl = document.getElementById('avt-info');
+      if (avatar.infoImg) {
+        infoEl.style.backgroundImage =
+          `linear-gradient(var(--avt-info-bg), var(--avt-info-bg)), url('${avatar.infoImg}')`;
+      } else {
+        infoEl.style.backgroundImage = '';
+      }
 
       /* ④ リファレンス枠（orgAvt を動的生成） */
       const refs  = document.getElementById('avt-refs');
