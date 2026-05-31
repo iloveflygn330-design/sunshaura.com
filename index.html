@@ -662,17 +662,18 @@
     @media (max-width: 759px) { #avt-desc { -webkit-line-clamp: 4; } }
     #avt-items-label { font-size: 10px; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
 
-    /* ④ リファレンス枠 (z-index:40) */
+    /* ④ リファレンス枠（⑤情報テキスト枠の内部に配置・フロー表示） */
     #avt-refs {
       /*
        * ★拡張予定: リファレンスアイテムのサイズを変えたい場合は
        *   .avt-ref-item の width / height を調整
        */
-      position: absolute; bottom: 14px; left: 28px;
-      z-index: 40; display: flex; align-items: center;
-      gap: 6px; flex-wrap: wrap; max-width: 50%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
     }
-    @media (max-width: 759px) { #avt-refs { left: 16px; bottom: 10px; } }
     .avt-ref-item {
       display: block; width: 34px; height: 34px; border-radius: 6px; overflow: hidden;
       border: 2px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.12);
@@ -691,17 +692,25 @@
     @media (max-width: 759px) { #avt-main-img { width: 60%; } }
 
     /* ② 扉 (z-index:60)
-       開状態: clip-path で 枠A + 扉バー分のみ表示
-       閉状態: door-closed クラスで全高50%を表示         */
+       開状態: height = 枠A + 扉バー分（細いバーが見えるだけ）
+       閉状態: door-closed クラスで height: 50% に拡張
+       がたがたの噛み合わせは clip-path の polygon で常時表現
+       ────────────────────────────────
+       歯の仕様（全幅を16等分、奇数番が歯・偶数番がスキマ）:
+         歯幅  = 12.5% × 要素幅
+         歯の深さ = 要素高さの12%
+       上扉: 歯が下向き（閉時に下扉の隙間に噛み込む）
+       下扉: 歯が上向き（上扉の歯と左右が交互でピッタリ合う）  */
     .avt-door {
-      position: absolute; left: 0; right: 0; height: 50%; z-index: 60;
+      position: absolute; left: 0; right: 0; z-index: 60;
       background-color: var(--color-main);
       background-image: repeating-linear-gradient(
         -55deg, transparent 0px, transparent 14px,
         rgba(255,255,255,0.07) 14px, rgba(255,255,255,0.07) 18px
       );
-      overflow: hidden;
-      transition: clip-path var(--avt-door-dur) cubic-bezier(0.65, 0, 0.35, 1);
+      /* clip-pathではなくheightをアニメさせる
+         こうすると歯の形を保ちながらスライドする */
+      transition: height var(--avt-door-dur) cubic-bezier(0.65, 0, 0.35, 1);
     }
     .avt-door::before {
       content: ''; position: absolute; inset: 0;
@@ -713,16 +722,47 @@
         transparent           calc(50% + 4px)
       );
     }
+
+    /* 上扉: 歯が下向き
+       x= 0〜12.5%, 25〜37.5%, 50〜62.5%, 75〜87.5% が歯（下突出）
+       x= 12.5〜25%, 37.5〜50%, 62.5〜75%, 87.5〜100% が隙間         */
     #avt-door-top {
       top: 0;
-      clip-path: inset(0 0 calc(100% - var(--avt-frame-a-h) - var(--avt-door-bar-h)) 0);
+      height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h)); /* 開状態 */
+      clip-path: polygon(
+        0%    0%,   100%   0%,   100%   88%,
+        87.5% 88%,  87.5% 100%,
+        75%  100%,  75%    88%,
+        62.5% 88%,  62.5% 100%,
+        50%  100%,  50%    88%,
+        37.5% 88%,  37.5% 100%,
+        25%  100%,  25%    88%,
+        12.5% 88%,  12.5% 100%,
+        0%   100%
+      );
     }
-    #avt-door-top.door-closed    { clip-path: inset(0); }
+    #avt-door-top.door-closed { height: 50%; } /* 閉状態 */
+
+    /* 下扉: 歯が上向き（上扉と噛み合うよう左右が反転）
+       x= 12.5〜25%, 37.5〜50%, 62.5〜75%, 87.5〜100% が歯（上突出）
+       x= 0〜12.5%, 25〜37.5%, 50〜62.5%, 75〜87.5% が隙間            */
     #avt-door-bottom {
       bottom: 0;
-      clip-path: inset(calc(100% - var(--avt-frame-a-h) - var(--avt-door-bar-h)) 0 0 0);
+      height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h)); /* 開状態 */
+      clip-path: polygon(
+        0%    12%,
+        12.5% 12%,  12.5%  0%,
+        25%    0%,  25%   12%,
+        37.5% 12%,  37.5%  0%,
+        50%    0%,  50%   12%,
+        62.5% 12%,  62.5%  0%,
+        75%    0%,  75%   12%,
+        87.5% 12%,  87.5%  0%,
+        100%   0%,
+        100% 100%,  0%   100%
+      );
     }
-    #avt-door-bottom.door-closed { clip-path: inset(0); }
+    #avt-door-bottom.door-closed { height: 50%; } /* 閉状態 */
 
     /* ① 枠A（z-index:70・最前列・アニメーションで動かない） */
     .avt-frame-a {
@@ -737,6 +777,19 @@
       height: var(--avt-optext-h); display: flex; align-items: center;
       padding: 0 20px; font-size: clamp(14px, 2vw, 16px);
       font-weight: 700; color: var(--color-text);
+    }
+
+    /* ── アバター表示領域＋操作テキストのラッパー ──
+       PCのみ画面幅の80%に絞って中央揃え
+       SP はそのまま全幅                           */
+    #avt-main-wrap {
+      width: 100%;
+    }
+    @media (min-width: 760px) {
+      #avt-main-wrap {
+        width: 80%;
+        margin: 0 auto;
+      }
     }
 
     /* ── サムネイル一覧 ── */
@@ -927,63 +980,69 @@
         </button>
       </div>
 
-      <!-- アバター表示領域 -->
+      <!-- アバター表示領域（画面幅100%） -->
       <div id="avt-display-area">
 
-        <!-- ⑦ 背景（最後列 z-index:10） -->
-        <div id="avt-bg">
-          <!-- ★拡張予定: bgImg でアバターごとに背景画像を指定 -->
-          <div id="avt-bg-img"></div>
-          <!-- ★拡張予定: bgPattern が設定されたアバターでのみスクロールアニメが動作 -->
-          <div id="avt-bg-pattern"></div>
-        </div>
-
-        <!-- ⑥ 枠C 斜め装飾（z-index:20） -->
-        <!-- ★拡張予定: frameCTop / frameCBottom でアバターごとに画像を個別指定 -->
-        <div id="avt-frame-c-top"></div>
-        <div id="avt-frame-c-bottom"></div>
-
-        <!-- ⑤ 情報テキスト枠（z-index:30） -->
-        <div id="avt-info">
-          <div id="avt-name-wrap">
-            <div id="avt-name-blob"></div>
-            <div id="avt-name">アバターを選択してください</div>
-            <div id="avt-name-line"></div>
+          <!-- ⑦ 背景（最後列 z-index:10） -->
+          <div id="avt-bg">
+            <!-- ★拡張予定: bgImg でアバターごとに背景画像を指定 -->
+            <div id="avt-bg-img"></div>
+            <!-- ★拡張予定: bgPattern が設定されたアバターでのみスクロールアニメが動作 -->
+            <div id="avt-bg-pattern"></div>
           </div>
-          <div id="avt-desc"></div>
-          <div id="avt-items-label">使用したアイテム</div>
-        </div>
 
-        <!-- ④ リファレンス枠（z-index:40）orgAvt の内容がJSで動的挿入 -->
-        <!-- ★拡張予定: アバターの orgAvt にアイテム情報を追加 -->
-        <div id="avt-refs"></div>
+          <!-- ⑥ 枠C 斜め装飾（z-index:20） -->
+          <!-- ★拡張予定: frameCTop / frameCBottom でアバターごとに画像を個別指定 -->
+          <div id="avt-frame-c-top"></div>
+          <div id="avt-frame-c-bottom"></div>
 
-        <!-- ③ アバター枠（z-index:50）mainImg がJSで background-image に設定 -->
-        <!-- ★拡張予定: mainImg に画像パスを設定 -->
-        <div id="avt-main-img"></div>
+          <!-- ⑤ 情報テキスト枠（z-index:30）
+               ④リファレンス枠も内部に含む（items-labelの直下にフロー配置） -->
+          <div id="avt-info">
+            <div id="avt-name-wrap">
+              <div id="avt-name-blob"></div>
+              <div id="avt-name">アバターを選択してください</div>
+              <div id="avt-name-line"></div>
+            </div>
+            <div id="avt-desc"></div>
+            <div id="avt-items-label">使用したアイテム</div>
+            <!-- ④ リファレンス枠（orgAvt の内容がJSで動的挿入）
+                 ★拡張予定: アバターの orgAvt にアイテム情報を追加 -->
+            <div id="avt-refs"></div>
+          </div>
 
-        <!-- ② 扉（z-index:60）アバター切り替え時に閉まり→開く -->
-        <div class="avt-door" id="avt-door-top"></div>
-        <div class="avt-door" id="avt-door-bottom"></div>
+          <!-- ③ アバター枠（z-index:50）mainImg がJSで background-image に設定 -->
+          <!-- ★拡張予定: mainImg に画像パスを設定 -->
+          <div id="avt-main-img"></div>
 
-        <!-- ① 枠A（z-index:70・最前列・アニメーションで動かない） -->
-        <div class="avt-frame-a" id="avt-frame-a-top"></div>
-        <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
+          <!-- ② 扉（z-index:60）アバター切り替え時に閉まり→開く
+               がたがた: 上扉=歯が下向き、下扉=歯が上向きで噛み合う -->
+          <div class="avt-door" id="avt-door-top"></div>
+          <div class="avt-door" id="avt-door-bottom"></div>
+
+          <!-- ① 枠A（z-index:70・最前列・アニメーションで動かない） -->
+          <div class="avt-frame-a" id="avt-frame-a-top"></div>
+          <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
 
       </div><!-- /#avt-display-area -->
 
-      <!-- 操作テキスト（高さ: --avt-optext-h） -->
-      <div id="avt-op-text">見たいアバターをクリック：</div>
+      <!-- 操作テキスト＋サムネイル一覧（PC時80%幅・中央揃え） -->
+      <div id="avt-main-wrap">
 
-      <!-- サムネイル一覧
-           ★拡張予定: アバターを追加する場合は avatars.json にエントリを追記するだけ
-                      このHTMLは変更不要
-      -->
-      <div id="avt-thumb-grid">
-        <div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">
-          読み込み中...
+        <!-- 操作テキスト（高さ: --avt-optext-h） -->
+        <div id="avt-op-text">見たいアバターをクリック：</div>
+
+        <!-- サムネイル一覧
+             ★拡張予定: アバターを追加する場合は avatars.json にエントリを追記するだけ
+                        このHTMLは変更不要
+        -->
+        <div id="avt-thumb-grid">
+          <div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">
+            読み込み中...
+          </div>
         </div>
-      </div>
+
+      </div><!-- /#avt-main-wrap -->
 
     </div><!-- /#page-avatar -->
 
