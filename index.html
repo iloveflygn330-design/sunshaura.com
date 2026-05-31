@@ -671,11 +671,16 @@
     @media (max-width: 759px) { #avt-desc { -webkit-line-clamp: 4; } }
     #avt-items-label { font-size: 10px; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
 
+    :root {
+      /* ★ リファレンスアイコンのサイズ（ここを変えるだけで変更できます） */
+      --avt-ref-size: 34px;
+    }
+
     /* ④ リファレンス枠（⑤情報テキスト枠の内部に配置・フロー表示） */
     #avt-refs {
       /*
        * ★拡張予定: リファレンスアイテムのサイズを変えたい場合は
-       *   .avt-ref-item の width / height を調整
+       *   :root の --avt-ref-size を変更してください
        */
       display: flex;
       align-items: center;
@@ -684,8 +689,14 @@
       margin-top: 4px;
     }
     .avt-ref-item {
-      display: block; width: 34px; height: 34px; border-radius: 6px; overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.12);
+      display: block;
+      width:  var(--avt-ref-size);
+      height: var(--avt-ref-size);
+      border-radius: 6px;
+      overflow: hidden;
+      /* 画像未設定時のプレースホルダーは非表示（border/background を透明に） */
+      border: 2px solid transparent;
+      background: transparent;
       transition: transform var(--duration-ui), border-color var(--duration-ui);
     }
     .avt-ref-item:hover { transform: scale(1.12); border-color: white; }
