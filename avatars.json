@@ -1,0 +1,84 @@
+[
+  {
+    "id":           "avatar_01",
+    "name":         "テストアバター①",
+    "genre":        "元ネタあり（別アバター）",
+    "category":     "まめひなた",
+    "mainImg":      "assets/images/avatar01/thumbnail/main.png",
+    "miniImgPC":    "assets/images/avatar01/thumbnail/mini_pc.png",
+    "miniImgSP":    "assets/images/avatar01/thumbnail/mini_sp.png",
+    "bgImg":        "assets/images/avatar01/bg.png",
+    "bgPattern":    "assets/images/avatar01/pattern.png",
+    "frameCTop":    "assets/images/avatar01/frame_c_top.png",
+    "frameCBottom": "assets/images/avatar01/frame_c_bottom.png",
+    "desc":         "テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。",
+    "photos": [
+      "assets/images/avatar01/photos/photo_01.png",
+      "assets/images/avatar01/photos/photo_02.png"
+    ],
+    "orgAvt": [
+      { "img": "assets/images/avatar01/refs/ref_01.png", "url": "https://example.com/item1" },
+      { "img": "assets/images/avatar01/refs/ref_02.png", "url": "https://example.com/item2" },
+      { "img": "assets/images/avatar01/refs/ref_03.png", "url": "https://example.com/item3" }
+    ]
+  },
+  {
+    "id":           "avatar_02",
+    "name":         "テストアバター②",
+    "genre":        "元ネタあり（その他）",
+    "category":     "フォシュニア",
+    "mainImg":      "assets/images/avatar02/thumbnail/main.png",
+    "miniImgPC":    "assets/images/avatar02/thumbnail/mini_pc.png",
+    "miniImgSP":    "assets/images/avatar02/thumbnail/mini_sp.png",
+    "bgImg":        "assets/images/avatar02/bg.png",
+    "bgPattern":    "",
+    "frameCTop":    "assets/images/avatar02/frame_c_top.png",
+    "frameCBottom": "assets/images/avatar02/frame_c_bottom.png",
+    "desc":         "テストアバター②の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。",
+    "photos": [
+      "assets/images/avatar02/photos/photo_01.png"
+    ],
+    "orgAvt": [
+      { "img": "assets/images/avatar02/refs/ref_01.png", "url": "https://example.com/item4" }
+    ]
+  },
+  {
+    "id":           "avatar_03",
+    "name":         "テストアバター③",
+    "genre":        "元ネタなし",
+    "category":     "シャロ",
+    "mainImg":      "assets/images/avatar03/thumbnail/main.png",
+    "miniImgPC":    "assets/images/avatar03/thumbnail/mini_pc.png",
+    "miniImgSP":    "assets/images/avatar03/thumbnail/mini_sp.png",
+    "bgImg":        "assets/images/avatar03/bg.png",
+    "bgPattern":    "assets/images/avatar03/pattern.png",
+    "frameCTop":    "assets/images/avatar03/frame_c_top.png",
+    "frameCBottom": "assets/images/avatar03/frame_c_bottom.png",
+    "desc":         "テストアバター③の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文。",
+    "photos": [],
+    "orgAvt": [
+      { "img": "assets/images/avatar03/refs/ref_01.png", "url": "https://example.com/item5" },
+      { "img": "assets/images/avatar03/refs/ref_02.png", "url": "https://example.com/item6" },
+      { "img": "assets/images/avatar03/refs/ref_03.png", "url": "https://example.com/item7" },
+      { "img": "assets/images/avatar03/refs/ref_04.png", "url": "https://example.com/item8" }
+    ]
+  },
+  {
+    "id":           "avatar_04",
+    "name":         "テストアバター④",
+    "genre":        "元ネタあり（別アバター）",
+    "category":     "その他",
+    "mainImg":      "assets/images/avatar04/thumbnail/main.png",
+    "miniImgPC":    "assets/images/avatar04/thumbnail/mini_pc.png",
+    "miniImgSP":    "assets/images/avatar04/thumbnail/mini_sp.png",
+    "bgImg":        "assets/images/avatar04/bg.png",
+    "bgPattern":    "assets/images/avatar04/pattern.png",
+    "frameCTop":    "assets/images/avatar04/frame_c_top.png",
+    "frameCBottom": "assets/images/avatar04/frame_c_bottom.png",
+    "desc":         "テストアバター④の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。",
+    "photos": [
+      "assets/images/avatar04/photos/photo_01.png"
+    ],
+    "orgAvt": []
+  }
+]
