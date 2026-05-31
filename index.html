@@ -234,10 +234,17 @@
       --avt-frame-a-clr:   #FF9500;
       --avt-filter-clr:    #00BBCC;
 
-      /* ★ infoImg の表示サイズ（ここを変えるだけで変更できます）
-         例: cover（全体を覆う）/ contain（全体を収める）/ auto（元のサイズ）
-             100% 100%（枠に合わせて引き伸ばす）/ 200px 100px（px指定） */
-      --avt-info-img-size: 100% 100%;
+      /* ★ avt-info の左端からの距離（PCのみ）
+         0    = 左端ぴったり / 5% = 少し右にずれて左よりの中央 / 10% = より中央寄り */
+      --avt-info-left-pc:      5%;
+
+      /* ★ infoImg アイコンの透かし設定
+         --avt-info-img-opacity : 透明度（0=完全透明 / 1=不透明）
+         --avt-info-img-size-pc : PC時の表示サイズ（auto/40%/cover など）
+         --avt-info-img-size-sp : SP時の表示サイズ                        */
+      --avt-info-img-opacity:  0.2;
+      --avt-info-img-size-pc:  40%;
+      --avt-info-img-size-sp:  60%;
 
       /* ★ リファレンスアイコンのサイズ（ここを変えるだけで変更できます） */
       --avt-ref-size: 34px;
@@ -341,15 +348,42 @@
 
     /* ⑤ 情報テキスト枠 */
     #avt-info {
-      position: absolute; top: 0; bottom: 0; left: 0; width: 45%;
+      position: absolute; top: 0; bottom: 0;
+      left: 0;             /* SP: 左端から（デフォルト） */
+      width: 45%;
       z-index: 30; display: flex; flex-direction: column;
       justify-content: center; padding: 12px 28px;
       background-color: var(--avt-info-bg);
-      /* ★ infoImg の表示サイズは :root の --avt-info-img-size で変更できます */
-      background-size: var(--avt-info-img-size);
-      background-position: center;
+    }
+    /* PC: --avt-info-left-pc で左端からの距離を変更できます */
+    @media (min-width: 760px) {
+      #avt-info { left: var(--avt-info-left-pc); }
     }
     @media (max-width: 759px) { #avt-info { width: 65%; padding: 10px 16px; } }
+
+    /* infoImg 透かしレイヤー（avt-info 内部に絶対配置）
+       テキストより後ろに表示されるよう z-index: 0 */
+    #avt-info-bg-layer {
+      position: absolute; inset: 0;
+      background-repeat: no-repeat;
+      background-position: center;
+      /* ★ PC時の透かしサイズ: :root の --avt-info-img-size-pc で変更 */
+      background-size: var(--avt-info-img-size-pc);
+      /* ★ 透明度: :root の --avt-info-img-opacity で変更（0=透明 / 1=不透明） */
+      opacity: var(--avt-info-img-opacity);
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* SP: --avt-info-img-size-sp でサイズ切り替え */
+    @media (max-width: 759px) {
+      #avt-info-bg-layer { background-size: var(--avt-info-img-size-sp); }
+    }
+
+    /* テキスト・refs 各要素を bg-layer の上に表示する */
+    #avt-name-wrap, #avt-desc, #avt-items-label, #avt-refs {
+      position: relative;
+      z-index: 1;
+    }
     #avt-name-wrap { position: relative; margin-bottom: 6px; }
     #avt-name-blob {
       position: absolute; inset: -14px -22px;
@@ -597,6 +631,8 @@
         <div id="avt-frame-c-top"></div>
         <div id="avt-frame-c-bottom"></div>
         <div id="avt-info">
+          <!-- 透かし背景レイヤー（infoImgがJSで設定される） -->
+          <div id="avt-info-bg-layer"></div>
           <div id="avt-name-wrap">
             <div id="avt-name-blob"></div>
             <div id="avt-name">アバターを選択してください</div>
@@ -871,13 +907,11 @@
       document.getElementById('avt-name').textContent = avatar.name || '';
       document.getElementById('avt-desc').textContent = avatar.desc || '';
 
-      /* ⑤ infoImg 背景（オーバーレイ＋画像の多重背景） */
-      const infoEl = document.getElementById('avt-info');
-      if (avatar.infoImg) {
-        infoEl.style.backgroundImage = `linear-gradient(var(--avt-info-bg), var(--avt-info-bg)), url('${avatar.infoImg}')`;
-      } else {
-        infoEl.style.backgroundImage = '';
-      }
+      /* ⑤ infoImg 透かし背景（bg-layerに反映）
+         opacity は CSS の --avt-info-img-opacity で制御
+         サイズは CSS の --avt-info-img-size-pc / sp で制御 */
+      const bgLayer = document.getElementById('avt-info-bg-layer');
+      bgLayer.style.backgroundImage = avatar.infoImg ? `url('${avatar.infoImg}')` : 'none';
 
       /* ④ リファレンス枠 */
       const refs = document.getElementById('avt-refs');
