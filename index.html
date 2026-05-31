@@ -624,6 +624,9 @@
       position: absolute; left: 0; right: 0; height: 45%; z-index: 20;
       background-size: 100% 100%; background-repeat: no-repeat;
       pointer-events: none;
+      /* frame_c画像が黒背景PNGの場合に黒を透明扱いにする
+         ★ 画像を透過PNGで再出力できたらこの行を削除してください */
+      mix-blend-mode: screen;
     }
     #avt-frame-c-top    { top: 0; }
     #avt-frame-c-bottom { bottom: 0; }
