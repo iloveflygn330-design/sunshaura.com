@@ -11,6 +11,7 @@
     "bgPattern":    "assets/images/avatar01/pattern.png",
     "frameCTop":    "assets/images/avatar01/frame_c_top.png",
     "frameCBottom": "assets/images/avatar01/frame_c_bottom.png",
+    "infoImg":      "assets/images/avatar01/info_bg.png",
     "desc":         "テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。",
     "photos": [
       "assets/images/avatar01/photos/photo_01.png",
@@ -34,6 +35,7 @@
     "bgPattern":    "",
     "frameCTop":    "assets/images/avatar02/frame_c_top.png",
     "frameCBottom": "assets/images/avatar02/frame_c_bottom.png",
+    "infoImg":      "assets/images/avatar02/info_bg.png",
     "desc":         "テストアバター②の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。",
     "photos": [
       "assets/images/avatar02/photos/photo_01.png"
@@ -54,6 +56,7 @@
     "bgPattern":    "assets/images/avatar03/pattern.png",
     "frameCTop":    "assets/images/avatar03/frame_c_top.png",
     "frameCBottom": "assets/images/avatar03/frame_c_bottom.png",
+    "infoImg":      "assets/images/avatar03/info_bg.png",
     "desc":         "テストアバター③の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文。",
     "photos": [],
     "orgAvt": [
@@ -75,6 +78,7 @@
     "bgPattern":    "assets/images/avatar04/pattern.png",
     "frameCTop":    "assets/images/avatar04/frame_c_top.png",
     "frameCBottom": "assets/images/avatar04/frame_c_bottom.png",
+    "infoImg":      "assets/images/avatar04/info_bg.png",
     "desc":         "テストアバター④の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。",
     "photos": [
       "assets/images/avatar04/photos/photo_01.png"
