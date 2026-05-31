@@ -11,523 +11,221 @@
        ★ 定義変数（数値・色はすべてここで一括管理）
        ===================================================== */
     :root {
-      /* ── ブレークポイント ───────────────── */
-      /* 760px未満 = SP  /  760px以上 = PC    */
       --bp-sp: 760px;
-
-      /* ── カラー ─────────────────────────── */
-      --color-main:        #CC2244;   /* メインカラー（赤）               */
-      --color-main-dark:   #8B1228;   /* ローディングパネル背景           */
-      --color-main-mid:    #B01D3A;   /* ヘッダー②背景（メインより暗め） */
-      --color-main-light:  #E03355;   /* ホバー・active時アクセント       */
-      --color-main-pale:   #FFF0F3;   /* ページ背景色                     */
-      --color-text:        #2A0A10;   /* 本文テキスト                     */
+      --color-main:        #CC2244;
+      --color-main-dark:   #8B1228;
+      --color-main-mid:    #B01D3A;
+      --color-main-light:  #E03355;
+      --color-main-pale:   #FFF0F3;
+      --color-text:        #2A0A10;
       --color-white:       #FFFFFF;
-      --color-loading-bar: #2E2E2E;   /* ローディング通知バー背景         */
-      --color-placeholder: #CC8899;   /* 未実装エリアのテキスト・枠線     */
-
-      /* ── ヘッダー ────────────────────────── */
-      --header1-height:    60px;      /* ヘッダー①（ロゴ行）の高さ       */
-      --header2-height:    60px;      /* ヘッダー②（ナビ行）の高さ       */
-      /* PC: ①②が重なるので 60px / SP: ①②が縦に並ぶので 120px */
+      --color-loading-bar: #2E2E2E;
+      --color-placeholder: #CC8899;
+      --header1-height:    60px;
+      --header2-height:    60px;
       --header-height-pc:  60px;
-      --header-height-sp: 120px;      /* = --header1-height + --header2-height */
-
-      /* ── ローディング ────────────────────── */
-      --loading-bar-height: 50px;     /* ローディング通知バーの高さ */
-
-      /* ── アニメーション ──────────────────── */
-      --ease-decel:       cubic-bezier(0.22, 1, 0.36, 1); /* 減速移動（パネル用） */
-      --duration-panel:   600ms;      /* パネルのせり上がり / 降下時間     */
-      --duration-ui:      300ms;      /* 通常UIトランジション              */
-      --duration-complete: 900ms;     /* 「移動完了！」の表示維持時間      */
-
-      /* ── ナビゲーション ──────────────────── */
-      --nav-btn-width:    130px;      /* ナビボタン1つの幅（スライド計算用） */
-      --nav-btn-gap:       10px;      /* ボタン間のギャップ                  */
+      --header-height-sp: 120px;
+      --loading-bar-height: 50px;
+      --ease-decel:       cubic-bezier(0.22, 1, 0.36, 1);
+      --duration-panel:   600ms;
+      --duration-ui:      300ms;
+      --duration-complete: 900ms;
+      --nav-btn-width:    130px;
+      --nav-btn-gap:       10px;
     }
 
-
-    /* =====================================================
-       リセット・ベーススタイル
-       ===================================================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      height: 100%;
-      overflow-x: hidden;
-    }
+    html, body { height: 100%; overflow-x: hidden; }
     body {
       font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
       background: var(--color-main-pale);
       color: var(--color-text);
     }
 
-
-    /* =====================================================
-       ヘッダー（コンテナ）
-       ===================================================== */
     #header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      /* ヘッダー全体を最前面に（loading-bar:3 より上） */
+      position: fixed; top: 0; left: 0; right: 0;
       z-index: 10;
-      height: var(--header-height-pc);   /* PC */
+      height: var(--header-height-pc);
     }
-    @media (max-width: 759px) {
-      #header { height: var(--header-height-sp); }  /* SP */
-    }
+    @media (max-width: 759px) { #header { height: var(--header-height-sp); } }
 
-
-    /* ─────────────────────────────────
-       ヘッダー①：サイトロゴ + 右エリア
-       ───────────────────────────────── */
     #header1 {
-      position: absolute;
-      top: 0; left: 0; right: 0;
+      position: absolute; top: 0; left: 0; right: 0;
       height: var(--header1-height);
       background: var(--color-main);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 12px;
-      z-index: 1;  /* ヘッダー内での重なり順: header①はheader②の後ろ */
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+      z-index: 1;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
-
-    /* ロゴエリア（左） */
     #logo-area {
       /*
        * ★拡張予定: ロゴ画像（PNG）への差し替え手順
        *   1. この div 内のテキスト「サイトロゴ」を削除
        *   2. <img src="assets/logo.png" alt="sunshaura"> を追加
        *   3. height / min-width を画像サイズに合わせて調整
-       *   4. background / border-radius は画像に合わせて変更または削除
        */
-      height: 44px;
-      min-width: 108px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 14px;
-      color: var(--color-white);
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
+      height: 44px; min-width: 108px;
+      background: rgba(255, 255, 255, 0.15); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 14px; color: var(--color-white);
+      font-weight: 800; font-size: 14px; letter-spacing: 0.05em; flex-shrink: 0;
     }
-
-    /* 右エリア（ブランク → 後から追加） */
     #header1-extra {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
+      flex: 1; display: flex; align-items: center; justify-content: flex-end;
       /*
-       * ★拡張予定: 右側エリアにコンテンツを追加する手順
-       *   例1: SNSアイコン
-       *        <a href="https://twitter.com/xxx" target="_blank">
-       *          <img src="assets/icon_x.png" alt="X" width="24" height="24">
-       *        </a>
-       *   例2: キャッチコピーテキスト
-       *        <span style="color:rgba(255,255,255,0.8); font-size:13px;">〜キャッチコピー〜</span>
-       *   ★ コンテンツを追加したら下の .placeholder-label 要素ごと削除してください
+       * ★拡張予定: 右側エリアにコンテンツを追加
+       *   追加後は下の .placeholder-label 要素ごと削除
        */
     }
-
-    /* 実装前の目印テキスト（コンテンツ追加後に削除） */
     .placeholder-label {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.4);
-      border: 1px dashed rgba(255, 255, 255, 0.3);
-      border-radius: 6px;
-      padding: 3px 10px;
-      pointer-events: none;
-      white-space: nowrap;
+      font-size: 11px; color: rgba(255, 255, 255, 0.4);
+      border: 1px dashed rgba(255, 255, 255, 0.3); border-radius: 6px;
+      padding: 3px 10px; pointer-events: none; white-space: nowrap;
     }
 
-
-    /* ─────────────────────────────────────
-       ヘッダー②：ナビゲーションボタン領域
-       ───────────────────────────────────── */
     #header2 {
-      position: absolute;
-      height: var(--header2-height);
+      position: absolute; height: var(--header2-height);
       background: var(--color-main-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;  /* ボタンを中央揃え */
-      padding: 0 8px;
-      gap: 6px;
-      z-index: 2;  /* ヘッダー内での重なり順: header②はheader①の前 */
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 8px; gap: 6px; z-index: 2;
     }
-
-    /* PC: ヘッダー①に重なる（ロゴ幅の右から始まる） */
     @media (min-width: 760px) {
-      #header2 {
-        top: 0;
-        left: 152px;  /* logo(108px) + padding(16px) + gap(12px) + 余白(16px) */
-        right: 0;
-      }
+      #header2 { top: 0; left: 152px; right: 0; }
     }
-
-    /* SP: ヘッダー①の真下 */
     @media (max-width: 759px) {
-      #header2 {
-        top: var(--header1-height);
-        left: 0;
-        right: 0;
-      }
+      #header2 { top: var(--header1-height); left: 0; right: 0; }
     }
 
-    /* ボタン群のオーバーフローを隠すラッパー */
     #nav-scroll-wrap {
-      flex: 1;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
+      flex: 1; overflow: hidden; display: flex; align-items: center;
     }
-
-    /* ボタン群（translateX でスライド） */
     #nav-buttons-wrap {
-      display: flex;
-      gap: var(--nav-btn-gap);
+      display: flex; gap: var(--nav-btn-gap);
       transition: transform var(--duration-ui) ease;
-      will-change: transform;
-      /* ≤3ボタン時は中央揃え（JSが margin: auto を制御） */
-      margin: 0 auto;
+      will-change: transform; margin: 0 auto;
     }
 
-    /*
-     * ★ ボタンが4つ以上になると JS が #nav-scroll-wrap に
-     *   .has-overflow クラスを付与し、以下が有効になる
-     *
-     * 両端フェードのマスクは JS で動的に制御する（updateNavArrows参照）
-     *   ・左端にいる時  → 左フェードなし / 右フェードあり
-     *   ・右端にいる時  → 左フェードあり / 右フェードなし
-     *   ・中間にいる時  → 両端フェードあり
-     */
-
-    /* ナビボタン */
     .nav-btn {
       /*
        * ★拡張予定: ナビボタンを追加する手順
-       *   1. この #nav-buttons-wrap 内に以下を追記:
-       *        <button class="nav-btn"
-       *                data-page="ページID"
-       *                onclick="navigateTo('ページID', this)">
-       *          ページ名
-       *        </button>
-       *
-       *   2. #body-content 内に対応するページ div も追加:
-       *        <div class="page" id="page-ページID">
-       *          ... コンテンツ ...
-       *        </div>
-       *
-       *   ★ ボタン数が 3 を超えると左右スライド矢印が自動で表示されます
-       *      (閾値は JS の CONFIG.NAV_VISIBLE で変更可)
+       *   #nav-buttons-wrap 内に追記 + 対応ページdivを #body-content に追加
        */
-      min-width: var(--nav-btn-width);
-      height: 40px;
-      background: rgba(255, 255, 255, 0.88);
-      color: var(--color-main);
-      border: none;
-      border-radius: 50px;
-      padding: 0 18px;
-      font-family: inherit;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition:
-        background var(--duration-ui),
-        color      var(--duration-ui),
-        transform  var(--duration-ui),
-        box-shadow var(--duration-ui);
+      min-width: var(--nav-btn-width); height: 40px;
+      background: rgba(255, 255, 255, 0.88); color: var(--color-main);
+      border: none; border-radius: 50px; padding: 0 18px;
+      font-family: inherit; font-weight: 700; font-size: 14px;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      transition: background var(--duration-ui), color var(--duration-ui),
+        transform var(--duration-ui), box-shadow var(--duration-ui);
     }
     .nav-btn:hover {
-      background: var(--color-white);
-      transform: translateY(-2px);
+      background: var(--color-white); transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .nav-btn.active {
-      background: var(--color-main);
-      color: var(--color-white);
+      background: var(--color-main); color: var(--color-white);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
-
-    /* スライド矢印ボタン（ボタン4つ以上で JS が表示する） */
     .nav-arrow {
-      background: rgba(255, 255, 255, 0.18);
-      color: var(--color-white);
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      line-height: 1;
-      display: none; /* JS が flex に変更する */
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background var(--duration-ui);
+      background: rgba(255, 255, 255, 0.18); color: var(--color-white);
+      border: none; width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: 18px; line-height: 1;
+      display: none; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background var(--duration-ui);
     }
     .nav-arrow:hover   { background: rgba(255, 255, 255, 0.32); }
     .nav-arrow:disabled { opacity: 0.3; cursor: default; }
 
-
-    /* =====================================================
-       ローディング通知バー
-       ヘッダーの裏（top:0）に常駐し、遷移時にヘッダー下へスライドアウト
-
-       ・通常時 : top:0 / z-index:3 でヘッダー①(z-index:4)の裏に隠れている
-       ・遷移時 : translateY(ヘッダー高さ) でヘッダー下に50px分スライドして見える
-       ・panel(z-index:2) より前面のため、パネルが上がってきても
-         ローディング通知の表示が勝つ
-       ===================================================== */
     #loading-bar {
-      position: fixed;
-      top: 0;
-      left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       height: var(--loading-bar-height);
-      background: var(--color-loading-bar);
-      color: var(--color-white);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3;                 /* body(1) < panel(2) < bar(3) < header①(4) */
-      /* ヘッダーの裏に隠れた状態（translateY(0) = top:0 にいる） */
-      transform: translateY(0);
+      background: var(--color-loading-bar); color: var(--color-white);
+      font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 3; transform: translateY(0);
       transition: transform var(--duration-ui) ease;
     }
+    @media (min-width: 760px) { #loading-bar.reveal { transform: translateY(var(--header-height-pc)); } }
+    @media (max-width: 759px) { #loading-bar.reveal { transform: translateY(var(--header-height-sp)); } }
+    @keyframes loadingDots { 0% { content: '・'; } 33% { content: '・・'; } 66% { content: '・・・'; } }
+    .dots-anim::after { content: '・'; animation: loadingDots 1.2s steps(1, end) infinite; }
 
-    /* PC: 遷移時にヘッダー①②が重なる60pxの下へスライドアウト */
-    @media (min-width: 760px) {
-      #loading-bar.reveal {
-        transform: translateY(var(--header-height-pc));
-      }
-    }
-    /* SP: 遷移時にヘッダー①②が積み上がる120pxの下へスライドアウト */
-    @media (max-width: 759px) {
-      #loading-bar.reveal {
-        transform: translateY(var(--header-height-sp));
-      }
-    }
-
-    /* 「移動中」のドット点滅アニメーション */
-    @keyframes loadingDots {
-      0%  { content: '・'; }
-      33% { content: '・・'; }
-      66% { content: '・・・'; }
-    }
-    .dots-anim::after {
-      content: '・';
-      animation: loadingDots 1.2s steps(1, end) infinite;
-    }
-
-
-    /* =====================================================
-       body領域（ページコンテンツを包むコンテナ）
-       ===================================================== */
     #body-content {
-      padding-top: var(--header-height-pc);  /* ヘッダー分の余白 */
-      min-height: 100vh;
-      position: relative;
-      z-index: 1;
-      /* ローディングバー(z-index:0)を隠すために背景色を明示する
-         この背景色がある限りバーは見えない。bodyが下がった時だけ覗く */
+      padding-top: var(--header-height-pc); min-height: 100vh;
+      position: relative; z-index: 1;
       background: var(--color-main-pale);
       transition: transform var(--duration-ui) ease;
     }
-    @media (max-width: 759px) {
-      #body-content { padding-top: var(--header-height-sp); }
-    }
+    @media (max-width: 759px) { #body-content { padding-top: var(--header-height-sp); } }
+    #body-content.loading { transform: translateY(var(--loading-bar-height)); }
 
-    /* ローディング開始時: body を loading-bar 分だけ下にずらす */
-    #body-content.loading {
-      transform: translateY(var(--loading-bar-height));
-    }
-
-
-    /* =====================================================
-       ローディングパネル
-       ボタン押下時に画面下からせり上がりbodyを覆うパネル
-       ===================================================== */
     #loading-panel {
-      position: fixed;
-      left: 0; right: 0;
-      bottom: 0;
-      height: 100vh;           /* 画面全体を覆う高さ */
+      position: fixed; left: 0; right: 0; bottom: 0; height: 100vh;
       background: var(--color-main-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 22px;
-      z-index: 2;              /* body(1) < panel(2) < bar(3) < header①(4) < header②(5) */
-                               /* bar(3)が上なのでパネルが上がってきても通知バーの表示が勝つ */
-
-      /* パネル内コンテンツをヘッダー+通知バーの下に表示するための余白 */
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 22px; z-index: 2;
       padding-top: calc(var(--header-height-pc) + var(--loading-bar-height));
-
-      /* 通常は画面外（下）に隠れている */
       transform: translateY(100%);
       transition: transform var(--duration-panel) var(--ease-decel);
     }
     @media (max-width: 759px) {
-      #loading-panel {
-        padding-top: calc(var(--header-height-sp) + var(--loading-bar-height));
-      }
+      #loading-panel { padding-top: calc(var(--header-height-sp) + var(--loading-bar-height)); }
     }
-
-    /* せり上がり（画面に入る） */
-    #loading-panel.slide-up {
-      transform: translateY(0);
-    }
-    /* 降下（画面外に戻る） = slide-up を外すと自動で戻る */
-
-
-    /* パネル内アイコン */
+    #loading-panel.slide-up { transform: translateY(0); }
     #panel-icon {
       /*
-       * ★拡張予定: アイコン画像への差し替え手順
-       *   1. この div の中身の絵文字を削除
-       *   2. 以下のように <img> タグを配置:
-       *        <img src="assets/panel-icon.png" alt=""
-       *             style="width:90px; height:90px;
-       *                    border-radius:50%; object-fit:cover;">
-       *   3. 背景の background / border-radius は不要なら削除
+       * ★拡張予定: アイコン画像への差し替え
+       *   <img src="assets/panel-icon.png" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
        */
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
+      width: 90px; height: 90px; border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 44px;
+      display: flex; align-items: center; justify-content: center; font-size: 44px;
     }
-
-    /* パネル内メッセージ */
     #panel-message {
-      color: var(--color-white);
-      font-size: clamp(20px, 4vw, 28px);
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      color: var(--color-white); font-size: clamp(20px, 4vw, 28px);
+      font-weight: 800; letter-spacing: 0.08em;
     }
 
-
-    /* =====================================================
-       各ページの表示切り替え
-       .active クラスがついているページだけ表示
-       ===================================================== */
     .page         { display: none; }
     .page.active  { display: block; }
 
-
-    /* ─────────────────────────────────
-       ようこそページ（初期表示）
-       ───────────────────────────────── */
-    .welcome-inner {
-      padding: 52px 24px 48px;
-      max-width: 860px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .welcome-title {
-      font-size: clamp(30px, 6vw, 52px);
-      font-weight: 800;
-      color: var(--color-main);
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-    .welcome-sub {
-      font-size: clamp(14px, 2.2vw, 17px);
-      color: var(--color-text);
-      opacity: 0.65;
-      line-height: 1.9;
-      margin-bottom: 44px;
-    }
+    .welcome-inner { padding: 52px 24px 48px; max-width: 860px; margin: 0 auto; text-align: center; }
+    .welcome-title { font-size: clamp(30px, 6vw, 52px); font-weight: 800; color: var(--color-main); line-height: 1.2; margin-bottom: 16px; }
+    .welcome-sub { font-size: clamp(14px, 2.2vw, 17px); color: var(--color-text); opacity: 0.65; line-height: 1.9; margin-bottom: 44px; }
     .welcome-visual {
       /*
-       * ★拡張予定: トップビジュアルを追加する手順
-       *   例1: 静止画像
-       *        <img src="assets/top-visual.jpg" alt="トップビジュアル"
-       *             style="width:100%; height:100%;
-       *                    object-fit:cover; border-radius:18px;">
-       *   例2: スライドショー
-       *        スライドショー用の div / JS をここに配置
-       *   ★ 追加後は下の <span>（プレースホルダーテキスト）を削除
+       * ★拡張予定: トップビジュアルを追加
+       *   <img src="assets/top-visual.jpg"> または スライドショーを配置
+       *   追加後は <span> を削除
        */
-      width: 100%;
-      max-width: 640px;
-      aspect-ratio: 16 / 9;
-      background: linear-gradient(
-        135deg,
-        var(--color-main) 0%,
-        var(--color-main-dark) 100%
-      );
-      border-radius: 20px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255, 255, 255, 0.35);
-      font-size: 13px;
+      width: 100%; max-width: 640px; aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--color-main) 0%, var(--color-main-dark) 100%);
+      border-radius: 20px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255, 255, 255, 0.35); font-size: 13px;
       border: 2px dashed rgba(255, 255, 255, 0.2);
     }
 
-
-    /* ─────────────────────────────────
-       その他ページ（拡張予定プレースホルダー）
-       ───────────────────────────────── */
-    .page-placeholder {
-      padding: 80px 24px;
-      text-align: center;
-    }
-    .placeholder-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--color-placeholder);
-      margin-bottom: 12px;
-      opacity: 0.7;
-    }
-    .placeholder-desc {
-      font-size: 14px;
-      color: var(--color-placeholder);
-      opacity: 0.55;
-    }
+    .page-placeholder { padding: 80px 24px; text-align: center; }
+    .placeholder-title { font-size: 24px; font-weight: 800; color: var(--color-placeholder); margin-bottom: 12px; opacity: 0.7; }
+    .placeholder-desc { font-size: 14px; color: var(--color-placeholder); opacity: 0.55; }
     .placeholder-box {
-      display: inline-block;
-      margin-top: 24px;
-      padding: 14px 28px;
-      border: 2px dashed var(--color-placeholder);
-      border-radius: 12px;
-      font-size: 12px;
-      color: var(--color-placeholder);
-      opacity: 0.5;
+      display: inline-block; margin-top: 24px; padding: 14px 28px;
+      border: 2px dashed var(--color-placeholder); border-radius: 12px;
+      font-size: 12px; color: var(--color-placeholder); opacity: 0.5;
     }
 
     /* =====================================================
        アバター改変ページ
        ===================================================== */
-
     :root {
       --avt-genre-h:       50px;
       --avt-category-h:    55px;
       --avt-optext-h:      40px;
       --avt-thumb-gap:     10px;
       --avt-frame-a-h:     12px;
-      --avt-door-bar-h:    22px;   /* 扉が静止時に見える高さ */
-      --avt-door-dur:      0.4s;   /* 扉アニメーション時間 */
-      /* ★拡張予定: 背景スクロール速度を変える場合は下記3行を変更
-         X:Y比 = 4:1（≒ 0.2:0.05）を維持すること */
+      --avt-door-bar-h:    22px;
+      --avt-door-dur:      0.4s;
       --avt-bg-scroll-x:   200px;
       --avt-bg-scroll-y:    50px;
       --avt-bg-scroll-dur: 10s;
@@ -535,11 +233,23 @@
       --avt-name-blob:     rgba(175, 165, 170, 0.45);
       --avt-frame-a-clr:   #FF9500;
       --avt-filter-clr:    #00BBCC;
+
+      /* ★ infoImg の表示サイズ（ここを変えるだけで変更できます）
+         例: cover（全体を覆う）/ contain（全体を収める）/ auto（元のサイズ）
+             100% 100%（枠に合わせて引き伸ばす）/ 200px 100px（px指定） */
+      --avt-info-img-size: 100% 100%;
+
+      /* ★ リファレンスアイコンのサイズ（ここを変えるだけで変更できます） */
+      --avt-ref-size: 34px;
+
+      /* ★ PCでのアバター画像の横位置（ここを変えるだけで変更できます）
+         right bottom = 右端 / center bottom = 中央 / 70% bottom = やや右寄り中央
+         数値が大きいほど右寄り、小さいほど左寄り                              */
+      --avt-main-img-pos-pc: 65% bottom;
     }
 
     #avt-genre-bar {
-      height: var(--avt-genre-h);
-      background: rgba(0,0,0,0.06);
+      height: var(--avt-genre-h); background: rgba(0,0,0,0.06);
       display: flex; align-items: center; justify-content: center;
       gap: 12px; padding: 0 16px; flex-wrap: wrap;
     }
@@ -563,8 +273,7 @@
     .avt-genre-btn:hover { opacity: 0.8; transform: translateY(-1px); }
 
     #avt-category-bar {
-      height: var(--avt-category-h);
-      background: rgba(0,0,0,0.04);
+      height: var(--avt-category-h); background: rgba(0,0,0,0.04);
       border-bottom: 1px solid rgba(0,0,0,0.07);
       display: flex; align-items: center; justify-content: center;
       gap: 10px; padding: 0 16px;
@@ -573,11 +282,9 @@
       /*
        * ★拡張予定: カテゴリを追加する場合は #avt-category-bar 内に
        *   同形式のボタンを追記し、avatars.json の "category" と一致させること
-       *   サイズは width / height で調整
        */
       width: 44px; height: 44px; border-radius: 8px;
-      border: 3px solid transparent;
-      background: rgba(0,0,0,0.08);
+      border: 3px solid transparent; background: rgba(0,0,0,0.08);
       cursor: pointer; padding: 0; overflow: hidden; opacity: 0.4;
       transition: all var(--duration-ui);
     }
@@ -590,14 +297,12 @@
 
     #avt-display-area {
       position: relative; width: 100%;
-      aspect-ratio: 3 / 1;  /* PC: 横3:縦1 */
+      aspect-ratio: 3 / 1;
       overflow: hidden; user-select: none;
     }
-    @media (max-width: 759px) {
-      #avt-display-area { aspect-ratio: 2 / 3; }  /* SP: 横1:縦1.5 */
-    }
+    @media (max-width: 759px) { #avt-display-area { aspect-ratio: 2 / 3; } }
 
-    /* ⑦ 背景 (z-index:10) */
+    /* ⑦ 背景 */
     #avt-bg { position: absolute; inset: 0; z-index: 10; }
     #avt-bg-img {
       position: absolute; inset: 0;
@@ -615,7 +320,7 @@
       to   { background-position: var(--avt-bg-scroll-x) var(--avt-bg-scroll-y); }
     }
 
-    /* ⑥ 枠C 斜め装飾 (z-index:20) */
+    /* ⑥ 枠C 斜め装飾 */
     #avt-frame-c-top, #avt-frame-c-bottom {
       /*
        * ★拡張予定: 装飾の高さを変えたい場合は height を調整
@@ -630,29 +335,25 @@
     }
     #avt-frame-c-top    { top: 0; }
     #avt-frame-c-bottom { bottom: 0; }
-    /* SP: PC比率（15vw = 45% × 画面幅/3）に固定して画像の歪みを防ぐ */
     @media (max-width: 759px) {
-      #avt-frame-c-top, #avt-frame-c-bottom {
-        height: 15vw;
-      }
+      #avt-frame-c-top, #avt-frame-c-bottom { height: 15vw; }
     }
 
-    /* ⑤ 情報テキスト枠 (z-index:30) */
+    /* ⑤ 情報テキスト枠 */
     #avt-info {
       position: absolute; top: 0; bottom: 0; left: 0; width: 45%;
       z-index: 30; display: flex; flex-direction: column;
       justify-content: center; padding: 12px 28px;
-      /* infoImg が設定されていない場合のデフォルト背景 */
       background-color: var(--avt-info-bg);
-      background-size: cover;
+      /* ★ infoImg の表示サイズは :root の --avt-info-img-size で変更できます */
+      background-size: var(--avt-info-img-size);
       background-position: center;
     }
     @media (max-width: 759px) { #avt-info { width: 65%; padding: 10px 16px; } }
     #avt-name-wrap { position: relative; margin-bottom: 6px; }
     #avt-name-blob {
       position: absolute; inset: -14px -22px;
-      background: var(--avt-name-blob);
-      border-radius: 42% 55% 50% 44%;
+      background: var(--avt-name-blob); border-radius: 42% 55% 50% 44%;
       filter: blur(16px); z-index: 0; pointer-events: none;
     }
     #avt-name {
@@ -674,56 +375,41 @@
     @media (max-width: 759px) { #avt-desc { -webkit-line-clamp: 4; } }
     #avt-items-label { font-size: 10px; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
 
-    :root {
-      /* ★ リファレンスアイコンのサイズ（ここを変えるだけで変更できます） */
-      --avt-ref-size: 34px;
-    }
-
-    /* ④ リファレンス枠（⑤情報テキスト枠の内部に配置・フロー表示） */
+    /* ④ リファレンス枠 */
     #avt-refs {
       /*
        * ★拡張予定: リファレンスアイテムのサイズを変えたい場合は
        *   :root の --avt-ref-size を変更してください
        */
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 4px;
+      display: flex; align-items: center; gap: 6px;
+      flex-wrap: wrap; margin-top: 4px;
     }
     .avt-ref-item {
       display: block;
-      width:  var(--avt-ref-size);
-      height: var(--avt-ref-size);
-      border-radius: 6px;
-      overflow: hidden;
-      /* 画像未設定時のプレースホルダーは非表示（border/background を透明に） */
-      border: 2px solid transparent;
-      background: transparent;
+      width: var(--avt-ref-size); height: var(--avt-ref-size);
+      border-radius: 6px; overflow: hidden;
+      border: 2px solid transparent; background: transparent;
       transition: transform var(--duration-ui), border-color var(--duration-ui);
     }
     .avt-ref-item:hover { transform: scale(1.12); border-color: white; }
     .avt-ref-item img   { width: 100%; height: 100%; object-fit: cover; }
 
-    /* ③ アバター枠 (z-index:50) */
+    /* ③ アバター枠 */
     #avt-main-img {
       position: absolute; right: 0; top: 0; bottom: 0; width: 50%;
       z-index: 50; background-size: contain;
-      background-repeat: no-repeat; background-position: right bottom;
+      background-repeat: no-repeat;
+      /* SP: right bottom のまま（現状完璧） */
+      background-position: right bottom;
       pointer-events: none;
+    }
+    /* PC: :root の --avt-main-img-pos-pc で横位置を調整できます */
+    @media (min-width: 760px) {
+      #avt-main-img { background-position: var(--avt-main-img-pos-pc); }
     }
     @media (max-width: 759px) { #avt-main-img { width: 60%; } }
 
-    /* ② 扉 (z-index:60)
-       開状態: height = 枠A + 扉バー分（細いバーが見えるだけ）
-       閉状態: door-closed クラスで height: 50% に拡張
-       がたがたの噛み合わせは clip-path の polygon で常時表現
-       ────────────────────────────────
-       歯の仕様（全幅を16等分、奇数番が歯・偶数番がスキマ）:
-         歯幅  = 12.5% × 要素幅
-         歯の深さ = 要素高さの12%
-       上扉: 歯が下向き（閉時に下扉の隙間に噛み込む）
-       下扉: 歯が上向き（上扉の歯と左右が交互でピッタリ合う）  */
+    /* ② 扉 */
     .avt-door {
       position: absolute; left: 0; right: 0; z-index: 60;
       background-color: var(--color-main);
@@ -731,8 +417,6 @@
         -55deg, transparent 0px, transparent 14px,
         rgba(255,255,255,0.07) 14px, rgba(255,255,255,0.07) 18px
       );
-      /* clip-pathではなくheightをアニメさせる
-         こうすると歯の形を保ちながらスライドする */
       transition: height var(--avt-door-dur) cubic-bezier(0.65, 0, 0.35, 1);
     }
     .avt-door::before {
@@ -745,49 +429,33 @@
         transparent           calc(50% + 4px)
       );
     }
-
-    /* 上扉: 歯が下向き
-       x= 0〜12.5%, 25〜37.5%, 50〜62.5%, 75〜87.5% が歯（下突出）
-       x= 12.5〜25%, 37.5〜50%, 62.5〜75%, 87.5〜100% が隙間         */
     #avt-door-top {
       top: 0;
-      height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h)); /* 開状態 */
+      height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h));
       clip-path: polygon(
-        0%    0%,   100%   0%,   100%   88%,
-        87.5% 88%,  87.5% 100%,
-        75%  100%,  75%    88%,
-        62.5% 88%,  62.5% 100%,
-        50%  100%,  50%    88%,
-        37.5% 88%,  37.5% 100%,
-        25%  100%,  25%    88%,
-        12.5% 88%,  12.5% 100%,
-        0%   100%
+        0% 0%, 100% 0%, 100% 88%,
+        87.5% 88%, 87.5% 100%, 75% 100%, 75% 88%,
+        62.5% 88%, 62.5% 100%, 50% 100%, 50% 88%,
+        37.5% 88%, 37.5% 100%, 25% 100%, 25% 88%,
+        12.5% 88%, 12.5% 100%, 0% 100%
       );
     }
-    #avt-door-top.door-closed { height: 50%; } /* 閉状態 */
-
-    /* 下扉: 歯が上向き（上扉と噛み合うよう左右が反転）
-       x= 12.5〜25%, 37.5〜50%, 62.5〜75%, 87.5〜100% が歯（上突出）
-       x= 0〜12.5%, 25〜37.5%, 50〜62.5%, 75〜87.5% が隙間            */
+    #avt-door-top.door-closed { height: 50%; }
     #avt-door-bottom {
       bottom: 0;
-      height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h)); /* 開状態 */
+      height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h));
       clip-path: polygon(
-        0%    12%,
-        12.5% 12%,  12.5%  0%,
-        25%    0%,  25%   12%,
-        37.5% 12%,  37.5%  0%,
-        50%    0%,  50%   12%,
-        62.5% 12%,  62.5%  0%,
-        75%    0%,  75%   12%,
-        87.5% 12%,  87.5%  0%,
-        100%   0%,
-        100% 100%,  0%   100%
+        0% 12%,
+        12.5% 12%, 12.5% 0%, 25% 0%, 25% 12%,
+        37.5% 12%, 37.5% 0%, 50% 0%, 50% 12%,
+        62.5% 12%, 62.5% 0%, 75% 0%, 75% 12%,
+        87.5% 12%, 87.5% 0%, 100% 0%,
+        100% 100%, 0% 100%
       );
     }
-    #avt-door-bottom.door-closed { height: 50%; } /* 閉状態 */
+    #avt-door-bottom.door-closed { height: 50%; }
 
-    /* ① 枠A（z-index:70・最前列・アニメーションで動かない） */
+    /* ① 枠A */
     .avt-frame-a {
       position: absolute; left: 0; right: 0;
       height: var(--avt-frame-a-h); background: var(--avt-frame-a-clr); z-index: 70;
@@ -795,27 +463,15 @@
     #avt-frame-a-top    { top: 0; }
     #avt-frame-a-bottom { bottom: 0; }
 
-    /* ── 操作テキスト ── */
     #avt-op-text {
       height: var(--avt-optext-h); display: flex; align-items: center;
       padding: 0 20px; font-size: clamp(14px, 2vw, 16px);
       font-weight: 700; color: var(--color-text);
     }
 
-    /* ── アバター表示領域＋操作テキストのラッパー ──
-       PCのみ画面幅の80%に絞って中央揃え
-       SP はそのまま全幅                           */
-    #avt-main-wrap {
-      width: 100%;
-    }
-    @media (min-width: 760px) {
-      #avt-main-wrap {
-        width: 80%;
-        margin: 0 auto;
-      }
-    }
+    #avt-main-wrap { width: 100%; }
+    @media (min-width: 760px) { #avt-main-wrap { width: 80%; margin: 0 auto; } }
 
-    /* ── サムネイル一覧 ── */
     #avt-thumb-grid {
       display: grid; grid-template-columns: repeat(4, 1fr);
       gap: var(--avt-thumb-gap); padding: 12px 16px 28px;
@@ -829,7 +485,6 @@
     .avt-thumb-item.selected {
       border-color: var(--color-main); box-shadow: 0 0 0 2px var(--color-main-light);
     }
-    /* PC用(4:3) / SP用(1:1) を出し分け */
     .avt-thumb-pc { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
     .avt-thumb-sp { display: none;  width: 100%; aspect-ratio: 1/1; object-fit: cover; }
     @media (max-width: 759px) {
@@ -841,279 +496,158 @@
 </head>
 <body>
 
-  <!-- ===================================================
-       ヘッダー
-       =================================================== -->
   <header id="header">
-
-    <!-- ヘッダー①：サイトロゴ + 右エリア -->
     <div id="header1">
-
-      <!-- ロゴ（左） -->
       <div id="logo-area">
-        <!-- ★拡張予定: ロゴ画像に差し替え（CSSコメント参照） -->
+        <!-- ★拡張予定: ロゴ画像に差し替え -->
         サイトロゴ
       </div>
-
-      <!-- 右エリア -->
       <div id="header1-extra">
-        <!-- ★拡張予定: SNSアイコンなどをここに追加（CSSコメント参照）
-             追加後はこの <span> ごと削除 -->
+        <!-- ★拡張予定: SNSアイコンなどをここに追加。追加後はこの <span> ごと削除 -->
         <span class="placeholder-label">HTMLは後から追加</span>
       </div>
+    </div>
 
-    </div><!-- /#header1 -->
-
-
-    <!-- ヘッダー②：ナビゲーションボタン -->
     <div id="header2">
-
-      <!-- スライド矢印（左） ※ボタン4つ以上の時のみ表示 -->
-      <button class="nav-arrow" id="nav-prev"
-              onclick="slideNav(-1)" aria-label="前のボタンへ">‹</button>
-
-      <!-- ナビボタン群 -->
+      <button class="nav-arrow" id="nav-prev" onclick="slideNav(-1)" aria-label="前のボタンへ">‹</button>
       <div id="nav-scroll-wrap">
         <div id="nav-buttons-wrap">
+          <!--
+            ★拡張予定: ボタンを追加する場合は以下の形式で追記
+              <button class="nav-btn" data-page="ページID" onclick="navigateTo('ページID', this)">ページ名</button>
+              対応するページ div（#body-content 内）も忘れずに追加
+          -->
+          <button class="nav-btn" data-page="avatar"  onclick="navigateTo('avatar', this)">アバター改変</button>
+          <button class="nav-btn" data-page="world"   onclick="navigateTo('world', this)">作ったワールド</button>
+          <button class="nav-btn" data-page="shop"    onclick="navigateTo('shop', this)">ショップ</button>
+          <button class="nav-btn" data-page="photo"   onclick="navigateTo('photo', this)">フォトギャラリー</button>
+          <button class="nav-btn" data-page="event"   onclick="navigateTo('event', this)">イベント</button>
+          <button class="nav-btn" data-page="about"   onclick="navigateTo('about', this)">このサイトについて</button>
+        </div>
+      </div>
+      <button class="nav-arrow" id="nav-next" onclick="slideNav(1)" aria-label="次のボタンへ">›</button>
+    </div>
+  </header>
 
-          <!-- ★拡張予定: ボタンを追加する場合は以下の形式で追記
-               <button class="nav-btn"
-                       data-page="ページID"
-                       onclick="navigateTo('ページID', this)">
-                 ページ名
-               </button>
-               ★ 対応するページ div（#body-content 内）も忘れずに追加
-               ★ ボタンが 4 つ以上になると左右スライドが自動で有効になります -->
-
-          <button class="nav-btn" data-page="avatar"
-                  onclick="navigateTo('avatar', this)">アバター改変</button>
-
-          <button class="nav-btn" data-page="world"
-                  onclick="navigateTo('world', this)">作ったワールド</button>
-
-          <button class="nav-btn" data-page="shop"
-                  onclick="navigateTo('shop', this)">ショップ</button>
-
-          <button class="nav-btn" data-page="photo"
-                  onclick="navigateTo('photo', this)">フォトギャラリー</button>
-
-          <button class="nav-btn" data-page="event"
-                  onclick="navigateTo('event', this)">イベント</button>
-
-          <button class="nav-btn" data-page="about"
-                  onclick="navigateTo('about', this)">このサイトについて</button>
-
-        </div><!-- /#nav-buttons-wrap -->
-      </div><!-- /#nav-scroll-wrap -->
-
-      <!-- スライド矢印（右） ※ボタン4つ以上の時のみ表示 -->
-      <button class="nav-arrow" id="nav-next"
-              onclick="slideNav(1)" aria-label="次のボタンへ">›</button>
-
-    </div><!-- /#header2 -->
-
-  </header><!-- /#header -->
-
-
-  <!-- ローディング通知バー（遷移中にヘッダー下に出現） -->
   <div id="loading-bar" aria-live="polite">
     <span id="loading-bar-text"></span>
   </div>
 
-
-  <!-- ローディングパネル（遷移中に画面下からせり上がる） -->
   <div id="loading-panel" aria-hidden="true">
-    <div id="panel-icon">
-      <!-- ★拡張予定: アイコン画像に差し替え（CSSコメント参照） -->
-      🌸
-    </div>
+    <div id="panel-icon">🌸</div>
     <div id="panel-message">ちょっとまってね...</div>
   </div>
 
-
-  <!-- ===================================================
-       body 領域（ページコンテンツ）
-       =================================================== -->
   <main id="body-content">
 
-    <!-- ようこそページ（初期表示） -->
     <div class="page active" id="page-welcome">
       <div class="welcome-inner">
         <h1 class="welcome-title">ようこそ！🌸</h1>
-        <p class="welcome-sub">
-          VRChatで作ったコンテンツをまとめたサイトです。<br>
-          上のボタンからページを選んでね
-        </p>
+        <p class="welcome-sub">VRChatで作ったコンテンツをまとめたサイトです。<br>上のボタンからページを選んでね</p>
         <div class="welcome-visual">
-          <!-- ★拡張予定: トップビジュアルをここに追加（CSSコメント参照） -->
+          <!-- ★拡張予定: トップビジュアルをここに追加 -->
           <span>トップビジュアルをここに追加</span>
         </div>
       </div>
-    </div><!-- /#page-welcome -->
+    </div>
 
-
-    <!-- アバター改変ページ -->
     <div class="page" id="page-avatar">
 
-      <!-- ジャンル選択バー（高さ: --avt-genre-h） -->
       <div id="avt-genre-bar">
         <!--
           ★拡張予定: ジャンルを追加する場合
-          1. 以下の形式でボタンを追記:
-             <button class="avt-genre-btn" data-genre="ジャンル名"
-                     onclick="avtToggleGenre(this.dataset.genre,this)">ジャンル名</button>
-          2. avatars.json の "genre" フィールドと完全一致させること
+            <button class="avt-genre-btn" data-genre="ジャンル名"
+                    onclick="avtToggleGenre(this.dataset.genre,this)">ジャンル名</button>
+            avatars.json の "genre" フィールドと完全一致させること
         -->
-        <button class="avt-genre-btn" data-genre="元ネタあり（別アバター）"
-                onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（別アバター）</button>
-        <button class="avt-genre-btn" data-genre="元ネタあり（その他）"
-                onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（その他）</button>
-        <button class="avt-genre-btn" data-genre="元ネタなし"
-                onclick="avtToggleGenre(this.dataset.genre,this)">元ネタなし</button>
+        <button class="avt-genre-btn" data-genre="元ネタあり（別アバター）" onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（別アバター）</button>
+        <button class="avt-genre-btn" data-genre="元ネタあり（その他）"     onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（その他）</button>
+        <button class="avt-genre-btn" data-genre="元ネタなし"               onclick="avtToggleGenre(this.dataset.genre,this)">元ネタなし</button>
       </div>
 
-      <!-- カテゴリ選択バー（高さ: --avt-category-h） -->
       <div id="avt-category-bar">
         <!--
           ★拡張予定: カテゴリを追加する場合
-          1. 以下の形式でボタンを追記:
-             <button class="avt-cat-btn" data-category="カテゴリ名"
-                     onclick="avtToggleCat(this.dataset.category,this)">
-               <img src="assets/images/categories/xxx.png" alt="カテゴリ名">
-             </button>
-          2. avatars.json の "category" フィールドと完全一致させること
-          3. assets/images/categories/ に対応画像を配置すること
+            <button class="avt-cat-btn" data-category="カテゴリ名"
+                    onclick="avtToggleCat(this.dataset.category,this)">
+              <img src="assets/images/categories/xxx.png" alt="カテゴリ名">
+            </button>
+            avatars.json の "category" と一致させること
         -->
-        <button class="avt-cat-btn" data-category="まめひなた"
-                onclick="avtToggleCat(this.dataset.category,this)">
+        <button class="avt-cat-btn" data-category="まめひなた" onclick="avtToggleCat(this.dataset.category,this)">
           <!-- ★拡張予定: src にカテゴリ画像パスを設定 -->
           <img src="assets/images/categories/mame_hinata.png" alt="まめひなた">
         </button>
-        <button class="avt-cat-btn" data-category="フォシュニア"
-                onclick="avtToggleCat(this.dataset.category,this)">
+        <button class="avt-cat-btn" data-category="フォシュニア" onclick="avtToggleCat(this.dataset.category,this)">
           <img src="assets/images/categories/foshunya.png" alt="フォシュニア">
         </button>
-        <button class="avt-cat-btn" data-category="シャロ"
-                onclick="avtToggleCat(this.dataset.category,this)">
+        <button class="avt-cat-btn" data-category="シャロ" onclick="avtToggleCat(this.dataset.category,this)">
           <img src="assets/images/categories/sharo.png" alt="シャロ">
         </button>
-        <button class="avt-cat-btn" data-category="その他"
-                onclick="avtToggleCat(this.dataset.category,this)">
+        <button class="avt-cat-btn" data-category="その他" onclick="avtToggleCat(this.dataset.category,this)">
           <img src="assets/images/categories/other.png" alt="その他">
         </button>
       </div>
 
-      <!-- アバター表示領域（画面幅100%） -->
       <div id="avt-display-area">
-
-          <!-- ⑦ 背景（最後列 z-index:10） -->
-          <div id="avt-bg">
-            <!-- ★拡張予定: bgImg でアバターごとに背景画像を指定 -->
-            <div id="avt-bg-img"></div>
-            <!-- ★拡張予定: bgPattern が設定されたアバターでのみスクロールアニメが動作 -->
-            <div id="avt-bg-pattern"></div>
+        <div id="avt-bg">
+          <div id="avt-bg-img"></div>
+          <div id="avt-bg-pattern"></div>
+        </div>
+        <div id="avt-frame-c-top"></div>
+        <div id="avt-frame-c-bottom"></div>
+        <div id="avt-info">
+          <div id="avt-name-wrap">
+            <div id="avt-name-blob"></div>
+            <div id="avt-name">アバターを選択してください</div>
+            <div id="avt-name-line"></div>
           </div>
+          <div id="avt-desc"></div>
+          <div id="avt-items-label">使用したアイテム</div>
+          <!-- ④ リファレンス枠（orgAvt の内容がJSで動的挿入）
+               ★拡張予定: アバターの orgAvt にアイテム情報を追加 -->
+          <div id="avt-refs"></div>
+        </div>
+        <div id="avt-main-img"></div>
+        <div class="avt-door" id="avt-door-top"></div>
+        <div class="avt-door" id="avt-door-bottom"></div>
+        <div class="avt-frame-a" id="avt-frame-a-top"></div>
+        <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
+      </div>
 
-          <!-- ⑥ 枠C 斜め装飾（z-index:20） -->
-          <!-- ★拡張予定: frameCTop / frameCBottom でアバターごとに画像を個別指定 -->
-          <div id="avt-frame-c-top"></div>
-          <div id="avt-frame-c-bottom"></div>
-
-          <!-- ⑤ 情報テキスト枠（z-index:30）
-               ④リファレンス枠も内部に含む（items-labelの直下にフロー配置） -->
-          <div id="avt-info">
-            <div id="avt-name-wrap">
-              <div id="avt-name-blob"></div>
-              <div id="avt-name">アバターを選択してください</div>
-              <div id="avt-name-line"></div>
-            </div>
-            <div id="avt-desc"></div>
-            <div id="avt-items-label">使用したアイテム</div>
-            <!-- ④ リファレンス枠（orgAvt の内容がJSで動的挿入）
-                 ★拡張予定: アバターの orgAvt にアイテム情報を追加 -->
-            <div id="avt-refs"></div>
-          </div>
-
-          <!-- ③ アバター枠（z-index:50）mainImg がJSで background-image に設定 -->
-          <!-- ★拡張予定: mainImg に画像パスを設定 -->
-          <div id="avt-main-img"></div>
-
-          <!-- ② 扉（z-index:60）アバター切り替え時に閉まり→開く
-               がたがた: 上扉=歯が下向き、下扉=歯が上向きで噛み合う -->
-          <div class="avt-door" id="avt-door-top"></div>
-          <div class="avt-door" id="avt-door-bottom"></div>
-
-          <!-- ① 枠A（z-index:70・最前列・アニメーションで動かない） -->
-          <div class="avt-frame-a" id="avt-frame-a-top"></div>
-          <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
-
-      </div><!-- /#avt-display-area -->
-
-      <!-- 操作テキスト＋サムネイル一覧（PC時80%幅・中央揃え） -->
       <div id="avt-main-wrap">
-
-        <!-- 操作テキスト（高さ: --avt-optext-h） -->
         <div id="avt-op-text">見たいアバターをクリック：</div>
-
-        <!-- サムネイル一覧
-             ★拡張予定: アバターを追加する場合は avatars.json にエントリを追記するだけ
-                        このHTMLは変更不要
-        -->
         <div id="avt-thumb-grid">
           <div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">
             読み込み中...
           </div>
         </div>
-
-      </div><!-- /#avt-main-wrap -->
+      </div>
 
     </div><!-- /#page-avatar -->
 
-
-    <!-- 作ったワールドページ -->
     <div class="page" id="page-world">
       <div class="page-placeholder">
         <p class="placeholder-title">作ったワールド</p>
         <p class="placeholder-desc">コンテンツは後から追加します</p>
-        <div class="placeholder-box">
-          <!-- ★拡張予定: ワールドページのコンテンツを追加
-               例: ワールドのスクリーンショット、説明文、VRChatリンク -->
-          ここにワールドの画像・説明を追加
-        </div>
+        <div class="placeholder-box"><!-- ★拡張予定 -->ここにワールドの画像・説明を追加</div>
       </div>
-    </div><!-- /#page-world -->
+    </div>
 
-
-    <!-- ショップページ -->
     <div class="page" id="page-shop">
       <div class="page-placeholder">
         <p class="placeholder-title">ショップ</p>
         <p class="placeholder-desc">コンテンツは後から追加します</p>
-        <div class="placeholder-box">
-          <!-- ★拡張予定: ショップページのコンテンツを追加
-               例: 商品カード一覧、BOOTHなどへの購入リンク -->
-          ここにショップのコンテンツを追加
-        </div>
+        <div class="placeholder-box"><!-- ★拡張予定 -->ここにショップのコンテンツを追加</div>
       </div>
-    </div><!-- /#page-shop -->
-
+    </div>
 
     <!--
       ★拡張予定: 新しいページを追加する手順
-        1. 以下の形式でページ div をここに追記:
-
-           <div class="page" id="page-ページID">
-             <div class="page-placeholder">
-               <p class="placeholder-title">ページ名</p>
-               ... コンテンツ ...
-             </div>
-           </div>
-
+        1. <div class="page" id="page-ページID"> をここに追記
         2. ヘッダー②の #nav-buttons-wrap にも対応ボタンを追記
-           （ヘッダー内の ★拡張予定 コメント参照）
     -->
 
-    <!-- フォトギャラリーページ（テスト用） -->
     <div class="page" id="page-photo">
       <div class="page-placeholder">
         <p class="placeholder-title">フォトギャラリー</p>
@@ -1122,7 +656,6 @@
       </div>
     </div>
 
-    <!-- イベントページ（テスト用） -->
     <div class="page" id="page-event">
       <div class="page-placeholder">
         <p class="placeholder-title">イベント</p>
@@ -1131,7 +664,6 @@
       </div>
     </div>
 
-    <!-- このサイトについてページ（テスト用） -->
     <div class="page" id="page-about">
       <div class="page-placeholder">
         <p class="placeholder-title">このサイトについて</p>
@@ -1140,49 +672,30 @@
       </div>
     </div>
 
-  </main><!-- /#body-content -->
+  </main>
 
 
   <script>
-    /* ===================================================
-       設定値（JS 側）
-       ★ CSS の定義変数と数値を合わせること
-       =================================================== */
     const CONFIG = {
-      NAV_VISIBLE:     3,    // 初期表示ボタン数  （CSS: --nav-visible-count）
-      NAV_BTN_WIDTH: 130,    // ボタン幅 px       （CSS: --nav-btn-width）
-      NAV_BTN_GAP:    10,    // ボタン間ギャップpx（CSS: --nav-btn-gap）
-      PANEL_RISE_MS: 600,    // パネルせり上がり ms（CSS: --duration-panel）
-      COMPLETE_MS:   400,    // 完了メッセージ表示ms ★ここを変えると「おまたせ！」の表示時間が変わる
-      PANEL_DROP_MS: 600,    // パネル降下 ms       （CSS: --duration-panel）
-      BAR_HIDE_MS:   300,    // バー非表示の追加待ち ms
+      NAV_VISIBLE:     3,
+      NAV_BTN_WIDTH: 130,
+      NAV_BTN_GAP:    10,
+      PANEL_RISE_MS: 600,
+      COMPLETE_MS:   400,    // ★「おまたせ！」の表示時間（ms）
+      PANEL_DROP_MS: 600,
+      BAR_HIDE_MS:   300,
     };
 
-
-    /* ===================================================
-       ナビゲーション スライド制御 ＋ 端フェード動的制御
-       ボタンが CONFIG.NAV_VISIBLE を超えると矢印・フェードが現れる
-
-       フェードは現在位置に応じて動的に変わる:
-         左端 (offset=0)      → 左フェードなし、右フェードあり
-         右端 (offset=max)    → 左フェードあり、右フェードなし
-         中間                 → 両端フェードあり
-       =================================================== */
     let navOffset = 0;
 
-    /* フェードマスクを現在位置に応じて更新する */
     function updateMask(offset, maxOffset) {
       const wrap = document.getElementById('nav-scroll-wrap');
-      const FADE = 30; // フェード幅px（CSS定義変数 --nav-fade-px と合わせること）
-
+      const FADE = 30;
       const atLeft  = offset <= 0;
       const atRight = offset >= maxOffset;
-
-      // 左端: 左フェードなし / 右端: 右フェードなし / 中間: 両方あり
-      const leftStop  = atLeft  ? `black 0px`               : `transparent 0px, black ${FADE}px`;
-      const rightStop = atRight ? `black 100%`              : `black calc(100% - ${FADE}px), transparent 100%`;
+      const leftStop  = atLeft  ? `black 0px`                        : `transparent 0px, black ${FADE}px`;
+      const rightStop = atRight ? `black 100%`                       : `black calc(100% - ${FADE}px), transparent 100%`;
       const mask = `linear-gradient(to right, ${leftStop}, ${rightStop})`;
-
       wrap.style.webkitMaskImage = mask;
       wrap.style.maskImage       = mask;
     }
@@ -1194,192 +707,91 @@
       const prevBtn    = document.getElementById('nav-prev');
       const nextBtn    = document.getElementById('nav-next');
       const maxOffset  = Math.max(0, buttons.length - CONFIG.NAV_VISIBLE);
-
       if (buttons.length > CONFIG.NAV_VISIBLE) {
-        // ボタン 4 つ以上:
-        //   ・矢印を表示してスライドを適用
-        //   ・現在位置に応じてフェードを更新
-        //   ・margin: 0 で左端揃え（スライドのため）
-        prevBtn.style.display = 'flex';
-        nextBtn.style.display = 'flex';
+        prevBtn.style.display = 'flex'; nextBtn.style.display = 'flex';
         scrollWrap.classList.add('has-overflow');
-        wrapper.style.marginLeft  = '0';
-        wrapper.style.marginRight = '0';
+        wrapper.style.marginLeft = '0'; wrapper.style.marginRight = '0';
         navOffset = Math.max(0, Math.min(navOffset, maxOffset));
-        wrapper.style.transform =
-          `translateX(-${navOffset * (CONFIG.NAV_BTN_WIDTH + CONFIG.NAV_BTN_GAP)}px)`;
-        prevBtn.disabled = (navOffset <= 0);
-        nextBtn.disabled = (navOffset >= maxOffset);
-        // フェードを現在位置に合わせて更新
+        wrapper.style.transform = `translateX(-${navOffset * (CONFIG.NAV_BTN_WIDTH + CONFIG.NAV_BTN_GAP)}px)`;
+        prevBtn.disabled = (navOffset <= 0); nextBtn.disabled = (navOffset >= maxOffset);
         updateMask(navOffset, maxOffset);
       } else {
-        // ボタン 3 つ以下:
-        //   ・矢印を非表示、フェードを解除、中央揃え
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
+        prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
         scrollWrap.classList.remove('has-overflow');
-        scrollWrap.style.webkitMaskImage = '';
-        scrollWrap.style.maskImage       = '';
-        wrapper.style.marginLeft  = 'auto';
-        wrapper.style.marginRight = 'auto';
-        wrapper.style.transform   = 'translateX(0)';
+        scrollWrap.style.webkitMaskImage = ''; scrollWrap.style.maskImage = '';
+        wrapper.style.marginLeft = 'auto'; wrapper.style.marginRight = 'auto';
+        wrapper.style.transform = 'translateX(0)';
       }
     }
 
-    function slideNav(dir) {
-      navOffset += dir;
-      updateNavArrows();
-    }
+    function slideNav(dir) { navOffset += dir; updateNavArrows(); }
 
-
-    /* ===================================================
-       ページ遷移アニメーション
-       ボタン押下から遷移完了まで 4 ステップで制御
-
-       [ステップ①] ボタン押下
-         - body を loading-bar 高さ分だけ下にずらす
-         - ローディング通知バーを表示「移動中・・・」
-         - ローディングパネルを画面下からせり上げる（減速移動）
-
-       [ステップ②] パネルが body を隠しきった直後
-         - ページコンテンツを切り替え（まだ画面には見えない）
-         - ナビボタンの active を変更
-
-       [ステップ③] 遷移完了メッセージ
-         - 通知バー →「移動完了！」
-         - パネル  →「おまたせ！」
-
-       [ステップ④] パネルを降下・UI を元に戻す
-         - パネルを画面外（下）へ降下
-         - body の下方ずらしを解除
-         - 通知バーを非表示にしてリセット
-       =================================================== */
     let isNavigating = false;
 
     function navigateTo(pageId, clickedBtn) {
-      // 現在表示中のページと同じ、または遷移中なら何もしない
       const currentPage = document.querySelector('.page.active');
       if (currentPage?.id === 'page-' + pageId || isNavigating) return;
       isNavigating = true;
-
-      const bar      = document.getElementById('loading-bar');
-      const barText  = document.getElementById('loading-bar-text');
-      const panel    = document.getElementById('loading-panel');
+      const bar = document.getElementById('loading-bar');
+      const barText = document.getElementById('loading-bar-text');
+      const panel = document.getElementById('loading-panel');
       const panelMsg = document.getElementById('panel-message');
-      const body     = document.getElementById('body-content');
-
-      /* ── ステップ① ────────────────────── */
-      barText.innerHTML    = '<span class="dots-anim">移動中</span>';
+      const body = document.getElementById('body-content');
+      barText.innerHTML = '<span class="dots-anim">移動中</span>';
       panelMsg.textContent = 'ちょっとまってね...';
-      // ローディングバーをヘッダーの裏からスライドアウトさせる
       bar.classList.add('reveal');
-      // body も同時に下げて、バーと body の間に隙間ができないようにする
       body.classList.add('loading');
-      // rAF を2回挟んで確実にスタイルを確定してからトランジション開始
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          panel.classList.add('slide-up');
-        });
-      });
-
-      /* ── ステップ②③（パネルが上がりきったタイミング） ── */
+      requestAnimationFrame(() => { requestAnimationFrame(() => { panel.classList.add('slide-up'); }); });
       setTimeout(() => {
-
-        // ページ切り替え（パネルの裏で行うのでユーザーには見えない）
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const nextPage = document.getElementById('page-' + pageId);
         if (nextPage) nextPage.classList.add('active');
-
-        // ナビボタンの active 切り替え
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         if (clickedBtn) clickedBtn.classList.add('active');
-
-        // 完了メッセージに変更
-        barText.textContent  = '移動完了！';
-        panelMsg.textContent = 'おまたせ！';
-
-        /* ── ステップ④（完了メッセージを一定時間表示後） ── */
+        barText.textContent = '移動完了！'; panelMsg.textContent = 'おまたせ！';
         setTimeout(() => {
-
-          // パネルを降下（slide-up を外すと CSS の基本 transform:translateY(100%) に戻る）
           panel.classList.remove('slide-up');
-          // body を元の位置に戻す & バーをヘッダーの裏にスライドバック
-          body.classList.remove('loading');
-          bar.classList.remove('reveal');
-
-          // パネル降下が終わったらテキストをリセット
-          setTimeout(() => {
-            barText.innerHTML = '';
-            isNavigating = false;
-          }, CONFIG.PANEL_DROP_MS + CONFIG.BAR_HIDE_MS);
-
+          body.classList.remove('loading'); bar.classList.remove('reveal');
+          setTimeout(() => { barText.innerHTML = ''; isNavigating = false; }, CONFIG.PANEL_DROP_MS + CONFIG.BAR_HIDE_MS);
         }, CONFIG.COMPLETE_MS);
-
       }, CONFIG.PANEL_RISE_MS);
     }
 
-
-    /* ===================================================
-       初期化
-       =================================================== */
     document.addEventListener('DOMContentLoaded', () => {
-      updateNavArrows();  // ナビボタン数チェック
-      avtLoadData();      // アバターデータの先読み（サーバー環境でのみ動作）
+      updateNavArrows();
+      avtLoadData();
     });
-
   </script>
 
 
-  <!-- ===================================================
-       アバター改変ページ JavaScript
-       =================================================== -->
   <script>
-
-    /* ── 設定値 ──────────────────────────────
-       ★ CSS の --avt-door-dur（秒）と
-         DOOR_DUR_MS（ミリ秒）は必ず一致させること         */
     const AVT_CONFIG = {
-      DATA_PATH:   'avatars.json', // アバターデータのパス
-      DOOR_DUR_MS: 400,            // 扉アニメ時間ms（CSS: --avt-door-dur: 0.4s）
+      DATA_PATH:   'avatars.json',
+      DOOR_DUR_MS: 400,  // ★ CSS の --avt-door-dur: 0.4s と合わせること
     };
 
-    /* ── 状態管理 ───────────────────────────── */
-    let avtData          = [];        // 全アバターデータ
-    let avtCurrentId     = null;      // 現在表示中のアバターID
-    let avtActiveGenres  = new Set(); // アクティブなジャンル（空 = 全表示）
-    let avtActiveCats    = new Set(); // アクティブなカテゴリ（空 = 全表示）
-    let avtDoorBusy      = false;     // 扉アニメーション中フラグ
-    let avtLoaded        = false;     // データ読み込み完了フラグ
+    let avtData = [], avtCurrentId = null;
+    let avtActiveGenres = new Set(), avtActiveCats = new Set();
+    let avtDoorBusy = false, avtLoaded = false;
 
-    /* ── データ読み込み ─────────────────────── */
     async function avtLoadData() {
-      if (avtLoaded) return;          // 2回目以降は不要
+      if (avtLoaded) return;
       try {
         const res = await fetch(AVT_CONFIG.DATA_PATH);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        avtData  = await res.json();
+        avtData = await res.json();
         avtLoaded = true;
-
-        /* 全アバターからランダムで初期表示 */
         if (avtData.length > 0) {
-          const rand = avtData[Math.floor(Math.random() * avtData.length)];
-          avtShowAvatar(rand, false);  // 扉アニメなし
+          avtShowAvatar(avtData[Math.floor(Math.random() * avtData.length)], false);
         }
         avtRenderThumbs();
       } catch (e) {
         console.error('avatars.json の読み込みに失敗:', e);
         const grid = document.getElementById('avt-thumb-grid');
-        if (grid) {
-          grid.innerHTML =
-            '<div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">' +
-            'データの読み込みに失敗しました。<br>GitHub Pages またはローカルサーバー上で開いてください。</div>';
-        }
+        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">データの読み込みに失敗しました。<br>GitHub Pages またはローカルサーバー上で開いてください。</div>';
       }
     }
 
-    /* ── フィルタリング ─────────────────────
-       AND 条件: ジャンル一致 AND カテゴリ一致
-       空の Set = 条件なし（全表示）                   */
     function avtGetFiltered() {
       return avtData.filter(a => {
         const genreOk = avtActiveGenres.size === 0 || avtActiveGenres.has(a.genre);
@@ -1388,148 +800,102 @@
       });
     }
 
-    /* ジャンルボタン切り替え */
     function avtToggleGenre(genre, btnEl) {
       avtActiveGenres.has(genre) ? avtActiveGenres.delete(genre) : avtActiveGenres.add(genre);
       btnEl.classList.toggle('active', avtActiveGenres.has(genre));
       avtRenderThumbs();
     }
 
-    /* カテゴリボタン切り替え */
     function avtToggleCat(cat, btnEl) {
       avtActiveCats.has(cat) ? avtActiveCats.delete(cat) : avtActiveCats.add(cat);
       btnEl.classList.toggle('active', avtActiveCats.has(cat));
       avtRenderThumbs();
     }
 
-    /* ── サムネイル一覧の描画 ─────────────── */
     function avtRenderThumbs() {
-      const grid     = document.getElementById('avt-thumb-grid');
+      const grid = document.getElementById('avt-thumb-grid');
       if (!grid) return;
       const filtered = avtGetFiltered();
-
       if (filtered.length === 0) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">該当するアバターがありません</div>';
         return;
       }
-
       grid.innerHTML = '';
       filtered.forEach(avatar => {
-        const item  = document.createElement('div');
+        const item = document.createElement('div');
         item.className = 'avt-thumb-item' + (avatar.id === avtCurrentId ? ' selected' : '');
-        item.onclick   = () => avtSelectAvatar(avatar.id);
-
-        /* PC用サムネ（4:3） */
-        const imgPC    = document.createElement('img');
-        imgPC.className = 'avt-thumb-pc';
-        imgPC.src       = avatar.miniImgPC || '';
-        imgPC.alt       = avatar.name;
-
-        /* SP用サムネ（1:1） */
-        const imgSP    = document.createElement('img');
-        imgSP.className = 'avt-thumb-sp';
-        imgSP.src       = avatar.miniImgSP || '';
-        imgSP.alt       = avatar.name;
-
-        item.appendChild(imgPC);
-        item.appendChild(imgSP);
+        item.onclick = () => avtSelectAvatar(avatar.id);
+        const imgPC = document.createElement('img');
+        imgPC.className = 'avt-thumb-pc'; imgPC.src = avatar.miniImgPC || ''; imgPC.alt = avatar.name;
+        const imgSP = document.createElement('img');
+        imgSP.className = 'avt-thumb-sp'; imgSP.src = avatar.miniImgSP || ''; imgSP.alt = avatar.name;
+        item.appendChild(imgPC); item.appendChild(imgSP);
         grid.appendChild(item);
       });
     }
 
-    /* ── アバター選択（扉アニメーション付き）─
-       [Step1] 扉を閉める（上扉↓ / 下扉↑）
-       [Step2] 扉が閉まりきったらコンテンツ切り替え
-       [Step3] 扉を開ける（上扉↑ / 下扉↓）         */
     function avtSelectAvatar(id) {
       if (id === avtCurrentId || avtDoorBusy) return;
       const avatar = avtData.find(a => a.id === id);
       if (!avatar) return;
-
       avtDoorBusy = true;
       const doorTop = document.getElementById('avt-door-top');
       const doorBot = document.getElementById('avt-door-bottom');
-
-      /* Step1: 扉を閉める */
-      doorTop.classList.add('door-closed');
-      doorBot.classList.add('door-closed');
-
+      doorTop.classList.add('door-closed'); doorBot.classList.add('door-closed');
       setTimeout(() => {
-        /* Step2: 扉の裏でコンテンツを切り替え */
         avtShowAvatar(avatar, true);
-
-        /* Step3: 扉を開ける */
-        doorTop.classList.remove('door-closed');
-        doorBot.classList.remove('door-closed');
-
+        doorTop.classList.remove('door-closed'); doorBot.classList.remove('door-closed');
         setTimeout(() => { avtDoorBusy = false; }, AVT_CONFIG.DOOR_DUR_MS);
       }, AVT_CONFIG.DOOR_DUR_MS);
     }
 
-    /* ── アバター情報を表示領域に反映 ─────── */
     function avtShowAvatar(avatar, updateThumb) {
       avtCurrentId = avatar.id;
 
       /* ⑦ 背景 */
-      document.getElementById('avt-bg-img').style.backgroundImage =
-        avatar.bgImg ? `url('${avatar.bgImg}')` : '';
-
+      document.getElementById('avt-bg-img').style.backgroundImage = avatar.bgImg ? `url('${avatar.bgImg}')` : '';
       const bgPat = document.getElementById('avt-bg-pattern');
       if (avatar.bgPattern) {
-        bgPat.style.backgroundImage    = `url('${avatar.bgPattern}')`;
+        bgPat.style.backgroundImage = `url('${avatar.bgPattern}')`;
         bgPat.style.animationPlayState = 'running';
       } else {
-        bgPat.style.backgroundImage    = 'none';
+        bgPat.style.backgroundImage = 'none';
         bgPat.style.animationPlayState = 'paused';
       }
 
       /* ⑥ 枠C */
-      document.getElementById('avt-frame-c-top').style.backgroundImage =
-        avatar.frameCTop    ? `url('${avatar.frameCTop}')` : 'none';
-      document.getElementById('avt-frame-c-bottom').style.backgroundImage =
-        avatar.frameCBottom ? `url('${avatar.frameCBottom}')` : 'none';
+      document.getElementById('avt-frame-c-top').style.backgroundImage    = avatar.frameCTop    ? `url('${avatar.frameCTop}')` : 'none';
+      document.getElementById('avt-frame-c-bottom').style.backgroundImage = avatar.frameCBottom ? `url('${avatar.frameCBottom}')` : 'none';
 
       /* ⑤ 情報テキスト */
       document.getElementById('avt-name').textContent = avatar.name || '';
       document.getElementById('avt-desc').textContent = avatar.desc || '';
 
-      /* ⑤ 情報テキスト枠の背景画像
-         infoImg が設定されている場合:
-           半透明オーバーレイ（--avt-info-bg）を前面に重ね、
-           背景画像をその後ろに表示する（CSS多重背景）
-         未設定の場合:
-           CSS の background-color（--avt-info-bg）のみ表示       */
+      /* ⑤ infoImg 背景（オーバーレイ＋画像の多重背景） */
       const infoEl = document.getElementById('avt-info');
       if (avatar.infoImg) {
-        infoEl.style.backgroundImage =
-          `linear-gradient(var(--avt-info-bg), var(--avt-info-bg)), url('${avatar.infoImg}')`;
+        infoEl.style.backgroundImage = `linear-gradient(var(--avt-info-bg), var(--avt-info-bg)), url('${avatar.infoImg}')`;
       } else {
         infoEl.style.backgroundImage = '';
       }
 
-      /* ④ リファレンス枠（orgAvt を動的生成） */
-      const refs  = document.getElementById('avt-refs');
+      /* ④ リファレンス枠 */
+      const refs = document.getElementById('avt-refs');
       refs.innerHTML = '';
       (avatar.orgAvt || []).forEach(ref => {
-        const a   = document.createElement('a');
-        a.href    = ref.url || '#';
-        a.target  = '_blank';
-        a.rel     = 'noopener noreferrer';
+        const a = document.createElement('a');
+        a.href = ref.url || '#'; a.target = '_blank'; a.rel = 'noopener noreferrer';
         a.className = 'avt-ref-item';
         const img = document.createElement('img');
-        img.src   = ref.img || '';
-        img.alt   = '';
-        a.appendChild(img);
-        refs.appendChild(a);
+        img.src = ref.img || ''; img.alt = '';
+        a.appendChild(img); refs.appendChild(a);
       });
 
       /* ③ アバター枠 */
-      document.getElementById('avt-main-img').style.backgroundImage =
-        avatar.mainImg ? `url('${avatar.mainImg}')` : '';
+      document.getElementById('avt-main-img').style.backgroundImage = avatar.mainImg ? `url('${avatar.mainImg}')` : '';
 
       if (updateThumb) avtRenderThumbs();
     }
-
   </script>
 </body>
 </html>
