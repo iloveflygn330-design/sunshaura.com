@@ -5,7 +5,7 @@
 // ★アバターを足すときは、ここのものを複製すること====================================================//
 
   my_avatarid = 'avatarAA'; // アバター識別子 基本的にはAAを連番にする
-  my_Dic = DicBase + my_avatarid
+  my_Dic = DicBase + my_avatarid;
   {
     id:           my_avatarid,
     name:         'アバターネーム',
@@ -88,21 +88,23 @@ export default [
   /* ──────────────────────────────────────────
      テストアバター①
   ────────────────────────────────────────── */
+  my_avatarid = 'avatar01'; // アバター識別子 基本的にはAAを連番にする
+  my_Dic = DicBase + my_avatarid;
   {
     id:           'avatar_01',
     name:         'テストアバター①',
     genre:        '元ネタあり（別アバター）', // 元ネタあり（別アバター）/ 元ネタあり（その他）/ 元ネタなし
     category:     'まめひなた',               // まめひなた / フォシュニア / シャロ / その他
 
-    mainImg:      P01 + 'thumbnail/main.png',
-    miniImgPC:    P01 + 'thumbnail/mini_pc.png', // PC用サムネ（アスペクト比 2:1.5）
-    miniImgSP:    P01 + 'thumbnail/mini_sp.png', // SP用サムネ（アスペクト比 1:1）
+    mainImg:      my_Dic + '/thumbnail/main.png',
+    miniImgPC:    my_Dic + '/thumbnail/mini_pc.png', // PC用サムネ（アスペクト比 2:1.5）
+    miniImgSP:    my_Dic + '/thumbnail/mini_sp.png', // SP用サムネ（アスペクト比 1:1）
 
-    bgImg:        P01 + 'bg.png',            // 背景画像（推奨: 1920×640px）
-    bgPattern:    P01 + 'pattern.png',       // 背景パターン（透過PNG・タイル繰り返し）
-    frameCTop:    P01 + 'frame_c_top.png',   // 枠C上（推奨: 1920×280px・透過PNG）
-    frameCBottom: P01 + 'frame_c_bottom.png',// 枠C下（推奨: 1920×280px・透過PNG）
-    infoImg:      P01 + 'info_bg.png',       // 情報枠の透かし画像（推奨: 1920×640px）
+    bgImg:        my_Dic + '/bg.png',            // 背景画像（推奨: 1920×640px）
+    bgPattern:    my_Dic + '/pattern.png',       // 背景パターン（透過PNG・タイル繰り返し）
+    frameCTop:    my_Dic + '/frame_c_top.png',   // 枠C上（推奨: 1920×280px・透過PNG）
+    frameCBottom: my_Dic + '/frame_c_bottom.png',// 枠C下（推奨: 1920×280px・透過PNG）
+    infoImg:      my_Dic + '/info_bg.png',       // 情報枠の透かし画像（推奨: 1920×640px）
 
     desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
 
@@ -114,9 +116,9 @@ export default [
 
     // 使用アイテム（改変に使ったアイテムのリンク画像）
     orgAvt: [
-      { img: P01 + 'refs/ref_01.png', url: 'https://example.com/item1' },
-      { img: P01 + 'refs/ref_02.png', url: 'https://example.com/item2' },
-      { img: P01 + 'refs/ref_03.png', url: 'https://example.com/item3' },
+      Item_Mamehinata,
+      Item_Mamehinata,
+      Item_Mamehinata,
     ]
   },
 
