@@ -263,7 +263,7 @@
     .avt-genre-btn {
       /*
        * ★拡張予定: ジャンルを追加する場合は #avt-genre-bar 内に
-       *   同形式のボタンを追記し、avatars.json の "genre" と一致させること
+       *   同形式のボタンを追記し、avatars.js の "genre" と一致させること
        */
       height: 32px; padding: 0 18px; border-radius: 50px;
       border: 2px solid rgba(0,0,0,0.12);
@@ -288,7 +288,7 @@
     .avt-cat-btn {
       /*
        * ★拡張予定: カテゴリを追加する場合は #avt-category-bar 内に
-       *   同形式のボタンを追記し、avatars.json の "category" と一致させること
+       *   同形式のボタンを追記し、avatars.js の "category" と一致させること
        */
       width: 44px; height: 44px; border-radius: 8px;
       border: 3px solid transparent; background: rgba(0,0,0,0.08);
@@ -616,7 +616,7 @@
           ★拡張予定: ジャンルを追加する場合
             <button class="avt-genre-btn" data-genre="ジャンル名"
                     onclick="avtToggleGenre(this.dataset.genre,this)">ジャンル名</button>
-            avatars.json の "genre" フィールドと完全一致させること
+            avatars.js の "genre" フィールドと完全一致させること
         -->
         <button class="avt-genre-btn" data-genre="元ネタあり（別アバター）" onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（別アバター）</button>
         <button class="avt-genre-btn" data-genre="元ネタあり（その他）"     onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（その他）</button>
@@ -630,7 +630,7 @@
                     onclick="avtToggleCat(this.dataset.category,this)">
               <img src="assets/images/categories/xxx.png" alt="カテゴリ名">
             </button>
-            avatars.json の "category" と一致させること
+            avatars.js の "category" と一致させること
         -->
         <button class="avt-cat-btn" data-category="まめひなた" onclick="avtToggleCat(this.dataset.category,this)">
           <!-- ★拡張予定: src にカテゴリ画像パスを設定 -->
@@ -827,7 +827,7 @@
   <script type="module">
     const AVT_CONFIG = {
       DATA_PATH:   './avatars.js', // ★ アバターデータのパス（jsファイル）
-      DOOR_DUR_MS: 400,  // ★ CSS の --avt-door-dur: 0.4s と合わせること
+      DOOR_DUR_MS: 400,            // ★ CSS の --avt-door-dur: 0.4s と合わせること
     };
 
     let avtData = [], avtCurrentId = null;
@@ -837,7 +837,7 @@
     async function avtLoadData() {
       if (avtLoaded) return;
       try {
-        const module = await import(AVT_CONFIG.DATA_PATH); // JSONのfetch()からJS importに変更
+        const module = await import(AVT_CONFIG.DATA_PATH);
         avtData = module.default;
         avtLoaded = true;
         if (avtData.length > 0) {
@@ -845,7 +845,7 @@
         }
         avtRenderThumbs();
       } catch (e) {
-        console.error('avatars.json の読み込みに失敗:', e);
+        console.error('avatars.js の読み込みに失敗:', e);
         const grid = document.getElementById('avt-thumb-grid');
         if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">データの読み込みに失敗しました。<br>GitHub Pages またはローカルサーバー上で開いてください。</div>';
       }
@@ -895,6 +895,7 @@
         nameEl.className = 'avt-thumb-name';
         nameEl.textContent = avatar.name;
         item.appendChild(nameEl);
+
         grid.appendChild(item);
       });
     }
@@ -936,9 +937,7 @@
       document.getElementById('avt-name').textContent = avatar.name || '';
       document.getElementById('avt-desc').textContent = avatar.desc || '';
 
-      /* ⑤ infoImg 透かし背景（bg-layerに反映）
-         opacity は CSS の --avt-info-img-opacity で制御
-         サイズは CSS の --avt-info-img-size-pc / sp で制御 */
+      /* ⑤ infoImg 透かし背景 */
       const bgLayer = document.getElementById('avt-info-bg-layer');
       bgLayer.style.backgroundImage = avatar.infoImg ? `url('${avatar.infoImg}')` : 'none';
 
@@ -962,6 +961,11 @@
 
     // モジュールscriptはDOMが準備されてから実行されるため、直接呼び出しでOK
     avtLoadData();
+
+    // onclick から呼び出せるようにグローバルに公開
+    // （type="module" の関数はそのままだと外から見えないため）
+    window.avtToggleGenre = avtToggleGenre;
+    window.avtToggleCat   = avtToggleCat;
   </script>
 </body>
 </html>
