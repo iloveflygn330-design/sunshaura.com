@@ -1,245 +1,249 @@
-/*
+// =====================================================
 // アバターデータ  avatars.js
+//
+// ★ アバターを追加する手順
+//   1. 「アバターデータ本体」セクションに
+//      my_avatarid と _avatars.push({...}) を追記
+//   2. assets/images/avatarAA/ に対応する画像を配置
+//   3. HTML・index.js は変更不要
+// =====================================================
 
-// アバターデータ　テンプレート====================================================//
-// ★アバターを足すときは、ここのものを複製すること====================================================//
-
-  my_avatarid = 'avatarAA'; // アバター識別子 基本的にはAAを連番にする
-  my_Dic = DicBase + my_avatarid;
-  {
+// アバターデータ　テンプレート ================================================
+// ★ アバターを足すときは、ここのものを複製すること
+/*
+  my_avatarid = 'avatarAA';          // ← AA を連番にする
+  my_Dic      = DicBase + my_avatarid;
+  _avatars.push({
     id:           my_avatarid,
     name:         'アバターネーム',
-    genre:        '元ネタあり（別アバター）',     // 元ネタあり（別アバター）/ 元ネタあり（その他）/ 元ネタなし
-    category:     'まめひなた',                  // まめひなた / フォシュニア / シャロ / その他
+    genre:        genre_copy_avatar,   // 下の定数から選ぶ
+    category:     cate_mame,           // 下の定数から選ぶ
 
-    mainImg:      my_Dic + '/thumbnail/main.png',   // アバターの立ち絵　投下画像
-    miniImgPC:    defo_miniImgPC , // PC用サムネ（アスペクト比 2:1.5） デフォじゃないなら　'/thumbnail/mini_pc.png'
-    miniImgSP:    defo_miniImgSP , // SP用サムネ（アスペクト比 1:1）　デフォじゃないなら　'/thumbnail/mini_sp.png'
-    
-    bgImg:        defo_bgImg,            // 背景画像（推奨: 1920×640px）　　デフォじゃないなら　'/bg.png'
-    bgPattern:    defo_bgPattern ,       // 背景パターン（透過PNG・タイル繰り返し）　　デフォじゃないなら　'/pattern.png'
-    frameCTop:    defo_frameCTop ,   // 枠C上（推奨: 1920×280px・透過PNG）　　デフォじゃないなら　'/frame_c_top.png'
-    frameCBottom: defo_frameCBottom ,// 枠C下（推奨: 1920×280px・透過PNG）　　デフォじゃないなら　'/frame_c_bottom.png'
-    infoImg:      defo_infoImg ,       // 情報枠の透かし画像（推奨: 1920×640px）　　デフォじゃないなら　'/info_bg.png'
+    mainImg:      my_Dic + '/thumbnail/main.png',
+    miniImgPC:    defo_miniImgPC,      // 個別にするなら my_Dic + '/thumbnail/mini_pc.png'
+    miniImgSP:    defo_miniImgSP,      // 個別にするなら my_Dic + '/thumbnail/mini_sp.png'
 
-    desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
+    bgImg:        defo_bgImg,          // 個別にするなら my_Dic + '/bg.png'
+    bgPattern:    defo_bgPattern,      // 個別にするなら my_Dic + '/pattern.png'
+    frameCTop:    defo_frameCTop,      // 個別にするなら my_Dic + '/frame_c_top.png'
+    frameCBottom: defo_frameCBottom,   // 個別にするなら my_Dic + '/frame_c_bottom.png'
+    infoImg:      defo_infoImg,        // 個別にするなら my_Dic + '/info_bg.png'
 
-    // ランダム表示用写真フォルダ内のファイル一覧
+    desc: '説明テキスト',
+
     photos: [
-      my_Dic + 'photos/photo_01.png',
-      my_Dic + 'photos/photo_02.png',
+      my_Dic + '/photos/photo_01.png',
+      my_Dic + '/photos/photo_02.png',
     ],
 
-    // 使用アイテム（改変に使ったアイテムのリンク画像）
     orgAvt: [
       Item_Mamehinata,
       Item_foshunia,
-      Item_charo
     ]
-  },
-
+  });
 */
+// ============================================================ テンプレートここまで
+
 
 // =====================================================
-// 変数エリア（アバター用画像）
+// 定数エリア：パス
 // =====================================================
-const DicBase = 'assets/images/'; // 画像格納フォルダ
-const DicDefo = 'assets/images/ShareImg/'; // デフォルト画像格納フォルダ
+const DicBase = 'assets/images/';          // 画像格納ベースフォルダ
+const DicDefo = 'assets/images/ShareImg/'; // デフォルト共有画像フォルダ
 
-//ジャンル
+
+// =====================================================
+// 定数エリア：ジャンル
+// =====================================================
 const genre_copy_avatar = '元ネタあり（別アバター）';
-const genre_copy_game = '元ネタあり（その他）';
-const genre_org = '元ネタなし';
+const genre_copy_game   = '元ネタあり（その他）';
+const genre_org         = '元ネタなし';
 
-//カテゴリ
-const cate_mame = 'まめひなた';
+
+// =====================================================
+// 定数エリア：カテゴリ
+// =====================================================
+const cate_mame  = 'まめひなた';
 const cate_foshu = 'フォシュニア';
 const cate_chalo = 'シャロ';
 const cate_other = 'その他';
 
-//描写用画像
-const defo_miniImgPC= DicDefo + 'mini_pc.png'
-const defo_miniImgSP= DicDefo + 'mini_sp.png'
-
-const defo_bgImg= DicDefo + 'bg.png'
-const defo_bgPattern= DicDefo + 'pattern.png'
-const defo_frameCTop= DicDefo + 'frame_c_top'
-const defo_frameCBottom= DicDefo + 'frame_c_bottom.png'
-const defo_infoImg= DicDefo + 'info_bg.png'
 
 // =====================================================
-// 変数エリア（リンク付き画像）
+// 定数エリア：デフォルト画像（共有）
+// =====================================================
+const defo_miniImgPC    = DicDefo + 'mini_pc.png';
+const defo_miniImgSP    = DicDefo + 'mini_sp.png';
+const defo_bgImg        = DicDefo + 'bg.png';
+const defo_bgPattern    = DicDefo + 'pattern.png';
+const defo_frameCTop    = DicDefo + 'frame_c_top.png';    // ★ .png 追加
+const defo_frameCBottom = DicDefo + 'frame_c_bottom.png';
+const defo_infoImg      = DicDefo + 'info_bg.png';
+
+
+// =====================================================
+// 定数エリア：リンク付きアイテム画像
+// ★ 複数アバターで使い回せます
 // =====================================================
 const Item_Mamehinata = { img: DicBase + 'categories/mame_hinata.png', url: 'https://booth.pm/ja/items/4340548' };
-const Item_foshunia = { img: DicBase + 'categories/charo.png', url: 'https://booth.pm/ja/items/4580093' };
-const Item_charo = { img: DicBase + 'categories/foshunia.png', url: 'https://booth.pm/...' };
+const Item_foshunia   = { img: DicBase + 'categories/foshunya.png',    url: 'https://booth.pm/ja/items/4580093' };
+const Item_charo      = { img: DicBase + 'categories/sharo.png',       url: 'https://booth.pm/...' };
+
 
 // =====================================================
-// 変数エリア（使いまわし用変数　指定）
+// 変数エリア：使いまわし用（アバターごとに上書き）
 // =====================================================
-let my_avatarid;
-let my_Dic;
+let my_avatarid; // アバター識別子
+let my_Dic;      // そのアバターの画像フォルダパス
+
 
 // =====================================================
 // アバターデータ本体
+// ★ アバターを追加する場合は以下に push を追記するだけ
 // =====================================================
-export default [
+const _avatars = [];
 
-  /* ──────────────────────────────────────────
-     テストアバター①
-  ────────────────────────────────────────── */
-  my_avatarid = 'avatar01'; // アバター識別子 基本的にはAAを連番にする
-  my_Dic = DicBase + my_avatarid;
-  {
-    id:           my_avatarid,
-    name:         'テストアバター①',
-    genre:        '元ネタあり（別アバター）', // 元ネタあり（別アバター）/ 元ネタあり（その他）/ 元ネタなし
-    category:     'まめひなた',               // まめひなた / フォシュニア / シャロ / その他
 
-    mainImg:      my_Dic + '/thumbnail/main.png',
-    miniImgPC:    my_Dic + '/thumbnail/mini_pc.png', // PC用サムネ（アスペクト比 2:1.5）
-    miniImgSP:    my_Dic + '/thumbnail/mini_sp.png', // SP用サムネ（アスペクト比 1:1）
+/* ──────────────────────────────────────────
+   テストアバター①
+────────────────────────────────────────── */
+my_avatarid = 'avatar01';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'テストアバター①',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
 
-    bgImg:        my_Dic + '/bg.png',            // 背景画像（推奨: 1920×640px）
-    bgPattern:    my_Dic + '/pattern.png',       // 背景パターン（透過PNG・タイル繰り返し）
-    frameCTop:    my_Dic + '/frame_c_top.png',   // 枠C上（推奨: 1920×280px・透過PNG）
-    frameCBottom: my_Dic + '/frame_c_bottom.png',// 枠C下（推奨: 1920×280px・透過PNG）
-    infoImg:      my_Dic + '/info_bg.png',       // 情報枠の透かし画像（推奨: 1920×640px）
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-    desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
+  bgImg:        my_Dic + '/bg.png',
+  bgPattern:    my_Dic + '/pattern.png',
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      my_Dic + '/info_bg.png',
 
-    // ランダム表示用写真フォルダ内のファイル一覧
-    photos: [
-      P01 + 'photos/photo_01.png',
-      P01 + 'photos/photo_02.png',
-    ],
+  desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
 
-    // 使用アイテム（改変に使ったアイテムのリンク画像）
-    orgAvt: [
-      Item_Mamehinata,
-      Item_Mamehinata,
-      Item_Mamehinata,
-    ]
-  },
+  photos: [
+    my_Dic + '/photos/photo_01.png',
+    my_Dic + '/photos/photo_02.png',
+  ],
 
-  /* ──────────────────────────────────────────
-     テストアバター②
-  ────────────────────────────────────────── */
-  my_avatarid = 'avatar02'; // アバター識別子 基本的にはAAを連番にする
-  my_Dic = DicBase + my_avatarid;
-  {
-    id:           my_avatarid,
-    name:         'テストアバター①',
-    genre:        '元ネタあり（別アバター）', // 元ネタあり（別アバター）/ 元ネタあり（その他）/ 元ネタなし
-    category:     'まめひなた',               // まめひなた / フォシュニア / シャロ / その他
+  orgAvt: [
+    Item_Mamehinata,
+    Item_foshunia,
+    Item_charo,
+  ]
+});
 
-    mainImg:      my_Dic + '/thumbnail/main.png',
-    miniImgPC:    my_Dic + '/thumbnail/mini_pc.png', // PC用サムネ（アスペクト比 2:1.5）
-    miniImgSP:    my_Dic + '/thumbnail/mini_sp.png', // SP用サムネ（アスペクト比 1:1）
 
-    bgImg:        my_Dic + '/bg.png',            // 背景画像（推奨: 1920×640px）
-    bgPattern:    my_Dic + '/pattern.png',       // 背景パターン（透過PNG・タイル繰り返し）
-    frameCTop:    my_Dic + '/frame_c_top.png',   // 枠C上（推奨: 1920×280px・透過PNG）
-    frameCBottom: my_Dic + '/frame_c_bottom.png',// 枠C下（推奨: 1920×280px・透過PNG）
-    infoImg:      my_Dic + '/info_bg.png',       // 情報枠の透かし画像（推奨: 1920×640px）
+/* ──────────────────────────────────────────
+   テストアバター②
+────────────────────────────────────────── */
+my_avatarid = 'avatar02';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'テストアバター②',
+  genre:        genre_copy_game,
+  category:     cate_foshu,
 
-    desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-    // ランダム表示用写真フォルダ内のファイル一覧
-    photos: [
-      P01 + 'photos/photo_01.png',
-      P01 + 'photos/photo_02.png',
-    ],
+  bgImg:        defo_bgImg,       // ← デフォルト共有画像を使用
+  bgPattern:    defo_bgPattern,
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      defo_infoImg,     // ← デフォルト共有画像を使用
 
-    // 使用アイテム（改変に使ったアイテムのリンク画像）
-    orgAvt: [
-      Item_Mamehinata,
-      Item_Mamehinata,
-      Item_Mamehinata,
-    ]
-  },
+  desc: 'テストアバター②の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
 
-  /* ──────────────────────────────────────────
-     テストアバター③
-  ────────────────────────────────────────── */
-  my_avatarid = 'avatar03'; // アバター識別子 基本的にはAAを連番にする
-  my_Dic = DicBase + my_avatarid;
-  {
-    id:           my_avatarid,
-    name:         'テストアバター①',
-    genre:        '元ネタあり（別アバター）', // 元ネタあり（別アバター）/ 元ネタあり（その他）/ 元ネタなし
-    category:     'まめひなた',               // まめひなた / フォシュニア / シャロ / その他
+  photos: [
+    my_Dic + '/photos/photo_01.png',
+  ],
 
-    mainImg:      my_Dic + '/thumbnail/main.png',
-    miniImgPC:    my_Dic + '/thumbnail/mini_pc.png', // PC用サムネ（アスペクト比 2:1.5）
-    miniImgSP:    my_Dic + '/thumbnail/mini_sp.png', // SP用サムネ（アスペクト比 1:1）
+  orgAvt: [
+    Item_foshunia,
+  ]
+});
 
-    bgImg:        my_Dic + '/bg.png',            // 背景画像（推奨: 1920×640px）
-    bgPattern:    my_Dic + '/pattern.png',       // 背景パターン（透過PNG・タイル繰り返し）
-    frameCTop:    my_Dic + '/frame_c_top.png',   // 枠C上（推奨: 1920×280px・透過PNG）
-    frameCBottom: my_Dic + '/frame_c_bottom.png',// 枠C下（推奨: 1920×280px・透過PNG）
-    infoImg:      my_Dic + '/info_bg.png',       // 情報枠の透かし画像（推奨: 1920×640px）
 
-    desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
+/* ──────────────────────────────────────────
+   テストアバター③
+────────────────────────────────────────── */
+my_avatarid = 'avatar03';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'テストアバター③',
+  genre:        genre_org,
+  category:     cate_chalo,
 
-    // ランダム表示用写真フォルダ内のファイル一覧
-    photos: [
-      P01 + 'photos/photo_01.png',
-      P01 + 'photos/photo_02.png',
-    ],
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-    // 使用アイテム（改変に使ったアイテムのリンク画像）
-    orgAvt: [
-      Item_Mamehinata,
-      Item_Mamehinata,
-      Item_Mamehinata,
-    ]
-  },
+  bgImg:        my_Dic + '/bg.png',
+  bgPattern:    my_Dic + '/pattern.png',
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      my_Dic + '/info_bg.png',
 
-  /* ──────────────────────────────────────────
-     テストアバター④
-  ────────────────────────────────────────── */
-  my_avatarid = 'avatar04'; // アバター識別子 基本的にはAAを連番にする
-  my_Dic = DicBase + my_avatarid;
-  {
-    id:           my_avatarid,
-    name:         'テストアバター①',
-    genre:        '元ネタあり（別アバター）', // 元ネタあり（別アバター）/ 元ネタあり（その他）/ 元ネタなし
-    category:     'まめひなた',               // まめひなた / フォシュニア / シャロ / その他
+  desc: 'テストアバター③の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文。',
 
-    mainImg:      my_Dic + '/thumbnail/main.png',
-    miniImgPC:    my_Dic + '/thumbnail/mini_pc.png', // PC用サムネ（アスペクト比 2:1.5）
-    miniImgSP:    my_Dic + '/thumbnail/mini_sp.png', // SP用サムネ（アスペクト比 1:1）
+  photos: [
+    my_Dic + '/photos/photo_01.png',
+    my_Dic + '/photos/photo_02.png',
+    my_Dic + '/photos/photo_03.png',
+  ],
 
-    bgImg:        my_Dic + '/bg.png',            // 背景画像（推奨: 1920×640px）
-    bgPattern:    my_Dic + '/pattern.png',       // 背景パターン（透過PNG・タイル繰り返し）
-    frameCTop:    my_Dic + '/frame_c_top.png',   // 枠C上（推奨: 1920×280px・透過PNG）
-    frameCBottom: my_Dic + '/frame_c_bottom.png',// 枠C下（推奨: 1920×280px・透過PNG）
-    infoImg:      my_Dic + '/info_bg.png',       // 情報枠の透かし画像（推奨: 1920×640px）
+  orgAvt: [
+    Item_Mamehinata,
+    Item_foshunia,
+    Item_charo,
+    Item_Mamehinata,  // 同じアイテムを複数入れることも可能
+  ]
+});
 
-    desc: 'テストアバター①の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
 
-    // ランダム表示用写真フォルダ内のファイル一覧
-    photos: [
-      P01 + 'photos/photo_01.png',
-      P01 + 'photos/photo_02.png',
-    ],
+/* ──────────────────────────────────────────
+   テストアバター④
+────────────────────────────────────────── */
+my_avatarid = 'avatar04';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'テストアバター④',
+  genre:        genre_copy_avatar,
+  category:     cate_other,
 
-    // 使用アイテム（改変に使ったアイテムのリンク画像）
-    orgAvt: [
-      Item_Mamehinata,
-      Item_Mamehinata,
-      Item_Mamehinata,
-    ]
-  },
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-  // ★ アバターを追加する場合はここに追記
-  // {
-  //   id:       'avatar_05',
-  //   name:     'アバター名',
-  //   genre:    '元ネタなし',
-  //   category: 'まめひなた',
-  //   ...
-  // },
+  bgImg:        my_Dic + '/bg.png',
+  bgPattern:    defo_bgPattern,   // ← デフォルト共有画像を使用
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      my_Dic + '/info_bg.png',
 
-];
+  desc: 'テストアバター④の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
+
+  photos: [],
+
+  orgAvt: []
+});
+
+
+// ★ アバターを追加する場合はここに追記
+// my_avatarid = 'avatar05';
+// my_Dic      = DicBase + my_avatarid;
+// _avatars.push({ ... });
+
+
+export default _avatars;
