@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>アバター入力ツール</title>
+<style>
+:root {
+  --main:#CC2244; --main-dark:#8B1228; --main-pale:#FFF0F3;
+  --filter:#00BBCC; --text:#1a1a1a; --muted:#777; --border:#e0e0e0;
+  --bg:#fff; --surface:#f6f6f6; --r:10px;
+  --green:#1a8a3a; --green-bg:#e6f7ee; --amber:#b06000; --amber-bg:#fff5e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Helvetica Neue',Arial,'Hiragino Sans',sans-serif;font-size:15px;color:var(--text);background:var(--surface);}
+
+/* ===== スタート画面 ===== */
+#scStart{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;gap:20px;background:var(--main-pale);}
+#scStart h1{font-size:20px;font-weight:700;color:var(--main);}
+#scStart p{font-size:14px;color:var(--muted);text-align:center;line-height:1.6;}
+.btn-start{display:flex;align-items:center;gap:10px;padding:16px 28px;background:var(--main);color:#fff;border:none;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;width:100%;max-width:320px;justify-content:center;}
+.btn-start:active{background:var(--main-dark);}
+.saved-info{background:var(--bg);border-radius:var(--r);padding:14px 16px;width:100%;max-width:320px;border:1px solid var(--border);}
+.saved-info .si-title{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.saved-info .si-body{font-size:15px;font-weight:700;}
+.btn-clear{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;margin-top:8px;}
+
+/* ===== メイン画面 ===== */
+#scMain{display:none;flex-direction:column;min-height:100vh;}
+
+/* ヘッダー */
+.hd{position:sticky;top:0;z-index:10;background:var(--main);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+.hd-back{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:2px 6px;opacity:0.85;}
+.hd-title{flex:1;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hd-prog{font-size:12px;background:rgba(255,255,255,0.2);border-radius:50px;padding:3px 10px;white-space:nowrap;}
+
+/* プログレスバー */
+.prog-bar-wrap{height:4px;background:rgba(0,0,0,0.08);}
+.prog-bar-fill{height:100%;background:var(--green);transition:width 0.3s;}
+
+/* ナビゲーション */
+.nav{display:flex;align-items:center;padding:10px 14px;gap:8px;background:var(--bg);border-bottom:1px solid var(--border);}
+.btn-nav{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);font-size:18px;cursor:pointer;flex-shrink:0;color:var(--text);}
+.btn-nav:disabled{opacity:0.3;cursor:default;}
+.btn-nav:active:not(:disabled){background:var(--surface);}
+.nav-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.nav-idx{font-size:16px;font-weight:700;}
+.nav-fname{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.btn-skip{display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:50px;border:1.5px solid var(--filter);background:var(--bg);color:var(--filter);font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;}
+.btn-skip:active{background:#e8f9fb;}
+
+/* 画像 */
+.img-wrap{position:relative;background:#111;}
+.img-wrap img{width:100%;max-height:52vw;object-fit:contain;display:block;}
+.status-badge{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:50px;font-size:12px;font-weight:700;}
+.sb-done   {background:var(--green-bg);color:var(--green);}
+.sb-partial{background:var(--amber-bg);color:var(--amber);}
+.sb-empty  {background:rgba(0,0,0,0.45);color:#fff;}
+
+/* フォーム */
+.form-body{padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--bg);}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.05em;}
+.fg label .req{color:var(--main);}
+input[type=text],textarea{width:100%;padding:10px 12px;font-size:15px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);color:var(--text);outline:none;font-family:inherit;transition:border-color .2s;}
+input[type=text]:focus,textarea:focus{border-color:var(--main);}
+textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.btn-group{display:flex;flex-wrap:wrap;gap:7px;}
+.bopt{padding:7px 13px;border-radius:50px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.bopt.ag{background:var(--filter);color:#fff;border-color:var(--filter);}
+.bopt.ac{background:var(--main);color:#fff;border-color:var(--main);}
+.chk-list{display:flex;flex-direction:column;gap:8px;}
+.chk-list label{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--main);flex-shrink:0;}
+
+/* 生成ボタン */
+.btn-area{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px;background:var(--bg);border-top:1px solid var(--border);}
+.btn-gen{padding:13px;font-size:14px;font-weight:700;border:none;border-radius:var(--r);cursor:pointer;}
+.btn-gen-copy{background:var(--surface);color:var(--text);}
+.btn-gen-next{background:var(--main);color:#fff;}
+.btn-gen:active{opacity:0.85;}
+
+/* 出力 */
+.output-area{margin:0 14px 14px;display:none;}
+.out-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.out-hd span{font-size:12px;font-weight:700;color:var(--muted);}
+.btn-copy{padding:6px 14px;font-size:13px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);border-radius:50px;cursor:pointer;}
+.btn-copy.ok{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-size:11.5px;line-height:1.7;overflow-x:auto;white-space:pre;font-family:'SF Mono','Fira Code',monospace;}
+.note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;}
+
+/* 完了グリッド */
+.grid-wrap{padding:12px 14px;background:var(--bg);border-top:1px solid var(--border);}
+.grid-title{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px;letter-spacing:.05em;}
+.dot-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.dot{width:20px;height:20px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;border:none;transition:transform .1s;}
+.dot:active{transform:scale(0.9);}
+.dot-done   {background:var(--green);color:#fff;}
+.dot-partial{background:#f0a000;color:#fff;}
+.dot-empty  {background:#ddd;color:#aaa;}
+.dot-current{outline:2px solid var(--main);outline-offset:1px;}
+
+/* ファイル選択後のリスタートボタン */
+.btn-reselect{background:none;border:1.5px solid var(--border);border-radius:50px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- スタート画面 -->
+<div id="scStart">
+  <h1>アバター入力ツール</h1>
+  <p>画像フォルダを選択すると<br>1枚ずつ確認しながら情報を入力できます</p>
+  <button class="btn-start" onclick="document.getElementById('fileInput').click()">
+    📂 画像を選択（複数可）
+  </button>
+  <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
+  <div class="saved-info" id="savedInfo" style="display:none">
+    <div class="si-title">前回の記録</div>
+    <div class="si-body" id="savedInfoText"></div>
+    <button class="btn-clear" onclick="clearAll()">データをすべてクリア</button>
+  </div>
+</div>
+
+<!-- メイン画面 -->
+<div id="scMain">
+  <div class="hd">
+    <button class="hd-back" onclick="backToStart()">←</button>
+    <div class="hd-title" id="hdTitle">アバター入力</div>
+    <div class="hd-prog" id="hdProg">0/0 完了</div>
+  </div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progFill" style="width:0%"></div></div>
+
+  <div class="nav">
+    <button class="btn-nav" id="btnPrev" onclick="go(cur-1)">‹</button>
+    <div class="nav-center">
+      <div class="nav-idx" id="navIdx">1 / 0</div>
+      <div class="nav-fname" id="navFname">-</div>
+    </div>
+    <button class="btn-nav" id="btnNext" onclick="go(cur+1)">›</button>
+    <button class="btn-skip" onclick="goNextEmpty()">未入力へ →</button>
+  </div>
+
+  <div class="img-wrap">
+    <img id="imgDisp" src="" alt="">
+    <div class="status-badge sb-empty" id="statusBadge">未記入</div>
+  </div>
+
+  <div class="form-body">
+    <div class="fg">
+      <label>アバターID <span class="req">*</span></label>
+      <input type="text" id="fId" placeholder="例: avatar01" autocomplete="off" autocorrect="off" spellcheck="false" oninput="autoSave()">
+    </div>
+    <div class="fg">
+      <label>アバター名 <span class="req">*</span></label>
+      <input type="text" id="fName" placeholder="例: まめひなた改変" oninput="autoSave()">
+    </div>
+    <div class="fg">
+      <label>ジャンル <span class="req">*</span></label>
+      <div class="btn-group" id="genreGrp">
+        <button class="bopt" data-v="genre_copy_avatar" onclick="sel(this,'g')">元ネタあり（別アバター）</button>
+        <button class="bopt" data-v="genre_copy_game"   onclick="sel(this,'g')">元ネタあり（その他）</button>
+        <button class="bopt" data-v="genre_org"         onclick="sel(this,'g')">元ネタなし</button>
+      </div>
+    </div>
+    <div class="fg">
+      <label>カテゴリ <span class="req">*</span></label>
+      <div class="btn-group" id="cateGrp">
+        <button class="bopt" data-v="cate_mame"  onclick="sel(this,'c')">まめひなた</button>
+        <button class="bopt" data-v="cate_foshu" onclick="sel(this,'c')">フォシュニア</button>
+        <button class="bopt" data-v="cate_chalo" onclick="sel(this,'c')">シャロ</button>
+        <button class="bopt" data-v="cate_other" onclick="sel(this,'c')">その他</button>
+      </div>
+    </div>
+    <div class="fg">
+      <label>説明文（desc）</label>
+      <textarea id="fDesc" placeholder="アバターの説明（省略可）" oninput="autoSave()"></textarea>
+    </div>
+    <div class="fg">
+      <label>個別画像を使う場合チェック（未チェック = デフォルト共有画像）</label>
+      <div class="chk-list">
+        <label><input type="checkbox" id="chkM" onchange="autoSave()"> mainImg（立ち絵）を個別指定</label>
+        <label><input type="checkbox" id="chkB" onchange="autoSave()"> bgImg / bgPattern を個別指定</label>
+        <label><input type="checkbox" id="chkF" onchange="autoSave()"> 枠C を個別指定</label>
+        <label><input type="checkbox" id="chkI" onchange="autoSave()"> infoImg を個別指定</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-area">
+    <button class="btn-gen btn-gen-copy" onclick="generate(false)">コードを生成</button>
+    <button class="btn-gen btn-gen-next" onclick="generate(true)">生成して次へ →</button>
+  </div>
+
+  <div class="output-area" id="outArea">
+    <div class="out-hd">
+      <span>生成されたコード</span>
+      <button class="btn-copy" id="btnCopy" onclick="copyCode()">コピー</button>
+    </div>
+    <pre id="outPre"></pre>
+    <p class="note">↑ このブロックを avatars.js の末尾（export default の前）に貼り付け</p>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="grid-title">進捗 — タップでジャンプ</div>
+    <div class="dot-grid" id="dotGrid"></div>
+  </div>
+</div>
+
+<script>
+const SK = 'avt_tool_v2';
+let files = [], cur = 0, objUrls = [];
+let selG = '', selC = '';
+let db = {};
+
+function loadDB(){ try{ db = JSON.parse(localStorage.getItem(SK))||{}; }catch(e){ db={}; } }
+function saveDB(){ localStorage.setItem(SK, JSON.stringify(db)); }
+function getKey(i){ return files[i]?.name || ''; }
+
+// 起動時
+window.onload = function(){
+  loadDB();
+  const keys = Object.keys(db);
+  const done = keys.filter(k=>db[k].completed).length;
+  if(keys.length > 0){
+    document.getElementById('savedInfo').style.display='block';
+    document.getElementById('savedInfoText').textContent = keys.length+'件のデータ（'+done+'件完了）';
+  }
+};
+
+// ファイル選択
+document.getElementById('fileInput').addEventListener('change', function(e){
+  const arr = Array.from(e.target.files).sort((a,b)=>a.name.localeCompare(b.name));
+  if(!arr.length) return;
+  objUrls.forEach(u=>URL.revokeObjectURL(u));
+  objUrls = arr.map(f=>URL.createObjectURL(f));
+  files = arr;
+  cur = 0;
+  document.getElementById('scStart').style.display='none';
+  document.getElementById('scMain').style.display='flex';
+  go(0);
+});
+
+function backToStart(){
+  document.getElementById('scMain').style.display='none';
+  document.getElementById('scStart').style.display='flex';
+  loadDB();
+  const keys = Object.keys(db);
+  const done = keys.filter(k=>db[k].completed).length;
+  if(keys.length>0){
+    document.getElementById('savedInfo').style.display='block';
+    document.getElementById('savedInfoText').textContent=keys.length+'件（'+done+'件完了）';
+  }
+}
+
+function clearAll(){
+  if(!confirm('すべてのデータをクリアしますか？')) return;
+  localStorage.removeItem(SK);
+  db={};
+  document.getElementById('savedInfo').style.display='none';
+}
+
+// 移動
+function go(idx){
+  if(!files.length) return;
+  autoSave();
+  cur = Math.max(0, Math.min(idx, files.length-1));
+  render();
+}
+
+function goNextEmpty(){
+  for(let i=cur+1; i<files.length; i++){
+    const d = db[files[i].name];
+    if(!d || !d.completed){ go(i); return; }
+  }
+  for(let i=0; i<cur; i++){
+    const d = db[files[i].name];
+    if(!d || !d.completed){ go(i); return; }
+  }
+  alert('すべて完了しています！');
+}
+
+// 描画
+function render(){
+  const f = files[cur];
+  document.getElementById('imgDisp').src = objUrls[cur];
+  document.getElementById('navIdx').textContent = (cur+1)+' / '+files.length;
+  document.getElementById('navFname').textContent = f.name;
+  document.getElementById('hdTitle').textContent = f.name;
+  document.getElementById('btnPrev').disabled = cur===0;
+  document.getElementById('btnNext').disabled = cur===files.length-1;
+
+  // フォーム復元
+  const d = db[f.name];
+  selG=''; selC='';
+  document.getElementById('fId').value   = d?.id   || autoId(f.name);
+  document.getElementById('fName').value = d?.name || '';
+  document.getElementById('fDesc').value = d?.desc || '';
+  document.getElementById('chkM').checked = d?.chkM || false;
+  document.getElementById('chkB').checked = d?.chkB || false;
+  document.getElementById('chkF').checked = d?.chkF || false;
+  document.getElementById('chkI').checked = d?.chkI || false;
+  document.querySelectorAll('#genreGrp .bopt').forEach(b=>{
+    b.classList.remove('ag');
+    if(d?.genre && b.dataset.v===d.genre){ b.classList.add('ag'); selG=d.genre; }
+  });
+  document.querySelectorAll('#cateGrp .bopt').forEach(b=>{
+    b.classList.remove('ac');
+    if(d?.cate && b.dataset.v===d.cate){ b.classList.add('ac'); selC=d.cate; }
+  });
+
+  // アウトプット非表示（別アバターを開いたとき）
+  const oa = document.getElementById('outArea');
+  oa.style.display = (d?.completed && d?.code) ? 'block' : 'none';
+  if(d?.completed && d?.code) document.getElementById('outPre').textContent = d.code;
+
+  updateStatus();
+  updateProgress();
+  renderDots();
+}
+
+// ファイル名から自動ID生成（拡張子除去・英数のみ）
+function autoId(fname){
+  return fname.replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_]/g,'').toLowerCase();
+}
+
+// ジャンル/カテゴリ選択
+function sel(btn, type){
+  if(type==='g'){
+    document.querySelectorAll('#genreGrp .bopt').forEach(b=>b.classList.remove('ag'));
+    btn.classList.add('ag'); selG=btn.dataset.v;
+  } else {
+    document.querySelectorAll('#cateGrp .bopt').forEach(b=>b.classList.remove('ac'));
+    btn.classList.add('ac'); selC=btn.dataset.v;
+  }
+  autoSave();
+}
+
+// 自動保存
+function autoSave(){
+  const key = getKey(cur);
+  if(!key) return;
+  const id   = document.getElementById('fId').value.trim();
+  const name = document.getElementById('fName').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  const hasData = id||name||selG||selC||desc;
+  if(!hasData && !db[key]) return;
+  db[key] = {
+    id, name, genre: selG, cate: selC, desc,
+    chkM: document.getElementById('chkM').checked,
+    chkB: document.getElementById('chkB').checked,
+    chkF: document.getElementById('chkF').checked,
+    chkI: document.getElementById('chkI').checked,
+    completed: db[key]?.completed || false,
+    code: db[key]?.code || ''
+  };
+  saveDB();
+  updateStatus();
+  updateProgress();
+  renderDots();
+}
+
+// ステータスバッジ更新
+function updateStatus(){
+  const key = getKey(cur);
+  const d = db[key];
+  const badge = document.getElementById('statusBadge');
+  if(d?.completed){
+    badge.className='status-badge sb-done'; badge.textContent='✓ 完了';
+  } else if(d && (d.id||d.name||d.genre||d.cate)){
+    badge.className='status-badge sb-partial'; badge.textContent='入力中';
+  } else {
+    badge.className='status-badge sb-empty'; badge.textContent='未記入';
+  }
+}
+
+// プログレス更新
+function updateProgress(){
+  const done = files.filter(f=>db[f.name]?.completed).length;
+  const pct  = files.length ? (done/files.length*100).toFixed(1) : 0;
+  document.getElementById('hdProg').textContent  = done+'/'+files.length+' 完了';
+  document.getElementById('progFill').style.width = pct+'%';
+}
+
+// ドットグリッド
+function renderDots(){
+  const grid = document.getElementById('dotGrid');
+  grid.innerHTML='';
+  files.forEach((f,i)=>{
+    const d = db[f.name];
+    let cls = 'dot-empty';
+    if(d?.completed) cls='dot-done';
+    else if(d&&(d.id||d.name||d.genre||d.cate)) cls='dot-partial';
+    const btn = document.createElement('button');
+    btn.className = 'dot '+cls+(i===cur?' dot-current':'');
+    btn.textContent = i+1;
+    btn.title = f.name;
+    btn.onclick = ()=>go(i);
+    grid.appendChild(btn);
+  });
+}
+
+// コード生成
+function generate(andNext){
+  const id   = document.getElementById('fId').value.trim();
+  const name = document.getElementById('fName').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  if(!id)   { alert('アバターIDを入力してください'); return; }
+  if(!name) { alert('アバター名を入力してください'); return; }
+  if(!selG) { alert('ジャンルを選択してください'); return; }
+  if(!selC) { alert('カテゴリを選択してください'); return; }
+
+  const chkM = document.getElementById('chkM').checked;
+  const chkB = document.getElementById('chkB').checked;
+  const chkF = document.getElementById('chkF').checked;
+  const chkI = document.getElementById('chkI').checked;
+
+  const miniPC = chkM ? `my_Dic + '/thumbnail/mini_pc.png'` : `defo_miniImgPC`;
+  const miniSP = chkM ? `my_Dic + '/thumbnail/mini_sp.png'` : `defo_miniImgSP`;
+  const bgImg  = chkB ? `my_Dic + '/bg.png'`               : `defo_bgImg`;
+  const bgPat  = chkB ? `my_Dic + '/pattern.png'`          : `defo_bgPattern`;
+  const fcTop  = chkF ? `my_Dic + '/frame_c_top.png'`      : `defo_frameCTop`;
+  const fcBot  = chkF ? `my_Dic + '/frame_c_bottom.png'`   : `defo_frameCBottom`;
+  const info   = chkI ? `my_Dic + '/info_bg.png'`          : `defo_infoImg`;
+
+  const code =
+`my_avatarid = '${id}';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '${name}',
+  genre:        ${selG},
+  category:     ${selC},
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    ${miniPC},
+  miniImgSP:    ${miniSP},
+
+  bgImg:        ${bgImg},
+  bgPattern:    ${bgPat},
+  frameCTop:    ${fcTop},
+  frameCBottom: ${fcBot},
+  infoImg:      ${info},
+
+  desc: '${(desc||'アバターの説明テキスト。').replace(/'/g,"\\'")}',
+
+  photos: [],
+
+  orgAvt: []
+});`;
+
+  // 保存
+  const key = getKey(cur);
+  db[key] = {
+    id, name, genre:selG, cate:selC, desc,
+    chkM, chkB, chkF, chkI,
+    completed: true,
+    code
+  };
+  saveDB();
+
+  document.getElementById('outPre').textContent = code;
+  document.getElementById('outArea').style.display = 'block';
+  document.getElementById('outArea').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  updateStatus(); updateProgress(); renderDots();
+
+  if(andNext){
+    setTimeout(()=>{
+      if(cur < files.length-1) go(cur+1);
+      else goNextEmpty();
+    }, 300);
+  }
+}
+
+// コピー
+function copyCode(){
+  const text = document.getElementById('outPre').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('btnCopy');
+    btn.textContent='✓ コピーしました'; btn.classList.add('ok');
+    setTimeout(()=>{ btn.textContent='コピー'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
