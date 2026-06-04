@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/5 0:19:25  /  2件
+// 生成日時: 2026/6/5 0:23:26  /  3件
 // =====================================================
 
 // アバターデータ　テンプレート ================================================
@@ -85,6 +85,33 @@ let my_Dic;
 // アバターデータ本体
 // =====================================================
 const _avatars = [];
+
+/* ─── 看板ネコ ─── */
+my_avatarid = '1010';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '看板ネコ',
+  genre:        genre_org,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        defo_bgImg,
+  bgPattern:    defo_bgPattern,
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  desc: '初めて改変したアバター
+無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
+
+  photos: [],
+
+  orgAvt: []
+});
 
 /* ─── test ─── */
 my_avatarid = 'vrchat_20260307_004043964_1920x1080';
