@@ -64,6 +64,7 @@ const genre_org         = '元ネタなし';
 // 定数エリア：カテゴリ
 // =====================================================
 const cate_mame  = 'まめひなた';
+const cate_ruri  = '凪夜瑠璃';
 const cate_foshu = 'フォシュニア';
 const cate_chalo = 'シャロ';
 const cate_other = 'その他';
@@ -153,14 +154,13 @@ _avatars.push({
 
   mainImg:      my_Dic + '/thumbnail/main.png',
   miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
-  miniImgPC:    defo_miniImgPC,      // 個別にするなら my_Dic + '/thumbnail/mini_pc.png'
-  miniImgSP:    defo_miniImgSP,      // 個別にするなら my_Dic + '/thumbnail/mini_sp.png'
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-  bgImg:        defo_bgImg,          // 個別にするなら my_Dic + '/bg.png'
-  bgPattern:    defo_bgPattern,      // 個別にするなら my_Dic + '/pattern.png'
-  frameCTop:    defo_frameCTop,      // 個別にするなら my_Dic + '/frame_c_top.png'
-  frameCBottom: defo_frameCBottom,   // 個別にするなら my_Dic + '/frame_c_bottom.png'
-  infoImg:      defo_infoImg,        // 個別にするなら my_Dic + '/info_bg.png'
+  bgImg:        defo_bgImg,       // ← デフォルト共有画像を使用
+  bgPattern:    defo_bgPattern,
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      defo_infoImg,     // ← デフォルト共有画像を使用
 
   desc: 'テストアバター②の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
 
@@ -186,14 +186,14 @@ _avatars.push({
   category:     cate_chalo,
 
   mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    defo_miniImgPC,      // 個別にするなら my_Dic + '/thumbnail/mini_pc.png'
-  miniImgSP:    defo_miniImgSP,      // 個別にするなら my_Dic + '/thumbnail/mini_sp.png'
+  miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-  bgImg:        defo_bgImg,          // 個別にするなら my_Dic + '/bg.png'
-  bgPattern:    defo_bgPattern,      // 個別にするなら my_Dic + '/pattern.png'
-  frameCTop:    defo_frameCTop,      // 個別にするなら my_Dic + '/frame_c_top.png'
-  frameCBottom: defo_frameCBottom,   // 個別にするなら my_Dic + '/frame_c_bottom.png'
-  infoImg:      defo_infoImg,        // 個別にするなら my_Dic + '/info_bg.png'
+  bgImg:        my_Dic + '/bg.png',
+  bgPattern:    my_Dic + '/pattern.png',
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      my_Dic + '/info_bg.png',
 
   desc: 'テストアバター③の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文。',
 
@@ -224,14 +224,14 @@ _avatars.push({
   category:     cate_other,
 
   mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    defo_miniImgPC,      // 個別にするなら my_Dic + '/thumbnail/mini_pc.png'
-  miniImgSP:    defo_miniImgSP,      // 個別にするなら my_Dic + '/thumbnail/mini_sp.png'
+  miniImgPC:    my_Dic + '/thumbnail/mini_pc.png',
+  miniImgSP:    my_Dic + '/thumbnail/mini_sp.png',
 
-  bgImg:        defo_bgImg,          // 個別にするなら my_Dic + '/bg.png'
-  bgPattern:    defo_bgPattern,      // 個別にするなら my_Dic + '/pattern.png'
-  frameCTop:    defo_frameCTop,      // 個別にするなら my_Dic + '/frame_c_top.png'
-  frameCBottom: defo_frameCBottom,   // 個別にするなら my_Dic + '/frame_c_bottom.png'
-  infoImg:      defo_infoImg,        // 個別にするなら my_Dic + '/info_bg.png'
+  bgImg:        my_Dic + '/bg.png',
+  bgPattern:    defo_bgPattern,   // ← デフォルト共有画像を使用
+  frameCTop:    my_Dic + '/frame_c_top.png',
+  frameCBottom: my_Dic + '/frame_c_bottom.png',
+  infoImg:      my_Dic + '/info_bg.png',
 
   desc: 'テストアバター④の説明テキストです。詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文詳細文。',
 
