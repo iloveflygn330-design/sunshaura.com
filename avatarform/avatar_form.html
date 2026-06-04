@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>アバター入力ツール</title>
+<style>
+:root{
+  --main:#CC2244;--main-dark:#8B1228;--main-pale:#FFF0F3;--main-mid:#B01D3A;
+  --filter:#00BBCC;--text:#1a1a1a;--muted:#888;--border:#e0e0e0;
+  --bg:#fff;--surface:#f6f6f6;--r:10px;
+  --green:#1a8a3a;--green-bg:#e6f7ee;--amber:#b06000;--amber-bg:#fff5e0;
+  --blue:#1a5fa8;--blue-bg:#e8f0fb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;font-family:'Helvetica Neue',Arial,'Hiragino Sans',sans-serif;font-size:15px;color:var(--text);background:var(--surface);}
+
+/* ===== 共通 ===== */
+.screen{display:none;flex-direction:column;min-height:100vh;}
+.screen.active{display:flex;}
+input[type=text],input[type=password],textarea,select{
+  width:100%;padding:10px 12px;font-size:15px;border:1.5px solid var(--border);
+  border-radius:var(--r);background:var(--bg);color:var(--text);outline:none;
+  font-family:inherit;transition:border-color .2s;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--main);}
+textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.fg{margin-bottom:12px;}
+.fg>label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.05em;}
+.fg .note{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+
+/* ===== 設定画面 ===== */
+#scSettings{background:var(--main-pale);padding:0;}
+.set-hd{background:var(--main);color:#fff;padding:16px;display:flex;align-items:center;gap:10px;}
+.set-hd h1{font-size:17px;font-weight:700;}
+.set-body{padding:16px;flex:1;overflow-y:auto;}
+.set-section{background:var(--bg);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;border:1px solid var(--border);}
+.set-section h2{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;}
+.pat-warn{background:#fff8e8;border:1px solid #f0c040;border-radius:var(--r);padding:12px;margin-bottom:14px;font-size:12px;color:#7a5500;line-height:1.6;}
+.pat-warn strong{display:block;margin-bottom:4px;font-size:13px;}
+.btn-primary{width:100%;padding:14px;background:var(--main);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;}
+.btn-primary:active{background:var(--main-dark);}
+.btn-secondary{width:100%;padding:12px;background:var(--surface);color:var(--text);border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.set-saved{font-size:12px;color:var(--green);margin-top:8px;text-align:center;}
+
+/* ===== ローディング画面 ===== */
+#scLoading{align-items:center;justify-content:center;gap:16px;background:var(--main-pale);}
+.loader{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.load-msg{font-size:15px;color:var(--muted);}
+.load-err{background:var(--bg);border:1px solid #f0c040;border-radius:var(--r);padding:14px;max-width:320px;font-size:13px;color:#7a3300;line-height:1.6;text-align:center;}
+.load-err strong{display:block;font-size:15px;margin-bottom:8px;}
+
+/* ===== メイン画面 ===== */
+#scMain{background:var(--surface);}
+.hd{position:sticky;top:0;z-index:10;background:var(--main);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 14px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.hd-back{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:2px 6px;opacity:.85;line-height:1;}
+.hd-title{flex:1;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hd-prog{font-size:12px;background:rgba(255,255,255,.2);border-radius:50px;padding:3px 10px;white-space:nowrap;}
+.prog-bar-wrap{height:4px;background:rgba(0,0,0,.08);}
+.prog-bar-fill{height:100%;background:var(--green);transition:width .4s;}
+
+/* ナビ */
+.nav{display:flex;align-items:center;padding:10px 12px;gap:8px;background:var(--bg);border-bottom:1px solid var(--border);}
+.btn-nav{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);font-size:18px;cursor:pointer;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;}
+.btn-nav:disabled{opacity:.3;cursor:default;}
+.btn-nav:active:not(:disabled){background:var(--surface);}
+.nav-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;}
+.nav-idx{font-size:16px;font-weight:700;}
+.nav-fname{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.btn-skip{padding:7px 11px;border-radius:50px;border:1.5px solid var(--filter);background:var(--bg);color:var(--filter);font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;}
+
+/* 画像 */
+.img-wrap{position:relative;background:#111;min-height:100px;}
+.img-wrap img{width:100%;max-height:55vw;object-fit:contain;display:block;}
+.img-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#111;}
+.status-badge{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:50px;font-size:12px;font-weight:700;}
+.sb-done   {background:var(--green-bg);color:var(--green);}
+.sb-partial{background:var(--amber-bg);color:var(--amber);}
+.sb-empty  {background:rgba(0,0,0,.5);color:#fff;}
+
+/* フォーム */
+.form-body{padding:14px;display:flex;flex-direction:column;gap:0;background:var(--bg);}
+.btn-group{display:flex;flex-wrap:wrap;gap:7px;}
+.bopt{padding:7px 13px;border-radius:50px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.bopt.ag{background:var(--filter);color:#fff;border-color:var(--filter);}
+.bopt.ac{background:var(--main);color:#fff;border-color:var(--main);}
+.chk-list{display:flex;flex-direction:column;gap:8px;}
+.chk-list label{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;font-weight:400;color:var(--text);}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--main);flex-shrink:0;}
+.divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+
+/* 生成ボタン */
+.btn-area{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;background:var(--bg);border-top:1px solid var(--border);}
+.btn-gen{padding:13px;font-size:14px;font-weight:700;border:none;border-radius:var(--r);cursor:pointer;}
+.btn-gen:active{opacity:.85;}
+.btn-copy-gen{background:var(--surface);color:var(--text);}
+.btn-next-gen{background:var(--main);color:#fff;}
+
+/* GitHub保存ボタン */
+.github-area{padding:10px 14px;background:var(--bg);border-top:1px solid var(--border);}
+.btn-github{width:100%;padding:13px;font-size:14px;font-weight:700;background:var(--blue-bg);color:var(--blue);border:1.5px solid #b0caf0;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-github:active{opacity:.85;}
+.github-status{font-size:12px;text-align:center;margin-top:8px;min-height:18px;color:var(--muted);}
+.github-status.ok  {color:var(--green);}
+.github-status.err {color:#cc2200;}
+
+/* 出力 */
+.output-area{margin:0 14px 14px;display:none;}
+.out-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:14px;}
+.out-hd span{font-size:12px;font-weight:700;color:var(--muted);}
+.btn-copy{padding:6px 14px;font-size:13px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);border-radius:50px;cursor:pointer;color:var(--text);}
+.btn-copy.ok{background:var(--green-bg);color:var(--green);border-color:var(--green);}
+pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-size:11px;line-height:1.7;overflow-x:auto;white-space:pre;font-family:'SF Mono','Fira Code',monospace;}
+.hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;}
+
+/* ドットグリッド */
+.grid-wrap{padding:12px 14px 20px;background:var(--bg);border-top:1px solid var(--border);}
+.grid-title{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px;letter-spacing:.05em;}
+.dot-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.dot{width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:9px;font-weight:700;border:none;display:flex;align-items:center;justify-content:center;transition:transform .1s;}
+.dot:active{transform:scale(.9);}
+.dot-done   {background:var(--green);color:#fff;}
+.dot-partial{background:#f0a000;color:#fff;}
+.dot-empty  {background:#ddd;color:#aaa;}
+.dot-current{outline:2.5px solid var(--main);outline-offset:1px;}
+</style>
+</head>
+<body>
+
+<!-- ===== 設定画面 ===== -->
+<div id="scSettings" class="screen active">
+  <div class="set-hd">
+    <h1>⚙️ 設定</h1>
+  </div>
+  <div class="set-body">
+
+    <div class="set-section">
+      <h2>GitHub リポジトリ</h2>
+      <div class="fg">
+        <label>ユーザー名（owner）</label>
+        <input type="text" id="sOwner" placeholder="例: sunshaura" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <div class="fg">
+        <label>リポジトリ名</label>
+        <input type="text" id="sRepo" placeholder="例: sunshaura.com" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="fg">
+        <label>ブランチ名</label>
+        <input type="text" id="sBranch" placeholder="main" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <div class="set-section">
+      <h2>ファイルパス</h2>
+      <div class="fg">
+        <label>参照画像フォルダ（リポジトリ内のパス）</label>
+        <input type="text" id="sImgFolder" placeholder="avatarform/profile" autocomplete="off" spellcheck="false">
+        <p class="note">フォームに表示するアバター参照画像の置き場所</p>
+      </div>
+      <div class="fg">
+        <label>出力ファイルパス（avatars.js）</label>
+        <input type="text" id="sOutputFile" placeholder="avatars.js" autocomplete="off" spellcheck="false">
+        <p class="note">GitHubに保存するファイルのパス</p>
+      </div>
+    </div>
+
+    <div class="pat-warn">
+      <strong>⚠️ Personal Access Token（PAT）について</strong>
+      GitHubへの書き込みに必要なキーです。<br>
+      GitHub → Settings → Developer settings → Fine-grained tokens<br>
+      対象リポジトリに <strong>Contents: Read and Write</strong> のみ付与してください。<br>
+      このツールを使う端末のみで保管し、他人には見せないでください。
+    </div>
+
+    <div class="set-section">
+      <h2>Personal Access Token</h2>
+      <div class="fg">
+        <label>PAT（書き込みに必要・読み込みのみなら空欄可）</label>
+        <input type="password" id="sPat" placeholder="github_pat_..." autocomplete="off">
+        <p class="note">端末のlocalStorageに保存されます</p>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="saveSettings()">保存して画像を読み込む</button>
+    <div class="set-saved" id="setSaved"></div>
+    <button class="btn-secondary" id="btnClearData" onclick="clearAllData()" style="display:none">保存データをすべてクリア</button>
+  </div>
+</div>
+
+<!-- ===== ローディング画面 ===== -->
+<div id="scLoading" class="screen">
+  <div class="loader" id="loadSpinner"></div>
+  <div class="load-msg" id="loadMsg">GitHubから画像を取得中...</div>
+  <div class="load-err" id="loadErr" style="display:none">
+    <strong>⚠️ 読み込みエラー</strong>
+    <span id="loadErrMsg"></span>
+    <br><br>
+    <button class="btn-secondary" style="width:auto;padding:8px 20px;" onclick="showSettings()">設定に戻る</button>
+  </div>
+</div>
+
+<!-- ===== メイン画面 ===== -->
+<div id="scMain" class="screen">
+  <div class="hd">
+    <button class="hd-back" onclick="showSettings()">⚙</button>
+    <div class="hd-title" id="hdTitle">アバター入力</div>
+    <div class="hd-prog" id="hdProg">0/0 完了</div>
+  </div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progFill" style="width:0%"></div></div>
+
+  <div class="nav">
+    <button class="btn-nav" id="btnPrev" onclick="go(cur-1)">‹</button>
+    <div class="nav-center">
+      <div class="nav-idx" id="navIdx">1 / 0</div>
+      <div class="nav-fname" id="navFname">-</div>
+    </div>
+    <button class="btn-nav" id="btnNext" onclick="go(cur+1)">›</button>
+    <button class="btn-skip" onclick="goNextEmpty()">未入力へ →</button>
+  </div>
+
+  <div class="img-wrap" id="imgWrap">
+    <div class="img-loading" id="imgLoading"><div class="loader"></div></div>
+    <img id="imgDisp" src="" alt="" style="display:none" onload="imgLoaded()" onerror="imgError()">
+    <div class="status-badge sb-empty" id="statusBadge">未記入</div>
+  </div>
+
+  <div class="form-body">
+    <div class="fg">
+      <label>アバターID ★必須</label>
+      <input type="text" id="fId" placeholder="例: avatar01" autocomplete="off" autocorrect="off" spellcheck="false" oninput="autoSave()">
+    </div>
+    <div class="fg">
+      <label>アバター名 ★必須</label>
+      <input type="text" id="fName" placeholder="例: まめひなた改変" oninput="autoSave()">
+    </div>
+    <div class="fg">
+      <label>ジャンル ★必須</label>
+      <div class="btn-group" id="genreGrp">
+        <button class="bopt" data-v="genre_copy_avatar" onclick="sel(this,'g')">元ネタあり（別アバター）</button>
+        <button class="bopt" data-v="genre_copy_game"   onclick="sel(this,'g')">元ネタあり（その他）</button>
+        <button class="bopt" data-v="genre_org"         onclick="sel(this,'g')">元ネタなし</button>
+      </div>
+    </div>
+    <div class="fg">
+      <label>カテゴリ ★必須</label>
+      <div class="btn-group" id="cateGrp">
+        <button class="bopt" data-v="cate_mame"  onclick="sel(this,'c')">まめひなた</button>
+        <button class="bopt" data-v="cate_foshu" onclick="sel(this,'c')">フォシュニア</button>
+        <button class="bopt" data-v="cate_chalo" onclick="sel(this,'c')">シャロ</button>
+        <button class="bopt" data-v="cate_other" onclick="sel(this,'c')">その他</button>
+      </div>
+    </div>
+    <div class="fg">
+      <label>説明文（省略可）</label>
+      <textarea id="fDesc" placeholder="アバターの説明テキスト" oninput="autoSave()"></textarea>
+    </div>
+    <hr class="divider">
+    <div class="fg">
+      <label>個別画像を使う場合チェック（未チェック = デフォルト共有画像）</label>
+      <div class="chk-list">
+        <label><input type="checkbox" id="chkM" onchange="autoSave()"> mainImg / miniImg を個別指定</label>
+        <label><input type="checkbox" id="chkB" onchange="autoSave()"> bgImg / bgPattern を個別指定</label>
+        <label><input type="checkbox" id="chkF" onchange="autoSave()"> 枠C（frameCTop / Bottom）を個別指定</label>
+        <label><input type="checkbox" id="chkI" onchange="autoSave()"> infoImg を個別指定</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-area">
+    <button class="btn-gen btn-copy-gen" onclick="generate(false)">コードを生成</button>
+    <button class="btn-gen btn-next-gen" onclick="generate(true)">生成して次へ →</button>
+  </div>
+
+  <div class="github-area">
+    <!-- GitHubに保存（全完了分をavatars.jsとして書き出し） -->
+    <button class="btn-github" onclick="pushToGitHub()">
+      <span style="font-size:18px;">↑</span> GitHubに保存（avatars.js を更新）
+    </button>
+    <div class="github-status" id="ghStatus"></div>
+  </div>
+
+  <div class="output-area" id="outArea">
+    <div class="out-hd">
+      <span>生成されたコード（この1件分）</span>
+      <button class="btn-copy" id="btnCopy" onclick="copyCode()">コピー</button>
+    </div>
+    <pre id="outPre"></pre>
+    <p class="hint">↑ 単品で使いたいときはここからコピーしてください</p>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="grid-title">進捗 — タップでジャンプ</div>
+    <div class="dot-grid" id="dotGrid"></div>
+  </div>
+</div>
+
+<script>
+// ===================== 定数 =====================
+const SK_SETTINGS = 'avt_settings';
+const SK_DATA     = 'avt_tool_v2';
+
+// ===================== 状態 =====================
+let settings = {};
+let images   = []; // [{name, url}]
+let cur      = 0;
+let selG = '', selC = '';
+let db   = {};
+
+// ===================== localStorage =====================
+function loadDB(){ try{ db = JSON.parse(localStorage.getItem(SK_DATA))||{}; }catch(e){ db={}; } }
+function saveDB(){ localStorage.setItem(SK_DATA, JSON.stringify(db)); }
+function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SK_SETTINGS))||null; }catch(e){ return null; } }
+function saveSettingsData(s){ localStorage.setItem(SK_SETTINGS, JSON.stringify(s)); }
+
+// ===================== 起動 =====================
+window.onload = function(){
+  loadDB();
+  const s = loadSettings();
+  if(s){
+    // フォームに設定を復元
+    document.getElementById('sOwner').value      = s.owner      || '';
+    document.getElementById('sRepo').value       = s.repo       || '';
+    document.getElementById('sBranch').value     = s.branch     || 'main';
+    document.getElementById('sImgFolder').value  = s.imgFolder  || 'avatarform/profile';
+    document.getElementById('sOutputFile').value = s.outputFile || 'avatars.js';
+    document.getElementById('sPat').value        = s.token      || '';
+  } else {
+    // デフォルト値
+    document.getElementById('sBranch').value     = 'main';
+    document.getElementById('sImgFolder').value  = 'avatarform/profile';
+    document.getElementById('sOutputFile').value = 'avatars.js';
+  }
+  // 保存データがある場合はクリアボタンを表示
+  if(Object.keys(db).length > 0){
+    document.getElementById('btnClearData').style.display = 'block';
+    const done = Object.values(db).filter(d=>d.completed).length;
+    document.getElementById('setSaved').textContent =
+      '保存済みデータ: '+Object.keys(db).length+'件（'+done+'件完了）';
+  }
+};
+
+// ===================== 画面切り替え =====================
+function showScreen(id){
+  ['scSettings','scLoading','scMain'].forEach(s=>{
+    const el = document.getElementById(s);
+    el.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+function showSettings(){ showScreen('scSettings'); }
+
+// ===================== 設定保存 & 画像読み込み =====================
+async function saveSettings(){
+  const s = {
+    owner:      document.getElementById('sOwner').value.trim(),
+    repo:       document.getElementById('sRepo').value.trim(),
+    branch:     document.getElementById('sBranch').value.trim() || 'main',
+    imgFolder:  document.getElementById('sImgFolder').value.trim() || 'avatarform/profile',
+    outputFile: document.getElementById('sOutputFile').value.trim() || 'avatars.js',
+    token:      document.getElementById('sPat').value.trim()
+  };
+  if(!s.owner){ alert('ユーザー名を入力してください'); return; }
+  if(!s.repo) { alert('リポジトリ名を入力してください'); return; }
+
+  settings = s;
+  saveSettingsData(s);
+  showScreen('scLoading');
+  document.getElementById('loadErr').style.display = 'none';
+  document.getElementById('loadSpinner').style.display = 'block';
+  document.getElementById('loadMsg').textContent = 'GitHubから画像を取得中...';
+
+  try {
+    images = await fetchImageList();
+    if(images.length === 0){
+      showError('フォルダ内に画像が見つかりませんでした。\nパス: ' + s.imgFolder);
+      return;
+    }
+    cur = 0;
+    showScreen('scMain');
+    render();
+  } catch(e) {
+    showError(e.message || '不明なエラーが発生しました');
+  }
+}
+
+function showError(msg){
+  document.getElementById('loadSpinner').style.display = 'none';
+  document.getElementById('loadMsg').style.display = 'none';
+  document.getElementById('loadErr').style.display = 'block';
+  document.getElementById('loadErrMsg').textContent = msg;
+}
+
+// ===================== GitHub API: 画像一覧取得 =====================
+async function fetchImageList(){
+  const url = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/${settings.imgFolder}?ref=${settings.branch}`;
+  const headers = { 'Accept': 'application/vnd.github.v3+json' };
+  if(settings.token) headers['Authorization'] = 'Bearer ' + settings.token;
+
+  const res = await fetch(url, { headers });
+  if(!res.ok){
+    const e = await res.json().catch(()=>({}));
+    throw new Error(`GitHub APIエラー ${res.status}: ${e.message || res.statusText}`);
+  }
+  const data = await res.json();
+  if(!Array.isArray(data)) throw new Error('フォルダの取得に失敗しました。パスを確認してください。');
+
+  return data
+    .filter(f => f.type==='file' && /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name))
+    .sort((a,b) => a.name.localeCompare(b.name))
+    .map(f => ({ name: f.name, url: f.download_url }));
+}
+
+// ===================== GitHub API: ファイルSHA取得 =====================
+async function getFileSha(){
+  const url = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/${settings.outputFile}?ref=${settings.branch}`;
+  const headers = { 'Accept':'application/vnd.github.v3+json', 'Authorization':'Bearer '+settings.token };
+  const res = await fetch(url, { headers });
+  if(res.status === 404) return null;
+  if(!res.ok) return null;
+  const d = await res.json();
+  return d.sha || null;
+}
+
+// ===================== GitHub API: ファイルPush =====================
+async function pushToGitHub(){
+  if(!settings.token){ alert('PATが設定されていません。\n設定画面でPersonal Access Tokenを入力してください。'); return; }
+
+  const entries = Object.values(db).filter(d => d.id && d.name && d.genre && d.cate);
+  if(entries.length === 0){ alert('入力済みのデータがありません。'); return; }
+
+  const st = document.getElementById('ghStatus');
+  st.className = 'github-status';
+  st.textContent = '生成中...';
+
+  const content = generateAvatarsJS();
+
+  st.textContent = 'GitHubに送信中...';
+  try {
+    const sha = await getFileSha();
+    const url = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/${settings.outputFile}`;
+    const headers = {
+      'Accept':'application/vnd.github.v3+json',
+      'Authorization':'Bearer '+settings.token,
+      'Content-Type':'application/json'
+    };
+    const body = {
+      message: 'Update avatars.js [avatar_form] ' + entries.length + '件',
+      content: toBase64(content),
+      branch:  settings.branch
+    };
+    if(sha) body.sha = sha;
+
+    const res = await fetch(url, { method:'PUT', headers, body: JSON.stringify(body) });
+    if(!res.ok){
+      const e = await res.json().catch(()=>({}));
+      throw new Error(e.message || res.statusText);
+    }
+    st.className = 'github-status ok';
+    st.textContent = '✓ 保存しました（' + entries.length + '件 → ' + settings.outputFile + '）';
+  } catch(e) {
+    st.className = 'github-status err';
+    st.textContent = '⚠️ エラー: ' + e.message;
+  }
+}
+
+// ===================== avatars.js 生成 =====================
+function generateAvatarsJS(){
+  const entries = Object.values(db)
+    .filter(d => d.id && d.name && d.genre && d.cate)
+    .sort((a,b) => a.id.localeCompare(b.id));
+
+  const blocks = entries.map(d => {
+    const miniPC = d.chkM ? `my_Dic + '/thumbnail/mini_pc.png'` : `defo_miniImgPC`;
+    const miniSP = d.chkM ? `my_Dic + '/thumbnail/mini_sp.png'` : `defo_miniImgSP`;
+    const bgImg  = d.chkB ? `my_Dic + '/bg.png'`               : `defo_bgImg`;
+    const bgPat  = d.chkB ? `my_Dic + '/pattern.png'`          : `defo_bgPattern`;
+    const fcTop  = d.chkF ? `my_Dic + '/frame_c_top.png'`      : `defo_frameCTop`;
+    const fcBot  = d.chkF ? `my_Dic + '/frame_c_bottom.png'`   : `defo_frameCBottom`;
+    const info   = d.chkI ? `my_Dic + '/info_bg.png'`          : `defo_infoImg`;
+    const desc   = (d.desc||'アバターの説明テキスト。').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `
+/* ─── ${d.name} ─── */
+my_avatarid = '${d.id}';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '${d.name}',
+  genre:        ${d.genre},
+  category:     ${d.cate},
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    ${miniPC},
+  miniImgSP:    ${miniSP},
+
+  bgImg:        ${bgImg},
+  bgPattern:    ${bgPat},
+  frameCTop:    ${fcTop},
+  frameCBottom: ${fcBot},
+  infoImg:      ${info},
+
+  desc: '${desc}',
+
+  photos: [],
+
+  orgAvt: []
+});`;
+  }).join('\n');
+
+  const now = new Date().toLocaleString('ja-JP');
+  return `// =====================================================
+// アバターデータ  avatars.js
+// avatar_form.html から自動生成
+// 生成日時: ${now}  /  ${entries.length}件
+// =====================================================
+
+// アバターデータ　テンプレート ================================================
+// ★ アバターを足すときは、ここのものを複製すること
+/*
+  my_avatarid = 'avatarAA';
+  my_Dic      = DicBase + my_avatarid;
+  _avatars.push({
+    id:           my_avatarid,
+    name:         'アバターネーム',
+    genre:        genre_copy_avatar,
+    category:     cate_mame,
+    mainImg:      my_Dic + '/thumbnail/main.png',
+    miniImgPC:    defo_miniImgPC,
+    miniImgSP:    defo_miniImgSP,
+    bgImg:        defo_bgImg,
+    bgPattern:    defo_bgPattern,
+    frameCTop:    defo_frameCTop,
+    frameCBottom: defo_frameCBottom,
+    infoImg:      defo_infoImg,
+    desc: '説明テキスト',
+    photos: [],
+    orgAvt: [ Item_Mamehinata ]
+  });
+*/
+
+
+// =====================================================
+// 定数エリア：パス
+// =====================================================
+const DicBase = 'assets/images/';
+const DicDefo = 'assets/images/ShareImg/';
+
+
+// =====================================================
+// 定数エリア：ジャンル
+// =====================================================
+const genre_copy_avatar = '元ネタあり（別アバター）';
+const genre_copy_game   = '元ネタあり（その他）';
+const genre_org         = '元ネタなし';
+
+
+// =====================================================
+// 定数エリア：カテゴリ
+// =====================================================
+const cate_mame  = 'まめひなた';
+const cate_foshu = 'フォシュニア';
+const cate_chalo = 'シャロ';
+const cate_other = 'その他';
+
+
+// =====================================================
+// 定数エリア：デフォルト画像（共有）
+// =====================================================
+const defo_miniImgPC    = DicDefo + 'mini_pc.png';
+const defo_miniImgSP    = DicDefo + 'mini_sp.png';
+const defo_bgImg        = DicDefo + 'bg.png';
+const defo_bgPattern    = DicDefo + 'pattern.png';
+const defo_frameCTop    = DicDefo + 'frame_c_top.png';
+const defo_frameCBottom = DicDefo + 'frame_c_bottom.png';
+const defo_infoImg      = DicDefo + 'info_bg.png';
+
+
+// =====================================================
+// 定数エリア：リンク付きアイテム画像
+// =====================================================
+const Item_Mamehinata = { img: DicBase + 'categories/mame_hinata.png', url: 'https://booth.pm/ja/items/4340548' };
+const Item_foshunia   = { img: DicBase + 'categories/foshunya.png',    url: 'https://booth.pm/ja/items/4580093' };
+const Item_charo      = { img: DicBase + 'categories/sharo.png',       url: 'https://booth.pm/...' };
+
+
+// =====================================================
+// 変数エリア：使いまわし用
+// =====================================================
+let my_avatarid;
+let my_Dic;
+
+
+// =====================================================
+// アバターデータ本体
+// =====================================================
+const _avatars = [];
+${blocks}
+
+// ★ アバターを追加する場合はここに追記
+
+
+export default _avatars;
+`;
+}
+
+// ===================== 1件コード生成 =====================
+function generate(andNext){
+  const id   = document.getElementById('fId').value.trim();
+  const name = document.getElementById('fName').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  if(!id)   { alert('アバターIDを入力してください'); return; }
+  if(!name) { alert('アバター名を入力してください'); return; }
+  if(!selG) { alert('ジャンルを選択してください'); return; }
+  if(!selC) { alert('カテゴリを選択してください'); return; }
+
+  const chkM = document.getElementById('chkM').checked;
+  const chkB = document.getElementById('chkB').checked;
+  const chkF = document.getElementById('chkF').checked;
+  const chkI = document.getElementById('chkI').checked;
+
+  const miniPC = chkM ? `my_Dic + '/thumbnail/mini_pc.png'` : `defo_miniImgPC`;
+  const miniSP = chkM ? `my_Dic + '/thumbnail/mini_sp.png'` : `defo_miniImgSP`;
+  const bgImg  = chkB ? `my_Dic + '/bg.png'`               : `defo_bgImg`;
+  const bgPat  = chkB ? `my_Dic + '/pattern.png'`          : `defo_bgPattern`;
+  const fcTop  = chkF ? `my_Dic + '/frame_c_top.png'`      : `defo_frameCTop`;
+  const fcBot  = chkF ? `my_Dic + '/frame_c_bottom.png'`   : `defo_frameCBottom`;
+  const info   = chkI ? `my_Dic + '/info_bg.png'`          : `defo_infoImg`;
+  const d2     = (desc||'アバターの説明テキスト。').replace(/'/g,"\\'");
+
+  const code =
+`my_avatarid = '${id}';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '${name}',
+  genre:        ${selG},
+  category:     ${selC},
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    ${miniPC},
+  miniImgSP:    ${miniSP},
+
+  bgImg:        ${bgImg},
+  bgPattern:    ${bgPat},
+  frameCTop:    ${fcTop},
+  frameCBottom: ${fcBot},
+  infoImg:      ${info},
+
+  desc: '${d2}',
+
+  photos: [],
+
+  orgAvt: []
+});`;
+
+  const key = images[cur]?.name || String(cur);
+  db[key] = { id, name, genre:selG, cate:selC, desc, chkM, chkB, chkF, chkI, completed:true, code };
+  saveDB();
+  document.getElementById('outPre').textContent = code;
+  document.getElementById('outArea').style.display = 'block';
+  updateStatus(); updateProgress(); renderDots();
+  document.getElementById('outArea').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  if(andNext){
+    setTimeout(()=>{ if(cur<images.length-1) go(cur+1); else goNextEmpty(); }, 300);
+  }
+}
+
+// ===================== コピー =====================
+function copyCode(){
+  navigator.clipboard.writeText(document.getElementById('outPre').textContent).then(()=>{
+    const b = document.getElementById('btnCopy');
+    b.textContent='✓ コピーしました'; b.classList.add('ok');
+    setTimeout(()=>{ b.textContent='コピー'; b.classList.remove('ok'); }, 2000);
+  });
+}
+
+// ===================== ナビゲーション =====================
+function go(idx){
+  if(!images.length) return;
+  autoSave();
+  cur = Math.max(0, Math.min(idx, images.length-1));
+  render();
+}
+function goNextEmpty(){
+  for(let i=cur+1;i<images.length;i++){
+    const d=db[images[i].name]; if(!d||!d.completed){ go(i); return; }
+  }
+  for(let i=0;i<cur;i++){
+    const d=db[images[i].name]; if(!d||!d.completed){ go(i); return; }
+  }
+  alert('すべて完了しています！');
+}
+
+// ===================== 画面描画 =====================
+function render(){
+  const f = images[cur];
+  document.getElementById('navIdx').textContent  = (cur+1)+' / '+images.length;
+  document.getElementById('navFname').textContent = f.name;
+  document.getElementById('hdTitle').textContent  = f.name;
+  document.getElementById('btnPrev').disabled     = cur===0;
+  document.getElementById('btnNext').disabled     = cur===images.length-1;
+
+  // 画像
+  const imgEl = document.getElementById('imgDisp');
+  const ldEl  = document.getElementById('imgLoading');
+  imgEl.style.display = 'none';
+  ldEl.style.display  = 'flex';
+  imgEl.src = f.url;
+
+  // フォーム復元
+  const d = db[f.name];
+  selG=''; selC='';
+  document.getElementById('fId').value   = d?.id   || autoId(f.name);
+  document.getElementById('fName').value = d?.name || '';
+  document.getElementById('fDesc').value = d?.desc || '';
+  document.getElementById('chkM').checked = d?.chkM||false;
+  document.getElementById('chkB').checked = d?.chkB||false;
+  document.getElementById('chkF').checked = d?.chkF||false;
+  document.getElementById('chkI').checked = d?.chkI||false;
+  document.querySelectorAll('#genreGrp .bopt').forEach(b=>{
+    b.classList.remove('ag');
+    if(d?.genre===b.dataset.v){ b.classList.add('ag'); selG=d.genre; }
+  });
+  document.querySelectorAll('#cateGrp .bopt').forEach(b=>{
+    b.classList.remove('ac');
+    if(d?.cate===b.dataset.v){ b.classList.add('ac'); selC=d.cate; }
+  });
+
+  // 出力エリア
+  const oa = document.getElementById('outArea');
+  if(d?.completed && d?.code){
+    oa.style.display='block';
+    document.getElementById('outPre').textContent=d.code;
+  } else {
+    oa.style.display='none';
+  }
+
+  // GitHub保存ステータスをクリア
+  const gs = document.getElementById('ghStatus');
+  gs.className='github-status'; gs.textContent='';
+
+  updateStatus(); updateProgress(); renderDots();
+}
+
+function imgLoaded(){
+  document.getElementById('imgDisp').style.display='block';
+  document.getElementById('imgLoading').style.display='none';
+}
+function imgError(){
+  document.getElementById('imgLoading').innerHTML='<span style="color:#fff;font-size:13px;">画像を読み込めませんでした</span>';
+}
+
+function autoId(fname){ return fname.replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_]/g,'').toLowerCase(); }
+
+// ===================== ジャンル/カテゴリ選択 =====================
+function sel(btn,type){
+  if(type==='g'){
+    document.querySelectorAll('#genreGrp .bopt').forEach(b=>b.classList.remove('ag'));
+    btn.classList.add('ag'); selG=btn.dataset.v;
+  } else {
+    document.querySelectorAll('#cateGrp .bopt').forEach(b=>b.classList.remove('ac'));
+    btn.classList.add('ac'); selC=btn.dataset.v;
+  }
+  autoSave();
+}
+
+// ===================== 自動保存 =====================
+function autoSave(){
+  const key = images[cur]?.name;
+  if(!key) return;
+  const id=document.getElementById('fId').value.trim();
+  const name=document.getElementById('fName').value.trim();
+  const desc=document.getElementById('fDesc').value.trim();
+  if(!id&&!name&&!selG&&!selC&&!desc&&!db[key]) return;
+  db[key]={
+    id, name, genre:selG, cate:selC, desc,
+    chkM:document.getElementById('chkM').checked,
+    chkB:document.getElementById('chkB').checked,
+    chkF:document.getElementById('chkF').checked,
+    chkI:document.getElementById('chkI').checked,
+    completed: db[key]?.completed||false,
+    code: db[key]?.code||''
+  };
+  saveDB(); updateStatus(); updateProgress(); renderDots();
+}
+
+// ===================== UI更新 =====================
+function updateStatus(){
+  const key=images[cur]?.name; const d=db[key];
+  const badge=document.getElementById('statusBadge');
+  if(d?.completed){ badge.className='status-badge sb-done'; badge.textContent='✓ 完了'; }
+  else if(d&&(d.id||d.name||d.genre||d.cate)){ badge.className='status-badge sb-partial'; badge.textContent='入力中'; }
+  else { badge.className='status-badge sb-empty'; badge.textContent='未記入'; }
+}
+function updateProgress(){
+  const done=images.filter(f=>db[f.name]?.completed).length;
+  const pct=images.length?(done/images.length*100).toFixed(1):0;
+  document.getElementById('hdProg').textContent=done+'/'+images.length+' 完了';
+  document.getElementById('progFill').style.width=pct+'%';
+}
+function renderDots(){
+  const grid=document.getElementById('dotGrid'); grid.innerHTML='';
+  images.forEach((f,i)=>{
+    const d=db[f.name];
+    let cls='dot-empty';
+    if(d?.completed) cls='dot-done';
+    else if(d&&(d.id||d.name||d.genre||d.cate)) cls='dot-partial';
+    const btn=document.createElement('button');
+    btn.className='dot '+cls+(i===cur?' dot-current':'');
+    btn.textContent=i+1; btn.title=f.name;
+    btn.onclick=()=>go(i);
+    grid.appendChild(btn);
+  });
+}
+
+// ===================== データクリア =====================
+function clearAllData(){
+  if(!confirm('保存されているすべての入力データを削除しますか？\n（GitHub上のファイルは変わりません）')) return;
+  localStorage.removeItem(SK_DATA); db={};
+  document.getElementById('setSaved').textContent='';
+  document.getElementById('btnClearData').style.display='none';
+  alert('クリアしました');
+}
+
+// ===================== ユーティリティ =====================
+function toBase64(str){
+  // 日本語対応UTF-8 base64エンコード
+  return btoa(unescape(encodeURIComponent(str)));
+}
+</script>
+</body>
+</html>
