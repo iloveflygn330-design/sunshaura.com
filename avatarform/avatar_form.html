@@ -6,19 +6,17 @@
 <title>アバター入力ツール</title>
 <style>
 :root{
-  --main:#CC2244;--main-dark:#8B1228;--main-pale:#FFF0F3;--main-mid:#B01D3A;
+  --main:#CC2244;--main-dark:#8B1228;--main-pale:#FFF0F3;
   --filter:#00BBCC;--text:#1a1a1a;--muted:#888;--border:#e0e0e0;
-  --bg:#fff;--surface:#f6f6f6;--r:10px;
+  --bg:#fff;--surface:#f4f4f4;--r:10px;
   --green:#1a8a3a;--green-bg:#e6f7ee;--amber:#b06000;--amber-bg:#fff5e0;
-  --blue:#1a5fa8;--blue-bg:#e8f0fb;
+  --blue:#1a5fa8;--blue-bg:#e8f0fb;--blue-border:#b0caf0;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{min-height:100%;font-family:'Helvetica Neue',Arial,'Hiragino Sans',sans-serif;font-size:15px;color:var(--text);background:var(--surface);}
-
-/* ===== 共通 ===== */
 .screen{display:none;flex-direction:column;min-height:100vh;}
 .screen.active{display:flex;}
-input[type=text],input[type=password],textarea,select{
+input[type=text],input[type=password],input[type=url],textarea,select{
   width:100%;padding:10px 12px;font-size:15px;border:1.5px solid var(--border);
   border-radius:var(--r);background:var(--bg);color:var(--text);outline:none;
   font-family:inherit;transition:border-color .2s;
@@ -27,23 +25,23 @@ input:focus,textarea:focus,select:focus{border-color:var(--main);}
 textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .fg{margin-bottom:12px;}
 .fg>label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.05em;}
-.fg .note{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.fg .hint{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
 
-/* ===== 設定画面 ===== */
-#scSettings{background:var(--main-pale);padding:0;}
-.set-hd{background:var(--main);color:#fff;padding:16px;display:flex;align-items:center;gap:10px;}
+/* 設定画面 */
+#scSettings{background:var(--main-pale);}
+.set-hd{background:var(--main);color:#fff;padding:14px 16px;}
 .set-hd h1{font-size:17px;font-weight:700;}
-.set-body{padding:16px;flex:1;overflow-y:auto;}
+.set-body{padding:16px;flex:1;}
 .set-section{background:var(--bg);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;border:1px solid var(--border);}
-.set-section h2{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;}
+.set-section h2{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;}
 .pat-warn{background:#fff8e8;border:1px solid #f0c040;border-radius:var(--r);padding:12px;margin-bottom:14px;font-size:12px;color:#7a5500;line-height:1.6;}
 .pat-warn strong{display:block;margin-bottom:4px;font-size:13px;}
 .btn-primary{width:100%;padding:14px;background:var(--main);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;}
 .btn-primary:active{background:var(--main-dark);}
 .btn-secondary{width:100%;padding:12px;background:var(--surface);color:var(--text);border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
-.set-saved{font-size:12px;color:var(--green);margin-top:8px;text-align:center;}
+.set-msg{font-size:12px;color:var(--green);margin-top:8px;text-align:center;min-height:16px;}
 
-/* ===== ローディング画面 ===== */
+/* ローディング */
 #scLoading{align-items:center;justify-content:center;gap:16px;background:var(--main-pale);}
 .loader{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--main);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -51,59 +49,83 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .load-err{background:var(--bg);border:1px solid #f0c040;border-radius:var(--r);padding:14px;max-width:320px;font-size:13px;color:#7a3300;line-height:1.6;text-align:center;}
 .load-err strong{display:block;font-size:15px;margin-bottom:8px;}
 
-/* ===== メイン画面 ===== */
+/* ヘッダー・ナビ */
 #scMain{background:var(--surface);}
 .hd{position:sticky;top:0;z-index:10;background:var(--main);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 14px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
-.hd-back{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:2px 6px;opacity:.85;line-height:1;}
+.hd-back{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:2px 6px;opacity:.85;line-height:1;}
 .hd-title{flex:1;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hd-prog{font-size:12px;background:rgba(255,255,255,.2);border-radius:50px;padding:3px 10px;white-space:nowrap;}
 .prog-bar-wrap{height:4px;background:rgba(0,0,0,.08);}
 .prog-bar-fill{height:100%;background:var(--green);transition:width .4s;}
-
-/* ナビ */
 .nav{display:flex;align-items:center;padding:10px 12px;gap:8px;background:var(--bg);border-bottom:1px solid var(--border);}
 .btn-nav{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);font-size:18px;cursor:pointer;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;}
 .btn-nav:disabled{opacity:.3;cursor:default;}
-.btn-nav:active:not(:disabled){background:var(--surface);}
 .nav-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;}
 .nav-idx{font-size:16px;font-weight:700;}
 .nav-fname{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
 .btn-skip{padding:7px 11px;border-radius:50px;border:1.5px solid var(--filter);background:var(--bg);color:var(--filter);font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;}
 
-/* 画像 */
-.img-wrap{position:relative;background:#111;min-height:100px;}
-.img-wrap img{width:100%;max-height:55vw;object-fit:contain;display:block;}
+/* 参照画像 */
+.img-wrap{position:relative;background:#111;min-height:80px;}
+.img-wrap img{width:100%;max-height:50vw;object-fit:contain;display:block;}
 .img-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#111;}
-.status-badge{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:50px;font-size:12px;font-weight:700;}
-.sb-done   {background:var(--green-bg);color:var(--green);}
+.status-badge{position:absolute;top:8px;right:8px;padding:4px 10px;border-radius:50px;font-size:12px;font-weight:700;}
+.sb-done{background:var(--green-bg);color:var(--green);}
 .sb-partial{background:var(--amber-bg);color:var(--amber);}
-.sb-empty  {background:rgba(0,0,0,.5);color:#fff;}
+.sb-empty{background:rgba(0,0,0,.5);color:#fff;}
 
-/* フォーム */
-.form-body{padding:14px;display:flex;flex-direction:column;gap:0;background:var(--bg);}
+/* フォーム共通 */
+.form-body{padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:12px;}
 .btn-group{display:flex;flex-wrap:wrap;gap:7px;}
 .bopt{padding:7px 13px;border-radius:50px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
 .bopt.ag{background:var(--filter);color:#fff;border-color:var(--filter);}
 .bopt.ac{background:var(--main);color:#fff;border-color:var(--main);}
-.chk-list{display:flex;flex-direction:column;gap:8px;}
-.chk-list label{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;font-weight:400;color:var(--text);}
-input[type=checkbox]{width:18px;height:18px;accent-color:var(--main);flex-shrink:0;}
-.divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.section-title{font-size:13px;font-weight:700;color:var(--muted);padding:10px 14px 6px;background:var(--surface);border-top:1px solid var(--border);letter-spacing:.04em;}
+.divider{border:none;border-top:1px solid var(--border);margin:0;}
 
-/* 生成ボタン */
+/* 画像スロット（単体） */
+.img-slots{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;background:var(--bg);}
+.img-slot{border-radius:var(--r);overflow:hidden;border:1.5px solid var(--border);background:var(--surface);position:relative;cursor:pointer;}
+.img-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.slot-preview{width:100%;display:block;object-fit:cover;background:#ddd;}
+.slot-preview.ratio-43{aspect-ratio:4/3;}
+.slot-preview.ratio-11{aspect-ratio:1/1;}
+.slot-preview.ratio-169{aspect-ratio:16/9;}
+.slot-preview.ratio-wide{aspect-ratio:3/1;}
+.slot-label{font-size:11px;color:var(--muted);padding:4px 6px;background:var(--surface);border-top:1px solid var(--border);}
+.slot-overlay{position:absolute;top:0;left:0;right:0;bottom:24px;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;pointer-events:none;}
+.img-slot:hover .slot-overlay{opacity:1;}
+.slot-overlay span{color:#fff;font-size:11px;font-weight:700;}
+.badge-defo{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.45);color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;pointer-events:none;}
+.btn-reset-slot{position:absolute;top:4px;right:4px;background:rgba(204,34,68,.85);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:3;line-height:1;}
+.img-slot.custom .btn-reset-slot{display:flex;}
+.img-slot.custom .badge-defo{display:none;}
+
+/* 写真・参照リスト */
+.media-wrap{padding:10px 14px;background:var(--bg);display:flex;flex-direction:column;gap:8px;}
+.media-item{display:flex;align-items:flex-start;gap:8px;background:var(--surface);border-radius:var(--r);padding:8px;border:1px solid var(--border);}
+.media-thumb-wrap{position:relative;flex-shrink:0;width:56px;height:56px;border-radius:6px;overflow:hidden;cursor:pointer;background:#ddd;}
+.media-thumb-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.media-thumb{width:100%;height:100%;object-fit:cover;display:block;}
+.media-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}
+.media-filename{font-size:12px;color:var(--muted);}
+.media-url-input{font-size:13px;padding:6px 8px;}
+.btn-del-media{flex-shrink:0;background:none;border:none;color:#cc3300;font-size:20px;cursor:pointer;padding:4px;line-height:1;align-self:flex-start;}
+.btn-add-media{width:100%;padding:10px;background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--r);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;}
+.btn-add-media:hover{border-color:var(--main);color:var(--main);}
+
+/* ボタンエリア・GitHub */
 .btn-area{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;background:var(--bg);border-top:1px solid var(--border);}
 .btn-gen{padding:13px;font-size:14px;font-weight:700;border:none;border-radius:var(--r);cursor:pointer;}
 .btn-gen:active{opacity:.85;}
 .btn-copy-gen{background:var(--surface);color:var(--text);}
 .btn-next-gen{background:var(--main);color:#fff;}
-
-/* GitHub保存ボタン */
-.github-area{padding:10px 14px;background:var(--bg);border-top:1px solid var(--border);}
-.btn-github{width:100%;padding:13px;font-size:14px;font-weight:700;background:var(--blue-bg);color:var(--blue);border:1.5px solid #b0caf0;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-github:active{opacity:.85;}
-.github-status{font-size:12px;text-align:center;margin-top:8px;min-height:18px;color:var(--muted);}
-.github-status.ok  {color:var(--green);}
-.github-status.err {color:#cc2200;}
+.github-area{padding:10px 14px 2px;background:var(--bg);border-top:1px solid var(--border);}
+.btn-github{width:100%;padding:13px;font-size:14px;font-weight:700;background:var(--blue-bg);color:var(--blue);border:1.5px solid var(--blue-border);border-radius:var(--r);cursor:pointer;}
+.btn-github:disabled{opacity:.6;cursor:default;}
+.github-status{font-size:12px;text-align:center;padding:8px 0;min-height:28px;color:var(--muted);}
+.github-status.ok{color:var(--green);}
+.github-status.err{color:#cc2200;}
 
 /* 出力 */
 .output-area{margin:0 14px 14px;display:none;}
@@ -114,93 +136,62 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--main);flex-shrink
 pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-size:11px;line-height:1.7;overflow-x:auto;white-space:pre;font-family:'SF Mono','Fira Code',monospace;}
 .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;}
 
-/* ドットグリッド */
+/* 進捗グリッド */
 .grid-wrap{padding:12px 14px 20px;background:var(--bg);border-top:1px solid var(--border);}
 .grid-title{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px;letter-spacing:.05em;}
 .dot-grid{display:flex;flex-wrap:wrap;gap:4px;}
 .dot{width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:9px;font-weight:700;border:none;display:flex;align-items:center;justify-content:center;transition:transform .1s;}
 .dot:active{transform:scale(.9);}
-.dot-done   {background:var(--green);color:#fff;}
+.dot-done{background:var(--green);color:#fff;}
 .dot-partial{background:#f0a000;color:#fff;}
-.dot-empty  {background:#ddd;color:#aaa;}
+.dot-empty{background:#ddd;color:#aaa;}
 .dot-current{outline:2.5px solid var(--main);outline-offset:1px;}
 </style>
 </head>
 <body>
 
-<!-- ===== 設定画面 ===== -->
+<!-- 設定画面 -->
 <div id="scSettings" class="screen active">
-  <div class="set-hd">
-    <h1>⚙️ 設定</h1>
-  </div>
+  <div class="set-hd"><h1>⚙️ 設定</h1></div>
   <div class="set-body">
-
     <div class="set-section">
-      <h2>GitHub リポジトリ</h2>
-      <div class="fg">
-        <label>ユーザー名（owner）</label>
-        <input type="text" id="sOwner" placeholder="例: sunshaura" autocomplete="off" autocorrect="off" spellcheck="false">
-      </div>
-      <div class="fg">
-        <label>リポジトリ名</label>
-        <input type="text" id="sRepo" placeholder="例: sunshaura.com" autocomplete="off" spellcheck="false">
-      </div>
-      <div class="fg">
-        <label>ブランチ名</label>
-        <input type="text" id="sBranch" placeholder="main" autocomplete="off" spellcheck="false">
-      </div>
+      <h2>GITHUB リポジトリ</h2>
+      <div class="fg"><label>ユーザー名</label><input type="text" id="sOwner" placeholder="例: sunshaura" autocomplete="off" spellcheck="false"></div>
+      <div class="fg"><label>リポジトリ名</label><input type="text" id="sRepo" placeholder="例: sunshaura.com" autocomplete="off" spellcheck="false"></div>
+      <div class="fg"><label>ブランチ</label><input type="text" id="sBranch" placeholder="main" spellcheck="false"></div>
     </div>
-
     <div class="set-section">
       <h2>ファイルパス</h2>
-      <div class="fg">
-        <label>参照画像フォルダ（リポジトリ内のパス）</label>
-        <input type="text" id="sImgFolder" placeholder="avatarform/profile" autocomplete="off" spellcheck="false">
-        <p class="note">フォームに表示するアバター参照画像の置き場所</p>
-      </div>
-      <div class="fg">
-        <label>出力ファイルパス（avatars.js）</label>
-        <input type="text" id="sOutputFile" placeholder="avatars.js" autocomplete="off" spellcheck="false">
-        <p class="note">GitHubに保存するファイルのパス</p>
-      </div>
+      <div class="fg"><label>参照画像フォルダ</label><input type="text" id="sImgFolder" placeholder="avatarform/profile" spellcheck="false"><p class="hint">フォームに表示するアバター参照画像の置き場所</p></div>
+      <div class="fg"><label>出力ファイル</label><input type="text" id="sOutputFile" placeholder="avatars.js" spellcheck="false"></div>
     </div>
-
     <div class="pat-warn">
       <strong>⚠️ Personal Access Token（PAT）について</strong>
-      GitHubへの書き込みに必要なキーです。<br>
       GitHub → Settings → Developer settings → Fine-grained tokens<br>
-      対象リポジトリに <strong>Contents: Read and Write</strong> のみ付与してください。<br>
-      このツールを使う端末のみで保管し、他人には見せないでください。
+      対象リポジトリに <strong>Contents: Read and Write</strong> のみ付与してください。
     </div>
-
     <div class="set-section">
-      <h2>Personal Access Token</h2>
-      <div class="fg">
-        <label>PAT（書き込みに必要・読み込みのみなら空欄可）</label>
-        <input type="password" id="sPat" placeholder="github_pat_..." autocomplete="off">
-        <p class="note">端末のlocalStorageに保存されます</p>
-      </div>
+      <h2>PERSONAL ACCESS TOKEN</h2>
+      <div class="fg"><label>PAT（書き込みに必要）</label><input type="password" id="sPat" placeholder="github_pat_..." autocomplete="off"><p class="hint">端末の localStorageに保存されます</p></div>
     </div>
-
     <button class="btn-primary" onclick="saveSettings()">保存して画像を読み込む</button>
-    <div class="set-saved" id="setSaved"></div>
-    <button class="btn-secondary" id="btnClearData" onclick="clearAllData()" style="display:none">保存データをすべてクリア</button>
+    <div class="set-msg" id="setMsg"></div>
+    <button class="btn-secondary" id="btnClearAll" onclick="clearAllData()" style="display:none">保存データをすべてクリア</button>
   </div>
 </div>
 
-<!-- ===== ローディング画面 ===== -->
+<!-- ローディング -->
 <div id="scLoading" class="screen">
-  <div class="loader" id="loadSpinner"></div>
-  <div class="load-msg" id="loadMsg">GitHubから画像を取得中...</div>
-  <div class="load-err" id="loadErr" style="display:none">
+  <div class="loader" id="ldSpinner"></div>
+  <div class="load-msg" id="ldMsg">GitHubから画像を取得中...</div>
+  <div class="load-err" id="ldErr" style="display:none">
     <strong>⚠️ 読み込みエラー</strong>
-    <span id="loadErrMsg"></span>
-    <br><br>
+    <span id="ldErrMsg"></span><br><br>
     <button class="btn-secondary" style="width:auto;padding:8px 20px;" onclick="showSettings()">設定に戻る</button>
   </div>
 </div>
 
-<!-- ===== メイン画面 ===== -->
+<!-- メイン -->
 <div id="scMain" class="screen">
   <div class="hd">
     <button class="hd-back" onclick="showSettings()">⚙</button>
@@ -219,16 +210,18 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
     <button class="btn-skip" onclick="goNextEmpty()">未入力へ →</button>
   </div>
 
-  <div class="img-wrap" id="imgWrap">
+  <!-- 参照画像 -->
+  <div class="img-wrap">
     <div class="img-loading" id="imgLoading"><div class="loader"></div></div>
     <img id="imgDisp" src="" alt="" style="display:none" onload="imgLoaded()" onerror="imgError()">
     <div class="status-badge sb-empty" id="statusBadge">未記入</div>
   </div>
 
+  <!-- 基本情報 -->
   <div class="form-body">
     <div class="fg">
-      <label>アバターID ★必須</label>
-      <input type="text" id="fId" placeholder="例: avatar01" autocomplete="off" autocorrect="off" spellcheck="false" oninput="autoSave()">
+      <label>アバターID ★必須　半角英数・アンダーバーのみ使えます</label>
+      <input type="text" id="fId" placeholder="例: avatar01" autocomplete="off" autocorrect="off" spellcheck="false" oninput="onIdInput()">
     </div>
     <div class="fg">
       <label>アバター名 ★必須</label>
@@ -253,43 +246,124 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
       </div>
     </div>
     <div class="fg">
-      <label>説明文（省略可）</label>
-      <textarea id="fDesc" placeholder="アバターの説明テキスト" oninput="autoSave()"></textarea>
-    </div>
-    <hr class="divider">
-    <div class="fg">
-      <label>個別画像を使う場合チェック（未チェック = デフォルト共有画像）</label>
-      <div class="chk-list">
-        <label><input type="checkbox" id="chkM" onchange="autoSave()"> mainImg / miniImg を個別指定</label>
-        <label><input type="checkbox" id="chkB" onchange="autoSave()"> bgImg / bgPattern を個別指定</label>
-        <label><input type="checkbox" id="chkF" onchange="autoSave()"> 枠C（frameCTop / Bottom）を個別指定</label>
-        <label><input type="checkbox" id="chkI" onchange="autoSave()"> infoImg を個別指定</label>
-      </div>
+      <label>説明文（改行可）</label>
+      <textarea id="fDesc" placeholder="アバターの説明テキスト（Enterで改行できます）" oninput="autoSave()"></textarea>
     </div>
   </div>
 
+  <!-- サムネイル -->
+  <div class="section-title">サムネイル画像</div>
+  <div class="img-slots" id="slotsThumbnail">
+    <div class="img-slot" id="slot-miniPC">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'miniPC')">
+      <img class="slot-preview ratio-43" id="prev-miniPC" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'miniPC')">×</button>
+      <div class="slot-label">PC用サムネ (4:3)</div>
+    </div>
+    <div class="img-slot" id="slot-miniSP">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'miniSP')">
+      <img class="slot-preview ratio-11" id="prev-miniSP" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'miniSP')">×</button>
+      <div class="slot-label">SP用サムネ (1:1)</div>
+    </div>
+  </div>
+
+  <!-- 背景・パターン -->
+  <div class="section-title">背景画像</div>
+  <div class="img-slots" id="slotsBg">
+    <div class="img-slot" id="slot-bgImg">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'bgImg')">
+      <img class="slot-preview ratio-43" id="prev-bgImg" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'bgImg')">×</button>
+      <div class="slot-label">背景画像</div>
+    </div>
+    <div class="img-slot" id="slot-bgPattern">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'bgPattern')">
+      <img class="slot-preview ratio-11" id="prev-bgPattern" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'bgPattern')">×</button>
+      <div class="slot-label">ループパターン</div>
+    </div>
+  </div>
+
+  <!-- 枠C -->
+  <div class="section-title">枠C 装飾</div>
+  <div class="img-slots" id="slotsFrame">
+    <div class="img-slot" id="slot-frameCTop">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'frameCTop')">
+      <img class="slot-preview ratio-wide" id="prev-frameCTop" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'frameCTop')">×</button>
+      <div class="slot-label">枠C 上側</div>
+    </div>
+    <div class="img-slot" id="slot-frameCBottom">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'frameCBottom')">
+      <img class="slot-preview ratio-wide" id="prev-frameCBottom" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'frameCBottom')">×</button>
+      <div class="slot-label">枠C 下側</div>
+    </div>
+  </div>
+
+  <!-- infoImg -->
+  <div class="section-title">情報枠 透かし画像</div>
+  <div class="img-slots">
+    <div class="img-slot" id="slot-infoImg">
+      <input type="file" accept="image/*" onchange="selectSingle(this,'infoImg')">
+      <img class="slot-preview ratio-43" id="prev-infoImg" src="">
+      <div class="slot-overlay"><span>タップして変更</span></div>
+      <span class="badge-defo">デフォルト</span>
+      <button class="btn-reset-slot" onclick="resetSingle(event,'infoImg')">×</button>
+      <div class="slot-label">infoImg（透かし）</div>
+    </div>
+  </div>
+
+  <!-- 思い出写真 -->
+  <div class="section-title">思い出写真（複数可）</div>
+  <div class="media-wrap" id="photosList"></div>
+  <div style="padding:0 14px 12px;background:var(--bg);">
+    <button class="btn-add-media" onclick="addPhoto()">＋ 写真を追加</button>
+  </div>
+
+  <!-- OrgAvt参照画像 -->
+  <div class="section-title">OrgAvt 参照画像（複数可・URL付き）</div>
+  <div class="media-wrap" id="refsList"></div>
+  <div style="padding:0 14px 12px;background:var(--bg);">
+    <button class="btn-add-media" onclick="addRef()">＋ 参照画像を追加</button>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 生成・保存ボタン -->
   <div class="btn-area">
     <button class="btn-gen btn-copy-gen" onclick="generate(false)">コードを生成</button>
     <button class="btn-gen btn-next-gen" onclick="generate(true)">生成して次へ →</button>
   </div>
-
   <div class="github-area">
-    <!-- GitHubに保存（全完了分をavatars.jsとして書き出し） -->
-    <button class="btn-github" onclick="pushToGitHub()">
-      <span style="font-size:18px;">↑</span> GitHubに保存（avatars.js を更新）
-    </button>
+    <button class="btn-github" id="btnGitHub" onclick="pushAll()">↑ GitHubに保存（フォルダ作成・画像upload・avatars.js更新）</button>
     <div class="github-status" id="ghStatus"></div>
   </div>
 
+  <!-- 生成コード出力 -->
   <div class="output-area" id="outArea">
     <div class="out-hd">
       <span>生成されたコード（この1件分）</span>
       <button class="btn-copy" id="btnCopy" onclick="copyCode()">コピー</button>
     </div>
     <pre id="outPre"></pre>
-    <p class="hint">↑ 単品で使いたいときはここからコピーしてください</p>
+    <p class="hint">↑ 単品で使いたい場合はここからコピー</p>
   </div>
 
+  <!-- 進捗ドット -->
   <div class="grid-wrap">
     <div class="grid-title">進捗 — タップでジャンプ</div>
     <div class="dot-grid" id="dotGrid"></div>
@@ -297,258 +371,695 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
 </div>
 
 <script>
-// ===================== 定数 =====================
+// =====================================================================
+// 定数
+// =====================================================================
 const SK_SETTINGS = 'avt_settings';
 const SK_DATA     = 'avt_tool_v2';
 
-// ===================== 状態 =====================
+// デフォルト画像（GitHub Raw URL で表示）
+const DEFO_BASE   = 'assets/images/ShareImg/';
+const DEFO_IMAGES = {
+  miniPC:       DEFO_BASE + 'mini_pc.png',
+  miniSP:       DEFO_BASE + 'mini_sp.png',
+  bgImg:        DEFO_BASE + 'bg.png',
+  bgPattern:    DEFO_BASE + 'pattern.png',
+  frameCTop:    DEFO_BASE + 'frame_c_top.png',
+  frameCBottom: DEFO_BASE + 'frame_c_bottom.png',
+  infoImg:      DEFO_BASE + 'info_bg.png',
+};
+// avatars.jsでの変数名対応
+const DEFO_VAR = {
+  miniPC:'defo_miniImgPC', miniSP:'defo_miniImgSP',
+  bgImg:'defo_bgImg', bgPattern:'defo_bgPattern',
+  frameCTop:'defo_frameCTop', frameCBottom:'defo_frameCBottom',
+  infoImg:'defo_infoImg',
+};
+// GitHubへの保存パス (my_Dic からの相対)
+const SAVE_PATH = {
+  miniPC:       'thumbnail/mini_pc.png',
+  miniSP:       'thumbnail/mini_sp.png',
+  bgImg:        'bg.png',
+  bgPattern:    'pattern.png',
+  frameCTop:    'frame_c_top.png',
+  frameCBottom: 'frame_c_bottom.png',
+  infoImg:      'info_bg.png',
+};
+
+// =====================================================================
+// 状態変数
+// =====================================================================
 let settings = {};
 let images   = []; // [{name, url}]
 let cur      = 0;
 let selG = '', selC = '';
 let db   = {};
 
-// ===================== localStorage =====================
-function loadDB(){ try{ db = JSON.parse(localStorage.getItem(SK_DATA))||{}; }catch(e){ db={}; } }
-function saveDB(){ localStorage.setItem(SK_DATA, JSON.stringify(db)); }
-function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SK_SETTINGS))||null; }catch(e){ return null; } }
-function saveSettingsData(s){ localStorage.setItem(SK_SETTINGS, JSON.stringify(s)); }
+// セッション（ページリロードで消える。ファイルはメモリのみ）
+// session[fileKey] = {
+//   singleImages: { miniPC: {file,objectUrl}, ... }
+//   photos: [{idx,file,objectUrl,deleted,isNew}]
+//   refs:   [{idx,file,objectUrl,url,deleted,isNew}]
+// }
+let session = {};
 
-// ===================== 起動 =====================
+// =====================================================================
+// ローカルストレージ
+// =====================================================================
+function loadDB(){ try{ db=JSON.parse(localStorage.getItem(SK_DATA))||{}; }catch(e){ db={}; } }
+function saveDB(){ localStorage.setItem(SK_DATA,JSON.stringify(db)); }
+function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SK_SETTINGS))||null; }catch(e){ return null; } }
+function saveSettingsData(s){ localStorage.setItem(SK_SETTINGS,JSON.stringify(s)); }
+
+// =====================================================================
+// セッション管理
+// =====================================================================
+function getSession(key){
+  if(!session[key]) session[key]={ singleImages:{}, photos:null, refs:null };
+  return session[key];
+}
+
+function initSessionMedia(key){
+  const s = getSession(key);
+  const d = db[key];
+  // photos
+  if(!s.photos){
+    s.photos = [];
+    const cnt = d?.up?.photoCount||0;
+    for(let i=1;i<=cnt;i++){
+      s.photos.push({idx:i, file:null, objectUrl:null, deleted:false, isNew:false});
+    }
+    s.nextPhotoIdx = cnt+1;
+  }
+  // refs
+  if(!s.refs){
+    s.refs = [];
+    const refData = d?.up?.refs||[];
+    for(let i=0;i<refData.length;i++){
+      s.refs.push({idx:i+1, file:null, objectUrl:null, url:refData[i].url||'', deleted:false, isNew:false});
+    }
+    s.nextRefIdx = refData.length+1;
+  }
+}
+
+// GitHub Raw URL
+function rawUrl(avatarId, filePath){
+  return `https://raw.githubusercontent.com/${settings.owner}/${settings.repo}/${settings.branch}/assets/images/${avatarId}/${filePath}`;
+}
+function rawDefoUrl(type){
+  return `https://raw.githubusercontent.com/${settings.owner}/${settings.repo}/${settings.branch}/${DEFO_IMAGES[type]}`;
+}
+
+// =====================================================================
+// 起動
+// =====================================================================
 window.onload = function(){
   loadDB();
   const s = loadSettings();
   if(s){
-    // フォームに設定を復元
-    document.getElementById('sOwner').value      = s.owner      || '';
-    document.getElementById('sRepo').value       = s.repo       || '';
-    document.getElementById('sBranch').value     = s.branch     || 'main';
-    document.getElementById('sImgFolder').value  = s.imgFolder  || 'avatarform/profile';
-    document.getElementById('sOutputFile').value = s.outputFile || 'avatars.js';
-    document.getElementById('sPat').value        = s.token      || '';
+    document.getElementById('sOwner').value      = s.owner||'';
+    document.getElementById('sRepo').value       = s.repo||'';
+    document.getElementById('sBranch').value     = s.branch||'main';
+    document.getElementById('sImgFolder').value  = s.imgFolder||'avatarform/profile';
+    document.getElementById('sOutputFile').value = s.outputFile||'avatars.js';
+    document.getElementById('sPat').value        = s.token||'';
   } else {
-    // デフォルト値
     document.getElementById('sBranch').value     = 'main';
     document.getElementById('sImgFolder').value  = 'avatarform/profile';
     document.getElementById('sOutputFile').value = 'avatars.js';
   }
-  // 保存データがある場合はクリアボタンを表示
-  if(Object.keys(db).length > 0){
-    document.getElementById('btnClearData').style.display = 'block';
-    const done = Object.values(db).filter(d=>d.completed).length;
-    document.getElementById('setSaved').textContent =
-      '保存済みデータ: '+Object.keys(db).length+'件（'+done+'件完了）';
+  if(Object.keys(db).length>0){
+    document.getElementById('btnClearAll').style.display='block';
+    const done=Object.values(db).filter(d=>d.completed).length;
+    document.getElementById('setMsg').textContent='保存済み: '+Object.keys(db).length+'件（完了'+done+'件）';
   }
 };
 
-// ===================== 画面切り替え =====================
+// =====================================================================
+// 画面切替
+// =====================================================================
 function showScreen(id){
-  ['scSettings','scLoading','scMain'].forEach(s=>{
-    const el = document.getElementById(s);
-    el.classList.remove('active');
-  });
+  ['scSettings','scLoading','scMain'].forEach(s=>document.getElementById(s).classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 function showSettings(){ showScreen('scSettings'); }
 
-// ===================== 設定保存 & 画像読み込み =====================
+// =====================================================================
+// 設定保存・画像読み込み
+// =====================================================================
 async function saveSettings(){
-  const s = {
+  const s={
     owner:      document.getElementById('sOwner').value.trim(),
     repo:       document.getElementById('sRepo').value.trim(),
-    branch:     document.getElementById('sBranch').value.trim() || 'main',
-    imgFolder:  document.getElementById('sImgFolder').value.trim() || 'avatarform/profile',
-    outputFile: document.getElementById('sOutputFile').value.trim() || 'avatars.js',
+    branch:     document.getElementById('sBranch').value.trim()||'main',
+    imgFolder:  document.getElementById('sImgFolder').value.trim()||'avatarform/profile',
+    outputFile: document.getElementById('sOutputFile').value.trim()||'avatars.js',
     token:      document.getElementById('sPat').value.trim()
   };
   if(!s.owner){ alert('ユーザー名を入力してください'); return; }
   if(!s.repo) { alert('リポジトリ名を入力してください'); return; }
-
-  settings = s;
+  settings=s;
   saveSettingsData(s);
   showScreen('scLoading');
-  document.getElementById('loadErr').style.display = 'none';
-  document.getElementById('loadSpinner').style.display = 'block';
-  document.getElementById('loadMsg').textContent = 'GitHubから画像を取得中...';
-
-  try {
+  document.getElementById('ldErr').style.display='none';
+  document.getElementById('ldSpinner').style.display='block';
+  document.getElementById('ldMsg').style.display='block';
+  document.getElementById('ldMsg').textContent='GitHubから画像を取得中...';
+  try{
     images = await fetchImageList();
-    if(images.length === 0){
-      showError('フォルダ内に画像が見つかりませんでした。\nパス: ' + s.imgFolder);
-      return;
-    }
-    cur = 0;
+    if(images.length===0){ showLoadError('画像が見つかりませんでした。\nパス: '+s.imgFolder); return; }
+    cur=0;
     showScreen('scMain');
     render();
-  } catch(e) {
-    showError(e.message || '不明なエラーが発生しました');
-  }
+  }catch(e){ showLoadError(e.message||'不明なエラー'); }
 }
 
-function showError(msg){
-  document.getElementById('loadSpinner').style.display = 'none';
-  document.getElementById('loadMsg').style.display = 'none';
-  document.getElementById('loadErr').style.display = 'block';
-  document.getElementById('loadErrMsg').textContent = msg;
+function showLoadError(msg){
+  document.getElementById('ldSpinner').style.display='none';
+  document.getElementById('ldMsg').style.display='none';
+  document.getElementById('ldErr').style.display='block';
+  document.getElementById('ldErrMsg').textContent=msg;
 }
 
-// ===================== GitHub API: 画像一覧取得 =====================
+// =====================================================================
+// GitHub API 基本
+// =====================================================================
+async function ghGet(path){
+  const headers={'Accept':'application/vnd.github.v3+json'};
+  if(settings.token) headers['Authorization']='Bearer '+settings.token;
+  const res=await fetch('https://api.github.com'+path,{headers});
+  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(`${res.status}: ${e.message||res.statusText}`); }
+  return res.json();
+}
+async function ghPut(path,body){
+  const headers={'Accept':'application/vnd.github.v3+json','Authorization':'Bearer '+settings.token,'Content-Type':'application/json'};
+  const res=await fetch('https://api.github.com'+path,{method:'PUT',headers,body:JSON.stringify(body)});
+  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(`${res.status}: ${e.message||res.statusText}`); }
+  return res.json();
+}
+async function ghDelete(path,body){
+  const headers={'Accept':'application/vnd.github.v3+json','Authorization':'Bearer '+settings.token,'Content-Type':'application/json'};
+  const res=await fetch('https://api.github.com'+path,{method:'DELETE',headers,body:JSON.stringify(body)});
+  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(`${res.status}: ${e.message||res.statusText}`); }
+  return res.json();
+}
+
+async function getFileSha(path){
+  try{
+    const d=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${path}?ref=${settings.branch}`);
+    return d.sha||null;
+  }catch(e){ return null; }
+}
+
+async function uploadFile(path, b64, sha, msg){
+  const body={message:msg||'Upload '+path, content:b64, branch:settings.branch};
+  if(sha) body.sha=sha;
+  return ghPut(`/repos/${settings.owner}/${settings.repo}/contents/${path}`,body);
+}
+
+async function deleteFile(path, msg){
+  const sha=await getFileSha(path);
+  if(!sha) return;
+  return ghDelete(`/repos/${settings.owner}/${settings.repo}/contents/${path}`,{
+    message:msg||'Delete '+path, sha, branch:settings.branch
+  });
+}
+
 async function fetchImageList(){
-  const url = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/${settings.imgFolder}?ref=${settings.branch}`;
-  const headers = { 'Accept': 'application/vnd.github.v3+json' };
-  if(settings.token) headers['Authorization'] = 'Bearer ' + settings.token;
-
-  const res = await fetch(url, { headers });
-  if(!res.ok){
-    const e = await res.json().catch(()=>({}));
-    throw new Error(`GitHub APIエラー ${res.status}: ${e.message || res.statusText}`);
-  }
-  const data = await res.json();
-  if(!Array.isArray(data)) throw new Error('フォルダの取得に失敗しました。パスを確認してください。');
-
-  return data
-    .filter(f => f.type==='file' && /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name))
-    .sort((a,b) => a.name.localeCompare(b.name))
-    .map(f => ({ name: f.name, url: f.download_url }));
+  const data=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${settings.imgFolder}?ref=${settings.branch}`);
+  if(!Array.isArray(data)) throw new Error('フォルダの取得に失敗しました');
+  return data.filter(f=>f.type==='file'&&/\.(png|jpg|jpeg|gif|webp)$/i.test(f.name))
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .map(f=>({name:f.name, url:f.download_url}));
 }
 
-// ===================== GitHub API: ファイルSHA取得 =====================
-async function getFileSha(){
-  const url = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/${settings.outputFile}?ref=${settings.branch}`;
-  const headers = { 'Accept':'application/vnd.github.v3+json', 'Authorization':'Bearer '+settings.token };
-  const res = await fetch(url, { headers });
-  if(res.status === 404) return null;
-  if(!res.ok) return null;
-  const d = await res.json();
-  return d.sha || null;
+// =====================================================================
+// ユーティリティ
+// =====================================================================
+function toBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function fileToBase64(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result.split(',')[1]);
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+function urlToBase64(url){
+  return new Promise(async(res,rej)=>{
+    try{
+      const headers={};
+      if(settings.token) headers['Authorization']='Bearer '+settings.token;
+      const resp=await fetch(url,{headers});
+      const blob=await resp.blob();
+      const reader=new FileReader();
+      reader.onload=e=>res(e.target.result.split(',')[1]);
+      reader.onerror=rej;
+      reader.readAsDataURL(blob);
+    }catch(e){ rej(e); }
+  });
+}
+function autoId(fname){ return fname.replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_]/g,'').toLowerCase(); }
+function pad2(n){ return String(n).padStart(2,'0'); }
+function setGhStatus(msg,cls=''){
+  const el=document.getElementById('ghStatus');
+  el.textContent=msg; el.className='github-status'+(cls?' '+cls:'');
 }
 
-// ===================== GitHub API: ファイルPush =====================
-async function pushToGitHub(){
-  if(!settings.token){ alert('PATが設定されていません。\n設定画面でPersonal Access Tokenを入力してください。'); return; }
+// =====================================================================
+// ナビゲーション
+// =====================================================================
+function go(idx){
+  if(!images.length) return;
+  autoSave();
+  cur=Math.max(0,Math.min(idx,images.length-1));
+  render();
+}
+function goNextEmpty(){
+  for(let i=cur+1;i<images.length;i++){ const d=db[images[i].name]; if(!d||!d.completed){ go(i); return; } }
+  for(let i=0;i<cur;i++){             const d=db[images[i].name]; if(!d||!d.completed){ go(i); return; } }
+  alert('すべて完了しています！');
+}
 
-  const entries = Object.values(db).filter(d => d.id && d.name && d.genre && d.cate);
-  if(entries.length === 0){ alert('入力済みのデータがありません。'); return; }
+// =====================================================================
+// メイン画面描画
+// =====================================================================
+function render(){
+  const f=images[cur];
+  document.getElementById('navIdx').textContent=(cur+1)+' / '+images.length;
+  document.getElementById('navFname').textContent=f.name;
+  document.getElementById('hdTitle').textContent=f.name;
+  document.getElementById('btnPrev').disabled=cur===0;
+  document.getElementById('btnNext').disabled=cur===images.length-1;
 
-  const st = document.getElementById('ghStatus');
-  st.className = 'github-status';
-  st.textContent = '生成中...';
+  // 参照画像
+  const imgEl=document.getElementById('imgDisp');
+  imgEl.style.display='none';
+  document.getElementById('imgLoading').style.display='flex';
+  imgEl.src=f.url;
 
-  const content = generateAvatarsJS();
+  // フォーム復元
+  const d=db[f.name];
+  selG=''; selC='';
+  document.getElementById('fId').value   = d?.id   || autoId(f.name);
+  document.getElementById('fName').value = d?.name || '';
+  document.getElementById('fDesc').value = d?.desc || '';
+  document.querySelectorAll('#genreGrp .bopt').forEach(b=>{ b.classList.remove('ag'); if(d?.genre===b.dataset.v){ b.classList.add('ag'); selG=d.genre; } });
+  document.querySelectorAll('#cateGrp .bopt').forEach(b=>{ b.classList.remove('ac'); if(d?.cate===b.dataset.v){ b.classList.add('ac'); selC=d.cate; } });
 
-  st.textContent = 'GitHubに送信中...';
-  try {
-    const sha = await getFileSha();
-    const url = `https://api.github.com/repos/${settings.owner}/${settings.repo}/contents/${settings.outputFile}`;
-    const headers = {
-      'Accept':'application/vnd.github.v3+json',
-      'Authorization':'Bearer '+settings.token,
-      'Content-Type':'application/json'
-    };
-    const body = {
-      message: 'Update avatars.js [avatar_form] ' + entries.length + '件',
-      content: toBase64(content),
-      branch:  settings.branch
-    };
-    if(sha) body.sha = sha;
+  // 単体画像スロット
+  renderSingleSlots(f.name, d);
 
-    const res = await fetch(url, { method:'PUT', headers, body: JSON.stringify(body) });
-    if(!res.ok){
-      const e = await res.json().catch(()=>({}));
-      throw new Error(e.message || res.statusText);
+  // 写真・参照リスト初期化
+  initSessionMedia(f.name);
+  renderPhotos(f.name);
+  renderRefs(f.name);
+
+  // 出力エリア
+  const oa=document.getElementById('outArea');
+  if(d?.completed&&d?.code){ oa.style.display='block'; document.getElementById('outPre').textContent=d.code; }
+  else { oa.style.display='none'; }
+
+  // GitHubステータスクリア
+  setGhStatus('');
+
+  updateStatus(); updateProgress(); renderDots();
+}
+
+function imgLoaded(){
+  document.getElementById('imgDisp').style.display='block';
+  document.getElementById('imgLoading').style.display='none';
+}
+function imgError(){
+  document.getElementById('imgLoading').innerHTML='<span style="color:#fff;font-size:13px;">画像を読み込めませんでした</span>';
+}
+
+// =====================================================================
+// 単体画像スロット
+// =====================================================================
+function renderSingleSlots(key, d){
+  const s=getSession(key);
+  const avatarId = d?.id || document.getElementById('fId').value.trim() || autoId(images[cur].name);
+
+  Object.keys(DEFO_IMAGES).forEach(type=>{
+    const slotEl=document.getElementById('slot-'+type);
+    const imgEl =document.getElementById('prev-'+type);
+    if(!slotEl||!imgEl) return;
+
+    // 表示する画像を決定
+    let src;
+    const sess=s.singleImages[type];
+    const uploaded=d?.up?.[type];
+
+    if(sess&&sess.objectUrl){
+      // セッション内の新規選択
+      src=sess.objectUrl;
+      slotEl.classList.add('custom');
+    } else if(uploaded&&avatarId){
+      // GitHubアップロード済み → raw URL
+      src=rawUrl(avatarId, SAVE_PATH[type])+'?t='+Date.now();
+      slotEl.classList.add('custom');
+    } else {
+      // デフォルト
+      src=settings.owner ? rawDefoUrl(type) : '';
+      slotEl.classList.remove('custom');
     }
-    st.className = 'github-status ok';
-    st.textContent = '✓ 保存しました（' + entries.length + '件 → ' + settings.outputFile + '）';
-  } catch(e) {
-    st.className = 'github-status err';
-    st.textContent = '⚠️ エラー: ' + e.message;
-  }
+    imgEl.src=src;
+  });
 }
 
-// ===================== avatars.js 生成 =====================
-function generateAvatarsJS(){
-  const entries = Object.values(db)
-    .filter(d => d.id && d.name && d.genre && d.cate)
-    .sort((a,b) => a.id.localeCompare(b.id));
+function selectSingle(input, type){
+  const key=images[cur]?.name; if(!key) return;
+  const file=input.files[0]; if(!file) return;
+  const objectUrl=URL.createObjectURL(file);
+  const s=getSession(key);
+  s.singleImages[type]={file, objectUrl};
+  const slotEl=document.getElementById('slot-'+type);
+  const imgEl =document.getElementById('prev-'+type);
+  slotEl.classList.add('custom');
+  imgEl.src=objectUrl;
+  autoSave();
+}
 
-  const blocks = entries.map(d => {
-    const miniPC = d.chkM ? `my_Dic + '/thumbnail/mini_pc.png'` : `defo_miniImgPC`;
-    const miniSP = d.chkM ? `my_Dic + '/thumbnail/mini_sp.png'` : `defo_miniImgSP`;
-    const bgImg  = d.chkB ? `my_Dic + '/bg.png'`               : `defo_bgImg`;
-    const bgPat  = d.chkB ? `my_Dic + '/pattern.png'`          : `defo_bgPattern`;
-    const fcTop  = d.chkF ? `my_Dic + '/frame_c_top.png'`      : `defo_frameCTop`;
-    const fcBot  = d.chkF ? `my_Dic + '/frame_c_bottom.png'`   : `defo_frameCBottom`;
-    const info   = d.chkI ? `my_Dic + '/info_bg.png'`          : `defo_infoImg`;
-    const desc   = (d.desc||'アバターの説明テキスト。').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    return `
-/* ─── ${d.name} ─── */
-my_avatarid = '${d.id}';
+function resetSingle(e, type){
+  e.stopPropagation();
+  const key=images[cur]?.name; if(!key) return;
+  const s=getSession(key);
+  delete s.singleImages[type];
+  // アップロード済みフラグも消す
+  if(db[key]?.up) db[key].up[type]=false;
+  saveDB();
+  const slotEl=document.getElementById('slot-'+type);
+  slotEl.classList.remove('custom');
+  document.getElementById('prev-'+type).src=settings.owner ? rawDefoUrl(type) : '';
+  autoSave();
+}
+
+// =====================================================================
+// 写真リスト
+// =====================================================================
+function renderPhotos(key){
+  const s=getSession(key);
+  const list=document.getElementById('photosList');
+  list.innerHTML='';
+  (s.photos||[]).filter(p=>!p.deleted).forEach(p=>{
+    const avatarId=db[key]?.id||document.getElementById('fId').value.trim();
+    const previewSrc = p.objectUrl || ((!p.isNew&&avatarId) ? rawUrl(avatarId,`photos/photo_${pad2(p.idx)}.png`)+'?t='+Date.now() : '');
+    const div=document.createElement('div');
+    div.className='media-item';
+    div.dataset.idx=p.idx;
+    div.innerHTML=`
+      <div class="media-thumb-wrap">
+        <input type="file" accept="image/*" onchange="changePhoto(this,${p.idx})">
+        <img class="media-thumb" src="${previewSrc}" onerror="this.style.background='#ddd'">
+      </div>
+      <div class="media-body">
+        <div class="media-filename">photo_${pad2(p.idx)}.png${p.isNew?' (未保存)':''}</div>
+      </div>
+      <button class="btn-del-media" onclick="deletePhoto(${p.idx})" title="削除">×</button>`;
+    list.appendChild(div);
+  });
+}
+
+function addPhoto(){
+  const key=images[cur]?.name; if(!key) return;
+  const s=getSession(key);
+  initSessionMedia(key);
+  // ファイルを選択させる
+  const input=document.createElement('input');
+  input.type='file'; input.accept='image/*';
+  input.onchange=function(){
+    const file=this.files[0]; if(!file) return;
+    const idx=s.nextPhotoIdx++;
+    const objectUrl=URL.createObjectURL(file);
+    s.photos.push({idx, file, objectUrl, deleted:false, isNew:true});
+    renderPhotos(key);
+    autoSave();
+  };
+  input.click();
+}
+
+function changePhoto(input, idx){
+  const key=images[cur]?.name; if(!key) return;
+  const file=input.files[0]; if(!file) return;
+  const s=getSession(key);
+  const p=s.photos.find(p=>p.idx===idx);
+  if(p){ p.file=file; p.objectUrl=URL.createObjectURL(file); p.isNew=true; }
+  renderPhotos(key);
+  autoSave();
+}
+
+function deletePhoto(idx){
+  const key=images[cur]?.name; if(!key) return;
+  const s=getSession(key);
+  const p=s.photos.find(p=>p.idx===idx);
+  if(p) p.deleted=true;
+  renderPhotos(key);
+  autoSave();
+}
+
+// =====================================================================
+// 参照（OrgAvt）リスト
+// =====================================================================
+function renderRefs(key){
+  const s=getSession(key);
+  const list=document.getElementById('refsList');
+  list.innerHTML='';
+  (s.refs||[]).filter(r=>!r.deleted).forEach(r=>{
+    const avatarId=db[key]?.id||document.getElementById('fId').value.trim();
+    const previewSrc = r.objectUrl || ((!r.isNew&&avatarId) ? rawUrl(avatarId,`thumbnail/ref_${pad2(r.idx)}.png`)+'?t='+Date.now() : '');
+    const div=document.createElement('div');
+    div.className='media-item';
+    div.dataset.idx=r.idx;
+    div.innerHTML=`
+      <div class="media-thumb-wrap">
+        <input type="file" accept="image/*" onchange="changeRef(this,${r.idx})">
+        <img class="media-thumb" src="${previewSrc}" onerror="this.style.background='#ddd'">
+      </div>
+      <div class="media-body">
+        <div class="media-filename">ref_${pad2(r.idx)}.png${r.isNew?' (未保存)':''}</div>
+        <input class="media-url-input" type="url" placeholder="https://booth.pm/..." value="${r.url||''}"
+          oninput="updateRefUrl(${r.idx},this.value)" onblur="autoSave()">
+      </div>
+      <button class="btn-del-media" onclick="deleteRef(${r.idx})" title="削除">×</button>`;
+    list.appendChild(div);
+  });
+}
+
+function addRef(){
+  const key=images[cur]?.name; if(!key) return;
+  const s=getSession(key);
+  initSessionMedia(key);
+  const input=document.createElement('input');
+  input.type='file'; input.accept='image/*';
+  input.onchange=function(){
+    const file=this.files[0]; if(!file) return;
+    const idx=s.nextRefIdx++;
+    const objectUrl=URL.createObjectURL(file);
+    s.refs.push({idx, file, objectUrl, url:'', deleted:false, isNew:true});
+    renderRefs(key);
+    autoSave();
+  };
+  input.click();
+}
+
+function changeRef(input, idx){
+  const key=images[cur]?.name; if(!key) return;
+  const file=input.files[0]; if(!file) return;
+  const s=getSession(key);
+  const r=s.refs.find(r=>r.idx===idx);
+  if(r){ r.file=file; r.objectUrl=URL.createObjectURL(file); r.isNew=true; }
+  renderRefs(key);
+  autoSave();
+}
+
+function deleteRef(idx){
+  const key=images[cur]?.name; if(!key) return;
+  const s=getSession(key);
+  const r=s.refs.find(r=>r.idx===idx);
+  if(r) r.deleted=true;
+  renderRefs(key);
+  autoSave();
+}
+
+function updateRefUrl(idx, url){
+  const key=images[cur]?.name; if(!key) return;
+  const s=getSession(key);
+  const r=s.refs.find(r=>r.idx===idx);
+  if(r) r.url=url;
+}
+
+// =====================================================================
+// フォーム入力・自動保存
+// =====================================================================
+function onIdInput(){
+  const v=document.getElementById('fId').value;
+  // 半角英数・アンダーバー以外を除去
+  document.getElementById('fId').value=v.replace(/[^a-zA-Z0-9_]/g,'');
+  autoSave();
+}
+
+function sel(btn, type){
+  if(type==='g'){ document.querySelectorAll('#genreGrp .bopt').forEach(b=>b.classList.remove('ag')); btn.classList.add('ag'); selG=btn.dataset.v; }
+  else          { document.querySelectorAll('#cateGrp .bopt').forEach(b=>b.classList.remove('ac')); btn.classList.add('ac'); selC=btn.dataset.v; }
+  autoSave();
+}
+
+function autoSave(){
+  const key=images[cur]?.name; if(!key) return;
+  const id  =document.getElementById('fId').value.trim();
+  const name=document.getElementById('fName').value.trim();
+  const desc=document.getElementById('fDesc').value;
+  const hasData=id||name||selG||selC||desc;
+  if(!hasData&&!db[key]) return;
+
+  // 写真・参照の状態を保存
+  const s=getSession(key);
+  const photosActive=(s.photos||[]).filter(p=>!p.deleted);
+  const refsActive  =(s.refs||[]).filter(r=>!r.deleted);
+
+  db[key]={
+    ...(db[key]||{}),
+    id, name, genre:selG, cate:selC, desc,
+    completed:db[key]?.completed||false,
+    code:db[key]?.code||'',
+    up:{
+      ...(db[key]?.up||{}),
+      photoCount: photosActive.length,
+      refs: refsActive.map(r=>({url:r.url||''}))
+    }
+  };
+  saveDB();
+  updateStatus(); updateProgress(); renderDots();
+}
+
+// =====================================================================
+// コード生成（1件）
+// =====================================================================
+function buildEntry(key){
+  const d=db[key]; if(!d) return null;
+  const s=getSession(key);
+  const {id,name,genre,cate,desc}=d;
+
+  // 単体画像
+  const imgLine = type=>{
+    const sess=s?.singleImages?.[type];
+    const uploaded=d?.up?.[type];
+    if(sess||uploaded) return `my_Dic + '/${SAVE_PATH[type]}'`;
+    return DEFO_VAR[type];
+  };
+
+  // 写真リスト
+  const photos=(s?.photos||[]).filter(p=>!p.deleted);
+  const photosCode = photos.length===0 ? '[]' :
+    '[\n'+photos.map(p=>`    my_Dic + '/photos/photo_${pad2(p.idx)}.png',`).join('\n')+'\n  ]';
+
+  // 参照リスト
+  const refs=(s?.refs||[]).filter(r=>!r.deleted);
+  const refsCode = refs.length===0 ? '[]' :
+    '[\n'+refs.map(r=>`    { img: my_Dic + '/thumbnail/ref_${pad2(r.idx)}.png', url: '${(r.url||'').replace(/'/g,"\\'")}' },`).join('\n')+'\n  ]';
+
+  // 説明文（改行を\nにエスケープ）
+  const descEscaped=(desc||'アバターの説明テキスト。').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r\n|\r|\n/g,'\\n');
+
+  return `my_avatarid = '${id}';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
   id:           my_avatarid,
-  name:         '${d.name}',
-  genre:        ${d.genre},
-  category:     ${d.cate},
+  name:         '${name}',
+  genre:        ${genre},
+  category:     ${cate},
 
   mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    ${miniPC},
-  miniImgSP:    ${miniSP},
+  miniImgPC:    ${imgLine('miniPC')},
+  miniImgSP:    ${imgLine('miniSP')},
 
-  bgImg:        ${bgImg},
-  bgPattern:    ${bgPat},
-  frameCTop:    ${fcTop},
-  frameCBottom: ${fcBot},
-  infoImg:      ${info},
+  bgImg:        ${imgLine('bgImg')},
+  bgPattern:    ${imgLine('bgPattern')},
+  frameCTop:    ${imgLine('frameCTop')},
+  frameCBottom: ${imgLine('frameCBottom')},
+  infoImg:      ${imgLine('infoImg')},
 
-  desc: '${desc}',
+  desc: '${descEscaped}',
 
-  photos: [],
+  photos: ${photosCode},
 
-  orgAvt: []
+  orgAvt: ${refsCode}
 });`;
-  }).join('\n');
+}
 
-  const now = new Date().toLocaleString('ja-JP');
+function generate(andNext){
+  const key=images[cur]?.name;
+  const id  =document.getElementById('fId').value.trim();
+  const name=document.getElementById('fName').value.trim();
+  if(!id)   { alert('アバターIDを入力してください'); return; }
+  if(!name) { alert('アバター名を入力してください'); return; }
+  if(!selG) { alert('ジャンルを選択してください'); return; }
+  if(!selC) { alert('カテゴリを選択してください'); return; }
+  autoSave();
+  const code=buildEntry(key);
+  db[key]={...db[key], completed:true, code};
+  saveDB();
+  document.getElementById('outPre').textContent=code;
+  document.getElementById('outArea').style.display='block';
+  document.getElementById('outArea').scrollIntoView({behavior:'smooth',block:'nearest'});
+  updateStatus(); updateProgress(); renderDots();
+  if(andNext) setTimeout(()=>{ if(cur<images.length-1) go(cur+1); else goNextEmpty(); },300);
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(document.getElementById('outPre').textContent).then(()=>{
+    const b=document.getElementById('btnCopy');
+    b.textContent='✓ コピーしました'; b.classList.add('ok');
+    setTimeout(()=>{ b.textContent='コピー'; b.classList.remove('ok'); },2000);
+  });
+}
+
+// =====================================================================
+// avatars.js 生成
+// =====================================================================
+function generateAvatarsJS(){
+  const entries=Object.entries(db)
+    .filter(([k,d])=>d.id&&d.name&&d.genre&&d.cate)
+    .sort((a,b)=>a[1].id.localeCompare(b[1].id));
+
+  const blocks=entries.map(([k,d])=>buildEntry(k)).filter(Boolean).map(b=>`\n/* ─── 次のアバター ─── */\n${b}`).join('\n');
+
+  const now=new Date().toLocaleString('ja-JP');
   return `// =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
 // 生成日時: ${now}  /  ${entries.length}件
 // =====================================================
 
-// アバターデータ　テンプレート ================================================
-// ★ アバターを足すときは、ここのものを複製すること
+// テンプレート ========================================================
 /*
   my_avatarid = 'avatarAA';
   my_Dic      = DicBase + my_avatarid;
   _avatars.push({
-    id:           my_avatarid,
-    name:         'アバターネーム',
-    genre:        genre_copy_avatar,
-    category:     cate_mame,
+    id: my_avatarid, name: 'アバターネーム',
+    genre: genre_copy_avatar, category: cate_mame,
     mainImg:      my_Dic + '/thumbnail/main.png',
-    miniImgPC:    defo_miniImgPC,
-    miniImgSP:    defo_miniImgSP,
-    bgImg:        defo_bgImg,
-    bgPattern:    defo_bgPattern,
-    frameCTop:    defo_frameCTop,
-    frameCBottom: defo_frameCBottom,
+    miniImgPC:    defo_miniImgPC,  miniImgSP: defo_miniImgSP,
+    bgImg:        defo_bgImg,      bgPattern: defo_bgPattern,
+    frameCTop:    defo_frameCTop,  frameCBottom: defo_frameCBottom,
     infoImg:      defo_infoImg,
-    desc: '説明テキスト',
-    photos: [],
-    orgAvt: [ Item_Mamehinata ]
+    desc: '説明テキスト\\n改行もできます',
+    photos: [ my_Dic + '/photos/photo_01.png' ],
+    orgAvt: [ { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://...' } ]
   });
 */
 
 
 // =====================================================
-// 定数エリア：パス
+// 定数：パス
 // =====================================================
 const DicBase = 'assets/images/';
 const DicDefo = 'assets/images/ShareImg/';
 
 
 // =====================================================
-// 定数エリア：ジャンル
+// 定数：ジャンル
 // =====================================================
 const genre_copy_avatar = '元ネタあり（別アバター）';
 const genre_copy_game   = '元ネタあり（その他）';
@@ -556,7 +1067,7 @@ const genre_org         = '元ネタなし';
 
 
 // =====================================================
-// 定数エリア：カテゴリ
+// 定数：カテゴリ
 // =====================================================
 const cate_mame  = 'まめひなた';
 const cate_ruri  = '凪夜瑠璃';
@@ -566,7 +1077,7 @@ const cate_other = 'その他';
 
 
 // =====================================================
-// 定数エリア：デフォルト画像（共有）
+// 定数：デフォルト画像（共有）
 // =====================================================
 const defo_miniImgPC    = DicDefo + 'mini_pc.png';
 const defo_miniImgSP    = DicDefo + 'mini_sp.png';
@@ -578,7 +1089,7 @@ const defo_infoImg      = DicDefo + 'info_bg.png';
 
 
 // =====================================================
-// 定数エリア：リンク付きアイテム画像
+// 定数：リンク付きアイテム
 // =====================================================
 const Item_Mamehinata = { img: DicBase + 'categories/mame_hinata.png', url: 'https://booth.pm/ja/items/4340548' };
 const Item_foshunia   = { img: DicBase + 'categories/foshunya.png',    url: 'https://booth.pm/ja/items/4580093' };
@@ -586,7 +1097,7 @@ const Item_charo      = { img: DicBase + 'categories/sharo.png',       url: 'htt
 
 
 // =====================================================
-// 変数エリア：使いまわし用
+// 変数：使いまわし用
 // =====================================================
 let my_avatarid;
 let my_Dic;
@@ -605,189 +1116,190 @@ export default _avatars;
 `;
 }
 
-// ===================== 1件コード生成 =====================
-function generate(andNext){
-  const id   = document.getElementById('fId').value.trim();
-  const name = document.getElementById('fName').value.trim();
-  const desc = document.getElementById('fDesc').value.trim();
-  if(!id)   { alert('アバターIDを入力してください'); return; }
-  if(!name) { alert('アバター名を入力してください'); return; }
-  if(!selG) { alert('ジャンルを選択してください'); return; }
-  if(!selC) { alert('カテゴリを選択してください'); return; }
-
-  const chkM = document.getElementById('chkM').checked;
-  const chkB = document.getElementById('chkB').checked;
-  const chkF = document.getElementById('chkF').checked;
-  const chkI = document.getElementById('chkI').checked;
-
-  const miniPC = chkM ? `my_Dic + '/thumbnail/mini_pc.png'` : `defo_miniImgPC`;
-  const miniSP = chkM ? `my_Dic + '/thumbnail/mini_sp.png'` : `defo_miniImgSP`;
-  const bgImg  = chkB ? `my_Dic + '/bg.png'`               : `defo_bgImg`;
-  const bgPat  = chkB ? `my_Dic + '/pattern.png'`          : `defo_bgPattern`;
-  const fcTop  = chkF ? `my_Dic + '/frame_c_top.png'`      : `defo_frameCTop`;
-  const fcBot  = chkF ? `my_Dic + '/frame_c_bottom.png'`   : `defo_frameCBottom`;
-  const info   = chkI ? `my_Dic + '/info_bg.png'`          : `defo_infoImg`;
-  const d2     = (desc||'アバターの説明テキスト。').replace(/'/g,"\\'");
-
-  const code =
-`my_avatarid = '${id}';
-my_Dic      = DicBase + my_avatarid;
-_avatars.push({
-  id:           my_avatarid,
-  name:         '${name}',
-  genre:        ${selG},
-  category:     ${selC},
-
-  mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    ${miniPC},
-  miniImgSP:    ${miniSP},
-
-  bgImg:        ${bgImg},
-  bgPattern:    ${bgPat},
-  frameCTop:    ${fcTop},
-  frameCBottom: ${fcBot},
-  infoImg:      ${info},
-
-  desc: '${d2}',
-
-  photos: [],
-
-  orgAvt: []
-});`;
-
-  const key = images[cur]?.name || String(cur);
-  db[key] = { id, name, genre:selG, cate:selC, desc, chkM, chkB, chkF, chkI, completed:true, code };
-  saveDB();
-  document.getElementById('outPre').textContent = code;
-  document.getElementById('outArea').style.display = 'block';
-  updateStatus(); updateProgress(); renderDots();
-  document.getElementById('outArea').scrollIntoView({behavior:'smooth',block:'nearest'});
-
-  if(andNext){
-    setTimeout(()=>{ if(cur<images.length-1) go(cur+1); else goNextEmpty(); }, 300);
-  }
-}
-
-// ===================== コピー =====================
-function copyCode(){
-  navigator.clipboard.writeText(document.getElementById('outPre').textContent).then(()=>{
-    const b = document.getElementById('btnCopy');
-    b.textContent='✓ コピーしました'; b.classList.add('ok');
-    setTimeout(()=>{ b.textContent='コピー'; b.classList.remove('ok'); }, 2000);
-  });
-}
-
-// ===================== ナビゲーション =====================
-function go(idx){
-  if(!images.length) return;
+// =====================================================================
+// GitHubに全保存
+// =====================================================================
+async function pushAll(){
+  const key=images[cur]?.name; if(!key) return;
+  if(!settings.token){ alert('PATが設定されていません'); return; }
   autoSave();
-  cur = Math.max(0, Math.min(idx, images.length-1));
-  render();
-}
-function goNextEmpty(){
-  for(let i=cur+1;i<images.length;i++){
-    const d=db[images[i].name]; if(!d||!d.completed){ go(i); return; }
+  const d=db[key];
+  if(!d?.id||!d?.name||!d?.genre||!d?.cate){ alert('必須項目（ID・名前・ジャンル・カテゴリ）を入力してください'); return; }
+
+  const id=d.id;
+  const oldId=d.savedId||null;
+  const btn=document.getElementById('btnGitHub');
+  btn.disabled=true;
+
+  try{
+    // ① IDが変わった場合はリネーム確認
+    if(oldId&&oldId!==id){
+      const ok=confirm(`アバターIDが変わりました。\n旧: ${oldId} → 新: ${id}\n\nGitHub上の旧フォルダ内ファイルを新フォルダに移動しますか？`);
+      if(ok){
+        setGhStatus('フォルダをリネーム中...'); await renameFolder(oldId,id);
+      }
+    }
+
+    // ② フォルダ構成を確認・作成
+    setGhStatus('フォルダ構成を確認・作成中...');
+    await ensureFolder(id);
+
+    // ③ 参照画像（フォームに表示中の画像）をmain.pngとしてコピー
+    setGhStatus('main.png をコピー中...');
+    const mainPath=`assets/images/${id}/thumbnail/main.png`;
+    const mainSha=await getFileSha(mainPath);
+    if(!mainSha){ // まだない場合のみコピー
+      const b64=await urlToBase64(images[cur].url);
+      await uploadFile(mainPath, b64, null, `Add main.png for ${id}`);
+    }
+
+    // ④ 単体画像をアップロード
+    const s=getSession(key);
+    for(const type of Object.keys(DEFO_IMAGES)){
+      const sess=s.singleImages[type];
+      if(sess?.file){
+        setGhStatus(`${type} をアップロード中...`);
+        const b64=await fileToBase64(sess.file);
+        const path=`assets/images/${id}/${SAVE_PATH[type]}`;
+        const sha=await getFileSha(path);
+        await uploadFile(path,b64,sha,`Upload ${type} for ${id}`);
+        db[key].up=db[key].up||{};
+        db[key].up[type]=true;
+        saveDB();
+      }
+    }
+
+    // ⑤ 写真をアップロード・削除
+    const photosAll=s.photos||[];
+    for(const p of photosAll){
+      const path=`assets/images/${id}/photos/photo_${pad2(p.idx)}.png`;
+      if(p.deleted&&!p.isNew){
+        setGhStatus(`photo_${pad2(p.idx)} を削除中...`);
+        await deleteFile(path,`Delete photo_${pad2(p.idx)} for ${id}`);
+      } else if(!p.deleted&&p.file){
+        setGhStatus(`photo_${pad2(p.idx)} をアップロード中...`);
+        const b64=await fileToBase64(p.file);
+        const sha=await getFileSha(path);
+        await uploadFile(path,b64,sha,`Upload photo for ${id}`);
+        p.isNew=false;
+      }
+    }
+    // 削除済みをリストから除去
+    s.photos=photosAll.filter(p=>!p.deleted);
+
+    // ⑥ 参照画像をアップロード・削除
+    const refsAll=s.refs||[];
+    for(const r of refsAll){
+      const path=`assets/images/${id}/thumbnail/ref_${pad2(r.idx)}.png`;
+      if(r.deleted&&!r.isNew){
+        setGhStatus(`ref_${pad2(r.idx)} を削除中...`);
+        await deleteFile(path,`Delete ref_${pad2(r.idx)} for ${id}`);
+      } else if(!r.deleted&&r.file){
+        setGhStatus(`ref_${pad2(r.idx)} をアップロード中...`);
+        const b64=await fileToBase64(r.file);
+        const sha=await getFileSha(path);
+        await uploadFile(path,b64,sha,`Upload ref for ${id}`);
+        r.isNew=false;
+      }
+    }
+    s.refs=refsAll.filter(r=>!r.deleted);
+
+    // ⑦ avatars.js を生成・プッシュ
+    setGhStatus('avatars.js を生成・プッシュ中...');
+    const content=generateAvatarsJS();
+    const jsSha=await getFileSha(settings.outputFile);
+    await uploadFile(settings.outputFile, toBase64(content), jsSha, `Update avatars.js [${id}]`);
+
+    // ⑧ 保存済みID・状態を更新
+    const photosActive=s.photos.filter(p=>!p.deleted);
+    const refsActive  =s.refs.filter(r=>!r.deleted);
+    db[key]={
+      ...db[key],
+      savedId: id,
+      completed: true,
+      code: buildEntry(key),
+      up:{
+        ...(db[key].up||{}),
+        main:true,
+        photoCount: photosActive.length,
+        refs: refsActive.map(r=>({url:r.url||''}))
+      }
+    };
+    saveDB();
+    setGhStatus('✓ 保存完了！（フォルダ作成・画像・avatars.js すべて更新済み）','ok');
+    updateStatus(); updateProgress(); renderDots();
+    renderSingleSlots(key, db[key]);
+    renderPhotos(key);
+    renderRefs(key);
+
+  }catch(e){
+    setGhStatus('⚠️ エラー: '+e.message,'err');
+    console.error(e);
+  }finally{
+    btn.disabled=false;
   }
-  for(let i=0;i<cur;i++){
-    const d=db[images[i].name]; if(!d||!d.completed){ go(i); return; }
+}
+
+// =====================================================================
+// フォルダ構成確認・作成
+// =====================================================================
+async function ensureFolder(id){
+  const base=`assets/images/${id}`;
+  const folders=['thumbnail','photos','refs'];
+  for(const f of folders){
+    const gkPath=`${base}/${f}/.gitkeep`;
+    const sha=await getFileSha(gkPath);
+    if(!sha){
+      await uploadFile(gkPath, btoa(''), null, `Create ${f}/ folder for ${id}`);
+    }
   }
-  alert('すべて完了しています！');
 }
 
-// ===================== 画面描画 =====================
-function render(){
-  const f = images[cur];
-  document.getElementById('navIdx').textContent  = (cur+1)+' / '+images.length;
-  document.getElementById('navFname').textContent = f.name;
-  document.getElementById('hdTitle').textContent  = f.name;
-  document.getElementById('btnPrev').disabled     = cur===0;
-  document.getElementById('btnNext').disabled     = cur===images.length-1;
+// =====================================================================
+// フォルダリネーム（旧ID→新ID）
+// =====================================================================
+async function renameFolder(oldId, newId){
+  const base=`assets/images/${oldId}`;
+  let files=[];
+  try{
+    // 1階層ずつ取得
+    const rootItems=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${base}?ref=${settings.branch}`);
+    for(const item of rootItems){
+      if(item.type==='file') files.push(item);
+      else if(item.type==='dir'){
+        try{
+          const subItems=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${item.path}?ref=${settings.branch}`);
+          subItems.filter(i=>i.type==='file').forEach(i=>files.push(i));
+        }catch(e){}
+      }
+    }
+  }catch(e){ return; } // 旧フォルダがない場合はスキップ
 
-  // 画像
-  const imgEl = document.getElementById('imgDisp');
-  const ldEl  = document.getElementById('imgLoading');
-  imgEl.style.display = 'none';
-  ldEl.style.display  = 'flex';
-  imgEl.src = f.url;
-
-  // フォーム復元
-  const d = db[f.name];
-  selG=''; selC='';
-  document.getElementById('fId').value   = d?.id   || autoId(f.name);
-  document.getElementById('fName').value = d?.name || '';
-  document.getElementById('fDesc').value = d?.desc || '';
-  document.getElementById('chkM').checked = d?.chkM||false;
-  document.getElementById('chkB').checked = d?.chkB||false;
-  document.getElementById('chkF').checked = d?.chkF||false;
-  document.getElementById('chkI').checked = d?.chkI||false;
-  document.querySelectorAll('#genreGrp .bopt').forEach(b=>{
-    b.classList.remove('ag');
-    if(d?.genre===b.dataset.v){ b.classList.add('ag'); selG=d.genre; }
-  });
-  document.querySelectorAll('#cateGrp .bopt').forEach(b=>{
-    b.classList.remove('ac');
-    if(d?.cate===b.dataset.v){ b.classList.add('ac'); selC=d.cate; }
-  });
-
-  // 出力エリア
-  const oa = document.getElementById('outArea');
-  if(d?.completed && d?.code){
-    oa.style.display='block';
-    document.getElementById('outPre').textContent=d.code;
-  } else {
-    oa.style.display='none';
+  // 新パスにコピー
+  for(const f of files){
+    const newPath=f.path.replace(`assets/images/${oldId}/`,`assets/images/${newId}/`);
+    const sha=await getFileSha(newPath);
+    if(!sha){
+      // ファイル内容を取得してコピー
+      try{
+        const info=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${f.path}?ref=${settings.branch}`);
+        if(info.content){
+          const b64=info.content.replace(/\n/g,'');
+          await uploadFile(newPath, b64, null, `Rename: move to ${newId}`);
+        }
+      }catch(e){}
+    }
   }
 
-  // GitHub保存ステータスをクリア
-  const gs = document.getElementById('ghStatus');
-  gs.className='github-status'; gs.textContent='';
-
-  updateStatus(); updateProgress(); renderDots();
-}
-
-function imgLoaded(){
-  document.getElementById('imgDisp').style.display='block';
-  document.getElementById('imgLoading').style.display='none';
-}
-function imgError(){
-  document.getElementById('imgLoading').innerHTML='<span style="color:#fff;font-size:13px;">画像を読み込めませんでした</span>';
-}
-
-function autoId(fname){ return fname.replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9_]/g,'').toLowerCase(); }
-
-// ===================== ジャンル/カテゴリ選択 =====================
-function sel(btn,type){
-  if(type==='g'){
-    document.querySelectorAll('#genreGrp .bopt').forEach(b=>b.classList.remove('ag'));
-    btn.classList.add('ag'); selG=btn.dataset.v;
-  } else {
-    document.querySelectorAll('#cateGrp .bopt').forEach(b=>b.classList.remove('ac'));
-    btn.classList.add('ac'); selC=btn.dataset.v;
+  // 旧ファイルを削除（逆順）
+  for(const f of files.reverse()){
+    try{ await deleteFile(f.path, `Rename: delete old ${oldId}`); }catch(e){}
   }
-  autoSave();
 }
 
-// ===================== 自動保存 =====================
-function autoSave(){
-  const key = images[cur]?.name;
-  if(!key) return;
-  const id=document.getElementById('fId').value.trim();
-  const name=document.getElementById('fName').value.trim();
-  const desc=document.getElementById('fDesc').value.trim();
-  if(!id&&!name&&!selG&&!selC&&!desc&&!db[key]) return;
-  db[key]={
-    id, name, genre:selG, cate:selC, desc,
-    chkM:document.getElementById('chkM').checked,
-    chkB:document.getElementById('chkB').checked,
-    chkF:document.getElementById('chkF').checked,
-    chkI:document.getElementById('chkI').checked,
-    completed: db[key]?.completed||false,
-    code: db[key]?.code||''
-  };
-  saveDB(); updateStatus(); updateProgress(); renderDots();
-}
-
-// ===================== UI更新 =====================
+// =====================================================================
+// UI更新
+// =====================================================================
 function updateStatus(){
   const key=images[cur]?.name; const d=db[key];
   const badge=document.getElementById('statusBadge');
@@ -810,25 +1322,16 @@ function renderDots(){
     else if(d&&(d.id||d.name||d.genre||d.cate)) cls='dot-partial';
     const btn=document.createElement('button');
     btn.className='dot '+cls+(i===cur?' dot-current':'');
-    btn.textContent=i+1; btn.title=f.name;
-    btn.onclick=()=>go(i);
+    btn.textContent=i+1; btn.title=f.name; btn.onclick=()=>go(i);
     grid.appendChild(btn);
   });
 }
 
-// ===================== データクリア =====================
 function clearAllData(){
-  if(!confirm('保存されているすべての入力データを削除しますか？\n（GitHub上のファイルは変わりません）')) return;
+  if(!confirm('保存データをすべてクリアしますか？\n（GitHub上のファイルは変わりません）')) return;
   localStorage.removeItem(SK_DATA); db={};
-  document.getElementById('setSaved').textContent='';
-  document.getElementById('btnClearData').style.display='none';
-  alert('クリアしました');
-}
-
-// ===================== ユーティリティ =====================
-function toBase64(str){
-  // 日本語対応UTF-8 base64エンコード
-  return btoa(unescape(encodeURIComponent(str)));
+  document.getElementById('setMsg').textContent='クリアしました';
+  document.getElementById('btnClearAll').style.display='none';
 }
 </script>
 </body>
