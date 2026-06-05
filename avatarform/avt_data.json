@@ -113,5 +113,21 @@
         }
       ]
     }
+  },
+  "1050.png": {
+    "id": "4000_QuestHinata",
+    "name": "クエスト対応まめひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめん。",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ]
   }
 }
