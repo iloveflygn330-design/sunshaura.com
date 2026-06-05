@@ -114,6 +114,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .btn-add-media{width:100%;padding:10px;background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--r);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;}
 .btn-add-media:hover{border-color:var(--main);color:var(--main);}
 
+/* OrgAvtテンプレートボタン */
+.template-refs{padding:10px 14px 8px;background:var(--bg);}
+.tr-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.04em;}
+.bopt.tr-sel{background:var(--amber);color:#fff;border-color:var(--amber);}
+
 /* PC表示：各要素を50%幅・中央揃えに（SPはそのまま） */
 @media (min-width: 760px) {
   .nav, .img-wrap, .form-body,
@@ -351,9 +356,19 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
 
   <!-- OrgAvt参照画像 -->
   <div class="section-title">OrgAvt 参照画像（複数可・URL付き）</div>
+  <!-- テンプレートボタン（複数選択可・選択するとorgAvtに定数として追加） -->
+  <div class="template-refs">
+    <div class="tr-label">テンプレートから追加（複数選択可）</div>
+    <div class="btn-group">
+      <button class="bopt tr-btn" data-code="Item_Mamehinata" onclick="toggleTRef(this)">まめひなた</button>
+      <button class="bopt tr-btn" data-code="{ img: DicBase + 'categories/ruri.png', url: 'https://booth.pm/ja/items/5351494' }" onclick="toggleTRef(this)">凪夜瑠璃</button>
+      <button class="bopt tr-btn" data-code="Item_foshunia" onclick="toggleTRef(this)">フォシュニア</button>
+      <button class="bopt tr-btn" data-code="Item_charo" onclick="toggleTRef(this)">シャロ</button>
+    </div>
+  </div>
   <div class="media-wrap" id="refsList"></div>
   <div class="add-media-wrap">
-    <button class="btn-add-media" onclick="addRef()">＋ 参照画像を追加</button>
+    <button class="btn-add-media" onclick="addRef()">＋ 参照画像を追加（カスタム）</button>
   </div>
 
   <hr class="divider">
@@ -724,6 +739,9 @@ function render(){
   document.getElementById('fDesc').value = d?.desc || '';
   document.querySelectorAll('#genreGrp .bopt').forEach(b=>{ b.classList.remove('ag'); if(d?.genre===b.dataset.v){ b.classList.add('ag'); selG=d.genre; } });
   document.querySelectorAll('#cateGrp .bopt').forEach(b=>{ b.classList.remove('ac'); if(d?.cate===b.dataset.v){ b.classList.add('ac'); selC=d.cate; } });
+  // テンプレートボタンの選択状態を復元
+  const tRefs = d?.templateRefs||[];
+  document.querySelectorAll('.tr-btn').forEach(b=>b.classList.toggle('tr-sel', tRefs.includes(b.dataset.code)));
 
   // 単体画像スロット
   renderSingleSlots(f.name, d);
@@ -947,6 +965,27 @@ function updateRefUrl(idx, url){
   if(r) r.url=url;
 }
 
+// OrgAvtテンプレートボタンのトグル
+// 選択するとorgAvtに定数名（例: Item_Mamehinata）または
+// インラインオブジェクトとしてコードに追加される
+function toggleTRef(btn){
+  const key=images[cur]?.name; if(!key) return;
+  btn.classList.toggle('tr-sel');
+  const code=btn.dataset.code;
+  if(!db[key]) db[key]={};
+  const current=db[key].templateRefs||[];
+  if(btn.classList.contains('tr-sel')){
+    // 選択：重複防止して追加
+    if(!current.includes(code)) db[key].templateRefs=[...current, code];
+  } else {
+    // 解除：該当コードを除去
+    db[key].templateRefs=current.filter(c=>c!==code);
+  }
+  saveDB();
+  // バックグラウンドでGitHubに同期
+  pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
+}
+
 // =====================================================================
 // フォーム入力・自動保存
 // =====================================================================
@@ -1012,10 +1051,16 @@ function buildEntry(key){
   const photosCode = photos.length===0 ? '[]' :
     '[\n'+photos.map(p=>`    my_Dic + '/photos/photo_${pad2(p.idx)}.png',`).join('\n')+'\n  ]';
 
-  // 参照リスト
+  // 参照リスト（テンプレート定数 + カスタムアップロード）
+  const templateRefs = db[key]?.templateRefs||[];
   const refs=(s?.refs||[]).filter(r=>!r.deleted);
-  const refsCode = refs.length===0 ? '[]' :
-    '[\n'+refs.map(r=>`    { img: my_Dic + '/thumbnail/ref_${pad2(r.idx)}.png', url: '${(r.url||'').replace(/'/g,"\\'")}' },`).join('\n')+'\n  ]';
+  const allRefLines = [
+    // ① テンプレートボタンで選択されたもの（定数名 or インラインオブジェクトをそのまま出力）
+    ...templateRefs.map(code=>`    ${code},`),
+    // ② カスタムアップロードした画像
+    ...refs.map(r=>`    { img: my_Dic + '/thumbnail/ref_${pad2(r.idx)}.png', url: '${(r.url||'').replace(/'/g,"\\'")}' },`)
+  ];
+  const refsCode = allRefLines.length===0 ? '[]' : '[\n'+allRefLines.join('\n')+'\n  ]';
 
   // 説明文（改行を\nにエスケープ）
   const descEscaped=(desc||'アバターの説明テキスト。').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r\n|\r|\n/g,'\\n');
