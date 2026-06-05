@@ -439,7 +439,11 @@ async function loadDataFromGitHub(){
   try{
     const data=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${DATA_SYNC_FILE}?ref=${settings.branch}`);
     if(data.content){
-      const remote=JSON.parse(atob(data.content.replace(/\n/g,'')));
+      const b64clean = data.content.replace(/\n/g,'');
+      // toBase64()はUTF-8対応エンコードのため、逆順でデコードする
+      // atob → escape → decodeURIComponent の順で正しく日本語が復元される
+      const jsonStr = decodeURIComponent(escape(atob(b64clean)));
+      const remote  = JSON.parse(jsonStr);
       // リモート優先でマージ（新しいデバイスでも最新の入力内容が反映される）
       db={ ...db, ...remote };
       saveDB();
