@@ -56,9 +56,7 @@
       "main": true
     },
     "savedId": "1010",
-    "templateRefs": [
-      "Item_Mamehinata"
-    ]
+    "templateRefs": []
   },
   "1060.png": {
     "id": "1060",
@@ -97,6 +95,23 @@
     "up": {
       "photoCount": 0,
       "refs": []
+    }
+  },
+  "1040.png": {
+    "id": "6010_Zudanoko",
+    "name": "ヒトノコずんだもん",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "ヒトノコを頻繁に使っていたころ、\nずんだもん集会に参加にあわせてした改変。",
+    "completed": true,
+    "code": "my_avatarid = '6010_Zudanoko';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ヒトノコずんだもん',\n  genre:        genre_copy_game,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        my_Dic + '/bg.png',\n  bgPattern:    defo_bgPattern,\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  desc: 'ヒトノコを頻繁に使っていたころ、\\nずんだもん集会に参加にあわせてした改変。',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },\n  ]\n});",
+    "up": {
+      "photoCount": 0,
+      "refs": [
+        {
+          "url": "https://uri880.booth.pm/items/4717337"
+        }
+      ]
     }
   }
 }
