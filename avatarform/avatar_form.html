@@ -608,9 +608,9 @@ function fileToBase64(file){
 function urlToBase64(url){
   return new Promise(async(res,rej)=>{
     try{
-      const headers={};
-      if(settings.token) headers['Authorization']='Bearer '+settings.token;
-      const resp=await fetch(url,{headers});
+      // raw.githubusercontent.com は公開URLのため認証ヘッダー不要
+      // Authorization を付けるとCORSプリフライトがブロックされる
+      const resp=await fetch(url);
       const blob=await resp.blob();
       const reader=new FileReader();
       reader.onload=e=>res(e.target.result.split(',')[1]);
