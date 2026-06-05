@@ -1,43 +1,37 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/5 0:23:26  /  3件
+// 生成日時: 2026/6/5 9:26:23  /  3件
 // =====================================================
 
-// アバターデータ　テンプレート ================================================
-// ★ アバターを足すときは、ここのものを複製すること
+// テンプレート ========================================================
 /*
   my_avatarid = 'avatarAA';
   my_Dic      = DicBase + my_avatarid;
   _avatars.push({
-    id:           my_avatarid,
-    name:         'アバターネーム',
-    genre:        genre_copy_avatar,
-    category:     cate_mame,
+    id: my_avatarid, name: 'アバターネーム',
+    genre: genre_copy_avatar, category: cate_mame,
     mainImg:      my_Dic + '/thumbnail/main.png',
-    miniImgPC:    defo_miniImgPC,
-    miniImgSP:    defo_miniImgSP,
-    bgImg:        defo_bgImg,
-    bgPattern:    defo_bgPattern,
-    frameCTop:    defo_frameCTop,
-    frameCBottom: defo_frameCBottom,
+    miniImgPC:    defo_miniImgPC,  miniImgSP: defo_miniImgSP,
+    bgImg:        defo_bgImg,      bgPattern: defo_bgPattern,
+    frameCTop:    defo_frameCTop,  frameCBottom: defo_frameCBottom,
     infoImg:      defo_infoImg,
-    desc: '説明テキスト',
-    photos: [],
-    orgAvt: [ Item_Mamehinata ]
+    desc: '説明テキスト\n改行もできます',
+    photos: [ my_Dic + '/photos/photo_01.png' ],
+    orgAvt: [ { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://...' } ]
   });
 */
 
 
 // =====================================================
-// 定数エリア：パス
+// 定数：パス
 // =====================================================
 const DicBase = 'assets/images/';
 const DicDefo = 'assets/images/ShareImg/';
 
 
 // =====================================================
-// 定数エリア：ジャンル
+// 定数：ジャンル
 // =====================================================
 const genre_copy_avatar = '元ネタあり（別アバター）';
 const genre_copy_game   = '元ネタあり（その他）';
@@ -45,7 +39,7 @@ const genre_org         = '元ネタなし';
 
 
 // =====================================================
-// 定数エリア：カテゴリ
+// 定数：カテゴリ
 // =====================================================
 const cate_mame  = 'まめひなた';
 const cate_ruri  = '凪夜瑠璃';
@@ -55,7 +49,7 @@ const cate_other = 'その他';
 
 
 // =====================================================
-// 定数エリア：デフォルト画像（共有）
+// 定数：デフォルト画像（共有）
 // =====================================================
 const defo_miniImgPC    = DicDefo + 'mini_pc.png';
 const defo_miniImgSP    = DicDefo + 'mini_sp.png';
@@ -67,7 +61,7 @@ const defo_infoImg      = DicDefo + 'info_bg.png';
 
 
 // =====================================================
-// 定数エリア：リンク付きアイテム画像
+// 定数：リンク付きアイテム
 // =====================================================
 const Item_Mamehinata = { img: DicBase + 'categories/mame_hinata.png', url: 'https://booth.pm/ja/items/4340548' };
 const Item_foshunia   = { img: DicBase + 'categories/foshunya.png',    url: 'https://booth.pm/ja/items/4580093' };
@@ -75,7 +69,7 @@ const Item_charo      = { img: DicBase + 'categories/sharo.png',       url: 'htt
 
 
 // =====================================================
-// 変数エリア：使いまわし用
+// 変数：使いまわし用
 // =====================================================
 let my_avatarid;
 let my_Dic;
@@ -86,12 +80,12 @@ let my_Dic;
 // =====================================================
 const _avatars = [];
 
-/* ─── 看板ネコ ─── */
+/* ─── 次のアバター ─── */
 my_avatarid = '1010';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
   id:           my_avatarid,
-  name:         '看板ネコ',
+  name:         '看板ネコtest',
   genre:        genre_org,
   category:     cate_other,
 
@@ -105,15 +99,14 @@ _avatars.push({
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
 
-  desc: '初めて改変したアバター
-無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
+  desc: '初めて改変したアバター\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
 
   photos: [],
 
   orgAvt: []
 });
 
-/* ─── test ─── */
+/* ─── 次のアバター ─── */
 my_avatarid = 'vrchat_20260307_004043964_1920x1080';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
@@ -139,7 +132,7 @@ _avatars.push({
   orgAvt: []
 });
 
-/* ─── test ─── */
+/* ─── 次のアバター ─── */
 my_avatarid = 'vrchat_20260315_021642369_1080x1920';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
