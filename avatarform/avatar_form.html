@@ -380,6 +380,8 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
   </div>
   <div class="github-area">
     <button class="btn-github" id="btnGitHub" onclick="pushAll()">↑ GitHubに保存（フォルダ作成・画像upload・avatars.js更新）</button>
+    <!-- main.png を強制上書きするボタン（参照画像を差し替えたときに使う） -->
+    <button class="btn-github" id="btnUpdateMain" onclick="forceUpdateMain()" style="margin-top:8px;background:#f0f4ff;color:#334;border-color:#c0c8e0;font-size:13px;">🔄 main.png を参照画像で上書き更新</button>
     <div class="github-status" id="ghStatus"></div>
   </div>
 
@@ -495,6 +497,34 @@ async function pushDataToGitHub(){
     await uploadFile(DATA_SYNC_FILE, toBase64(content), sha, 'Sync form data');
   }catch(e){
     console.warn('データ同期に失敗（次回の保存時に再試行されます）:', e.message);
+  }
+}
+
+// main.png を参照画像で強制上書き
+// avatarform/profile/ の参照画像を差し替えたときに使う
+async function forceUpdateMain(){
+  if(!settings.token){ alert('PATが設定されていません'); return; }
+  const key=images[cur]?.name; if(!key) return;
+  const d=db[key];
+  const id=d?.id||document.getElementById('fId').value.trim();
+  if(!id){ alert('アバターIDを入力してください'); return; }
+
+  const btn=document.getElementById('btnUpdateMain');
+  btn.disabled=true;
+  setGhStatus('main.png を上書き中...');
+  try{
+    const mainPath=`assets/images/${id}/thumbnail/main.png`;
+    // 既存ファイルのSHAを取得（上書きにはSHAが必要）
+    const sha=await getFileSha(mainPath);
+    // 現在の参照画像をBase64に変換
+    const b64=await urlToBase64(images[cur].url);
+    // SHAがあれば上書き、なければ新規作成
+    await uploadFile(mainPath, b64, sha, `Update main.png for ${id}`);
+    setGhStatus('✓ main.png を更新しました','ok');
+  }catch(e){
+    setGhStatus('⚠️ エラー: '+e.message,'err');
+  }finally{
+    btn.disabled=false;
   }
 }
 
