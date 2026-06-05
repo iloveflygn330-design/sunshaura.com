@@ -376,6 +376,8 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
 // =====================================================================
 const SK_SETTINGS = 'avt_settings';
 const SK_DATA     = 'avt_tool_v2';
+// デバイス間データ同期ファイル（GitHub上に保存）
+const DATA_SYNC_FILE = 'avatarform/avt_data.json';
 
 // デフォルト画像（GitHub Raw URL で表示）
 const DEFO_BASE   = 'assets/images/ShareImg/';
@@ -430,6 +432,37 @@ function loadDB(){ try{ db=JSON.parse(localStorage.getItem(SK_DATA))||{}; }catch
 function saveDB(){ localStorage.setItem(SK_DATA,JSON.stringify(db)); }
 function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SK_SETTINGS))||null; }catch(e){ return null; } }
 function saveSettingsData(s){ localStorage.setItem(SK_SETTINGS,JSON.stringify(s)); }
+
+// GitHubからデータを読み込む（起動時・デバイス間同期）
+async function loadDataFromGitHub(){
+  if(!settings.owner||!settings.repo) return;
+  try{
+    const data=await ghGet(`/repos/${settings.owner}/${settings.repo}/contents/${DATA_SYNC_FILE}?ref=${settings.branch}`);
+    if(data.content){
+      const remote=JSON.parse(atob(data.content.replace(/\n/g,'')));
+      // リモート優先でマージ（新しいデバイスでも最新の入力内容が反映される）
+      db={ ...db, ...remote };
+      saveDB();
+      console.log('GitHubからデータを読み込みました（'+Object.keys(remote).length+'件）');
+    }
+  }catch(e){
+    // ファイルがない場合（初回）はローカルデータをそのまま使用
+    console.log('リモートデータなし、ローカルデータを使用');
+  }
+}
+
+// GitHubにデータを書き込む（バックグラウンド同期）
+// ナビゲーション・コード生成のたびに自動実行される
+async function pushDataToGitHub(){
+  if(!settings.token) return; // PATなしは書き込み不可
+  try{
+    const content=JSON.stringify(db,null,2);
+    const sha=await getFileSha(DATA_SYNC_FILE);
+    await uploadFile(DATA_SYNC_FILE, toBase64(content), sha, 'Sync form data');
+  }catch(e){
+    console.warn('データ同期に失敗（次回の保存時に再試行されます）:', e.message);
+  }
+}
 
 // =====================================================================
 // セッション管理
@@ -528,6 +561,10 @@ async function saveSettings(){
   try{
     images = await fetchImageList();
     if(images.length===0){ showLoadError('画像が見つかりませんでした。\nパス: '+s.imgFolder); return; }
+    // GitHubからデータを読み込んで端末間で同期
+    setGhStatus && setGhStatus('');
+    document.getElementById('ldMsg').textContent='入力データを同期中...';
+    await loadDataFromGitHub();
     cur=0;
     showScreen('scMain');
     render();
@@ -632,6 +669,8 @@ function setGhStatus(msg,cls=''){
 function go(idx){
   if(!images.length) return;
   autoSave();
+  // バックグラウンドでGitHubに同期（他の端末でも最新状態になる）
+  pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
   cur=Math.max(0,Math.min(idx,images.length-1));
   render();
 }
@@ -1000,6 +1039,8 @@ function generate(andNext){
   const code=buildEntry(key);
   db[key]={...db[key], completed:true, code};
   saveDB();
+  // バックグラウンドでGitHubに同期
+  pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
   document.getElementById('outPre').textContent=code;
   document.getElementById('outArea').style.display='block';
   document.getElementById('outArea').scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -1227,6 +1268,8 @@ async function pushAll(){
     };
     saveDB();
     setGhStatus('✓ 保存完了！（フォルダ作成・画像・avatars.js すべて更新済み）','ok');
+    // データファイルも同期（他の端末で最新状態が反映される）
+    await pushDataToGitHub();
     updateStatus(); updateProgress(); renderDots();
     renderSingleSlots(key, db[key]);
     renderPhotos(key);
