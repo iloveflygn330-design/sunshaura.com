@@ -82,5 +82,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1030.png": {
+    "id": "1030",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
