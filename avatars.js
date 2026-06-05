@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/5 17:41:11  /  3件
+// 生成日時: 2026/6/5 19:17:21  /  5件
 // =====================================================
 
 // テンプレート ========================================================
@@ -104,6 +104,62 @@ _avatars.push({
   photos: [],
 
   orgAvt: []
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '4000_QuestHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'クエスト対応まめひなた',
+  genre:        genre_org,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        defo_bgImg,
+  bgPattern:    defo_bgPattern,
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  desc: 'クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめん。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '6010_Zudanoko';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'ヒトノコずんだもん',
+  genre:        genre_copy_game,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        my_Dic + '/bg.png',
+  bgPattern:    defo_bgPattern,
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  desc: 'ヒトノコを頻繁に使っていたころ、\nずんだもん集会に参加にあわせてした改変。',
+
+  photos: [],
+
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
