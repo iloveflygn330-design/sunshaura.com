@@ -114,6 +114,21 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .btn-add-media{width:100%;padding:10px;background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--r);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;}
 .btn-add-media:hover{border-color:var(--main);color:var(--main);}
 
+/* PC表示：各要素を50%幅・中央揃えに（SPはそのまま） */
+@media (min-width: 760px) {
+  .nav, .img-wrap, .form-body,
+  .section-title, .img-slots, .media-wrap,
+  .btn-area, .github-area, .output-area,
+  .grid-wrap, .add-media-wrap {
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* add-media-wrap のスタイル */
+.add-media-wrap{padding:0 14px 12px;background:var(--bg);}
+
 /* ボタンエリア・GitHub */
 .btn-area{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;background:var(--bg);border-top:1px solid var(--border);}
 .btn-gen{padding:13px;font-size:14px;font-weight:700;border:none;border-radius:var(--r);cursor:pointer;}
@@ -330,14 +345,14 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
   <!-- 思い出写真 -->
   <div class="section-title">思い出写真（複数可）</div>
   <div class="media-wrap" id="photosList"></div>
-  <div style="padding:0 14px 12px;background:var(--bg);">
+  <div class="add-media-wrap">
     <button class="btn-add-media" onclick="addPhoto()">＋ 写真を追加</button>
   </div>
 
   <!-- OrgAvt参照画像 -->
   <div class="section-title">OrgAvt 参照画像（複数可・URL付き）</div>
   <div class="media-wrap" id="refsList"></div>
-  <div style="padding:0 14px 12px;background:var(--bg);">
+  <div class="add-media-wrap">
     <button class="btn-add-media" onclick="addRef()">＋ 参照画像を追加</button>
   </div>
 
