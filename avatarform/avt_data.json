@@ -49,18 +49,23 @@
     "chkF": false,
     "chkI": false,
     "completed": true,
-    "code": "my_avatarid = '1010';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '看板ネコtest',\n  genre:        genre_org,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        defo_bgImg,\n  bgPattern:    defo_bgPattern,\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  desc: '初めて改変したアバター\\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',\n\n  photos: [],\n\n  orgAvt: []\n});",
+    "code": "my_avatarid = '1010';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '看板ネコtest',\n  genre:        genre_org,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/red.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: '初めて改変したアバター\\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": [],
+      "refs": [
+        {
+          "url": "https://hoshinekonikki.booth.pm/items/2597163"
+        }
+      ],
       "main": true
     },
     "savedId": "1010",
-    "templateRefs": [
-      "Item_Mamehinata"
-    ],
+    "templateRefs": [],
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/red.png"
+      "bgImg": "assets/images/ShareImg_bg/red.png",
+      "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
     }
   },
   "1060.png": {
