@@ -91,31 +91,38 @@
     "genre": "genre_copy_game",
     "cate": "cate_other",
     "desc": "月食ちゃんに続いて一目ぼれ。\n2人目に購入したアバター。\n改変で好きな要素をいれたいなーと思い、フライゴンと同じ配色にしようとした。\nFUJIYAMAでずんだもんのアバターを見かけて何となく遠目に見ていたら、ずんだもん仲間として受け入れてもらえた（？）",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '7020_MeryuFlygon';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'メリュー（フライゴン色）',\n  genre:        genre_copy_game,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/green.png',\n  bgPattern:    defo_bgPattern,\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',\n  infoImg:      defo_infoImg,\n\n  desc: '月食ちゃんに続いて一目ぼれ。\\n2人目に購入したアバター。\\n改変で好きな要素をいれたいなーと思い、フライゴンと同じ配色にしようとした。\\nFUJIYAMAでずんだもんのアバターを見かけて何となく遠目に見ていたら、ずんだもん仲間として受け入れてもらえた（？）',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/4580792' },\n  ]\n});",
     "up": {
       "photoCount": 0,
       "refs": [
         {
           "url": "https://hoshinekonikki.booth.pm/items/4580792"
         }
-      ]
+      ],
+      "main": true
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/green.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/green.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_glass.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_glass.png"
+    },
+    "savedId": "7020_MeryuFlygon"
   },
   "1030.png": {
-    "id": "1030",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "7030_zundaRED",
+    "name": "2Pずんだもん",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "フライゴンメリューの時に見かけたずんだもんアバターから、VRChatにずんだもんの公式アバターがあることを認知して、公式ストアを覗いてすぐにDL。\n赤色が好きなので改変で赤色を加えたら、「あんこもんだ！」と言われた。\nずんだもんに亜種がいたんだね。",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/red.png"
     }
   },
   "1040.png": {
