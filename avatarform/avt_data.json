@@ -86,11 +86,11 @@
     }
   },
   "1020.png": {
-    "id": "1020",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "7020_MeryuFlygon",
+    "name": "メリュー（フライゴン色）",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "月食ちゃんに続いて一目ぼれ。\n2人目に購入したアバター。\n改変で好きな要素をいれたいなーと思い、フライゴンと同じ配色にしようとした。\nFUJIYAMAでずんだもんのアバターを見かけて何となく遠目に見ていたら、ずんだもん仲間として受け入れてもらえた（？）",
     "completed": false,
     "code": "",
     "up": {
@@ -100,6 +100,9 @@
           "url": "https://hoshinekonikki.booth.pm/items/4580792"
         }
       ]
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/green.png"
     }
   },
   "1030.png": {
