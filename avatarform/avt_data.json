@@ -126,14 +126,16 @@
         {
           "url": "https://zunko.jp/"
         }
-      ]
+      ],
+      "main": true
     },
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/red.png",
       "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png",
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_cir.png"
-    }
+    },
+    "savedId": "7030_zundaRED"
   },
   "1040.png": {
     "id": "6010_Zudanoko",
