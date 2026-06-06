@@ -56,7 +56,9 @@
       "main": true
     },
     "savedId": "1010",
-    "templateRefs": []
+    "templateRefs": [
+      "Item_Mamehinata"
+    ]
   },
   "1060.png": {
     "id": "1060",
