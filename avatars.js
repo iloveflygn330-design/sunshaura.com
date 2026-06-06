@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/6 9:48:02  /  5件
+// 生成日時: 2026/6/6 9:50:30  /  5件
 // =====================================================
 
 // テンプレート ========================================================
@@ -81,34 +81,6 @@ let my_Dic;
 const _avatars = [];
 
 /* ─── 次のアバター ─── */
-my_avatarid = '1010';
-my_Dic      = DicBase + my_avatarid;
-_avatars.push({
-  id:           my_avatarid,
-  name:         '看板ネコtest',
-  genre:        genre_org,
-  category:     cate_other,
-
-  mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    defo_miniImgPC,
-  miniImgSP:    defo_miniImgSP,
-
-  bgImg:        DicBase + 'ShareImg_bg/red.png',
-  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
-  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
-  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
-  infoImg:      defo_infoImg,
-
-  desc: '初めて改変したアバター\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
-
-  photos: [],
-
-  orgAvt: [
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },
-  ]
-});
-
-/* ─── 次のアバター ─── */
 my_avatarid = '4000_QuestHinata';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
@@ -160,6 +132,34 @@ _avatars.push({
   photos: [],
 
   orgAvt: []
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '7010_LunerBoard';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '看板ネコtest',
+  genre:        genre_org,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/red.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  desc: '初めて改変したアバター\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
+
+  photos: [],
+
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
