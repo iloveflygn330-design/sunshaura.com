@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/6 9:50:30  /  5件
+// 生成日時: 2026/6/6 9:54:23  /  6件
 // =====================================================
 
 // テンプレート ========================================================
@@ -159,6 +159,34 @@ _avatars.push({
 
   orgAvt: [
     { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '7020_MeryuFlygon';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'メリュー（フライゴン色）',
+  genre:        genre_copy_game,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/green.png',
+  bgPattern:    defo_bgPattern,
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',
+  infoImg:      defo_infoImg,
+
+  desc: '月食ちゃんに続いて一目ぼれ。\n2人目に購入したアバター。\n改変で好きな要素をいれたいなーと思い、フライゴンと同じ配色にしようとした。\nFUJIYAMAでずんだもんのアバターを見かけて何となく遠目に見ていたら、ずんだもん仲間として受け入れてもらえた（？）',
+
+  photos: [],
+
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/4580792' },
   ]
 });
 
