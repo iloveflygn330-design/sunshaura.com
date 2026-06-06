@@ -115,14 +115,24 @@
     "genre": "genre_copy_game",
     "cate": "cate_other",
     "desc": "フライゴンメリューの時に見かけたずんだもんアバターから、VRChatにずんだもんの公式アバターがあることを認知して、公式ストアを覗いてすぐにDL。\n赤色が好きなので改変で赤色を加えたら、「あんこもんだ！」と言われた。\nずんだもんに亜種がいたんだね。",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '7030_zundaRED';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '2Pずんだもん',\n  genre:        genre_copy_game,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/red.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'フライゴンメリューの時に見かけたずんだもんアバターから、VRChatにずんだもんの公式アバターがあることを認知して、公式ストアを覗いてすぐにDL。\\n赤色が好きなので改変で赤色を加えたら、「あんこもんだ！」と言われた。\\nずんだもんに亜種がいたんだね。',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3733351' },\n    { img: my_Dic + '/thumbnail/ref_02.png', url: 'https://zunko.jp/' },\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [
+        {
+          "url": "https://booth.pm/ja/items/3733351"
+        },
+        {
+          "url": "https://zunko.jp/"
+        }
+      ]
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/red.png"
+      "bgImg": "assets/images/ShareImg_bg/red.png",
+      "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_cir.png"
     }
   },
   "1040.png": {
