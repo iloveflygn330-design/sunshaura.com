@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/6 10:04:31  /  7件
+// 生成日時: 2026/6/6 11:04:08  /  7件
 // =====================================================
 
 // テンプレート ========================================================
@@ -93,13 +93,13 @@ _avatars.push({
   miniImgPC:    defo_miniImgPC,
   miniImgSP:    defo_miniImgSP,
 
-  bgImg:        defo_bgImg,
-  bgPattern:    defo_bgPattern,
-  frameCTop:    defo_frameCTop,
-  frameCBottom: defo_frameCBottom,
+  bgImg:        DicBase + 'ShareImg_bg/orange.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',
   infoImg:      defo_infoImg,
 
-  desc: 'クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめん。',
+  desc: 'クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめんね。',
 
   photos: [],
 
@@ -185,9 +185,7 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: [
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/4580792' },
-  ]
+  orgAvt: []
 });
 
 /* ─── 次のアバター ─── */
@@ -213,10 +211,7 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: [
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3733351' },
-    { img: my_Dic + '/thumbnail/ref_02.png', url: 'https://zunko.jp/' },
-  ]
+  orgAvt: []
 });
 
 /* ─── 次のアバター ─── */
