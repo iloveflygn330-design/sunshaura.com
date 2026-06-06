@@ -162,7 +162,7 @@
     "name": "クエスト対応まめひなた",
     "genre": "genre_org",
     "cate": "cate_mame",
-    "desc": "クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめん。",
+    "desc": "クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめんね。",
     "completed": true,
     "code": "my_avatarid = '4000_QuestHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'クエスト対応まめひなた',\n  genre:        genre_org,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        defo_bgImg,\n  bgPattern:    defo_bgPattern,\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  desc: 'クエスト対応の仕様を知った頃。\\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\\n謝らせてごめん。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
@@ -173,6 +173,9 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "4000_QuestHinata"
+    "savedId": "4000_QuestHinata",
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/purple.png"
+    }
   }
 }
