@@ -119,12 +119,21 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 .tr-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.04em;}
 .bopt.tr-sel{background:var(--amber);color:#fff;border-color:var(--amber);}
 
+/* 画像テンプレートボタン（bgImg/bgPattern/frameCTop/Bottom用） */
+.img-tpl-wrap{background:var(--bg);}
+.img-tpl-bar{padding:10px 14px 8px;}
+.bopt.tpl-sel{background:var(--amber);color:#fff;border-color:var(--amber);}
+/* 「自分で設定」ボタンは破線で区別 */
+.bopt.tpl-custom{border-style:dashed;}
+.bopt.tpl-custom.tpl-sel{border-style:solid;}
+
 /* PC表示：各要素を50%幅・中央揃えに（SPはそのまま） */
 @media (min-width: 760px) {
   .nav, .img-wrap, .form-body,
   .section-title, .img-slots, .media-wrap,
   .btn-area, .github-area, .output-area,
-  .grid-wrap, .add-media-wrap {
+  .grid-wrap, .add-media-wrap,
+  .img-tpl-wrap, .img-tpl-bar, .template-refs {
     max-width: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -292,45 +301,109 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
     </div>
   </div>
 
-  <!-- 背景・パターン -->
+  <!-- 背景画像 -->
   <div class="section-title">背景画像</div>
-  <div class="img-slots" id="slotsBg">
-    <div class="img-slot" id="slot-bgImg">
-      <input type="file" accept="image/*" onchange="selectSingle(this,'bgImg')">
-      <img class="slot-preview ratio-43" id="prev-bgImg" src="">
-      <div class="slot-overlay"><span>タップして変更</span></div>
-      <span class="badge-defo">デフォルト</span>
-      <button class="btn-reset-slot" onclick="resetSingle(event,'bgImg')">×</button>
-      <div class="slot-label">背景画像</div>
+  <div class="img-tpl-wrap">
+    <div class="img-tpl-bar">
+      <div class="tr-label">テンプレート（1つだけ選択可）</div>
+      <div class="btn-group">
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/green.png"  onclick="selectImgTpl(this)">緑</button>
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/orange.png" onclick="selectImgTpl(this)">橙</button>
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/pink.png"   onclick="selectImgTpl(this)">桃</button>
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/purple.png" onclick="selectImgTpl(this)">紫</button>
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/red.png"    onclick="selectImgTpl(this)">赤</button>
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/water.png"  onclick="selectImgTpl(this)">水</button>
+        <button class="bopt img-tpl-btn" data-type="bgImg" data-path="assets/images/ShareImg_bg/yellow.png" onclick="selectImgTpl(this)">黄</button>
+        <button class="bopt img-tpl-btn tpl-custom" data-type="bgImg" data-path="CUSTOM" onclick="selectImgTpl(this)">自分で設定</button>
+      </div>
     </div>
-    <div class="img-slot" id="slot-bgPattern">
-      <input type="file" accept="image/*" onchange="selectSingle(this,'bgPattern')">
-      <img class="slot-preview ratio-11" id="prev-bgPattern" src="">
-      <div class="slot-overlay"><span>タップして変更</span></div>
-      <span class="badge-defo">デフォルト</span>
-      <button class="btn-reset-slot" onclick="resetSingle(event,'bgPattern')">×</button>
-      <div class="slot-label">ループパターン</div>
+    <div class="img-slots">
+      <div class="img-slot" id="slot-bgImg">
+        <input type="file" accept="image/*" onchange="selectSingle(this,'bgImg')">
+        <img class="slot-preview ratio-43" id="prev-bgImg" src="">
+        <div class="slot-overlay"><span>タップして変更</span></div>
+        <span class="badge-defo">デフォルト</span>
+        <button class="btn-reset-slot" onclick="resetSingle(event,'bgImg')">×</button>
+        <div class="slot-label">背景画像（プレビュー）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ループパターン -->
+  <div class="section-title">ループパターン</div>
+  <div class="img-tpl-wrap">
+    <div class="img-tpl-bar">
+      <div class="tr-label">テンプレート（1つだけ選択可）</div>
+      <div class="btn-group">
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/pattern.png" onclick="selectImgTpl(this)">シンプル</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/cloud.png"   onclick="selectImgTpl(this)">雲</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/watch.png"   onclick="selectImgTpl(this)">時計</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/cake.png"    onclick="selectImgTpl(this)">ケーキ</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/spana.png"   onclick="selectImgTpl(this)">スパナ</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/power.png"   onclick="selectImgTpl(this)">電源</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/hobagi.png"  onclick="selectImgTpl(this)">かぼちゃ</button>
+        <button class="bopt img-tpl-btn" data-type="bgPattern" data-path="assets/images/ShareImg_pattern/box.png"     onclick="selectImgTpl(this)">プレゼント</button>
+        <button class="bopt img-tpl-btn tpl-custom" data-type="bgPattern" data-path="CUSTOM" onclick="selectImgTpl(this)">自分で設定</button>
+      </div>
+    </div>
+    <div class="img-slots">
+      <div class="img-slot" id="slot-bgPattern">
+        <input type="file" accept="image/*" onchange="selectSingle(this,'bgPattern')">
+        <img class="slot-preview ratio-11" id="prev-bgPattern" src="">
+        <div class="slot-overlay"><span>タップして変更</span></div>
+        <span class="badge-defo">デフォルト</span>
+        <button class="btn-reset-slot" onclick="resetSingle(event,'bgPattern')">×</button>
+        <div class="slot-label">ループパターン（プレビュー）</div>
+      </div>
     </div>
   </div>
 
   <!-- 枠C -->
   <div class="section-title">枠C 装飾</div>
-  <div class="img-slots" id="slotsFrame">
-    <div class="img-slot" id="slot-frameCTop">
-      <input type="file" accept="image/*" onchange="selectSingle(this,'frameCTop')">
-      <img class="slot-preview ratio-wide" id="prev-frameCTop" src="">
-      <div class="slot-overlay"><span>タップして変更</span></div>
-      <span class="badge-defo">デフォルト</span>
-      <button class="btn-reset-slot" onclick="resetSingle(event,'frameCTop')">×</button>
-      <div class="slot-label">枠C 上側</div>
+  <div class="img-tpl-wrap">
+    <div class="img-tpl-bar">
+      <div class="tr-label">枠C 上側　テンプレート（1つだけ選択可）</div>
+      <div class="btn-group">
+        <button class="bopt img-tpl-btn" data-type="frameCTop" data-path="assets/images/ShareImg_frame/frame_c_top_cir.png"   onclick="selectImgTpl(this)">円</button>
+        <button class="bopt img-tpl-btn" data-type="frameCTop" data-path="assets/images/ShareImg_frame/frame_c_top_squ.png"   onclick="selectImgTpl(this)">四角形</button>
+        <button class="bopt img-tpl-btn" data-type="frameCTop" data-path="assets/images/ShareImg_frame/frame_c_top_6.png"     onclick="selectImgTpl(this)">六角形</button>
+        <button class="bopt img-tpl-btn" data-type="frameCTop" data-path="assets/images/ShareImg_frame/frame_c_top_glass.png" onclick="selectImgTpl(this)">草むら</button>
+        <button class="bopt img-tpl-btn" data-type="frameCTop" data-path="assets/images/ShareImg_frame/frame_c_top_gear.png"  onclick="selectImgTpl(this)">歯車</button>
+        <button class="bopt img-tpl-btn tpl-custom" data-type="frameCTop" data-path="CUSTOM" onclick="selectImgTpl(this)">自分で設定</button>
+      </div>
     </div>
-    <div class="img-slot" id="slot-frameCBottom">
-      <input type="file" accept="image/*" onchange="selectSingle(this,'frameCBottom')">
-      <img class="slot-preview ratio-wide" id="prev-frameCBottom" src="">
-      <div class="slot-overlay"><span>タップして変更</span></div>
-      <span class="badge-defo">デフォルト</span>
-      <button class="btn-reset-slot" onclick="resetSingle(event,'frameCBottom')">×</button>
-      <div class="slot-label">枠C 下側</div>
+    <div class="img-slots">
+      <div class="img-slot" id="slot-frameCTop">
+        <input type="file" accept="image/*" onchange="selectSingle(this,'frameCTop')">
+        <img class="slot-preview ratio-wide" id="prev-frameCTop" src="">
+        <div class="slot-overlay"><span>タップして変更</span></div>
+        <span class="badge-defo">デフォルト</span>
+        <button class="btn-reset-slot" onclick="resetSingle(event,'frameCTop')">×</button>
+        <div class="slot-label">枠C 上側（プレビュー）</div>
+      </div>
+    </div>
+  </div>
+  <div class="img-tpl-wrap">
+    <div class="img-tpl-bar">
+      <div class="tr-label">枠C 下側　テンプレート（1つだけ選択可）</div>
+      <div class="btn-group">
+        <button class="bopt img-tpl-btn" data-type="frameCBottom" data-path="assets/images/ShareImg_frame/frame_c_bottom_cir.png"   onclick="selectImgTpl(this)">円</button>
+        <button class="bopt img-tpl-btn" data-type="frameCBottom" data-path="assets/images/ShareImg_frame/frame_c_bottom_squ.png"   onclick="selectImgTpl(this)">四角形</button>
+        <button class="bopt img-tpl-btn" data-type="frameCBottom" data-path="assets/images/ShareImg_frame/frame_c_bottom_6.png"     onclick="selectImgTpl(this)">六角形</button>
+        <button class="bopt img-tpl-btn" data-type="frameCBottom" data-path="assets/images/ShareImg_frame/frame_c_bottom_glass.png" onclick="selectImgTpl(this)">草むら</button>
+        <button class="bopt img-tpl-btn" data-type="frameCBottom" data-path="assets/images/ShareImg_frame/frame_c_bottom_gear.png"  onclick="selectImgTpl(this)">歯車</button>
+        <button class="bopt img-tpl-btn tpl-custom" data-type="frameCBottom" data-path="CUSTOM" onclick="selectImgTpl(this)">自分で設定</button>
+      </div>
+    </div>
+    <div class="img-slots">
+      <div class="img-slot" id="slot-frameCBottom">
+        <input type="file" accept="image/*" onchange="selectSingle(this,'frameCBottom')">
+        <img class="slot-preview ratio-wide" id="prev-frameCBottom" src="">
+        <div class="slot-overlay"><span>タップして変更</span></div>
+        <span class="badge-defo">デフォルト</span>
+        <button class="btn-reset-slot" onclick="resetSingle(event,'frameCBottom')">×</button>
+        <div class="slot-label">枠C 下側（プレビュー）</div>
+      </div>
     </div>
   </div>
 
@@ -805,32 +878,37 @@ function imgError(){
 // =====================================================================
 function renderSingleSlots(key, d){
   const s=getSession(key);
-  const avatarId = d?.id || document.getElementById('fId').value.trim() || autoId(images[cur].name);
+  const avatarId = d?.id || document.getElementById('fId').value.trim() || autoId(images[cur]?.name||'');
 
   Object.keys(DEFO_IMAGES).forEach(type=>{
     const slotEl=document.getElementById('slot-'+type);
     const imgEl =document.getElementById('prev-'+type);
     if(!slotEl||!imgEl) return;
 
-    // 表示する画像を決定
-    let src;
+    const template = d?.templates?.[type]; // テンプレートの選択状態
     const sess=s.singleImages[type];
     const uploaded=d?.up?.[type];
 
-    if(sess&&sess.objectUrl){
-      // セッション内の新規選択
-      src=sess.objectUrl;
-      slotEl.classList.add('custom');
-    } else if(uploaded&&avatarId){
-      // GitHubアップロード済み → raw URL
-      src=rawUrl(avatarId, SAVE_PATH[type])+'?t='+Date.now();
-      slotEl.classList.add('custom');
+    let src, isCustom;
+    if(template && template !== 'CUSTOM'){
+      // テンプレート画像をGitHub Rawで表示
+      src=`https://raw.githubusercontent.com/${settings.owner}/${settings.repo}/${settings.branch}/${template}`;
+      isCustom=true;
+    } else if(sess?.objectUrl){
+      src=sess.objectUrl; isCustom=true;
+    } else if((template==='CUSTOM'||uploaded) && avatarId){
+      src=rawUrl(avatarId,SAVE_PATH[type])+'?t='+Date.now(); isCustom=!!uploaded;
     } else {
-      // デフォルト
-      src=settings.owner ? rawDefoUrl(type) : '';
-      slotEl.classList.remove('custom');
+      src=settings.owner ? rawDefoUrl(type) : ''; isCustom=false;
     }
     imgEl.src=src;
+    slotEl.classList.toggle('custom',isCustom);
+  });
+
+  // テンプレートボタンの選択状態を復元（ラジオ動作）
+  const templates=d?.templates||{};
+  document.querySelectorAll('.img-tpl-btn').forEach(b=>{
+    b.classList.toggle('tpl-sel', templates[b.dataset.type]===b.dataset.path);
   });
 }
 
@@ -840,6 +918,15 @@ function selectSingle(input, type){
   const objectUrl=URL.createObjectURL(file);
   const s=getSession(key);
   s.singleImages[type]={file, objectUrl};
+
+  // ファイルを選んだら「自分で設定」を自動選択（ラジオ動作）
+  document.querySelectorAll(`.img-tpl-btn[data-type="${type}"]`).forEach(b=>b.classList.remove('tpl-sel'));
+  const customBtn=document.querySelector(`.img-tpl-btn[data-type="${type}"][data-path="CUSTOM"]`);
+  if(customBtn) customBtn.classList.add('tpl-sel');
+  if(!db[key]) db[key]={};
+  if(!db[key].templates) db[key].templates={};
+  db[key].templates[type]='CUSTOM';
+
   const slotEl=document.getElementById('slot-'+type);
   const imgEl =document.getElementById('prev-'+type);
   slotEl.classList.add('custom');
@@ -852,8 +939,10 @@ function resetSingle(e, type){
   const key=images[cur]?.name; if(!key) return;
   const s=getSession(key);
   delete s.singleImages[type];
-  // アップロード済みフラグも消す
   if(db[key]?.up) db[key].up[type]=false;
+  // テンプレート選択もクリア（デフォルトに戻す）
+  if(db[key]?.templates) delete db[key].templates[type];
+  document.querySelectorAll(`.img-tpl-btn[data-type="${type}"]`).forEach(b=>b.classList.remove('tpl-sel'));
   saveDB();
   const slotEl=document.getElementById('slot-'+type);
   slotEl.classList.remove('custom');
@@ -995,8 +1084,34 @@ function updateRefUrl(idx, url){
   if(r) r.url=url;
 }
 
-// OrgAvtテンプレートボタンのトグル
-// 選択するとorgAvtに定数名（例: Item_Mamehinata）または
+// 画像テンプレートボタンのラジオ選択
+// 同じボタンを再タップ → 解除してデフォルトに戻す
+// 「自分で設定」選択 → アップロードスロットが有効になる
+function selectImgTpl(btn){
+  const key=images[cur]?.name; if(!key) return;
+  const type=btn.dataset.type;
+  const path=btn.dataset.path;
+  if(!db[key]) db[key]={};
+  if(!db[key].templates) db[key].templates={};
+
+  const current=db[key].templates[type];
+  // 同じボタンを再タップ → 解除（デフォルトに戻る）
+  if(current===path){
+    delete db[key].templates[type];
+    document.querySelectorAll(`.img-tpl-btn[data-type="${type}"]`).forEach(b=>b.classList.remove('tpl-sel'));
+  } else {
+    // ラジオ動作：同typeの他ボタンをすべて解除してこのボタンだけ選択
+    document.querySelectorAll(`.img-tpl-btn[data-type="${type}"]`).forEach(b=>b.classList.remove('tpl-sel'));
+    btn.classList.add('tpl-sel');
+    db[key].templates[type]=path;
+  }
+  saveDB();
+  // プレビューを更新
+  renderSingleSlots(key, db[key]);
+  pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
+}
+
+
 // インラインオブジェクトとしてコードに追加される
 function toggleTRef(btn){
   const key=images[cur]?.name; if(!key) return;
@@ -1068,11 +1183,21 @@ function buildEntry(key){
   const s=getSession(key);
   const {id,name,genre,cate,desc}=d;
 
-  // 単体画像
+  // 単体画像パス決定ロジック
+  // ① テンプレート選択あり（CUSTOM以外）→ DicBase + 'ShareImg_xx/yy.png' 形式で出力
+  // ② CUSTOM or セッションにファイルあり or アップロード済み → my_Dic + '/...' で出力
+  // ③ 何もなし → デフォルト定数（defo_bgImg 等）
   const imgLine = type=>{
+    const template=db[key]?.templates?.[type];
     const sess=s?.singleImages?.[type];
     const uploaded=d?.up?.[type];
-    if(sess||uploaded) return `my_Dic + '/${SAVE_PATH[type]}'`;
+    if(template && template!=='CUSTOM'){
+      // テンプレートパスを DicBase 相対で出力
+      // 例: 'assets/images/ShareImg_bg/green.png' → DicBase + 'ShareImg_bg/green.png'
+      const rel=template.replace('assets/images/','');
+      return `DicBase + '${rel}'`;
+    }
+    if(template==='CUSTOM' || sess || uploaded) return `my_Dic + '/${SAVE_PATH[type]}'`;
     return DEFO_VAR[type];
   };
 
