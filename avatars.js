@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/6 9:54:23  /  6件
+// 生成日時: 2026/6/6 10:04:31  /  7件
 // =====================================================
 
 // テンプレート ========================================================
@@ -187,6 +187,35 @@ _avatars.push({
 
   orgAvt: [
     { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/4580792' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '7030_zundaRED';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '2Pずんだもん',
+  genre:        genre_copy_game,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/red.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'フライゴンメリューの時に見かけたずんだもんアバターから、VRChatにずんだもんの公式アバターがあることを認知して、公式ストアを覗いてすぐにDL。\n赤色が好きなので改変で赤色を加えたら、「あんこもんだ！」と言われた。\nずんだもんに亜種がいたんだね。',
+
+  photos: [],
+
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3733351' },
+    { img: my_Dic + '/thumbnail/ref_02.png', url: 'https://zunko.jp/' },
   ]
 });
 
