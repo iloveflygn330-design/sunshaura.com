@@ -58,7 +58,10 @@
     "savedId": "1010",
     "templateRefs": [
       "Item_Mamehinata"
-    ]
+    ],
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/red.png"
+    }
   },
   "1060.png": {
     "id": "1060",
