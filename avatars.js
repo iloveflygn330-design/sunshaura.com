@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/5 19:18:22  /  5件
+// 生成日時: 2026/6/6 9:45:40  /  5件
 // =====================================================
 
 // テンプレート ========================================================
@@ -93,17 +93,19 @@ _avatars.push({
   miniImgPC:    defo_miniImgPC,
   miniImgSP:    defo_miniImgSP,
 
-  bgImg:        defo_bgImg,
-  bgPattern:    defo_bgPattern,
-  frameCTop:    defo_frameCTop,
-  frameCBottom: defo_frameCBottom,
+  bgImg:        DicBase + 'ShareImg_bg/red.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
 
   desc: '初めて改変したアバター\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
 
   photos: [],
 
-  orgAvt: []
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
@@ -157,9 +159,59 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: [
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },
-  ]
+  orgAvt: []
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = 'vrchat_20260307_004043964_1920x1080';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'test',
+  genre:        genre_org,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        defo_bgImg,
+  bgPattern:    defo_bgPattern,
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  desc: 'アバターの説明テキスト。',
+
+  photos: [],
+
+  orgAvt: []
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = 'vrchat_20260315_021642369_1080x1920';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'test',
+  genre:        genre_org,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        defo_bgImg,
+  bgPattern:    defo_bgPattern,
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  desc: 'tset',
+
+  photos: [],
+
+  orgAvt: []
 });
 
 // ★ アバターを追加する場合はここに追記
