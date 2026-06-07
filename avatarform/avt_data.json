@@ -308,16 +308,19 @@
     "savedId": "1050_Torofinata"
   },
   "1120.png": {
-    "id": "1120",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1060_hitonokohinata",
+    "name": "ヒトノコひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "まめひなたの前に一番気に入っていたヒトノコちゃん。\nまめひなたしか使いたくない病を患って使用機会が減っていたが、トロフィエひなたが上手くいったことで、ヒトノコでも同じことができそうと着手。\nかわいいアバターを組み合わせたらかわいくなるので良い。",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/water.png"
     }
   }
 }
