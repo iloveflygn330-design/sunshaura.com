@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 21:00:49  /  13件
+// 生成日時: 2026/6/7 21:06:24  /  14件
 // =====================================================
 
 // テンプレート ========================================================
@@ -218,6 +218,35 @@ _avatars.push({
   orgAvt: [
     Item_Mamehinata,
     { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3145167' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1060_hitonokohinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'ヒトノコひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/water.png',
+  bgPattern:    defo_bgPattern,
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'まめひなたの前に一番気に入っていたヒトノコちゃん。\nまめひなたしか使いたくない病を患って使用機会が減っていたが、トロフィエひなたが上手くいったことで、ヒトノコでも同じことができそうと着手。\nかわいいアバターを組み合わせたらかわいくなるので良い。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },
   ]
 });
 
