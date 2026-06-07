@@ -402,7 +402,8 @@
         {
           "url": "https://nyarbera.booth.pm/items/4076902"
         }
-      ]
+      ],
+      "main": true
     },
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/water.png",
@@ -412,6 +413,20 @@
     },
     "templateRefs": [
       "Item_Mamehinata"
-    ]
+    ],
+    "savedId": "1090_HoloHinata"
+  },
+  "1160.png": {
+    "id": "1160",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
