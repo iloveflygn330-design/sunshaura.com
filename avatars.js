@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/6 11:04:08  /  7件
+// 生成日時: 2026/6/7 18:18:13  /  8件
 // =====================================================
 
 // テンプレート ========================================================
@@ -81,6 +81,34 @@ let my_Dic;
 const _avatars = [];
 
 /* ─── 次のアバター ─── */
+my_avatarid = '1010_akahinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '赤まめひなた',
+  genre:        genre_org,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/red.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'パブリックで見かけるまめひなたがひたすらかわいくて、耐え切れず購入。\nせっかくなら自分好みの要素を入れたくて、赤色や海の要素を入れた。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
 my_avatarid = '4000_QuestHinata';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
@@ -93,13 +121,13 @@ _avatars.push({
   miniImgPC:    defo_miniImgPC,
   miniImgSP:    defo_miniImgSP,
 
-  bgImg:        DicBase + 'ShareImg_bg/orange.png',
-  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
-  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',
-  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',
+  bgImg:        defo_bgImg,
+  bgPattern:    defo_bgPattern,
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
 
-  desc: 'クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめんね。',
+  desc: 'クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめん。',
 
   photos: [],
 
