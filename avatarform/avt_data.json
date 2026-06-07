@@ -85,7 +85,8 @@
       "refs": []
     },
     "templates": {
-      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png"
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_gear.png",
+      "bgPattern": "assets/images/ShareImg_pattern/pattern.png"
     }
   },
   "1020.png": {
