@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 21:28:10  /  16件
+// 生成日時: 2026/6/7 21:34:08  /  17件
 // =====================================================
 
 // テンプレート ========================================================
@@ -305,6 +305,35 @@ _avatars.push({
   orgAvt: [
     Item_Mamehinata,
     { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/5032831' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1090_HoloHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'ホロひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/water.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'Hologroidをそもそも気に入っているということを前提に。\nコスプレ改変に結構慣れてきた。\nしかしアニメーションやマテリアルの動きをよくわかっていない。\n勉強がてら改変できそうだなーと考え改変に着手した。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://nyarbera.booth.pm/items/4076902' },
   ]
 });
 
