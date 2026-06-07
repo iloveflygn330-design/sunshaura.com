@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 21:10:00  /  15件
+// 生成日時: 2026/6/7 21:28:10  /  16件
 // =====================================================
 
 // テンプレート ========================================================
@@ -276,6 +276,35 @@ _avatars.push({
   orgAvt: [
     Item_Mamehinata,
     { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/6691155' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1080_SoraHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'ソラまめひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/green.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'コスプレ改変に慣れてきて、いろんな改変をしようとしていた。\nヒトノコちゃん伝いで羊鯨座さんのとこのアバターを好んでおり、ソーラちゃんも気に入っていたので、そのコスプレ改変。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/5032831' },
   ]
 });
 
