@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 18:18:13  /  8件
+// 生成日時: 2026/6/7 18:40:49  /  9件
 // =====================================================
 
 // テンプレート ========================================================
@@ -100,6 +100,34 @@ _avatars.push({
   infoImg:      defo_infoImg,
 
   desc: 'パブリックで見かけるまめひなたがひたすらかわいくて、耐え切れず購入。\nせっかくなら自分好みの要素を入れたくて、赤色や海の要素を入れた。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1020_momohinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '桃まめひなた',
+  genre:        genre_org,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/pink.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
+  infoImg:      defo_infoImg,
+
+  desc: '赤色改変しているときに、通りがかった桃色がかわいくて、似合いそうだな～って勢いで改変した。\nかわいい色になって気に入っている。',
 
   photos: [],
 
