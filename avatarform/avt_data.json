@@ -261,7 +261,7 @@
     "name": "カリン（失敗）",
     "genre": "",
     "cate": "",
-    "desc": "",
+    "desc": "少し頭身が高いアバターを改変しようと思考。\n含みを持たせようとリボンで顔を隠したりして試行錯誤をしていたところ「セーラームーンにいそうだね」と言われて、これでいいかと落ち着いた。",
     "completed": false,
     "code": "",
     "up": {
@@ -273,7 +273,10 @@
       ]
     },
     "templates": {
-      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
+      "bgPattern": "assets/images/ShareImg_pattern/watch.png",
+      "bgImg": "assets/images/ShareImg_bg/purple.png"
     }
   }
 }
