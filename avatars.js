@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 21:34:08  /  17件
+// 生成日時: 2026/6/7 21:37:38  /  18件
 // =====================================================
 
 // テンプレート ========================================================
@@ -334,6 +334,35 @@ _avatars.push({
   orgAvt: [
     Item_Mamehinata,
     { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://nyarbera.booth.pm/items/4076902' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1100_NEUHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'NEUひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/orange.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'フレンドがよく使うシャムシールNEU君がすごくかわいい。\nかなり固有の雰囲気を持っているけどこういうコスプレ改変もできるかな？という動機。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/4236463' },
   ]
 });
 
