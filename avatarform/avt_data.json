@@ -69,11 +69,11 @@
     }
   },
   "1060.png": {
-    "id": "1060",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1010_akahinata",
+    "name": "赤まめひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "パブリックで見かけるまめひなたがひたすらかわいくて、耐え切れず購入。\nせっかくなら自分好みの要素を入れたくて、赤色や海の要素を入れた。",
     "chkM": false,
     "chkB": false,
     "chkF": false,
@@ -86,7 +86,8 @@
     },
     "templates": {
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_gear.png",
-      "bgPattern": "assets/images/ShareImg_pattern/pattern.png"
+      "bgPattern": "assets/images/ShareImg_pattern/pattern.png",
+      "bgImg": "assets/images/ShareImg_bg/red.png"
     }
   },
   "1020.png": {
