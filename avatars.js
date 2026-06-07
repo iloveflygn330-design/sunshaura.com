@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 19:37:58  /  12件
+// 生成日時: 2026/6/7 20:59:35  /  13件
 // =====================================================
 
 // テンプレート ========================================================
@@ -189,6 +189,35 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1050_Torofinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'トロフィなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/yellow.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/spana.png',
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  desc: 'この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\nまめひなたに心酔してまめひなたしか使いたくない秒を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\n存外いい感じになり、コスプレ改変にハマるきっかけになった。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3145167' },
   ]
 });
 
