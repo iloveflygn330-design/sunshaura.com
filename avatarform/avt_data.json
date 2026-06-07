@@ -63,7 +63,7 @@
     "templateRefs": [],
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/red.png",
-      "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
+      "bgPattern": "assets/images/ShareImg_pattern/pattern.png",
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
     }
