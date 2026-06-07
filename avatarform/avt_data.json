@@ -257,8 +257,8 @@
     "savedId": "1040_neruHinata"
   },
   "1100.png": {
-    "id": "1100",
-    "name": "",
+    "id": "7040_karen",
+    "name": "カリン（失敗）",
     "genre": "",
     "cate": "",
     "desc": "",
@@ -266,7 +266,14 @@
     "code": "",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [
+        {
+          "url": "https://booth.pm/ja/items/3470989"
+        }
+      ]
+    },
+    "templates": {
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
     }
   }
 }
