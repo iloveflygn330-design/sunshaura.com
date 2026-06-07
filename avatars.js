@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 18:42:20  /  9件
+// 生成日時: 2026/6/7 19:22:02  /  10件
 // =====================================================
 
 // テンプレート ========================================================
@@ -128,6 +128,34 @@ _avatars.push({
   infoImg:      defo_infoImg,
 
   desc: '赤色改変しているときに、通りがかった桃色がかわいくて、似合いそうだな～って勢いで改変した。\nかわいい色になって気に入っている。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1030_shiroHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '白まめひなた',
+  genre:        genre_org,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/purple.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/hobagi.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\n普段はメカクレかつ暗い印象で、その髪に白い肌とハートの瞳が隠れていて、かわいくできたな、と気に入っている。',
 
   photos: [],
 
