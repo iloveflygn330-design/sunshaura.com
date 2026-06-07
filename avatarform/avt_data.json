@@ -209,5 +209,18 @@
       "Item_Mamehinata"
     ],
     "savedId": "1020_momohinata"
+  },
+  "1080.png": {
+    "id": "1080",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
