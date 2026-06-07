@@ -359,5 +359,21 @@
       "Item_Mamehinata"
     ],
     "savedId": "1070_VketHinata"
+  },
+  "1140.png": {
+    "id": "1080_SoraHinata",
+    "name": "ソラまめひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "コスプレ改変に慣れてきて、いろんな改変をしようとしていた。\nヒトノコちゃん伝いで羊鯨座さんのとこのアバターを好んでおり、ソーラちゃんも気に入っていたので、そのコスプレ改変。",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/green.png"
+    }
   }
 }
