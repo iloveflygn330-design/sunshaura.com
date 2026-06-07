@@ -233,5 +233,21 @@
       "Item_Mamehinata"
     ],
     "savedId": "1030_shiroHinata"
+  },
+  "1090.png": {
+    "id": "1040_neruHinata",
+    "name": "寝るひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "フレンドからV眠に誘われるようになってきた。\n当時は寝方を知らず、「die」モーションで何とかしていた。\nほどなくごろ寝システムを教えてもらい、組み込むにあたって、「寝る」をテーマにした改変をした。",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png"
+    }
   }
 }
