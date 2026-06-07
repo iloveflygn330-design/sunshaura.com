@@ -340,14 +340,24 @@
     "genre": "genre_copy_avatar",
     "cate": "cate_mame",
     "desc": "Vketに興味を持っていろいろ調べていたら、Vketにゃんというすごくかわいいキャラクターがいることを認知。しかも０円？！もうすぐVketが開催するし…これは、今（自分の中で）流行りのコスプレ改変するしかないな。で、これ。",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '1070_VketHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'Vケットひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/yellow.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/spana.png',\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  desc: 'Vketに興味を持っていろいろ調べていたら、Vketにゃんというすごくかわいいキャラクターがいることを認知。しかも０円？！もうすぐVketが開催するし…これは、今（自分の中で）流行りのコスプレ改変するしかないな。で、これ。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/6691155' },\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [
+        {
+          "url": "https://booth.pm/ja/items/6691155"
+        }
+      ],
+      "main": true
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/yellow.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/yellow.png",
+      "bgPattern": "assets/images/ShareImg_pattern/spana.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ],
+    "savedId": "1070_VketHinata"
   }
 }
