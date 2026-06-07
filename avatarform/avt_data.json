@@ -78,17 +78,23 @@
     "chkB": false,
     "chkF": false,
     "chkI": false,
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '1010_akahinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '赤まめひなた',\n  genre:        genre_org,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/red.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'パブリックで見かけるまめひなたがひたすらかわいくて、耐え切れず購入。\\nせっかくなら自分好みの要素を入れたくて、赤色や海の要素を入れた。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [],
+      "main": true
     },
     "templates": {
-      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_gear.png",
-      "bgPattern": "assets/images/ShareImg_pattern/spana.png",
-      "bgImg": "assets/images/ShareImg_bg/red.png"
-    }
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png",
+      "bgPattern": "assets/images/ShareImg_pattern/pattern.png",
+      "bgImg": "assets/images/ShareImg_bg/red.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_cir.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ],
+    "savedId": "1010_akahinata"
   },
   "1020.png": {
     "id": "7020_MeryuFlygon",
