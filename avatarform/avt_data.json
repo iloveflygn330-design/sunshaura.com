@@ -211,16 +211,19 @@
     "savedId": "1020_momohinata"
   },
   "1080.png": {
-    "id": "1080",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1030_shiroHinata",
+    "name": "白まめひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\n普段はメカクレかつ暗い印象で、その髪に白い肌とハートの瞳が隠れていて、かわいくできたな、と気に入っている。",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/purple.png"
     }
   }
 }
