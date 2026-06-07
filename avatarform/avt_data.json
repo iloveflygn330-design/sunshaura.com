@@ -366,14 +366,24 @@
     "genre": "genre_copy_avatar",
     "cate": "cate_mame",
     "desc": "コスプレ改変に慣れてきて、いろんな改変をしようとしていた。\nヒトノコちゃん伝いで羊鯨座さんのとこのアバターを好んでおり、ソーラちゃんも気に入っていたので、そのコスプレ改変。",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '1080_SoraHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ソラまめひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/green.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'コスプレ改変に慣れてきて、いろんな改変をしようとしていた。\\nヒトノコちゃん伝いで羊鯨座さんのとこのアバターを好んでおり、ソーラちゃんも気に入っていたので、そのコスプレ改変。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/5032831' },\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [
+        {
+          "url": "https://uri880.booth.pm/items/5032831"
+        }
+      ]
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/green.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/green.png",
+      "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_glass.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_glass.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ]
   }
 }
