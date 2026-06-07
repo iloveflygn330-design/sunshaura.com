@@ -286,9 +286,9 @@
     "name": "トロフィなた",
     "genre": "genre_copy_avatar",
     "cate": "cate_mame",
-    "desc": "この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\nまめひなたに心酔してまめひなたしか使いたくない秒を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\n存外いい感じになり、コスプレ改変にハマるきっかけになった。",
+    "desc": "この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\nまめひなたに心酔してまめひなたしか使いたくない病を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\n存外いい感じになり、コスプレ改変にハマるきっかけになった。",
     "completed": true,
-    "code": "my_avatarid = '1050_Torofinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'トロフィなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/yellow.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/spana.png',\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  desc: 'この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\\nまめひなたに心酔してまめひなたしか使いたくない秒を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\\n存外いい感じになり、コスプレ改変にハマるきっかけになった。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3145167' },\n  ]\n});",
+    "code": "my_avatarid = '1050_Torofinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'トロフィなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/yellow.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/spana.png',\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  desc: 'この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\\nまめひなたに心酔してまめひなたしか使いたくない病を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\\n存外いい感じになり、コスプレ改変にハマるきっかけになった。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3145167' },\n  ]\n});",
     "up": {
       "photoCount": 0,
       "refs": [
@@ -306,5 +306,18 @@
       "Item_Mamehinata"
     ],
     "savedId": "1050_Torofinata"
+  },
+  "1120.png": {
+    "id": "1120",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
