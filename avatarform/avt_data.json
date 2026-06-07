@@ -185,5 +185,18 @@
       "Item_Mamehinata"
     ],
     "savedId": "4000_QuestHinata"
+  },
+  "1070.png": {
+    "id": "1070",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
