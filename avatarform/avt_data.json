@@ -259,24 +259,42 @@
   "1100.png": {
     "id": "7040_karen",
     "name": "カリン（失敗）",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_org",
+    "cate": "cate_other",
     "desc": "少し頭身が高いアバターを改変しようと思考。\n含みを持たせようとリボンで顔を隠したりして試行錯誤をしていたところ「セーラームーンにいそうだね」と言われて、これでいいかと落ち着いた。",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '7040_karen';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'カリン（失敗）',\n  genre:        genre_org,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/purple.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/watch.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: '少し頭身が高いアバターを改変しようと思考。\\n含みを持たせようとリボンで顔を隠したりして試行錯誤をしていたところ「セーラームーンにいそうだね」と言われて、これでいいかと落ち着いた。',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3470989' },\n  ]\n});",
     "up": {
       "photoCount": 0,
       "refs": [
         {
           "url": "https://booth.pm/ja/items/3470989"
         }
-      ]
+      ],
+      "main": true
     },
     "templates": {
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png",
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
       "bgPattern": "assets/images/ShareImg_pattern/watch.png",
       "bgImg": "assets/images/ShareImg_bg/purple.png"
+    },
+    "savedId": "7040_karen"
+  },
+  "1110.png": {
+    "id": "1050_Torofinata",
+    "name": "トロフィなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\nまめひなたに心酔してまめひなたしか使いたくない秒を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\n存外いい感じになり、コスプレ改変にハマるきっかけになった。",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/yellow.png"
     }
   }
 }
