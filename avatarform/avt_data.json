@@ -187,16 +187,19 @@
     "savedId": "4000_QuestHinata"
   },
   "1070.png": {
-    "id": "1070",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1020_momohinata",
+    "name": "桃まめひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "赤色改変しているときに、通りがかった桃色がかわいくて、似合いそうだな～って勢いで改変した。\nかわいい色になって気に入っている。",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/pink.png"
     }
   }
 }
