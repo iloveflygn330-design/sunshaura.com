@@ -240,14 +240,33 @@
     "genre": "genre_org",
     "cate": "cate_mame",
     "desc": "フレンドからV眠に誘われるようになってきた。\n当時は寝方を知らず、「die」モーションで何とかしていた。\nほどなくごろ寝システムを教えてもらい、組み込むにあたって、「寝る」をテーマにした改変をした。",
+    "completed": true,
+    "code": "my_avatarid = '1040_neruHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '寝るひなた',\n  genre:        genre_org,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        defo_bgImg,\n  bgPattern:    defo_bgPattern,\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'フレンドからV眠に誘われるようになってきた。\\n当時は寝方を知らず、「die」モーションで何とかしていた。\\nほどなくごろ寝システムを教えてもらい、組み込むにあたって、「寝る」をテーマにした改変をした。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
+    "up": {
+      "photoCount": 0,
+      "refs": [],
+      "main": true
+    },
+    "templates": {
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_cir.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ],
+    "savedId": "1040_neruHinata"
+  },
+  "1100.png": {
+    "id": "1100",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
-    },
-    "templates": {
-      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png"
     }
   }
 }
