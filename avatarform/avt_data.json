@@ -417,16 +417,19 @@
     "savedId": "1090_HoloHinata"
   },
   "1160.png": {
-    "id": "1160",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1100_NEUHinata",
+    "name": "NEUひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "フレンドがよく使うシャムシールNEU君がすごくかわいい。\nかなり固有の雰囲気を持っているけどこういうコスプレ改変もできるかな？という動機。",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/red.png"
     }
   }
 }
