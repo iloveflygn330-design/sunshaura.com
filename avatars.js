@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 19:30:32  /  11件
+// 生成日時: 2026/6/7 19:37:58  /  12件
 // =====================================================
 
 // テンプレート ========================================================
@@ -324,6 +324,34 @@ _avatars.push({
   photos: [],
 
   orgAvt: []
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '7040_karen';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'カリン（失敗）',
+  genre:        genre_org,
+  category:     cate_other,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/purple.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/watch.png',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  desc: '少し頭身が高いアバターを改変しようと思考。\n含みを持たせようとリボンで顔を隠したりして試行錯誤をしていたところ「セーラームーンにいそうだね」と言われて、これでいいかと落ち着いた。',
+
+  photos: [],
+
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3470989' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
