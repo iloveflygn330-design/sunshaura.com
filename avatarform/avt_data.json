@@ -313,14 +313,23 @@
     "genre": "genre_copy_avatar",
     "cate": "cate_mame",
     "desc": "まめひなたの前に一番気に入っていたヒトノコちゃん。\nまめひなたしか使いたくない病を患って使用機会が減っていたが、トロフィエひなたが上手くいったことで、ヒトノコでも同じことができそうと着手。\nかわいいアバターを組み合わせたらかわいくなるので良い。",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '1060_hitonokohinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ヒトノコひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/water.png',\n  bgPattern:    defo_bgPattern,\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'まめひなたの前に一番気に入っていたヒトノコちゃん。\\nまめひなたしか使いたくない病を患って使用機会が減っていたが、トロフィエひなたが上手くいったことで、ヒトノコでも同じことができそうと着手。\\nかわいいアバターを組み合わせたらかわいくなるので良い。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [
+        {
+          "url": "https://uri880.booth.pm/items/4717337"
+        }
+      ]
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/water.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/water.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ]
   }
 }
