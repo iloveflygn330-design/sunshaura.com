@@ -374,7 +374,8 @@
         {
           "url": "https://uri880.booth.pm/items/5032831"
         }
-      ]
+      ],
+      "main": true
     },
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/green.png",
@@ -384,6 +385,20 @@
     },
     "templateRefs": [
       "Item_Mamehinata"
-    ]
+    ],
+    "savedId": "1080_SoraHinata"
+  },
+  "1150.png": {
+    "id": "1150",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
