@@ -321,7 +321,8 @@
         {
           "url": "https://uri880.booth.pm/items/4717337"
         }
-      ]
+      ],
+      "main": true
     },
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/water.png",
@@ -330,6 +331,23 @@
     },
     "templateRefs": [
       "Item_Mamehinata"
-    ]
+    ],
+    "savedId": "1060_hitonokohinata"
+  },
+  "1130.png": {
+    "id": "1070_VketHinata",
+    "name": "Vケットひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "Vketに興味を持っていろいろ調べていたら、Vketにゃんというすごくかわいいキャラクターがいることを認知。しかも０円？！もうすぐVketが開催するし…これは、今（自分の中で）流行りのコスプレ改変するしかないな。で、これ。",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/yellow.png"
+    }
   }
 }
