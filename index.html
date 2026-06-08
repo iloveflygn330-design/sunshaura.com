@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>sunshaura.com</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- GSAP + ScrollTrigger（CDN） -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <style>
     /* =====================================================
@@ -189,6 +192,269 @@
     .page         { display: none; }
     .page.active  { display: block; }
 
+    /* =====================================================
+       ようこそページ全体
+       ===================================================== */
+
+    /* page-welcome: GSAPのpin留め時はoverflow指定を持たせない
+       （overflow:hiddenがあるとpin位置がズレるため）
+       横はみ出しは .wlc-sec2-sticky 側で個別にclipする */
+    #page-welcome {
+      overflow: visible;
+    }
+
+    /* -------------------------------------------------------
+       セクション1: ようこそ（初期表示テキスト群）
+       ------------------------------------------------------- */
+    .wlc-sec1 {
+      /* ヘッダー分を引いて、画面いっぱいに表示 */
+      height: calc(100svh - var(--header-height-pc));
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 24px 60px;
+      text-align: center;
+      background: var(--color-main-pale);
+      overflow: hidden;
+    }
+    @media (max-width: 759px) {
+      .wlc-sec1 { height: calc(100svh - var(--header-height-sp)); }
+    }
+
+    /* ① ようこそ！タイトル（初期から表示） */
+    .wlc-title {
+      font-size: clamp(36px, 7vw, 64px);
+      font-weight: 800; color: var(--color-main);
+      line-height: 1.15; margin-bottom: 28px;
+      opacity: 1; /* 初期から見える */
+    }
+
+    /* ② メインキャッチコピー（0.4秒後フェードイン） */
+    .wlc-catch {
+      font-size: clamp(18px, 3.5vw, 28px);
+      font-weight: 700; color: var(--color-text);
+      line-height: 1.6; margin-bottom: 32px;
+      opacity: 0; /* JS でフェードイン */
+    }
+
+    /* ③ 注意書き＋矢印（0.7秒後フェードイン） */
+    .wlc-note {
+      font-size: clamp(12px, 1.8vw, 15px);
+      color: var(--color-text); opacity: 0; /* JS でフェードイン */
+      line-height: 1.85; margin-bottom: 40px;
+    }
+    .wlc-arrows {
+      font-size: 20px; letter-spacing: 4px;
+      color: var(--color-main); opacity: 0; /* wlc-note と同タイミング */
+      animation: wlcBounce 1.4s ease-in-out infinite;
+      display: block;
+    }
+    @keyframes wlcBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(6px); }
+    }
+
+    /* -------------------------------------------------------
+       セクション2: 自己紹介（スクロール連動アニメ）
+       ------------------------------------------------------- */
+    .wlc-sec2 {
+      /* GSAPのpin:trueでピン留めするため、高さはコンテンツ分だけでOK */
+      background: var(--color-main-pale);
+      overflow: hidden;
+    }
+
+    /* ピン留めされる実画面エリア
+       GSAPが position:fixed に切り替えてスクロール中に画面に固定する
+       clip-path で横はみ出しを隠す（overflow:hiddenはpin干渉のため使わない） */
+    .wlc-sec2-sticky {
+      height: calc(100svh - var(--header-height-pc));
+      width: 100%;
+      display: flex; align-items: center;
+      overflow: hidden;
+      position: relative;
+      /* 横スライドアニメの飛び出し防止 */
+      clip-path: inset(0);
+    }
+    @media (max-width: 759px) {
+      .wlc-sec2-sticky { height: calc(100svh - var(--header-height-sp)); }
+    }
+
+    /* キャラクター画像エリア（右半分に固定表示） */
+    .wlc-chara-wrap {
+      position: absolute;
+      right: 0; bottom: 0;
+      width: 50%; height: 100%;
+      display: flex; align-items: flex-end; justify-content: center;
+      pointer-events: none;
+    }
+    @media (max-width: 759px) {
+      .wlc-chara-wrap { width: 55%; }
+    }
+
+    /*
+     * ★拡張予定: キャラクタースプライトシート差し替え手順
+     *
+     *   【スプライトシートとは】
+     *     複数のポーズを1枚の画像に横並びにした画像ファイルです。
+     *     例: 8ポーズなら横8マス×縦1マスの画像を用意します。
+     *
+     *   【差し替え手順】
+     *     1. スプライトシート画像を assets/images/welcome_sprite.png として配置
+     *     2. 下記 CSS の background-image を変更:
+     *          background-image: url('assets/images/welcome_sprite.png');
+     *     3. --wlc-sprite-cols にポーズ（コマ）数を設定（例: 8コマなら 8）
+     *     4. --wlc-sprite-rows に行数を設定（通常 1）
+     *     5. background-size: calc(100% * var(--wlc-sprite-cols)) auto; に変更
+     *     6. JS側の WLC_SPRITE_TOTAL をコマ数に合わせて変更（下記参照）
+     *
+     *   【スプライトシートのコマ割り目安（8コマの場合）】
+     *     0: 腕を振って登場（右スライドイン用）
+     *     1: テキストボックスに気づく（振り向く）
+     *     2: テキストボックスに手をかける
+     *     3: 左へ押す（力を込めた動作）
+     *     4: 左から飛んできたテキストを受け止める
+     *     5: ポーズ（笑顔・決めポーズ）
+     *     6: 上へ退場（消える直前）
+     *     7: 退場完了（非表示）
+     */
+    :root {
+      --wlc-sprite-cols: 1; /* ★ スプライトのコマ数（差し替え時に変更） */
+    }
+    .wlc-chara {
+      width: min(380px, 90%);
+      aspect-ratio: 1 / 1.4;
+
+      /* ★拡張予定: 下記 background-image をスプライトシート画像に差し替え */
+      background-color: rgba(180, 100, 80, 0.15);
+      background-image: none; /* ← url('assets/images/welcome_sprite.png') に変更 */
+      background-size: calc(100% * var(--wlc-sprite-cols)) auto;
+      background-repeat: no-repeat;
+      background-position: 0% 100%;
+
+      /* プレースホルダー表示（差し替え後は下記 border/display を削除） */
+      border: 3px dashed rgba(180, 100, 80, 0.35);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .wlc-chara-placeholder {
+      /*
+       * ★拡張予定: スプライトシート差し替え後、この要素ごと削除する
+       *   <div class="wlc-chara-placeholder"> を HTML から消せばOK
+       */
+      font-size: 12px; color: rgba(180, 100, 80, 0.6);
+      text-align: center; padding: 16px; pointer-events: none;
+    }
+
+    /* テキストボックス（左側に表示されるカード） */
+    .wlc-textbox {
+      position: absolute;
+      left: 5%; top: 50%; transform: translateY(-50%);
+      width: min(400px, 48%);
+      background: rgba(255, 220, 120, 0.92);
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 4px 6px 20px rgba(0,0,0,0.12);
+      backdrop-filter: blur(2px);
+    }
+    @media (max-width: 759px) {
+      .wlc-textbox {
+        left: 4%; width: 56%;
+        padding: 16px 18px;
+        top: 30%; transform: none;
+      }
+    }
+    .wlc-textbox-title {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 800; color: var(--color-text);
+      margin-bottom: 10px;
+    }
+    .wlc-textbox-body {
+      font-size: clamp(12px, 1.8vw, 15px);
+      color: var(--color-text); line-height: 1.85;
+    }
+    /* テキストボックス内の各行（スクロールで順次表示） */
+    .wlc-textbox-line {
+      display: block;
+      opacity: 0; /* ScrollTrigger で表示 */
+      transform: translateY(8px);
+    }
+    /* テキストボックス下のハイライト線（装飾） */
+    .wlc-textbox-lines {
+      margin-top: 16px; display: flex; flex-direction: column; gap: 7px;
+    }
+    .wlc-textbox-bar {
+      height: 7px; border-radius: 4px;
+      background: var(--color-main-light); opacity: 0.7;
+    }
+    .wlc-textbox-bar:nth-child(2) { width: 80%; }
+    .wlc-textbox-bar:nth-child(3) { width: 55%; }
+
+    /* -------------------------------------------------------
+       セクション3: コンテンツ紹介フッター
+       ------------------------------------------------------- */
+    .wlc-sec3 {
+      background: var(--color-main-pale);
+      padding: 64px 24px 80px;
+      text-align: center;
+    }
+    .wlc-sec3-title {
+      font-size: clamp(16px, 3vw, 22px);
+      font-weight: 700; color: var(--color-text);
+      margin-bottom: 36px;
+      opacity: 0; transform: translateY(24px); /* ScrollTrigger で表示 */
+      border: 2px solid rgba(0,0,0,0.1);
+      border-radius: 12px; padding: 18px 28px;
+      display: inline-block;
+    }
+    .wlc-sec3-grid {
+      /*
+       * ★拡張予定: PC は4枚・SP は2枚並べる画像グリッド
+       *   画像を追加する場合は .wlc-sec3-grid 内に
+       *   <div class="wlc-preview-card"> を追記するだけ
+       */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px; max-width: 860px; margin: 0 auto;
+    }
+    @media (max-width: 759px) {
+      .wlc-sec3-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .wlc-preview-card {
+      aspect-ratio: 1 / 1;
+      background: rgba(0,0,0,0.07);
+      border-radius: 12px;
+      border: 2px dashed rgba(0,0,0,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: rgba(0,0,0,0.3);
+      opacity: 0; transform: translateY(20px); /* ScrollTrigger で順次表示 */
+      overflow: hidden;
+    }
+    .wlc-preview-card img {
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 10px; display: block;
+    }
+    /*
+     * ★拡張予定: SPで非表示にするカード（PC専用の3・4枚目）
+     *   SP表示で不要なカードに .wlc-sp-hidden クラスを付与するだけ
+     */
+    @media (max-width: 759px) {
+      .wlc-sp-hidden { display: none; }
+    }
+
+    .wlc-footer {
+      /*
+       * ★拡張予定: フッターコンテンツを追加
+       *   現在はシンプルなバーのみ。必要に応じてリンクや著作権表記を追記
+       */
+      background: var(--color-main);
+      color: rgba(255,255,255,0.7);
+      text-align: center; padding: 20px;
+      font-size: 12px; letter-spacing: 0.08em;
+    }
+
+    /* -------------------------------------------------------
+       旧 welcome-* スタイル（互換性のため残置・今後削除可）
+       ------------------------------------------------------- */
     .welcome-inner { padding: 52px 24px 48px; max-width: 860px; margin: 0 auto; text-align: center; }
     .welcome-title { font-size: clamp(30px, 6vw, 52px); font-weight: 800; color: var(--color-main); line-height: 1.2; margin-bottom: 16px; }
     .welcome-sub { font-size: clamp(14px, 2.2vw, 17px); color: var(--color-text); opacity: 0.65; line-height: 1.9; margin-bottom: 44px; }
@@ -600,15 +866,128 @@
   <main id="body-content">
 
     <div class="page active" id="page-welcome">
-      <div class="welcome-inner">
-        <h1 class="welcome-title">ようこそ！🌸</h1>
-        <p class="welcome-sub">VRChatで作ったコンテンツをまとめたサイトです。<br>上のボタンからページを選んでね</p>
-        <div class="welcome-visual">
-          <!-- ★拡張予定: トップビジュアルをここに追加 -->
-          <span>トップビジュアルをここに追加</span>
+
+      <!-- =====================================================
+           セクション1: ようこそ（初期表示 + 時間差フェードイン）
+           ===================================================== -->
+      <section class="wlc-sec1" id="wlc-sec1">
+
+        <!-- ① ようこそ！タイトル（初期から表示） -->
+        <h1 class="wlc-title" id="wlc-title">ようこそ！🌸</h1>
+
+        <!-- ② メインキャッチコピー（0.4秒後フェードイン） -->
+        <p class="wlc-catch" id="wlc-catch">
+          初めてこのページにアクセスした人は、<br>
+          スクロールしてこの続きを読んでみてください。
+        </p>
+
+        <!-- ③ 注意書き + 下矢印（0.7秒後フェードイン） -->
+        <p class="wlc-note" id="wlc-note">
+          ※このページにはVRChat向けコンテンツが多数用いられます。<br>
+          特記がないものは全て、シャウラ製ではございません。<br>
+          各コンテンツに関しては、クレジットをご参照ください。
+        </p>
+        <span class="wlc-arrows" id="wlc-arrows">↓↓↓↓</span>
+
+      </section>
+
+      <!-- =====================================================
+           セクション2: 自己紹介（スクロール連動アニメ）
+           sticky レイアウト: .wlc-sec2 がスクロール量を確保し
+           .wlc-sec2-sticky が画面に貼りついて表示される
+           ===================================================== -->
+      <section class="wlc-sec2" id="wlc-sec2">
+        <div class="wlc-sec2-sticky" id="wlc-sec2-sticky">
+
+          <!-- テキストボックス（左側） -->
+          <div class="wlc-textbox" id="wlc-textbox">
+            <p class="wlc-textbox-title">こんにちは！</p>
+            <p class="wlc-textbox-body">
+              <!--
+                ★拡張予定: 自己紹介テキストの編集
+                  .wlc-textbox-line を1行＝1要素として追記・編集する。
+                  各行は ScrollTrigger で上から順番にフェードインする。
+                  行を増やす場合は <span class="wlc-textbox-line">テキスト</span>
+                  を末尾に追加するだけ。
+              -->
+              <span class="wlc-textbox-line">私はシャウラと申します。</span>
+              <span class="wlc-textbox-line">&nbsp;</span>
+              <span class="wlc-textbox-line">まめひなたに心酔し、</span>
+              <span class="wlc-textbox-line">まめひなたばかり使う</span>
+              <span class="wlc-textbox-line">VRChatプレイヤーです。</span>
+            </p>
+            <div class="wlc-textbox-lines">
+              <div class="wlc-textbox-bar"></div>
+              <div class="wlc-textbox-bar"></div>
+              <div class="wlc-textbox-bar"></div>
+            </div>
+          </div>
+
+          <!-- キャラクター画像（右側・透過PNG / スプライトシート） -->
+          <div class="wlc-chara-wrap" id="wlc-chara-wrap">
+            <div class="wlc-chara" id="wlc-chara">
+              <!--
+                ★拡張予定: スプライトシート差し替え後にこの要素を削除する
+                  スプライトシート画像を配置すると自動的に背景として表示される。
+                  この .wlc-chara-placeholder div ごと削除すればOK。
+              -->
+              <div class="wlc-chara-placeholder">
+                キャラクター画像<br>（透過PNG / スプライトシート）<br>をここに配置
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.wlc-sec2-sticky -->
+      </section><!-- /.wlc-sec2 -->
+
+      <!-- =====================================================
+           セクション3: コンテンツ紹介 + フッター
+           ===================================================== -->
+      <section class="wlc-sec3" id="wlc-sec3">
+
+        <!-- 見出し（下からスライドイン） -->
+        <p class="wlc-sec3-title" id="wlc-sec3-title">
+          まずは、アバター改変などを見てみてください
+        </p>
+
+        <!--
+          ★拡張予定: プレビュー画像グリッド
+            PC: 4枚 / SP: 2枚（.wlc-sp-hidden クラスで制御）
+
+            画像を差し替える場合:
+              <div class="wlc-preview-card"> の中身を
+              <img src="assets/images/xxx.jpg" alt="説明"> に変更するだけ。
+
+            画像を追加する場合（PC4枚を超える場合）:
+              <div class="wlc-preview-card"> を末尾に追加し、
+              SPで不要なら class="wlc-preview-card wlc-sp-hidden" にする。
+
+            SP用に表示枚数を変えたいとき:
+              不要なカードに wlc-sp-hidden クラスを付けると SP では非表示になる。
+        -->
+        <div class="wlc-sec3-grid" id="wlc-sec3-grid">
+          <!-- PC: 表示 / SP: 表示 -->
+          <div class="wlc-preview-card">画像①</div>
+          <!-- PC: 表示 / SP: 表示 -->
+          <div class="wlc-preview-card">画像②</div>
+          <!-- PC: 表示 / SP: 表示 -->
+          <div class="wlc-preview-card">画像③</div>
+          <!-- PC: 表示 / SP: 非表示（.wlc-sp-hidden） -->
+          <div class="wlc-preview-card wlc-sp-hidden">画像④</div>
         </div>
-      </div>
-    </div>
+
+      </section>
+
+      <!-- フッター -->
+      <footer class="wlc-footer" id="wlc-footer">
+        <!--
+          ★拡張予定: フッターにリンクや著作権表記を追加
+            例: <a href="#" style="color:rgba(255,255,255,0.6)">Twitter</a>
+        -->
+        sunshaura.com
+      </footer>
+
+    </div><!-- /#page-welcome -->
 
     <div class="page" id="page-avatar">
 
@@ -968,6 +1347,298 @@
     // （type="module" の関数はそのままだと外から見えないため）
     window.avtToggleGenre = avtToggleGenre;
     window.avtToggleCat   = avtToggleCat;
+  </script>
+
+  <!-- =====================================================
+       ようこそページ ScrollTrigger アニメーション
+       ===================================================== -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ----------------------------------------------------------
+       定数・設定値
+       スプライトシートやアニメの尺を変える場合はここを編集する
+    ---------------------------------------------------------- */
+
+    /*
+     * ★拡張予定: スプライトシートのコマ数
+     *   スプライトシート画像を用意したら、この値を実際のコマ数に変更する。
+     *   例: 8コマのシートなら WLC_SPRITE_TOTAL = 8;
+     *
+     * コマ割りの目安（8コマの場合）:
+     *   0: 待機・初期表示（スライドイン直後）
+     *   1: テキストボックスに気づく
+     *   2: テキストボックスに手をかける
+     *   3: 左へ押す
+     *   4: 左から飛んできたテキストを受け止める
+     *   5: ポーズ（笑顔）
+     *   6: 上へ退場準備
+     *   7: 退場完了
+     */
+    var WLC_SPRITE_TOTAL = 1; // ← スプライトシート差し替え時に変更
+
+    /* ----------------------------------------------------------
+       ページ表示時に一度だけ初期化する（他ページから戻っても再実行）
+    ---------------------------------------------------------- */
+    function initWelcomeAnim() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* ======================================================
+         セクション1: 初期フェードイン（ScrollTrigger不使用）
+         ====================================================== */
+      var title   = document.getElementById('wlc-title');
+      var catchEl = document.getElementById('wlc-catch');
+      var noteEl  = document.getElementById('wlc-note');
+      var arrows  = document.getElementById('wlc-arrows');
+
+      if (!title) return; // welcomeページが非表示なら何もしない
+
+      // ① タイトルは初期から表示（CSSでopacity:1）
+      gsap.set(title, { opacity: 1 });
+
+      // ② キャッチコピー: 0.4秒後にフェードイン
+      gsap.to(catchEl, {
+        opacity: 1, y: 0, duration: 0.7,
+        ease: 'power2.out', delay: 0.4
+      });
+
+      // ③ 注意書き + 矢印: 0.7秒後にフェードイン
+      gsap.to([noteEl, arrows], {
+        opacity: 1, duration: 0.7,
+        ease: 'power2.out', delay: 0.7,
+        stagger: 0.1
+      });
+
+      /* ======================================================
+         セクション2: 自己紹介（sticky スクロール連動）
+
+         スクロール進捗 progress 0→1 の中で各アニメを割り当てる。
+         進捗の区切り値を変えるとアニメの長さ・タイミングが変わる。
+
+         【構成イメージ】
+           0.00 - 0.10: キャラが右からスライドイン
+           0.05 - 0.12: テキストボックスが右からスライドイン（こんにちは！は最初から表示）
+           0.12 - 0.35: テキスト各行がスクロールで順次フェードイン
+           0.35 - 0.45: キャラがテキストボックスに気づく（スプライト変化）
+           0.45 - 0.55: テキストボックスに手をかける（スプライト変化）
+           0.55 - 0.65: テキストボックスを左へ押し飛ばす
+           0.65 - 0.70: テキストボックスが左へ消える
+           0.65 - 0.72: 2枚目テキストボックスが左から飛んでくる
+           0.72 - 0.80: キャラが受け止める（スプライト変化）
+           0.80 - 0.88: ポーズ（スプライト変化）
+           0.88 - 1.00: キャラとテキストが上へ退場
+         ====================================================== */
+      var sec2       = document.getElementById('wlc-sec2');
+      var textbox    = document.getElementById('wlc-textbox');
+      var chara      = document.getElementById('wlc-chara');
+
+      if (!sec2 || !textbox || !chara) return;
+
+      // テキストボックスのコンテナ幅（左飛び出し量の基準）
+      var viewW = window.innerWidth;
+
+      /* --- 2枚目テキストボックスを動的生成 ---
+         左から飛んでくる「自己紹介後半」ボックス
+         ★拡張予定: テキストを変更したい場合は下記 innerHTML を編集する */
+      var textbox2 = document.createElement('div');
+      textbox2.className = 'wlc-textbox';
+      textbox2.id = 'wlc-textbox2';
+      textbox2.style.cssText = 'opacity:0; transform: translateX(120%);';
+      textbox2.innerHTML = [
+        '<p class="wlc-textbox-body">',
+        /*
+         * ★拡張予定: 2枚目テキストボックスの内容
+         *   左から飛んでくるボックスのテキストをここで編集する。
+         *   1行 = <span class="wlc-textbox-line"> で囲む。
+         */
+        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分用のHPが欲しくて、</span>',
+        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">勉強の傍ら開設しました。</span>',
+        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">&nbsp;</span>',
+        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分がこれまでやった改変のまとめなど、</span>',
+        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分の情報をまとめていこうと思います。</span>',
+        '</p>',
+        '<div class="wlc-textbox-lines">',
+        '  <div class="wlc-textbox-bar"></div>',
+        '  <div class="wlc-textbox-bar"></div>',
+        '</div>'
+      ].join('');
+      document.getElementById('wlc-sec2-sticky').appendChild(textbox2);
+
+      /* --- ScrollTrigger 本体 ---
+         pin: true       … .wlc-sec2-sticky を画面に固定（スクロールしても動かない）
+         pinSpacing: true … ピン留め中のスクロール量分のスペースを自動確保
+         scrub: 1        … スクロール量にアニメを連動（数値が大きいほど遅延感が増す）
+
+         ★アニメの長さを変えたい場合:
+           end の '+=3000' の数値を変更する（大きいほどゆっくり・長くなる）
+           例: '+=2000' で短め / '+=5000' でかなりゆっくり
+      */
+      var headerH = window.innerWidth <= 759
+        ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height-sp'))
+        : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height-pc'));
+
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.wlc-sec2-sticky', // ピン留めする要素
+          start: 'top ' + headerH + 'px', // ヘッダーの下端に来たらスタート
+          end: '+=3000',            // スクロール 3000px 分でアニメ全体が進む
+          pin: true,                // この要素を画面に固定する ← これが核心
+          pinSpacing: true,         // ピン留め中のスペースを自動確保
+          scrub: 1,                 // スクロール量に連動
+          // markers: true,         // ★ デバッグ時はコメントを外すと開始/終了点が見える
+        }
+      });
+
+      /* 初期状態: テキストボックスは右外・キャラは右外 */
+      gsap.set(textbox, { x: viewW * 0.6, opacity: 0 });
+      gsap.set(chara,   { x: viewW * 0.5, opacity: 0 });
+
+      // 0.00 → 0.10: キャラが右からスライドイン
+      tl.to(chara, {
+        x: 0, opacity: 1, duration: 0.10,
+        ease: 'power2.out'
+      }, 0.00);
+
+      // 0.05 → 0.12: テキストボックスが右からスライドイン
+      tl.to(textbox, {
+        x: 0, opacity: 1, duration: 0.07,
+        ease: 'back.out(1.2)'
+      }, 0.05);
+
+      // 0.12 → 0.35: テキスト各行を順次フェードイン
+      var lines = textbox.querySelectorAll('.wlc-textbox-line');
+      var lineStep = (0.35 - 0.12) / Math.max(lines.length, 1);
+      lines.forEach(function (line, i) {
+        tl.to(line, {
+          opacity: 1, y: 0, duration: lineStep * 0.7,
+          ease: 'power1.out'
+        }, 0.12 + i * lineStep);
+      });
+
+      // 0.35 → 0.45: キャラがテキストボックスに気づく（スプライト コマ1）
+      tl.call(function () {
+        setSprite(chara, 1); // コマ番号 1: 気づき
+      }, null, 0.35);
+
+      // 0.40: テキストボックスを「ふわっ」と揺らす（気づきアクション）
+      tl.to(textbox, {
+        y: -12, duration: 0.05, ease: 'power1.inOut', yoyo: true, repeat: 1
+      }, 0.40);
+
+      // 0.45 → 0.55: テキストボックスに手をかける（スプライト コマ2）
+      tl.call(function () {
+        setSprite(chara, 2); // コマ番号 2: 手をかける
+      }, null, 0.45);
+
+      // 0.55 → 0.65: テキストボックスを左へ押し飛ばす（スプライト コマ3）
+      tl.call(function () {
+        setSprite(chara, 3); // コマ番号 3: 押す
+      }, null, 0.55);
+      tl.to(textbox, {
+        x: -viewW * 0.7, opacity: 0, duration: 0.10,
+        ease: 'power2.in'
+      }, 0.55);
+
+      // 0.65 → 0.72: 2枚目テキストボックスが左から飛んでくる
+      tl.to(textbox2, {
+        x: 0, opacity: 1, duration: 0.07,
+        ease: 'back.out(1.4)'
+      }, 0.65);
+
+      // 0.72 → 0.80: キャラが受け止める（スプライト コマ4）
+      tl.call(function () {
+        setSprite(chara, 4); // コマ番号 4: 受け止め
+      }, null, 0.72);
+      // テキストボックスが少し「ドン」と止まる演出
+      tl.to(textbox2, {
+        x: 8, duration: 0.02, ease: 'power1.out', yoyo: true, repeat: 1
+      }, 0.73);
+
+      // 0.80 → 0.88: ポーズ（スプライト コマ5）
+      tl.call(function () {
+        setSprite(chara, 5); // コマ番号 5: ポーズ
+      }, null, 0.80);
+
+      // 0.88 → 1.00: キャラとテキストが上へ退場
+      tl.to([chara, textbox2], {
+        y: -viewW * 0.5, opacity: 0, duration: 0.12,
+        ease: 'power2.in', stagger: 0.02
+      }, 0.88);
+
+      /* ======================================================
+         セクション3: コンテンツ紹介（下からスライドイン）
+         ====================================================== */
+      var sec3Title = document.getElementById('wlc-sec3-title');
+      var cards     = document.querySelectorAll('#wlc-sec3-grid .wlc-preview-card');
+
+      // 見出しが画面に入ったらスライドイン
+      if (sec3Title) {
+        gsap.to(sec3Title, {
+          scrollTrigger: {
+            trigger: sec3Title,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          },
+          opacity: 1, y: 0, duration: 0.7, ease: 'power2.out'
+        });
+      }
+
+      // プレビュー画像カードを順次表示（stagger で少しずつずらす）
+      if (cards.length) {
+        gsap.to(cards, {
+          scrollTrigger: {
+            trigger: '#wlc-sec3-grid',
+            start: 'top 88%',
+            toggleActions: 'play none none none'
+          },
+          opacity: 1, y: 0, duration: 0.55,
+          ease: 'power2.out',
+          stagger: 0.12 // ← カード間の表示ディレイ（秒）
+        });
+      }
+    }
+
+    /* ----------------------------------------------------------
+       スプライトシート コマ切り替えヘルパー
+       ★拡張予定: スプライトシート差し替え後に動作確認する関数
+
+       引数:
+         el    - キャラ要素（.wlc-chara）
+         frame - 0始まりのコマ番号
+
+       仕組み:
+         スプライトシートは横並びを想定。
+         background-position の x を (-100% * frame) にずらすことで
+         指定コマを表示する。
+    ---------------------------------------------------------- */
+    function setSprite(el, frame) {
+      if (WLC_SPRITE_TOTAL <= 1) return; // 1コマ（未設定）なら何もしない
+      var pct = (frame / (WLC_SPRITE_TOTAL - 1)) * 100;
+      el.style.backgroundPositionX = pct + '%';
+    }
+
+    /* ----------------------------------------------------------
+       DOMContentLoaded 後に初期化
+       ページ切り替えで welcomeページが再表示された場合も動作するよう
+       navigateTo のタイミングで再initする（ScrollTrigger.refresh 呼び出し）
+    ---------------------------------------------------------- */
+    document.addEventListener('DOMContentLoaded', function () {
+      initWelcomeAnim();
+    });
+
+    /*
+     * ★拡張予定: 他ページから「ようこそ」に戻ってきたとき
+     *   navigateTo() の中で以下を呼び出すと ScrollTrigger が再計算される。
+     *
+     *   if (pageId === 'welcome') {
+     *     setTimeout(function() { ScrollTrigger.refresh(); }, 50);
+     *   }
+     *
+     *   現状は初回表示のみ対応。戻り時にアニメが崩れる場合は上記を追加する。
+     */
+
+  }());
   </script>
 </body>
 </html>
