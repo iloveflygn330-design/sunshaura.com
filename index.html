@@ -1466,9 +1466,10 @@
       document.getElementById('wlc-sec2-sticky').appendChild(textbox2);
 
       /* --- ScrollTrigger 本体 ---
-         pin: true       … .wlc-sec2-sticky を画面に固定（スクロールしても動かない）
-         pinSpacing: true … ピン留め中のスクロール量分のスペースを自動確保
-         scrub: 1        … スクロール量にアニメを連動（数値が大きいほど遅延感が増す）
+         pin: true       … .wlc-sec2-sticky を画面に固定
+         pinSpacing: true … ピン留め中のスクロール量を自動確保
+         scrub: true     … 遅延なしでスクロールに即時追従
+                           （数値指定すると「借り」が発生して引っかかる原因になるため true を使う）
 
          ★アニメの長さを変えたい場合:
            end の '+=3000' の数値を変更する（大きいほどゆっくり・長くなる）
@@ -1478,15 +1479,43 @@
         ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height-sp'))
         : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height-pc'));
 
+      /* スプライトのコマ番号を記録（同じコマへの重複set防止）*/
+      var currentFrame = -1;
+
       var tl = gsap.timeline({
         scrollTrigger: {
-          trigger: '.wlc-sec2-sticky', // ピン留めする要素
-          start: 'top ' + headerH + 'px', // ヘッダーの下端に来たらスタート
-          end: '+=3000',            // スクロール 3000px 分でアニメ全体が進む
-          pin: true,                // この要素を画面に固定する ← これが核心
-          pinSpacing: true,         // ピン留め中のスペースを自動確保
-          scrub: 1,                 // スクロール量に連動
-          // markers: true,         // ★ デバッグ時はコメントを外すと開始/終了点が見える
+          trigger: '.wlc-sec2-sticky',
+          start: 'top ' + headerH + 'px',
+          end: '+=3000',
+          pin: true,
+          pinSpacing: true,
+          scrub: true, // ← true にすることで「引っかかり」を解消
+          // markers: true, // ★ デバッグ時はコメントを外す
+
+          /*
+           * onUpdate: スクロール進捗(progress 0→1)から
+           * スプライトのコマを直接計算して切り替える。
+           * tl.call() はscrub時に引っかかりの原因になるため廃止。
+           *
+           * ★拡張予定: スプライトシートのコマ割りを変えたい場合は
+           *   下記の if/else のしきい値と setSprite() のコマ番号を変更する。
+           *   コマ割り定義は WLC_SPRITE_TOTAL と合わせること。
+           */
+          onUpdate: function (self) {
+            var p = self.progress;
+            var frame;
+            if      (p < 0.35) frame = 0; // 待機・スライドイン中
+            else if (p < 0.45) frame = 1; // 気づき
+            else if (p < 0.55) frame = 2; // 手をかける
+            else if (p < 0.72) frame = 3; // 押す
+            else if (p < 0.80) frame = 4; // 受け止め
+            else if (p < 0.88) frame = 5; // ポーズ
+            else               frame = 6; // 退場
+            if (frame !== currentFrame) {
+              currentFrame = frame;
+              setSprite(chara, frame);
+            }
+          }
         }
       });
 
@@ -1516,25 +1545,12 @@
         }, 0.12 + i * lineStep);
       });
 
-      // 0.35 → 0.45: キャラがテキストボックスに気づく（スプライト コマ1）
-      tl.call(function () {
-        setSprite(chara, 1); // コマ番号 1: 気づき
-      }, null, 0.35);
-
       // 0.40: テキストボックスを「ふわっ」と揺らす（気づきアクション）
       tl.to(textbox, {
         y: -12, duration: 0.05, ease: 'power1.inOut', yoyo: true, repeat: 1
       }, 0.40);
 
-      // 0.45 → 0.55: テキストボックスに手をかける（スプライト コマ2）
-      tl.call(function () {
-        setSprite(chara, 2); // コマ番号 2: 手をかける
-      }, null, 0.45);
-
-      // 0.55 → 0.65: テキストボックスを左へ押し飛ばす（スプライト コマ3）
-      tl.call(function () {
-        setSprite(chara, 3); // コマ番号 3: 押す
-      }, null, 0.55);
+      // 0.55 → 0.65: テキストボックスを左へ押し飛ばす
       tl.to(textbox, {
         x: -viewW * 0.7, opacity: 0, duration: 0.10,
         ease: 'power2.in'
@@ -1546,19 +1562,10 @@
         ease: 'back.out(1.4)'
       }, 0.65);
 
-      // 0.72 → 0.80: キャラが受け止める（スプライト コマ4）
-      tl.call(function () {
-        setSprite(chara, 4); // コマ番号 4: 受け止め
-      }, null, 0.72);
-      // テキストボックスが少し「ドン」と止まる演出
+      // 0.73: テキストボックスが「ドン」と止まる演出
       tl.to(textbox2, {
         x: 8, duration: 0.02, ease: 'power1.out', yoyo: true, repeat: 1
       }, 0.73);
-
-      // 0.80 → 0.88: ポーズ（スプライト コマ5）
-      tl.call(function () {
-        setSprite(chara, 5); // コマ番号 5: ポーズ
-      }, null, 0.80);
 
       // 0.88 → 1.00: キャラとテキストが上へ退場
       tl.to([chara, textbox2], {
