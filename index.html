@@ -1384,6 +1384,10 @@
     function initWelcomeAnim() {
       gsap.registerPlugin(ScrollTrigger);
 
+      // 再初期化時に前回のScrollTriggerが残らないようクリーンアップ
+      // （ページ切り替えで戻ってきたとき二重登録を防ぐ）
+      ScrollTrigger.getAll().forEach(function (st) { st.kill(); });
+
       /* ======================================================
          セクション1: 初期フェードイン（ScrollTrigger不使用）
          ====================================================== */
@@ -1475,9 +1479,12 @@
            end の '+=3000' の数値を変更する（大きいほどゆっくり・長くなる）
            例: '+=2000' で短め / '+=5000' でかなりゆっくり
       */
+      // CSS変数からヘッダー高さを取得
+      // getPropertyValue は "48px" のように単位付きで返すため parseFloat で数値化
       var headerH = window.innerWidth <= 759
-        ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height-sp'))
-        : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height-pc'));
+        ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-sp'))
+        : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-pc'));
+      if (!headerH || isNaN(headerH)) headerH = 48; // 取得失敗時のフォールバック
 
       /* スプライトのコマ番号を記録（同じコマへの重複set防止）*/
       var currentFrame = -1;
@@ -1489,8 +1496,11 @@
           end: '+=3000',
           pin: true,
           pinSpacing: true,
-          scrub: true, // ← true にすることで「引っかかり」を解消
+          scrub: true,
           // markers: true, // ★ デバッグ時はコメントを外す
+          // invalidateOnRefresh: リサイズや refresh() 時に start/end を再計算する。
+          // GitHub Pages でフォント読み込み後にページ高さが変わっても正しく追従する。
+          invalidateOnRefresh: true,
 
           /*
            * onUpdate: スクロール進捗(progress 0→1)から
@@ -1523,6 +1533,20 @@
       gsap.set(textbox, { x: viewW * 0.6, opacity: 0 });
       gsap.set(chara,   { x: viewW * 0.5, opacity: 0 });
 
+      /*
+       * scrub: true との相性について
+       *
+       * 使ってはいけないもの（引っかかりの原因）:
+       *   - yoyo: true / repeat  … 折り返し計算でフリーズする
+       *   - back.out / elastic   … オーバーシュートがスクロール逆走を引き起こす
+       *   - stagger（配列対象）  … 各要素の終了タイミング計算が重なりやすい
+       *
+       * 代わりに使うもの:
+       *   - 「行き→戻り」は tl.to を2つに分けて書く
+       *   - イージングは power 系か none にする
+       *   - stagger は個別に position 指定で書く
+       */
+
       // 0.00 → 0.10: キャラが右からスライドイン
       tl.to(chara, {
         x: 0, opacity: 1, duration: 0.10,
@@ -1530,9 +1554,10 @@
       }, 0.00);
 
       // 0.05 → 0.12: テキストボックスが右からスライドイン
+      // back.out はNG → power2.out に変更
       tl.to(textbox, {
         x: 0, opacity: 1, duration: 0.07,
-        ease: 'back.out(1.2)'
+        ease: 'power2.out'
       }, 0.05);
 
       // 0.12 → 0.35: テキスト各行を順次フェードイン
@@ -1545,10 +1570,14 @@
         }, 0.12 + i * lineStep);
       });
 
-      // 0.40: テキストボックスを「ふわっ」と揺らす（気づきアクション）
+      // 0.38 → 0.43: テキストボックスを「ふわっ」と揺らす
+      // yoyo/repeat はNG → 「上へ」「戻る」を2つに分けて書く
       tl.to(textbox, {
-        y: -12, duration: 0.05, ease: 'power1.inOut', yoyo: true, repeat: 1
-      }, 0.40);
+        y: -10, duration: 0.025, ease: 'power1.out'
+      }, 0.38);
+      tl.to(textbox, {
+        y: 0, duration: 0.025, ease: 'power1.in'
+      }, 0.405);
 
       // 0.55 → 0.65: テキストボックスを左へ押し飛ばす
       tl.to(textbox, {
@@ -1557,21 +1586,31 @@
       }, 0.55);
 
       // 0.65 → 0.72: 2枚目テキストボックスが左から飛んでくる
+      // back.out はNG → power2.out に変更
       tl.to(textbox2, {
         x: 0, opacity: 1, duration: 0.07,
-        ease: 'back.out(1.4)'
+        ease: 'power2.out'
       }, 0.65);
 
-      // 0.73: テキストボックスが「ドン」と止まる演出
+      // 0.72 → 0.76: 「ドン」と止まる演出
+      // yoyo/repeat はNG → 「右へ少しずれる」「戻る」を2つに分けて書く
       tl.to(textbox2, {
-        x: 8, duration: 0.02, ease: 'power1.out', yoyo: true, repeat: 1
-      }, 0.73);
+        x: 10, duration: 0.02, ease: 'power1.out'
+      }, 0.72);
+      tl.to(textbox2, {
+        x: 0, duration: 0.02, ease: 'power1.in'
+      }, 0.74);
 
       // 0.88 → 1.00: キャラとテキストが上へ退場
-      tl.to([chara, textbox2], {
+      // stagger + 配列はNG → 個別に position をずらして書く
+      tl.to(chara, {
         y: -viewW * 0.5, opacity: 0, duration: 0.12,
-        ease: 'power2.in', stagger: 0.02
+        ease: 'power2.in'
       }, 0.88);
+      tl.to(textbox2, {
+        y: -viewW * 0.5, opacity: 0, duration: 0.12,
+        ease: 'power2.in'
+      }, 0.90);
 
       /* ======================================================
          セクション3: コンテンツ紹介（下からスライドイン）
@@ -1626,12 +1665,25 @@
     }
 
     /* ----------------------------------------------------------
-       DOMContentLoaded 後に初期化
-       ページ切り替えで welcomeページが再表示された場合も動作するよう
-       navigateTo のタイミングで再initする（ScrollTrigger.refresh 呼び出し）
+       初期化タイミングの制御
+
+       GitHub Pages では以下の順で処理が完了する:
+         1. DOMContentLoaded … HTML解析完了（フォント・画像はまだ）
+         2. load             … 全リソース読み込み完了（ページ高さが確定）
+
+       ScrollTrigger.refresh() は「ページ高さ確定後」に呼ぶ必要がある。
+       DOMContentLoaded だけでは不十分で、load 後に refresh することで
+       pin の位置ズレ・スクロール量のズレが解消される。
     ---------------------------------------------------------- */
     document.addEventListener('DOMContentLoaded', function () {
+      // DOM構築直後に一度初期化（暫定値で）
       initWelcomeAnim();
+    });
+
+    window.addEventListener('load', function () {
+      // フォント・画像込みのページ高さが確定した後に再計算
+      // これにより pin 位置・スクロール終了点のズレが修正される
+      ScrollTrigger.refresh();
     });
 
     /*
@@ -1639,10 +1691,9 @@
      *   navigateTo() の中で以下を呼び出すと ScrollTrigger が再計算される。
      *
      *   if (pageId === 'welcome') {
-     *     setTimeout(function() { ScrollTrigger.refresh(); }, 50);
+     *     ScrollTrigger.getAll().forEach(function(st) { st.kill(); });
+     *     initWelcomeAnim();
      *   }
-     *
-     *   現状は初回表示のみ対応。戻り時にアニメが崩れる場合は上記を追加する。
      */
 
   }());
