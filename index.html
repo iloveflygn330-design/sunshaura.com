@@ -154,7 +154,10 @@
     .dots-anim::after { content: '・'; animation: loadingDots 1.2s steps(1, end) infinite; }
 
     #body-content {
-      padding-top: var(--header-height-pc); min-height: 100vh;
+      padding-top: var(--header-height-pc);
+      /* welcomeページの #page-welcome が position:absolute で
+         この要素を基準に広がるため、height を明示する */
+      min-height: 100svh;
       position: relative; z-index: 1;
       background: var(--color-main-pale);
       transition: transform var(--duration-ui) ease;
@@ -196,19 +199,64 @@
        ようこそページ全体
        ===================================================== */
 
-    /* page-welcome: GSAPのpin留め時はoverflow指定を持たせない
-       （overflow:hiddenがあるとpin位置がズレるため）
-       横はみ出しは .wlc-sec2-sticky 側で個別にclipする */
+    /*
+     * page-welcome: 専用スクロールコンテナ方式（方法B）
+     *
+     * 仕組み:
+     *   #page-welcome は画面サイズに固定（overflow: hidden）
+     *   内側の #wlc-scroll が実際にスクロールするコンテナ
+     *   GSAPの scroller をこの #wlc-scroll に向けることで
+     *   window スクロールと完全に分離 → Edge の引っかかりが解消
+     *
+     *   ページ切り替えで welcome に戻ったとき:
+     *   navigateTo() 内で wlcScrollEl.scrollTop = 0 をセットすること（★拡張予定）
+     */
     #page-welcome {
-      overflow: visible;
+      /*
+       * #body-content が padding-top でヘッダー分を押し下げているため、
+       * page-welcome 自体は padding なしで残り画面を全部使う。
+       * position: absolute で #body-content の padding 内側に貼り付ける。
+       */
+      position: absolute;
+      top: var(--header-height-pc);
+      left: 0; right: 0;
+      bottom: 0;
+      overflow: hidden; /* スクロールは #wlc-scroll が担う */
+    }
+    @media (max-width: 759px) {
+      #page-welcome { top: var(--header-height-sp); }
+    }
+
+    /* 専用スクロールコンテナ
+       ここが実際にスクロールする。GSAPの scroller として指定する。
+       position: absolute の親を基準に 100% 高さを確保する。 */
+    #wlc-scroll {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      /* スクロールバーを非表示にしたい場合は下記をコメント解除
+      scrollbar-width: none;
+      */
+    }
+    #wlc-scroll::-webkit-scrollbar {
+      /* ★拡張予定: スクロールバーのスタイル変更
+           幅や色を変えたい場合はここを編集する
+           完全に消すには display: none; */
+      width: 6px;
+    }
+    #wlc-scroll::-webkit-scrollbar-thumb {
+      background: var(--color-main-light);
+      border-radius: 3px;
     }
 
     /* -------------------------------------------------------
        セクション1: ようこそ（初期表示テキスト群）
        ------------------------------------------------------- */
     .wlc-sec1 {
-      /* ヘッダー分を引いて、画面いっぱいに表示 */
-      height: calc(100svh - var(--header-height-pc));
+      /* #wlc-scroll コンテナの中で画面1枚分を確保する
+         100svh からヘッダー高さを引いた値がちょうど1画面 */
+      min-height: calc(100svh - var(--header-height-pc));
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 40px 24px 60px;
@@ -217,7 +265,7 @@
       overflow: hidden;
     }
     @media (max-width: 759px) {
-      .wlc-sec1 { height: calc(100svh - var(--header-height-sp)); }
+      .wlc-sec1 { min-height: calc(100svh - var(--header-height-sp)); }
     }
 
     /* ① ようこそ！タイトル（初期から表示） */
@@ -254,25 +302,27 @@
     }
 
     /* -------------------------------------------------------
-       セクション2: 自己紹介（スクロール連動アニメ）
+       セクション2: 自己紹介
+       pin/scrub 廃止済み。スクロールでアニメが順番に起動する方式。
+       各アニメブロックが画面に入ったとき ScrollTrigger で発火する。
        ------------------------------------------------------- */
     .wlc-sec2 {
-      /* GSAPのpin:trueでピン留めするため、高さはコンテンツ分だけでOK */
       background: var(--color-main-pale);
-      overflow: hidden;
+      overflow: hidden; /* 横スライドの飛び出し防止 */
+      padding: 80px 0 100px;
     }
 
-    /* ピン留めされる実画面エリア
-       GSAPが position:fixed に切り替えてスクロール中に画面に固定する
-       clip-path で横はみ出しを隠す（overflow:hiddenはpin干渉のため使わない） */
+    /* ピン留め対象エリア
+       GSAPが pin: true でこの要素をスクロールコンテナ内に固定する
+       コンテナが #wlc-scroll なので window への干渉がない */
     .wlc-sec2-sticky {
+      /* pin留め中に画面1枚分を占有する高さ */
       height: calc(100svh - var(--header-height-pc));
       width: 100%;
       display: flex; align-items: center;
       overflow: hidden;
       position: relative;
-      /* 横スライドアニメの飛び出し防止 */
-      clip-path: inset(0);
+      clip-path: inset(0); /* 横スライドの飛び出しを隠す */
     }
     @media (max-width: 759px) {
       .wlc-sec2-sticky { height: calc(100svh - var(--header-height-sp)); }
@@ -866,6 +916,8 @@
   <main id="body-content">
 
     <div class="page active" id="page-welcome">
+      <!-- 専用スクロールコンテナ: GSAPのscrollerとして使用（windowと分離） -->
+      <div id="wlc-scroll">
 
       <!-- =====================================================
            セクション1: ようこそ（初期表示 + 時間差フェードイン）
@@ -987,6 +1039,7 @@
         sunshaura.com
       </footer>
 
+      </div><!-- /#wlc-scroll -->
     </div><!-- /#page-welcome -->
 
     <div class="page" id="page-avatar">
@@ -1415,112 +1468,105 @@
       });
 
       /* ======================================================
-         セクション2: 自己紹介（sticky スクロール連動）
+         セクション2: 自己紹介（スクロール連動アニメ・方法B）
 
-         スクロール進捗 progress 0→1 の中で各アニメを割り当てる。
-         進捗の区切り値を変えるとアニメの長さ・タイミングが変わる。
+         #wlc-scroll を scroller に指定することで、
+         window スクロールと GSAPが完全分離し Edge の引っかかりが解消される。
 
-         【構成イメージ】
-           0.00 - 0.10: キャラが右からスライドイン
-           0.05 - 0.12: テキストボックスが右からスライドイン（こんにちは！は最初から表示）
-           0.12 - 0.35: テキスト各行がスクロールで順次フェードイン
-           0.35 - 0.45: キャラがテキストボックスに気づく（スプライト変化）
-           0.45 - 0.55: テキストボックスに手をかける（スプライト変化）
-           0.55 - 0.65: テキストボックスを左へ押し飛ばす
-           0.65 - 0.70: テキストボックスが左へ消える
-           0.65 - 0.72: 2枚目テキストボックスが左から飛んでくる
-           0.72 - 0.80: キャラが受け止める（スプライト変化）
-           0.80 - 0.88: ポーズ（スプライト変化）
-           0.88 - 1.00: キャラとテキストが上へ退場
-         ====================================================== */
-      var sec2       = document.getElementById('wlc-sec2');
-      var textbox    = document.getElementById('wlc-textbox');
-      var chara      = document.getElementById('wlc-chara');
-
-      if (!sec2 || !textbox || !chara) return;
-
-      // テキストボックスのコンテナ幅（左飛び出し量の基準）
-      var viewW = window.innerWidth;
-
-      /* --- 2枚目テキストボックスを動的生成 ---
-         左から飛んでくる「自己紹介後半」ボックス
-         ★拡張予定: テキストを変更したい場合は下記 innerHTML を編集する */
-      var textbox2 = document.createElement('div');
-      textbox2.className = 'wlc-textbox';
-      textbox2.id = 'wlc-textbox2';
-      textbox2.style.cssText = 'opacity:0; transform: translateX(120%);';
-      textbox2.innerHTML = [
-        '<p class="wlc-textbox-body">',
-        /*
-         * ★拡張予定: 2枚目テキストボックスの内容
-         *   左から飛んでくるボックスのテキストをここで編集する。
-         *   1行 = <span class="wlc-textbox-line"> で囲む。
-         */
-        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分用のHPが欲しくて、</span>',
-        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">勉強の傍ら開設しました。</span>',
-        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">&nbsp;</span>',
-        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分がこれまでやった改変のまとめなど、</span>',
-        '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分の情報をまとめていこうと思います。</span>',
-        '</p>',
-        '<div class="wlc-textbox-lines">',
-        '  <div class="wlc-textbox-bar"></div>',
-        '  <div class="wlc-textbox-bar"></div>',
-        '</div>'
-      ].join('');
-      document.getElementById('wlc-sec2-sticky').appendChild(textbox2);
-
-      /* --- ScrollTrigger 本体 ---
-         pin: true       … .wlc-sec2-sticky を画面に固定
-         pinSpacing: true … ピン留め中のスクロール量を自動確保
-         scrub: true     … 遅延なしでスクロールに即時追従
-                           （数値指定すると「借り」が発生して引っかかる原因になるため true を使う）
+         【アニメの流れ】
+           progress 0.00-0.10: キャラ右スライドイン
+           progress 0.05-0.12: テキストボックス右スライドイン
+           progress 0.12-0.35: テキスト各行 順次フェードイン
+           progress 0.38-0.43: テキストボックス揺れ（気づき）
+           progress 0.55-0.65: テキストボックスを左へ押し飛ばす
+           progress 0.65-0.72: 2枚目テキストが左から飛んでくる
+           progress 0.72-0.76: 受け止め「ドン」演出
+           progress 0.88-1.00: キャラ・テキスト上へ退場
 
          ★アニメの長さを変えたい場合:
-           end の '+=3000' の数値を変更する（大きいほどゆっくり・長くなる）
-           例: '+=2000' で短め / '+=5000' でかなりゆっくり
-      */
-      // CSS変数からヘッダー高さを取得
-      // getPropertyValue は "48px" のように単位付きで返すため parseFloat で数値化
-      var headerH = window.innerWidth <= 759
-        ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-sp'))
-        : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-pc'));
-      if (!headerH || isNaN(headerH)) headerH = 48; // 取得失敗時のフォールバック
+           end の '+=3000' を変更する（大きいほどゆっくり）
+         ====================================================== */
+      var wlcScrollEl = document.getElementById('wlc-scroll');
+      var sec2        = document.getElementById('wlc-sec2');
+      var textbox     = document.getElementById('wlc-textbox');
+      var chara       = document.getElementById('wlc-chara');
+      if (!sec2 || !textbox || !chara || !wlcScrollEl) return;
 
-      /* スプライトのコマ番号を記録（同じコマへの重複set防止）*/
+      var viewW = window.innerWidth;
+
+      /*
+       * 全ScrollTriggerのデフォルトscrollerを#wlc-scrollに設定
+       * これにより window スクロールへの干渉がゼロになる
+       *
+       * ★注意: このページを離れる際に ScrollTrigger.defaults({ scroller: window })
+       *   でリセットする必要がある（他ページのScrollTriggerに影響しないよう）
+       *   → initWelcomeAnim() の先頭で getAll().kill() しているため現状は問題なし
+       */
+      ScrollTrigger.defaults({ scroller: wlcScrollEl });
+
+      /* --- 2枚目テキストボックスを動的生成 ---
+         ★拡張予定: テキストを変更したい場合は下記 innerHTML を編集する
+           1行 = <span class="wlc-textbox-line"> で囲む */
+      var textbox2 = document.getElementById('wlc-textbox2');
+      if (!textbox2) {
+        textbox2 = document.createElement('div');
+        textbox2.className = 'wlc-textbox';
+        textbox2.id = 'wlc-textbox2';
+        textbox2.innerHTML = [
+          '<p class="wlc-textbox-body">',
+          '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分用のHPが欲しくて、</span>',
+          '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">勉強の傍ら開設しました。</span>',
+          '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">&nbsp;</span>',
+          '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分がこれまでやった改変のまとめなど、</span>',
+          '  <span class="wlc-textbox-line" style="opacity:1;transform:none;">自分の情報をまとめていこうと思います。</span>',
+          '</p>',
+          '<div class="wlc-textbox-lines">',
+          '  <div class="wlc-textbox-bar"></div>',
+          '  <div class="wlc-textbox-bar"></div>',
+          '</div>'
+        ].join('');
+        document.getElementById('wlc-sec2-sticky').appendChild(textbox2);
+      }
+
+      /* --- 初期状態 --- */
+      gsap.set(chara,    { x: viewW * 0.6,  opacity: 0 });
+      gsap.set(textbox,  { x: viewW * 0.6,  opacity: 0 });
+      gsap.set(textbox2, { x: -viewW * 0.7, opacity: 0 });
+
+      /* --- スプライット進捗追跡 --- */
       var currentFrame = -1;
 
+      /* --- タイムライン本体 ---
+         scroller: wlcScrollEl … #wlc-scroll がスクロール源
+         pin: true             … .wlc-sec2-sticky を#wlc-scroll内で固定
+         scrub: true           … スクロール量にアニメを即時連動
+         invalidateOnRefresh   … リサイズ時に位置を再計算
+      */
       var tl = gsap.timeline({
         scrollTrigger: {
           trigger: '.wlc-sec2-sticky',
-          start: 'top ' + headerH + 'px',
+          scroller: wlcScrollEl,
+          start: 'top top',
           end: '+=3000',
           pin: true,
           pinSpacing: true,
           scrub: true,
-          // markers: true, // ★ デバッグ時はコメントを外す
-          // invalidateOnRefresh: リサイズや refresh() 時に start/end を再計算する。
-          // GitHub Pages でフォント読み込み後にページ高さが変わっても正しく追従する。
           invalidateOnRefresh: true,
+          // markers: true, // ★ デバッグ時はコメントを外す
 
           /*
-           * onUpdate: スクロール進捗(progress 0→1)から
-           * スプライトのコマを直接計算して切り替える。
-           * tl.call() はscrub時に引っかかりの原因になるため廃止。
-           *
-           * ★拡張予定: スプライトシートのコマ割りを変えたい場合は
-           *   下記の if/else のしきい値と setSprite() のコマ番号を変更する。
-           *   コマ割り定義は WLC_SPRITE_TOTAL と合わせること。
+           * onUpdate でスプライットコマを進捗から直接決定
+           * ★拡張予定: コマ割りを変えたい場合は if/else のしきい値を変更する
            */
           onUpdate: function (self) {
             var p = self.progress;
-            var frame;
-            if      (p < 0.35) frame = 0; // 待機・スライドイン中
-            else if (p < 0.45) frame = 1; // 気づき
-            else if (p < 0.55) frame = 2; // 手をかける
-            else if (p < 0.72) frame = 3; // 押す
-            else if (p < 0.80) frame = 4; // 受け止め
-            else if (p < 0.88) frame = 5; // ポーズ
-            else               frame = 6; // 退場
+            var frame =
+              p < 0.35 ? 0 :
+              p < 0.45 ? 1 :
+              p < 0.55 ? 2 :
+              p < 0.72 ? 3 :
+              p < 0.80 ? 4 :
+              p < 0.88 ? 5 : 6;
             if (frame !== currentFrame) {
               currentFrame = frame;
               setSprite(chara, frame);
@@ -1529,88 +1575,36 @@
         }
       });
 
-      /* 初期状態: テキストボックスは右外・キャラは右外 */
-      gsap.set(textbox, { x: viewW * 0.6, opacity: 0 });
-      gsap.set(chara,   { x: viewW * 0.5, opacity: 0 });
+      // 0.00→0.10: キャラ右スライドイン
+      tl.to(chara,   { x: 0, opacity: 1, duration: 0.10, ease: 'power2.out' }, 0.00);
+      // 0.05→0.12: テキストボックス右スライドイン
+      tl.to(textbox, { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.05);
 
-      /*
-       * scrub: true との相性について
-       *
-       * 使ってはいけないもの（引っかかりの原因）:
-       *   - yoyo: true / repeat  … 折り返し計算でフリーズする
-       *   - back.out / elastic   … オーバーシュートがスクロール逆走を引き起こす
-       *   - stagger（配列対象）  … 各要素の終了タイミング計算が重なりやすい
-       *
-       * 代わりに使うもの:
-       *   - 「行き→戻り」は tl.to を2つに分けて書く
-       *   - イージングは power 系か none にする
-       *   - stagger は個別に position 指定で書く
-       */
-
-      // 0.00 → 0.10: キャラが右からスライドイン
-      tl.to(chara, {
-        x: 0, opacity: 1, duration: 0.10,
-        ease: 'power2.out'
-      }, 0.00);
-
-      // 0.05 → 0.12: テキストボックスが右からスライドイン
-      // back.out はNG → power2.out に変更
-      tl.to(textbox, {
-        x: 0, opacity: 1, duration: 0.07,
-        ease: 'power2.out'
-      }, 0.05);
-
-      // 0.12 → 0.35: テキスト各行を順次フェードイン
-      var lines = textbox.querySelectorAll('.wlc-textbox-line');
+      // 0.12→0.35: テキスト各行 順次フェードイン
+      var lines    = textbox.querySelectorAll('.wlc-textbox-line');
       var lineStep = (0.35 - 0.12) / Math.max(lines.length, 1);
       lines.forEach(function (line, i) {
-        tl.to(line, {
-          opacity: 1, y: 0, duration: lineStep * 0.7,
-          ease: 'power1.out'
-        }, 0.12 + i * lineStep);
+        tl.to(line, { opacity: 1, y: 0, duration: lineStep * 0.7, ease: 'power1.out' },
+          0.12 + i * lineStep);
       });
 
-      // 0.38 → 0.43: テキストボックスを「ふわっ」と揺らす
-      // yoyo/repeat はNG → 「上へ」「戻る」を2つに分けて書く
-      tl.to(textbox, {
-        y: -10, duration: 0.025, ease: 'power1.out'
-      }, 0.38);
-      tl.to(textbox, {
-        y: 0, duration: 0.025, ease: 'power1.in'
-      }, 0.405);
+      // 0.38→0.43: テキストボックス揺れ（「行き」「戻り」分割でscrub対応）
+      tl.to(textbox, { y: -10, duration: 0.025, ease: 'power1.out' }, 0.38);
+      tl.to(textbox, { y:   0, duration: 0.025, ease: 'power1.in'  }, 0.405);
 
-      // 0.55 → 0.65: テキストボックスを左へ押し飛ばす
-      tl.to(textbox, {
-        x: -viewW * 0.7, opacity: 0, duration: 0.10,
-        ease: 'power2.in'
-      }, 0.55);
+      // 0.55→0.65: テキストボックスを左へ押し飛ばす
+      tl.to(textbox, { x: -viewW * 0.7, opacity: 0, duration: 0.10, ease: 'power2.in' }, 0.55);
 
-      // 0.65 → 0.72: 2枚目テキストボックスが左から飛んでくる
-      // back.out はNG → power2.out に変更
-      tl.to(textbox2, {
-        x: 0, opacity: 1, duration: 0.07,
-        ease: 'power2.out'
-      }, 0.65);
+      // 0.65→0.72: 2枚目テキストボックスが左から飛んでくる
+      tl.to(textbox2, { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.65);
 
-      // 0.72 → 0.76: 「ドン」と止まる演出
-      // yoyo/repeat はNG → 「右へ少しずれる」「戻る」を2つに分けて書く
-      tl.to(textbox2, {
-        x: 10, duration: 0.02, ease: 'power1.out'
-      }, 0.72);
-      tl.to(textbox2, {
-        x: 0, duration: 0.02, ease: 'power1.in'
-      }, 0.74);
+      // 0.72→0.76: 受け止め「ドン」演出（「行き」「戻り」分割）
+      tl.to(textbox2, { x: 10, duration: 0.02, ease: 'power1.out' }, 0.72);
+      tl.to(textbox2, { x:  0, duration: 0.02, ease: 'power1.in'  }, 0.74);
 
-      // 0.88 → 1.00: キャラとテキストが上へ退場
-      // stagger + 配列はNG → 個別に position をずらして書く
-      tl.to(chara, {
-        y: -viewW * 0.5, opacity: 0, duration: 0.12,
-        ease: 'power2.in'
-      }, 0.88);
-      tl.to(textbox2, {
-        y: -viewW * 0.5, opacity: 0, duration: 0.12,
-        ease: 'power2.in'
-      }, 0.90);
+      // 0.88→1.00: キャラ・テキスト上へ退場
+      tl.to(chara,    { y: -viewW * 0.5, opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.88);
+      tl.to(textbox2, { y: -viewW * 0.5, opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.90);
 
       /* ======================================================
          セクション3: コンテンツ紹介（下からスライドイン）
@@ -1618,11 +1612,11 @@
       var sec3Title = document.getElementById('wlc-sec3-title');
       var cards     = document.querySelectorAll('#wlc-sec3-grid .wlc-preview-card');
 
-      // 見出しが画面に入ったらスライドイン
       if (sec3Title) {
         gsap.to(sec3Title, {
           scrollTrigger: {
             trigger: sec3Title,
+            scroller: wlcScrollEl,
             start: 'top 85%',
             toggleActions: 'play none none none'
           },
@@ -1630,11 +1624,11 @@
         });
       }
 
-      // プレビュー画像カードを順次表示（stagger で少しずつずらす）
       if (cards.length) {
         gsap.to(cards, {
           scrollTrigger: {
             trigger: '#wlc-sec3-grid',
+            scroller: wlcScrollEl,
             start: 'top 88%',
             toggleActions: 'play none none none'
           },
@@ -1681,8 +1675,9 @@
     });
 
     window.addEventListener('load', function () {
-      // フォント・画像込みのページ高さが確定した後に再計算
-      // これにより pin 位置・スクロール終了点のズレが修正される
+      // フォント・画像込みの高さ確定後に再計算
+      // #wlc-scroll コンテナの高さも確定してから refresh することで
+      // pin 位置・end 値のズレが修正される
       ScrollTrigger.refresh();
     });
 
