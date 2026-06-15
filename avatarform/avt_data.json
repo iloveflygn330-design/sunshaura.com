@@ -66,6 +66,11 @@
       "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
+    },
+    "nameStyle": {
+      "color": "white",
+      "shadow": true,
+      "outline": true
     }
   },
   "1060.png": {
