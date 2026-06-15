@@ -133,12 +133,40 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
   .section-title, .img-slots, .media-wrap,
   .btn-area, .github-area, .output-area,
   .grid-wrap, .add-media-wrap,
-  .img-tpl-wrap, .img-tpl-bar, .template-refs {
+  .img-tpl-wrap, .img-tpl-bar, .template-refs, .preview-wrap {
     max-width: 50%;
     margin-left: auto;
     margin-right: auto;
   }
 }
+
+/* テキストスタイル選択（名前・説明文） */
+.style-selectors{margin-top:8px;}
+.style-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.style-group{display:flex;align-items:center;gap:5px;}
+.sg-label{font-size:11px;color:var(--muted);white-space:nowrap;}
+.bopt.style-sel{background:var(--main);color:#fff;border-color:var(--main);}
+
+/* bgPatternサイズ入力エリア */
+.pattern-size-bar{padding:8px 0;}
+
+/* 簡易プレビュー */
+.preview-wrap{padding:10px 14px 14px;background:var(--bg);}
+.preview-area{position:relative;width:100%;aspect-ratio:3/1;overflow:hidden;border-radius:8px;border:1px solid var(--border);}
+.pv-layer{position:absolute;inset:0;}
+.pv-bg-img{background-size:cover;background-position:center;background-color:#87CEEB;}
+.pv-bg-pattern{background-repeat:repeat;opacity:0.5;}
+.pv-frame-c{position:absolute;left:0;right:0;height:45%;background-size:100% 100%;background-repeat:no-repeat;mix-blend-mode:screen;pointer-events:none;z-index:20;}
+.pv-frame-c-top{top:0;}
+.pv-frame-c-bottom{bottom:0;}
+.pv-info{position:absolute;top:0;bottom:0;left:5%;width:42%;z-index:30;display:flex;flex-direction:column;justify-content:center;padding:6px 14px;}
+.pv-name{font-size:clamp(9px,2.5vw,17px);font-weight:800;line-height:1.25;margin-bottom:2px;}
+.pv-name-line{width:36px;height:2px;background:#CC2244;border-radius:2px;margin-bottom:5px;}
+.pv-desc{font-size:clamp(6px,1vw,9px);line-height:1.6;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;}
+.pv-main-img{position:absolute;right:0;top:0;bottom:0;width:50%;background-size:contain;background-repeat:no-repeat;background-position:right bottom;z-index:50;pointer-events:none;}
+.pv-frame-a{position:absolute;left:0;right:0;height:6px;background:#FF9500;z-index:70;}
+.pv-frame-a-top{top:0;}
+.pv-frame-a-bottom{bottom:0;}
 
 /* add-media-wrap のスタイル */
 .add-media-wrap{padding:0 14px 12px;background:var(--bg);}
@@ -256,6 +284,27 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
       <label>アバター名 ★必須</label>
       <input type="text" id="fName" placeholder="例: まめひなた改変" oninput="autoSave()">
     </div>
+    <!-- アバター名 表示スタイル（白/黒・シャドー・縁取り） -->
+    <div class="fg style-selectors">
+      <div class="tr-label">アバター名 表示スタイル</div>
+      <div class="style-row">
+        <div class="style-group">
+          <span class="sg-label">文字色</span>
+          <button class="bopt style-btn" data-field="nameColor" data-val="white" onclick="selStyle(this)">白</button>
+          <button class="bopt style-btn" data-field="nameColor" data-val="black" onclick="selStyle(this)">黒</button>
+        </div>
+        <div class="style-group">
+          <span class="sg-label">シャドー</span>
+          <button class="bopt style-btn" data-field="nameShadow" data-val="true" onclick="selStyle(this)">あり</button>
+          <button class="bopt style-btn" data-field="nameShadow" data-val="false" onclick="selStyle(this)">なし</button>
+        </div>
+        <div class="style-group">
+          <span class="sg-label">縁取り</span>
+          <button class="bopt style-btn" data-field="nameOutline" data-val="true" onclick="selStyle(this)">あり</button>
+          <button class="bopt style-btn" data-field="nameOutline" data-val="false" onclick="selStyle(this)">なし</button>
+        </div>
+      </div>
+    </div>
     <div class="fg">
       <label>ジャンル ★必須</label>
       <div class="btn-group" id="genreGrp">
@@ -357,6 +406,18 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
       </div>
     </div>
   </div>
+  <!-- パターン タイルサイズ入力 -->
+  <div class="img-tpl-wrap">
+    <div class="img-tpl-bar">
+      <div class="tr-label">パターン タイルサイズ（空白=デフォルト）</div>
+      <div class="pattern-size-bar" style="display:flex;gap:8px;align-items:center;">
+        <input type="text" id="fPatternSize" placeholder="例: 100px　または　200px 150px"
+               style="flex:1;" oninput="onPatternSizeInput(this.value)">
+        <button class="bopt" onclick="resetPatternSize()" style="white-space:nowrap;padding:8px 12px;">リセット</button>
+      </div>
+      <p class="hint">background-size のCSS値を直接指定します。大きい値ほどタイルが大きくなります</p>
+    </div>
+  </div>
 
   <!-- 枠C -->
   <div class="section-title">枠C 装飾</div>
@@ -442,6 +503,26 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
   <div class="media-wrap" id="refsList"></div>
   <div class="add-media-wrap">
     <button class="btn-add-media" onclick="addRef()">＋ 参照画像を追加（カスタム）</button>
+  </div>
+
+  <!-- 簡易プレビュー -->
+  <div class="section-title">プレビュー（簡易）</div>
+  <div class="preview-wrap">
+    <div class="preview-area" id="previewArea">
+      <div class="pv-layer pv-bg-img"  id="pv-bg-img"></div>
+      <div class="pv-layer pv-bg-pattern" id="pv-bg-pattern"></div>
+      <div class="pv-frame-c pv-frame-c-top"    id="pv-frame-c-top"></div>
+      <div class="pv-frame-c pv-frame-c-bottom" id="pv-frame-c-bottom"></div>
+      <div class="pv-info">
+        <div class="pv-name" id="pv-name">アバター名</div>
+        <div class="pv-name-line"></div>
+        <div class="pv-desc" id="pv-desc"></div>
+      </div>
+      <div class="pv-main-img" id="pv-main-img"></div>
+      <div class="pv-frame-a pv-frame-a-top"></div>
+      <div class="pv-frame-a pv-frame-a-bottom"></div>
+    </div>
+    <p class="hint" style="margin-top:6px;">※ 近似プレビューです。実際のサイトと完全一致はしません</p>
   </div>
 
   <hr class="divider">
@@ -846,6 +927,24 @@ function render(){
   const tRefs = d?.templateRefs||[];
   document.querySelectorAll('.tr-btn').forEach(b=>b.classList.toggle('tr-sel', tRefs.includes(b.dataset.code)));
 
+  // テキストスタイルボタンの復元
+  const ns = d?.nameStyle || { color:'white', shadow:true,  outline:false };
+  const ds = d?.descStyle || { color:'white', shadow:false, outline:false };
+  const styleMap = {
+    nameColor:   String(ns.color),
+    nameShadow:  String(ns.shadow),
+    nameOutline: String(ns.outline),
+    descColor:   String(ds.color),
+    descShadow:  String(ds.shadow),
+    descOutline: String(ds.outline),
+  };
+  document.querySelectorAll('.style-btn').forEach(b=>{
+    b.classList.toggle('style-sel', styleMap[b.dataset.field]===b.dataset.val);
+  });
+  // パターンサイズ入力の復元
+  const psSel = document.getElementById('fPatternSize');
+  if(psSel) psSel.value = d?.bgPatternSize||'';
+
   // 単体画像スロット
   renderSingleSlots(f.name, d);
 
@@ -932,6 +1031,7 @@ function selectSingle(input, type){
   slotEl.classList.add('custom');
   imgEl.src=objectUrl;
   autoSave();
+  updatePreview();
 }
 
 function resetSingle(e, type){
@@ -948,6 +1048,7 @@ function resetSingle(e, type){
   slotEl.classList.remove('custom');
   document.getElementById('prev-'+type).src=settings.owner ? rawDefoUrl(type) : '';
   autoSave();
+  updatePreview();
 }
 
 // =====================================================================
@@ -1108,9 +1209,130 @@ function selectImgTpl(btn){
   saveDB();
   // プレビューを更新
   renderSingleSlots(key, db[key]);
+  updatePreview();
   pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
 }
 
+
+
+// =====================================================================
+// テキストスタイル選択（名前・説明文の色・シャドー・縁取り）
+// =====================================================================
+function selStyle(btn){
+  const key=images[cur]?.name; if(!key) return;
+  const field=btn.dataset.field;
+  const val=btn.dataset.val;
+
+  // ラジオ動作：同じfieldの他ボタンを解除
+  document.querySelectorAll(`.style-btn[data-field="${field}"]`).forEach(b=>b.classList.remove('style-sel'));
+  btn.classList.add('style-sel');
+
+  if(!db[key]) db[key]={};
+  // 値を変換（'true'/'false' → bool）
+  const parsed = val==='true' ? true : val==='false' ? false : val;
+
+  if(field.startsWith('name')){
+    if(!db[key].nameStyle) db[key].nameStyle={color:'white',shadow:true,outline:false};
+    const prop=field.replace('name','').toLowerCase(); // color/shadow/outline
+    db[key].nameStyle[prop]=parsed;
+  } else {
+    if(!db[key].descStyle) db[key].descStyle={color:'white',shadow:false,outline:false};
+    const prop=field.replace('desc','').toLowerCase();
+    db[key].descStyle[prop]=parsed;
+  }
+  saveDB();
+  updatePreview();
+  pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
+}
+
+// =====================================================================
+// パターンサイズ入力
+// =====================================================================
+function onPatternSizeInput(val){
+  const key=images[cur]?.name; if(!key) return;
+  if(!db[key]) db[key]={};
+  db[key].bgPatternSize=val.trim();
+  saveDB();
+  updatePreview();
+}
+
+function resetPatternSize(){
+  const key=images[cur]?.name; if(!key) return;
+  const el=document.getElementById('fPatternSize');
+  if(el) el.value='';
+  if(db[key]) db[key].bgPatternSize='';
+  saveDB();
+  updatePreview();
+}
+
+// =====================================================================
+// 簡易プレビュー更新
+// =====================================================================
+function updatePreview(){
+  const key=images[cur]?.name;
+  const d=key ? (db[key]||{}) : {};
+  const s=key ? getSession(key) : null;
+  const avatarId=d?.id||document.getElementById('fId')?.value.trim()||'';
+
+  // 画像URL決定ヘルパー
+  function pvUrl(type){
+    const template=d?.templates?.[type];
+    const sess=s?.singleImages?.[type];
+    if(template && template!=='CUSTOM')
+      return `https://raw.githubusercontent.com/${settings.owner}/${settings.repo}/${settings.branch}/${template}`;
+    if(sess?.objectUrl) return sess.objectUrl;
+    if((template==='CUSTOM'||d?.up?.[type]) && avatarId)
+      return rawUrl(avatarId, SAVE_PATH[type])+'?t='+Date.now();
+    if(settings.owner) return rawDefoUrl(type);
+    return '';
+  }
+
+  const bgImgEl =document.getElementById('pv-bg-img');   if(!bgImgEl) return;
+  const bgPatEl =document.getElementById('pv-bg-pattern');
+  const fcTopEl =document.getElementById('pv-frame-c-top');
+  const fcBotEl =document.getElementById('pv-frame-c-bottom');
+  const pvName  =document.getElementById('pv-name');
+  const pvDesc  =document.getElementById('pv-desc');
+  const pvMain  =document.getElementById('pv-main-img');
+
+  // 背景
+  const bgUrl=pvUrl('bgImg');
+  bgImgEl.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : '';
+  const patUrl=pvUrl('bgPattern');
+  bgPatEl.style.backgroundImage = patUrl ? `url('${patUrl}')` : 'none';
+  bgPatEl.style.backgroundSize  = d?.bgPatternSize||'';
+
+  // 枠C
+  const ctUrl=pvUrl('frameCTop');
+  const cbUrl=pvUrl('frameCBottom');
+  fcTopEl.style.backgroundImage = ctUrl ? `url('${ctUrl}')` : 'none';
+  fcBotEl.style.backgroundImage = cbUrl ? `url('${cbUrl}')` : 'none';
+
+  // 名前テキスト＋スタイル
+  pvName.textContent = document.getElementById('fName')?.value||'アバター名';
+  const ns=d.nameStyle||{color:'white',shadow:true,outline:false};
+  pvName.style.color          = ns.color==='black' ? 'rgba(0,0,0,0.9)' : '#fff';
+  pvName.style.textShadow     = ns.shadow ? '0 1px 4px rgba(0,0,0,0.6)' : 'none';
+  pvName.style.webkitTextStroke = ns.outline ? '1px rgba(0,0,0,0.8)' : '0';
+  pvName.style.paintOrder     = 'stroke fill';
+
+  // 説明文＋スタイル
+  pvDesc.textContent = document.getElementById('fDesc')?.value||'';
+  const ds=d.descStyle||{color:'white',shadow:false,outline:false};
+  pvDesc.style.color          = ds.color==='black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)';
+  pvDesc.style.textShadow     = ds.shadow ? '0 1px 3px rgba(0,0,0,0.5)' : 'none';
+  pvDesc.style.webkitTextStroke = ds.outline ? '0.5px rgba(0,0,0,0.6)' : '0';
+  pvDesc.style.paintOrder     = 'stroke fill';
+
+  // メイン画像（アップロード済みまたはセッション中ファイル）
+  if(avatarId && d?.up?.main){
+    pvMain.style.backgroundImage=`url('${rawUrl(avatarId,'thumbnail/main.png')}?t=${Date.now()}')`;
+  } else if(s?.singleImages?.miniPC?.objectUrl){
+    pvMain.style.backgroundImage=`url('${s.singleImages.miniPC.objectUrl}')`;
+  } else {
+    pvMain.style.backgroundImage='';
+  }
+}
 
 // インラインオブジェクトとしてコードに追加される
 function toggleTRef(btn){
@@ -1163,6 +1385,7 @@ function autoSave(){
   db[key]={
     ...(db[key]||{}),
     id, name, genre:selG, cate:selC, desc,
+    bgPatternSize: document.getElementById('fPatternSize')?.value.trim()||'',
     completed:db[key]?.completed||false,
     code:db[key]?.code||'',
     up:{
@@ -1173,6 +1396,7 @@ function autoSave(){
   };
   saveDB();
   updateStatus(); updateProgress(); renderDots();
+  updatePreview();
 }
 
 // =====================================================================
@@ -1220,6 +1444,15 @@ function buildEntry(key){
   // 説明文（改行を\nにエスケープ）
   const descEscaped=(desc||'アバターの説明テキスト。').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r\n|\r|\n/g,'\\n');
 
+  // テキストスタイル（デフォルト値を持つ）
+  const ns = d.nameStyle || { color:'white', shadow:true,  outline:false };
+  const ds = d.descStyle || { color:'white', shadow:false, outline:false };
+  const nsStr = `{ color: '${ns.color}', shadow: ${ns.shadow}, outline: ${ns.outline} }`;
+  const dsStr = `{ color: '${ds.color}', shadow: ${ds.shadow}, outline: ${ds.outline} }`;
+
+  // パターンサイズ
+  const patSize = d.bgPatternSize ? `'${d.bgPatternSize}'` : "''";
+
   return `my_avatarid = '${id}';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
@@ -1234,9 +1467,13 @@ _avatars.push({
 
   bgImg:        ${imgLine('bgImg')},
   bgPattern:    ${imgLine('bgPattern')},
+  bgPatternSize: ${patSize},
   frameCTop:    ${imgLine('frameCTop')},
   frameCBottom: ${imgLine('frameCBottom')},
   infoImg:      ${imgLine('infoImg')},
+
+  nameStyle:    ${nsStr},
+  descStyle:    ${dsStr},
 
   desc: '${descEscaped}',
 
