@@ -1358,9 +1358,12 @@
       if (avatar.bgPattern) {
         bgPat.style.backgroundImage = `url('${avatar.bgPattern}')`;
         bgPat.style.animationPlayState = 'running';
+        /* bgPatternSize: フォームで設定したタイルサイズを適用（空文字=デフォルト） */
+        bgPat.style.backgroundSize = avatar.bgPatternSize || '';
       } else {
         bgPat.style.backgroundImage = 'none';
         bgPat.style.animationPlayState = 'paused';
+        bgPat.style.backgroundSize = '';
       }
 
       /* ⑥ 枠C */
@@ -1368,8 +1371,26 @@
       document.getElementById('avt-frame-c-bottom').style.backgroundImage = avatar.frameCBottom ? `url('${avatar.frameCBottom}')` : 'none';
 
       /* ⑤ 情報テキスト */
-      document.getElementById('avt-name').textContent = avatar.name || '';
-      document.getElementById('avt-desc').textContent = avatar.desc || '';
+      const nameEl = document.getElementById('avt-name');
+      const descEl = document.getElementById('avt-desc');
+      nameEl.textContent = avatar.name || '';
+      descEl.textContent = avatar.desc || '';
+
+      /* ⑤ テキストスタイル（nameStyle / descStyle）
+         フォームで設定した色・シャドー・縁取りを動的に適用
+         デフォルト: 白文字・シャドーあり・縁取りなし */
+      const ns = avatar.nameStyle || { color: 'white', shadow: true,  outline: false };
+      const ds = avatar.descStyle || { color: 'white', shadow: false, outline: false };
+
+      nameEl.style.color            = ns.color === 'black' ? 'rgba(0,0,0,0.9)'  : 'var(--color-white)';
+      nameEl.style.textShadow       = ns.shadow  ? '0 1px 4px rgba(0,0,0,0.6)' : 'none';
+      nameEl.style.webkitTextStroke = ns.outline ? '1.5px rgba(0,0,0,0.85)'    : '0px transparent';
+      nameEl.style.paintOrder       = 'stroke fill';
+
+      descEl.style.color            = ds.color === 'black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)';
+      descEl.style.textShadow       = ds.shadow  ? '0 1px 3px rgba(0,0,0,0.5)' : 'none';
+      descEl.style.webkitTextStroke = ds.outline ? '0.8px rgba(0,0,0,0.7)'     : '0px transparent';
+      descEl.style.paintOrder       = 'stroke fill';
 
       /* ⑤ infoImg 透かし背景 */
       const bgLayer = document.getElementById('avt-info-bg-layer');
