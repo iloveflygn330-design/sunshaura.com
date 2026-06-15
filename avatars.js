@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/7 21:37:38  /  18件
+// 生成日時: 2026/6/15 23:32:23  /  18件
 // =====================================================
 
 // テンプレート ========================================================
@@ -95,9 +95,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/red.png',
   bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'パブリックで見かけるまめひなたがひたすらかわいくて、耐え切れず購入。\nせっかくなら自分好みの要素を入れたくて、赤色や海の要素を入れた。',
 
@@ -123,9 +127,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/pink.png',
   bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: '赤色改変しているときに、通りがかった桃色がかわいくて、似合いそうだな～って勢いで改変した。\nかわいい色になって気に入っている。',
 
@@ -151,9 +159,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/purple.png',
   bgPattern:    DicBase + 'ShareImg_pattern/hobagi.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\n普段はメカクレかつ暗い印象で、その髪に白い肌とハートの瞳が隠れていて、かわいくできたな、と気に入っている。',
 
@@ -179,9 +191,13 @@ _avatars.push({
 
   bgImg:        defo_bgImg,
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'フレンドからV眠に誘われるようになってきた。\n当時は寝方を知らず、「die」モーションで何とかしていた。\nほどなくごろ寝システムを教えてもらい、組み込むにあたって、「寝る」をテーマにした改変をした。',
 
@@ -207,9 +223,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/yellow.png',
   bgPattern:    DicBase + 'ShareImg_pattern/spana.png',
+  bgPatternSize: '',
   frameCTop:    defo_frameCTop,
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'この頃仲良くしていたフレンドに、何かサプライズがしたいな～と考えてたところ。\nまめひなたに心酔してまめひなたしか使いたくない病を発症しつつほかのアバターも使いたいなと思っていたころに、（まめひなたで、フレンドがよく使うアバターのコスプレ改変をすれば、良いとこどりで結構いいのでは？）とを思案。\n存外いい感じになり、コスプレ改変にハマるきっかけになった。',
 
@@ -217,7 +237,6 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3145167' },
   ]
 });
 
@@ -236,9 +255,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/water.png',
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'まめひなたの前に一番気に入っていたヒトノコちゃん。\nまめひなたしか使いたくない病を患って使用機会が減っていたが、トロフィエひなたが上手くいったことで、ヒトノコでも同じことができそうと着手。\nかわいいアバターを組み合わせたらかわいくなるので良い。',
 
@@ -246,7 +269,6 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },
   ]
 });
 
@@ -265,9 +287,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/yellow.png',
   bgPattern:    DicBase + 'ShareImg_pattern/spana.png',
+  bgPatternSize: '',
   frameCTop:    defo_frameCTop,
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'Vketに興味を持っていろいろ調べていたら、Vketにゃんというすごくかわいいキャラクターがいることを認知。しかも０円？！もうすぐVketが開催するし…これは、今（自分の中で）流行りのコスプレ改変するしかないな。で、これ。',
 
@@ -275,7 +301,6 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/6691155' },
   ]
 });
 
@@ -294,9 +319,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/green.png',
   bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'コスプレ改変に慣れてきて、いろんな改変をしようとしていた。\nヒトノコちゃん伝いで羊鯨座さんのとこのアバターを好んでおり、ソーラちゃんも気に入っていたので、そのコスプレ改変。',
 
@@ -304,7 +333,6 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/5032831' },
   ]
 });
 
@@ -323,9 +351,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/water.png',
   bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'Hologroidをそもそも気に入っているということを前提に。\nコスプレ改変に結構慣れてきた。\nしかしアニメーションやマテリアルの動きをよくわかっていない。\n勉強がてら改変できそうだなーと考え改変に着手した。',
 
@@ -333,7 +365,6 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://nyarbera.booth.pm/items/4076902' },
   ]
 });
 
@@ -352,9 +383,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/orange.png',
   bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'フレンドがよく使うシャムシールNEU君がすごくかわいい。\nかなり固有の雰囲気を持っているけどこういうコスプレ改変もできるかな？という動機。',
 
@@ -362,7 +397,6 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/4236463' },
   ]
 });
 
@@ -381,9 +415,13 @@ _avatars.push({
 
   bgImg:        defo_bgImg,
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    defo_frameCTop,
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'クエスト対応の仕様を知った頃。\nそれぞれのアバターをクエスト対応するの大変だな～って思って、クエストアバターを一律で設定できるアバターを用意しよう、ってこうなった。\n謝らせてごめん。',
 
@@ -409,9 +447,13 @@ _avatars.push({
 
   bgImg:        my_Dic + '/bg.png',
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    defo_frameCTop,
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'ヒトノコを頻繁に使っていたころ、\nずんだもん集会に参加にあわせてした改変。',
 
@@ -435,9 +477,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/red.png',
   bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  bgPatternSize: '100',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: true },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: '初めて改変したアバター\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
 
@@ -463,9 +509,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/green.png',
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_glass.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_glass.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: '月食ちゃんに続いて一目ぼれ。\n2人目に購入したアバター。\n改変で好きな要素をいれたいなーと思い、フライゴンと同じ配色にしようとした。\nFUJIYAMAでずんだもんのアバターを見かけて何となく遠目に見ていたら、ずんだもん仲間として受け入れてもらえた（？）',
 
@@ -489,9 +539,13 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/red.png',
   bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'フライゴンメリューの時に見かけたずんだもんアバターから、VRChatにずんだもんの公式アバターがあることを認知して、公式ストアを覗いてすぐにDL。\n赤色が好きなので改変で赤色を加えたら、「あんこもんだ！」と言われた。\nずんだもんに亜種がいたんだね。',
 
@@ -515,17 +569,19 @@ _avatars.push({
 
   bgImg:        DicBase + 'ShareImg_bg/purple.png',
   bgPattern:    DicBase + 'ShareImg_pattern/watch.png',
+  bgPatternSize: '',
   frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
   frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: '少し頭身が高いアバターを改変しようと思考。\n含みを持たせようとリボンで顔を隠したりして試行錯誤をしていたところ「セーラームーンにいそうだね」と言われて、これでいいかと落ち着いた。',
 
   photos: [],
 
-  orgAvt: [
-    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3470989' },
-  ]
+  orgAvt: []
 });
 
 /* ─── 次のアバター ─── */
@@ -543,9 +599,13 @@ _avatars.push({
 
   bgImg:        defo_bgImg,
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    defo_frameCTop,
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'アバターの説明テキスト。',
 
@@ -569,9 +629,13 @@ _avatars.push({
 
   bgImg:        defo_bgImg,
   bgPattern:    defo_bgPattern,
+  bgPatternSize: '',
   frameCTop:    defo_frameCTop,
   frameCBottom: defo_frameCBottom,
   infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'tset',
 
