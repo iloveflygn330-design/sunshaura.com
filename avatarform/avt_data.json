@@ -49,7 +49,7 @@
     "chkF": false,
     "chkI": false,
     "completed": true,
-    "code": "my_avatarid = '7010_LunerBoard';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '看板ネコtest',\n  genre:        genre_org,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/red.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: '初めて改変したアバター\\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },\n  ]\n});",
+    "code": "my_avatarid = '7010_LunerBoard';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '看板ネコtest',\n  genre:        genre_org,\n  category:     cate_other,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/red.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  bgPatternSize: '100',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  nameStyle:    { color: 'white', shadow: true, outline: true },\n  descStyle:    { color: 'white', shadow: false, outline: false },\n\n  desc: '初めて改変したアバター\\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',\n\n  photos: [],\n\n  orgAvt: [\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/2597163' },\n  ]\n});",
     "up": {
       "photoCount": 0,
       "refs": [
@@ -71,7 +71,8 @@
       "color": "white",
       "shadow": true,
       "outline": true
-    }
+    },
+    "bgPatternSize": "100"
   },
   "1060.png": {
     "id": "1010_akahinata",
