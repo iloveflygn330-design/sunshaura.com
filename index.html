@@ -719,10 +719,8 @@
     #avt-desc {
       font-size: clamp(10px, 1.4vw, 12px);
       /* ★ JSからCSS変数で色・シャドー・縁取りを動的に変更する */
-      color:              var(--avt-desc-color,  rgba(255,255,255,0.88));
-      text-shadow:        var(--avt-desc-shadow, none);
-      -webkit-text-stroke:var(--avt-desc-stroke, 0px transparent);
-      paint-order: stroke fill;
+      color:       var(--avt-desc-color,   rgba(255,255,255,0.88));
+      text-shadow: var(--avt-desc-tshadow, none);
       line-height: 1.75; margin-bottom: 10px;
       white-space: pre-line; /* ★ 説明文の改行（\n）を表示に反映 */
       display: -webkit-box; -webkit-line-clamp: 5;
@@ -1354,6 +1352,20 @@
       }, AVT_CONFIG.DOOR_DUR_MS);
     }
 
+    /* テキストのシャドー・縁取りを text-shadow で統合して返す
+       （-webkit-text-stroke + paint-order は HTML要素では
+         ブラウザによって効かないため、text-shadow 多方向重ねで代替） */
+    function buildTextShadow(shadow, outline) {
+      const parts = [];
+      if (outline) {
+        const c = 'rgba(0,0,0,0.85)';
+        parts.push(`-1px -1px 0 ${c}`, ` 1px -1px 0 ${c}`,
+                   `-1px  1px 0 ${c}`, ` 1px  1px 0 ${c}`);
+      }
+      if (shadow) { parts.push('0 2px 5px rgba(0,0,0,0.6)'); }
+      return parts.length ? parts.join(', ') : 'none';
+    }
+
     function avtShowAvatar(avatar, updateThumb) {
       avtCurrentId = avatar.id;
 
@@ -1387,15 +1399,12 @@
       const ns = avatar.nameStyle || { color: 'white', shadow: true,  outline: false };
       const ds = avatar.descStyle || { color: 'white', shadow: false, outline: false };
 
-      nameEl.style.color            = ns.color === 'black' ? 'rgba(0,0,0,0.9)'  : 'var(--color-white)';
-      nameEl.style.textShadow       = ns.shadow  ? '0 1px 4px rgba(0,0,0,0.6)' : 'none';
-      nameEl.style.webkitTextStroke = ns.outline ? '1.5px rgba(0,0,0,0.85)'    : '0px transparent';
-      nameEl.style.paintOrder       = 'stroke fill';
+      nameEl.style.color      = ns.color === 'black' ? 'rgba(0,0,0,0.9)' : 'var(--color-white)';
+      nameEl.style.textShadow = buildTextShadow(ns.shadow, ns.outline);
 
-      /* CSS変数で設定（-webkit-box と inline style.color の干渉を回避） */
+      /* CSS変数で設定（-webkit-box との干渉を回避 / シャドー・縁取りは統合text-shadow） */
       descEl.style.setProperty('--avt-desc-color',  ds.color === 'black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)');
-      descEl.style.setProperty('--avt-desc-shadow', ds.shadow  ? '0 1px 3px rgba(0,0,0,0.5)' : 'none');
-      descEl.style.setProperty('--avt-desc-stroke', ds.outline ? '0.8px rgba(0,0,0,0.7)'     : '0px transparent');
+      descEl.style.setProperty('--avt-desc-tshadow', buildTextShadow(ds.shadow, ds.outline));
 
       /* ⑤ infoImg 透かし背景 */
       const bgLayer = document.getElementById('avt-info-bg-layer');
