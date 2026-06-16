@@ -72,7 +72,12 @@
       "shadow": true,
       "outline": true
     },
-    "bgPatternSize": "100"
+    "bgPatternSize": "100",
+    "descStyle": {
+      "color": "black",
+      "shadow": false,
+      "outline": false
+    }
   },
   "1060.png": {
     "id": "1010_akahinata",
