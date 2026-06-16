@@ -717,7 +717,12 @@
       border-radius: 2px; margin-top: 5px; margin-bottom: 10px;
     }
     #avt-desc {
-      font-size: clamp(10px, 1.4vw, 12px); color: rgba(255,255,255,0.88);
+      font-size: clamp(10px, 1.4vw, 12px);
+      /* ★ JSからCSS変数で色・シャドー・縁取りを動的に変更する */
+      color:              var(--avt-desc-color,  rgba(255,255,255,0.88));
+      text-shadow:        var(--avt-desc-shadow, none);
+      -webkit-text-stroke:var(--avt-desc-stroke, 0px transparent);
+      paint-order: stroke fill;
       line-height: 1.75; margin-bottom: 10px;
       white-space: pre-line; /* ★ 説明文の改行（\n）を表示に反映 */
       display: -webkit-box; -webkit-line-clamp: 5;
@@ -1387,10 +1392,10 @@
       nameEl.style.webkitTextStroke = ns.outline ? '1.5px rgba(0,0,0,0.85)'    : '0px transparent';
       nameEl.style.paintOrder       = 'stroke fill';
 
-      descEl.style.color            = ds.color === 'black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)';
-      descEl.style.textShadow       = ds.shadow  ? '0 1px 3px rgba(0,0,0,0.5)' : 'none';
-      descEl.style.webkitTextStroke = ds.outline ? '0.8px rgba(0,0,0,0.7)'     : '0px transparent';
-      descEl.style.paintOrder       = 'stroke fill';
+      /* CSS変数で設定（-webkit-box と inline style.color の干渉を回避） */
+      descEl.style.setProperty('--avt-desc-color',  ds.color === 'black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)');
+      descEl.style.setProperty('--avt-desc-shadow', ds.shadow  ? '0 1px 3px rgba(0,0,0,0.5)' : 'none');
+      descEl.style.setProperty('--avt-desc-stroke', ds.outline ? '0.8px rgba(0,0,0,0.7)'     : '0px transparent');
 
       /* ⑤ infoImg 透かし背景 */
       const bgLayer = document.getElementById('avt-info-bg-layer');
