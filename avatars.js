@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/16 12:21:02  /  18件
+// 生成日時: 2026/6/16 12:23:18  /  18件
 // =====================================================
 
 // テンプレート ========================================================
@@ -483,7 +483,7 @@ _avatars.push({
   infoImg:      defo_infoImg,
 
   nameStyle:    { color: 'white', shadow: true, outline: true },
-  descStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'black', shadow: false, outline: false },
 
   desc: '初めて改変したアバター\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
 
