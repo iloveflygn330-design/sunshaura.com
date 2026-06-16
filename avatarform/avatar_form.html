@@ -327,6 +327,27 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
       <label>説明文（改行可）</label>
       <textarea id="fDesc" placeholder="アバターの説明テキスト（Enterで改行できます）" oninput="autoSave()"></textarea>
     </div>
+    <!-- 説明文 表示スタイル -->
+    <div class="fg style-selectors">
+      <div class="tr-label">説明文 表示スタイル</div>
+      <div class="style-row">
+        <div class="style-group">
+          <span class="sg-label">文字色</span>
+          <button class="bopt style-btn" data-field="descColor" data-val="white" onclick="selStyle(this)">白</button>
+          <button class="bopt style-btn" data-field="descColor" data-val="black" onclick="selStyle(this)">黒</button>
+        </div>
+        <div class="style-group">
+          <span class="sg-label">シャドー</span>
+          <button class="bopt style-btn" data-field="descShadow" data-val="true" onclick="selStyle(this)">あり</button>
+          <button class="bopt style-btn" data-field="descShadow" data-val="false" onclick="selStyle(this)">なし</button>
+        </div>
+        <div class="style-group">
+          <span class="sg-label">縁取り</span>
+          <button class="bopt style-btn" data-field="descOutline" data-val="true" onclick="selStyle(this)">あり</button>
+          <button class="bopt style-btn" data-field="descOutline" data-val="false" onclick="selStyle(this)">なし</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- サムネイル -->
