@@ -1290,6 +1290,13 @@ function resetPatternSize(){
 // 簡易プレビュー更新
 // =====================================================================
 function updatePreview(){
+  // text-shadow で縁取り+シャドーを統合（-webkit-text-strokeは不安定なため）
+  function pvBuildShadow(shadow, outline) {
+    const p=[]; const c='rgba(0,0,0,0.85)';
+    if(outline){ p.push(`-1px -1px 0 ${c}`,` 1px -1px 0 ${c}`,`-1px 1px 0 ${c}`,` 1px 1px 0 ${c}`); }
+    if(shadow) { p.push('0 2px 5px rgba(0,0,0,0.6)'); }
+    return p.length ? p.join(', ') : 'none';
+  }
   const key=images[cur]?.name;
   const d=key ? (db[key]||{}) : {};
   const s=key ? getSession(key) : null;
@@ -1332,18 +1339,14 @@ function updatePreview(){
   // 名前テキスト＋スタイル
   pvName.textContent = document.getElementById('fName')?.value||'アバター名';
   const ns=d.nameStyle||{color:'white',shadow:true,outline:false};
-  pvName.style.color          = ns.color==='black' ? 'rgba(0,0,0,0.9)' : '#fff';
-  pvName.style.textShadow     = ns.shadow ? '0 1px 4px rgba(0,0,0,0.6)' : 'none';
-  pvName.style.webkitTextStroke = ns.outline ? '1px rgba(0,0,0,0.8)' : '0';
-  pvName.style.paintOrder     = 'stroke fill';
+  pvName.style.color      = ns.color==='black' ? 'rgba(0,0,0,0.9)' : '#fff';
+  pvName.style.textShadow = pvBuildShadow(ns.shadow, ns.outline);
 
   // 説明文＋スタイル
   pvDesc.textContent = document.getElementById('fDesc')?.value||'';
   const ds=d.descStyle||{color:'white',shadow:false,outline:false};
-  pvDesc.style.color          = ds.color==='black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)';
-  pvDesc.style.textShadow     = ds.shadow ? '0 1px 3px rgba(0,0,0,0.5)' : 'none';
-  pvDesc.style.webkitTextStroke = ds.outline ? '0.5px rgba(0,0,0,0.6)' : '0';
-  pvDesc.style.paintOrder     = 'stroke fill';
+  pvDesc.style.color      = ds.color==='black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)';
+  pvDesc.style.textShadow = pvBuildShadow(ds.shadow, ds.outline);
 
   // メイン画像（アップロード済みまたはセッション中ファイル）
   if(avatarId && d?.up?.main){
