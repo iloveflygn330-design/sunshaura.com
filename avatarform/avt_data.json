@@ -68,7 +68,7 @@
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
     },
     "nameStyle": {
-      "color": "white",
+      "color": "black",
       "shadow": true,
       "outline": true
     },
