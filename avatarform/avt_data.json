@@ -105,7 +105,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1010_akahinata"
+    "savedId": "1010_akahinata",
+    "bgPatternSize": ""
   },
   "1020.png": {
     "id": "7020_MeryuFlygon",
@@ -158,7 +159,8 @@
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png",
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_cir.png"
     },
-    "savedId": "7030_zundaRED"
+    "savedId": "7030_zundaRED",
+    "bgPatternSize": ""
   },
   "1040.png": {
     "id": "6010_Zudanoko",
@@ -178,7 +180,8 @@
       "bgImg": true,
       "main": true
     },
-    "savedId": "6010_Zudanoko"
+    "savedId": "6010_Zudanoko",
+    "bgPatternSize": ""
   },
   "1050.png": {
     "id": "4000_QuestHinata",
@@ -196,7 +199,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "4000_QuestHinata"
+    "savedId": "4000_QuestHinata",
+    "bgPatternSize": ""
   },
   "1070.png": {
     "id": "1020_momohinata",
@@ -220,16 +224,17 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1020_momohinata"
+    "savedId": "1020_momohinata",
+    "bgPatternSize": ""
   },
   "1080.png": {
     "id": "1030_shiroHinata",
     "name": "白まめひなた",
     "genre": "genre_org",
     "cate": "cate_mame",
-    "desc": "ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\n普段はメカクレかつ暗い印象で、その髪に白い肌とハートの瞳が隠れていて、かわいくできたな、と気に入っている。",
+    "desc": "ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\nお化けって白色のイメージあるな、白基調かな。\n一見黒基調だけど、中身が白系っていいかもしれないな、よし。",
     "completed": true,
-    "code": "my_avatarid = '1030_shiroHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '白まめひなた',\n  genre:        genre_org,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/purple.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/hobagi.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\\n普段はメカクレかつ暗い印象で、その髪に白い肌とハートの瞳が隠れていて、かわいくできたな、と気に入っている。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
+    "code": "my_avatarid = '1030_shiroHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '白まめひなた',\n  genre:        genre_org,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/purple.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/hobagi.png',\n  bgPatternSize: '',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  nameStyle:    { color: 'white', shadow: true, outline: false },\n  descStyle:    { color: 'white', shadow: false, outline: false },\n\n  desc: 'ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\\nお化けって白色のイメージあるな、白基調かな。\\n一見黒基調だけど、中身が白系っていいかもしれないな、よし。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
       "photoCount": 0,
       "refs": [],
@@ -244,7 +249,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1030_shiroHinata"
+    "savedId": "1030_shiroHinata",
+    "bgPatternSize": ""
   },
   "1090.png": {
     "id": "1040_neruHinata",
