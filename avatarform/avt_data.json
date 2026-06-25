@@ -519,5 +519,22 @@
       "Item_Mamehinata"
     ],
     "savedId": "1180_HareHinata"
+  },
+  "1190.png": {
+    "id": "1190_ShipiHinata",
+    "name": "シピひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "シピルカ",
+    "bgPatternSize": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/purple.png"
+    }
   }
 }
