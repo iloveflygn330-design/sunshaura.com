@@ -633,7 +633,7 @@
       aspect-ratio: 3 / 1;
       overflow: hidden; user-select: none;
     }
-    @media (max-width: 759px) { #avt-display-area { aspect-ratio: 2 / 3; } }
+    @media (max-width: 759px) { #avt-display-area { aspect-ratio: 5 / 4; } }
 
     /* ⑦ 背景 */
     #avt-bg { position: absolute; inset: 0; z-index: 10; }
@@ -1474,13 +1474,16 @@
       const avatar = avtData.find(a => a.id === id);
       if (!avatar) return;
       avtDoorBusy = true;
+
+      // ① タップした瞬間にスクロール開始（ドアアニメーションと並行して進む）
+      scrollToDisplayArea();
+
       const doorTop = document.getElementById('avt-door-top');
       const doorBot = document.getElementById('avt-door-bottom');
       doorTop.classList.add('door-closed'); doorBot.classList.add('door-closed');
       setTimeout(() => {
         avtShowAvatar(avatar, true);
         doorTop.classList.remove('door-closed'); doorBot.classList.remove('door-closed');
-        scrollToDisplayArea(); // 自動スクロール（オプションON時のみ実行）
         setTimeout(() => { avtDoorBusy = false; }, AVT_CONFIG.DOOR_DUR_MS);
       }, AVT_CONFIG.DOOR_DUR_MS);
     }
