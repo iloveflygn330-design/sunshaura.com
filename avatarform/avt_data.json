@@ -527,14 +527,24 @@
     "cate": "cate_mame",
     "desc": "シピルカ",
     "bgPatternSize": "",
-    "completed": false,
-    "code": "",
+    "completed": true,
+    "code": "my_avatarid = '1190_ShipiHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'シピひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/purple.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  bgPatternSize: '',\n  frameCTop:    defo_frameCTop,\n  frameCBottom: defo_frameCBottom,\n  infoImg:      defo_infoImg,\n\n  nameStyle:    { color: 'white', shadow: true, outline: false },\n  descStyle:    { color: 'white', shadow: false, outline: false },\n\n  desc: 'シピルカ',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/4593994' },\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [
+        {
+          "url": "https://booth.pm/ja/items/4593994"
+        }
+      ],
+      "main": true
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/purple.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/purple.png",
+      "bgPattern": "assets/images/ShareImg_pattern/cloud.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ],
+    "savedId": "1190_ShipiHinata"
   }
 }
