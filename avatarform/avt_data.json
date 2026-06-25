@@ -473,19 +473,27 @@
   "1170.png": {
     "id": "1170_syagaHinata",
     "name": "シャガひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "お正月の時期に改変。\nお正月系のアバターでコスプレ改変をしようといろいろ検索し、良いケモノを発見（シャガ）。\nコスプレするぞ～ってあれ、おお、これ、こんな衣装になってるのか。",
-    "bgPatternSize": "",
-    "completed": false,
-    "code": "",
+    "bgPatternSize": "40",
+    "completed": true,
+    "code": "my_avatarid = '1170_syagaHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'シャガひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/water.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',\n  bgPatternSize: '40',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  nameStyle:    { color: 'white', shadow: true, outline: false },\n  descStyle:    { color: 'white', shadow: false, outline: false },\n\n  desc: 'お正月の時期に改変。\\nお正月系のアバターでコスプレ改変をしようといろいろ検索し、良いケモノを発見（シャガ）。\\nコスプレするぞ～ってあれ、おお、これ、こんな衣装になってるのか。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [],
+      "main": true
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/water.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/water.png",
+      "bgPattern": "assets/images/ShareImg_pattern/pattern.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ],
+    "savedId": "1170_syagaHinata"
   },
   "1180.png": {
     "id": "1180",
