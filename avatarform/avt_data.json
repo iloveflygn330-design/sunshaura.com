@@ -501,15 +501,23 @@
     "genre": "genre_org",
     "cate": "cate_mame",
     "desc": "晴れ着のまめひなた。晴れ着で会ってる？間違えてるかも。\nシャガひなたに男の子っぽい印象があったので、\n女の子っぽくもしたいと思い改変。\n白い毛がきれいなヒトノコちゃんの耳を借りています。",
-    "bgPatternSize": "",
-    "completed": false,
-    "code": "",
+    "bgPatternSize": "40",
+    "completed": true,
+    "code": "my_avatarid = '1180_HareHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         '晴れひなた',\n  genre:        genre_org,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/water.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',\n  bgPatternSize: '40',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_squ.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_squ.png',\n  infoImg:      defo_infoImg,\n\n  nameStyle:    { color: 'white', shadow: true, outline: false },\n  descStyle:    { color: 'white', shadow: false, outline: false },\n\n  desc: '晴れ着のまめひなた。晴れ着で会ってる？間違えてるかも。\\nシャガひなたに男の子っぽい印象があったので、\\n女の子っぽくもしたいと思い改変。\\n白い毛がきれいなヒトノコちゃんの耳を借りています。',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [],
+      "main": true
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/water.png"
-    }
+      "bgImg": "assets/images/ShareImg_bg/water.png",
+      "bgPattern": "assets/images/ShareImg_pattern/cloud.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_squ.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_squ.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ],
+    "savedId": "1180_HareHinata"
   }
 }
