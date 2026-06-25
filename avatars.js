@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/16 12:40:01  /  18件
+// 生成日時: 2026/6/25 12:32:36  /  18件
 // =====================================================
 
 // テンプレート ========================================================
@@ -167,7 +167,7 @@ _avatars.push({
   nameStyle:    { color: 'white', shadow: true, outline: false },
   descStyle:    { color: 'white', shadow: false, outline: false },
 
-  desc: 'ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\n普段はメカクレかつ暗い印象で、その髪に白い肌とハートの瞳が隠れていて、かわいくできたな、と気に入っている。',
+  desc: 'ハロウィンの時期に、「まめひなた集会」なるものが存在することを認知。\n赤・桃と続けて改変をして、色をテーマにしようとこの頃は意気込んでいた。\nお化けって白色のイメージあるな、白基調かな。\n一見黒基調だけど、中身が白系っていいかもしれないな、よし。',
 
   photos: [],
 
@@ -459,7 +459,9 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: []
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
@@ -483,7 +485,7 @@ _avatars.push({
   infoImg:      defo_infoImg,
 
   nameStyle:    { color: 'white', shadow: true, outline: true },
-  descStyle:    { color: 'white', shadow: true, outline: true },
+  descStyle:    { color: 'white', shadow: false, outline: true },
 
   desc: '初めて改変したアバター\n月食ちゃんに一目ぼれして、好きな色を差し込んだ\n無言勢で生きるため、コミュニケpションように8種の言葉が書かれた看板を持っている',
 
@@ -521,7 +523,9 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: []
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://hoshinekonikki.booth.pm/items/4580792' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
@@ -551,7 +555,10 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: []
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3733351' },
+    { img: my_Dic + '/thumbnail/ref_02.png', url: 'https://zunko.jp/' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
