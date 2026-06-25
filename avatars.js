@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/25 12:41:52  /  20件
+// 生成日時: 2026/6/25 12:47:55  /  21件
 // =====================================================
 
 // テンプレート ========================================================
@@ -467,6 +467,39 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1190_ShipiHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'シピひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/purple.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  bgPatternSize: '',
+  frameCTop:    defo_frameCTop,
+  frameCBottom: defo_frameCBottom,
+  infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
+
+  desc: 'シピルカ',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/4593994' },
   ]
 });
 
