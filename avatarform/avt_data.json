@@ -496,17 +496,20 @@
     "savedId": "1170_syagaHinata"
   },
   "1180.png": {
-    "id": "1180",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1180_HareHinata",
+    "name": "晴れひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "晴れ着のまめひなた。晴れ着で会ってる？間違えてるかも。\nシャガひなたに男の子っぽい印象があったので、\n女の子っぽくもしたいと思い改変。\n白い毛がきれいなヒトノコちゃんの耳を借りています。",
     "bgPatternSize": "",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/water.png"
     }
   }
 }
