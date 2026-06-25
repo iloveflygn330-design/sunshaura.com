@@ -582,9 +582,12 @@
       border-bottom: 1px solid rgba(204, 34, 68, 0.15);
     }
 
-    #avt-genre-bar {      height: var(--avt-genre-h); background: rgba(0,0,0,0.06);
+    #avt-genre-bar {
+      /* height を min-height に変更: ボタンが改行された場合でも自動拡張 */
+      min-height: var(--avt-genre-h); height: auto;
+      background: rgba(0,0,0,0.06);
       display: flex; align-items: center; justify-content: center;
-      gap: 12px; padding: 0 16px; flex-wrap: wrap;
+      gap: 12px; padding: 6px 16px; flex-wrap: wrap;
     }
     .avt-genre-btn {
       /*
@@ -632,8 +635,10 @@
       position: relative; width: 100%;
       aspect-ratio: 3 / 1;
       overflow: hidden; user-select: none;
+      /* 自動スクロール時にヘッダーで隠れないようオフセット */
+      scroll-margin-top: calc(var(--header-height-pc) + 4px);
     }
-    @media (max-width: 759px) { #avt-display-area { aspect-ratio: 5 / 4; } }
+    @media (max-width: 759px) { #avt-display-area { aspect-ratio: 5 / 4; scroll-margin-top: calc(var(--header-height-sp) + 4px); } }
 
     /* ⑦ 背景 */
     #avt-bg { position: absolute; inset: 0; z-index: 10; }
@@ -833,8 +838,10 @@
        ★拡張予定: opt-row を追加するだけで項目を増やせます
        ===================================================== */
     #avt-options-wrap {
-      background: var(--color-main-pale);
-      border-bottom: 1px solid rgba(0,0,0,0.07);
+      background: #f0f0f0;
+      border-top:    2px solid #d8d8d8;
+      border-bottom: 2px solid #d8d8d8;
+      margin: 6px 0;
     }
     #avt-options-toggle {
       display: flex; align-items: center; justify-content: space-between;
@@ -1636,9 +1643,9 @@
       if (!viewerOpts.autoScroll) return;
       const el = document.getElementById('avt-display-area');
       if (!el) return;
-      const headerH = document.getElementById('header')?.offsetHeight || 60;
-      const y = el.getBoundingClientRect().top + window.scrollY - headerH;
-      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      // scroll-margin-top でヘッダー分のオフセットを吸収しているため
+      // scrollIntoView だけで確実にスクロールできる
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     // グローバルに公開（onclick から呼び出すため）
