@@ -571,8 +571,18 @@
       --avt-main-img-pos-pc: 65% bottom;
     }
 
-    #avt-genre-bar {
-      height: var(--avt-genre-h); background: rgba(0,0,0,0.06);
+    /* カテゴリバー直下のお知らせテキスト */
+    #avt-notice {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-main);
+      background: var(--color-main-pale);
+      padding: 6px 16px;
+      border-bottom: 1px solid rgba(204, 34, 68, 0.15);
+    }
+
+    #avt-genre-bar {      height: var(--avt-genre-h); background: rgba(0,0,0,0.06);
       display: flex; align-items: center; justify-content: center;
       gap: 12px; padding: 0 16px; flex-wrap: wrap;
     }
@@ -1048,7 +1058,6 @@
     <div class="page" id="page-avatar">
 
       <div id="avt-genre-bar">
-        <p> "現在更新中！　サムネイルやアバターはゆっくり追加されていきます。" </p>
         <!--
           ★拡張予定: ジャンルを追加する場合
             <button class="avt-genre-btn" data-genre="ジャンル名"
@@ -1083,6 +1092,9 @@
           <img src="assets/images/categories/other.png" alt="その他">
         </button>
       </div>
+
+      <!-- お知らせテキスト（カテゴリバーの直下） -->
+      <div id="avt-notice">現在更新中！　サムネイルやアバターはゆっくり追加されていきます。</div>
 
       <div id="avt-display-area">
         <div id="avt-bg">
