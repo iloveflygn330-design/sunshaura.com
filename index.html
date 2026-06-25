@@ -827,6 +827,72 @@
     #avt-frame-a-top    { top: 0; }
     #avt-frame-a-bottom { bottom: 0; }
 
+
+    /* =====================================================
+       視聴者オプションパネル（#avt-options-wrap）
+       ★拡張予定: opt-row を追加するだけで項目を増やせます
+       ===================================================== */
+    #avt-options-wrap {
+      background: var(--color-main-pale);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    #avt-options-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; cursor: pointer; user-select: none;
+      font-size: 13px; font-weight: 700; color: var(--color-main);
+      transition: background var(--duration-ui);
+    }
+    #avt-options-toggle:hover { background: rgba(204,34,68,0.06); }
+    #avt-opts-arrow { font-size: 10px; transition: transform var(--duration-ui); }
+    #avt-opts-arrow.open { transform: rotate(90deg); }
+
+    #avt-options-panel {
+      display: none;
+      padding: 4px 20px 16px;
+      gap: 10px;
+    }
+    #avt-options-panel.open { display: grid; }
+
+    /*
+     * ★拡張予定: オプション項目の追加方法
+     *   #avt-options-panel 内に .opt-row を追記するだけ
+     *   <div class="opt-row">
+     *     <label class="opt-label">ラベル名</label>
+     *     ... ボタン or スライダー ...
+     *   </div>
+     */
+    .opt-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .opt-label {
+      font-size: 12px; font-weight: 700; color: var(--color-text);
+      min-width: 160px;
+    }
+    @media (max-width: 759px) { .opt-label { min-width: 100%; } }
+    .opt-btn {
+      height: 30px; padding: 0 14px; border-radius: 50px;
+      border: 2px solid rgba(0,0,0,0.12);
+      background: var(--color-white); color: var(--color-text);
+      font-family: inherit; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all var(--duration-ui);
+    }
+    .opt-btn:hover { transform: translateY(-1px); }
+    .opt-btn.active {
+      background: var(--color-main); color: var(--color-white);
+      border-color: var(--color-main);
+    }
+    .opt-slider-wrap {
+      display: flex; align-items: center; gap: 6px; flex: 1; min-width: 160px; max-width: 260px;
+    }
+    .opt-slider-wrap input[type=range] {
+      flex: 1; accent-color: var(--color-main); cursor: pointer;
+    }
+    .opt-swatch {
+      width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+    .opt-swatch-black { background: #000; }
+    .opt-swatch-white { background: #fff; }
     #avt-op-text {
       height: var(--avt-optext-h); display: flex; align-items: center;
       padding: 0 20px; font-size: clamp(14px, 2vw, 16px);
@@ -1125,7 +1191,61 @@
       </div>
 
       <div id="avt-main-wrap">
-        <div id="avt-op-text">見たいアバターをクリック：</div>
+        <!--
+        オプション領域（折り畳み式）
+        ★拡張予定: .opt-row を #avt-options-panel 内に追記するだけで項目を増やせます
+      -->
+      <div id="avt-options-wrap">
+        <div id="avt-options-toggle" onclick="toggleAvtOptions()">
+          <span>⚙ オプション設定</span>
+          <span id="avt-opts-arrow">▶</span>
+        </div>
+        <div id="avt-options-panel">
+
+          <!-- ★ 自動スクロール -->
+          <div class="opt-row">
+            <label class="opt-label">アバター切替時に自動スクロール</label>
+            <button class="opt-btn active" id="opt-scroll-btn" onclick="toggleOpt('autoScroll','opt-scroll-btn','ON','OFF')">ON</button>
+          </div>
+
+          <!-- ★ 文字色（名前・説明文・ラベル共通） -->
+          <div class="opt-row">
+            <label class="opt-label">文字色</label>
+            <div class="opt-slider-wrap">
+              <span class="opt-swatch opt-swatch-black" title="#000"></span>
+              <input type="range" id="opt-text-color" min="0" max="100" value="100"
+                     oninput="applyViewerOpts()" title="文字色（左=黒 / 右=白）">
+              <span class="opt-swatch opt-swatch-white" title="#fff"></span>
+            </div>
+          </div>
+
+          <!-- ★ 文字の太さ -->
+          <div class="opt-row">
+            <label class="opt-label">文字の太さ</label>
+            <button class="opt-btn" id="opt-bold-btn" onclick="toggleOpt('bold','opt-bold-btn','太字','通常')">通常</button>
+          </div>
+
+          <!-- ★ 縁取り -->
+          <div class="opt-row">
+            <label class="opt-label">縁取り</label>
+            <button class="opt-btn" id="opt-outline-btn" onclick="toggleOpt('outline','opt-outline-btn','あり','なし')">なし</button>
+          </div>
+
+          <!-- ★ 縁取り色 -->
+          <div class="opt-row">
+            <label class="opt-label">縁取り色</label>
+            <div class="opt-slider-wrap">
+              <span class="opt-swatch opt-swatch-black" title="#000"></span>
+              <input type="range" id="opt-outline-color" min="0" max="100" value="0"
+                     oninput="applyViewerOpts()" title="縁取り色（左=黒 / 右=白）">
+              <span class="opt-swatch opt-swatch-white" title="#fff"></span>
+            </div>
+          </div>
+
+        </div><!-- /#avt-options-panel -->
+      </div><!-- /#avt-options-wrap -->
+
+      <div id="avt-op-text">見たいアバターをクリック：</div>
         <div id="avt-thumb-grid">
           <div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">
             読み込み中...
@@ -1360,6 +1480,7 @@
       setTimeout(() => {
         avtShowAvatar(avatar, true);
         doorTop.classList.remove('door-closed'); doorBot.classList.remove('door-closed');
+        scrollToDisplayArea(); // 自動スクロール（オプションON時のみ実行）
         setTimeout(() => { avtDoorBusy = false; }, AVT_CONFIG.DOOR_DUR_MS);
       }, AVT_CONFIG.DOOR_DUR_MS);
     }
@@ -1438,7 +1559,89 @@
       document.getElementById('avt-main-img').style.backgroundImage = avatar.mainImg ? `url('${avatar.mainImg}')` : '';
 
       if (updateThumb) avtRenderThumbs();
+      // 視聴者オプションを再適用（per-avatar設定を上書き）
+      applyViewerOpts();
     }
+
+
+    // ================================================================
+    // 視聴者オプション（表示設定・ローカル保持）
+    // ================================================================
+    const viewerOpts = {
+      autoScroll: true,  // アバター切替時に自動スクロール
+      bold:       false, // 文字の太さ
+      outline:    false, // 縁取り
+    };
+
+    // オプションパネルの折り畳み開閉
+    function toggleAvtOptions() {
+      const panel = document.getElementById('avt-options-panel');
+      const arrow = document.getElementById('avt-opts-arrow');
+      const isOpen = panel.classList.contains('open');
+      panel.classList.toggle('open', !isOpen);
+      arrow.classList.toggle('open', !isOpen);
+    }
+
+    // ON/OFFトグルボタン（ラベルも切り替え）
+    // btnId: ボタンのID / labelOn: ON時のテキスト / labelOff: OFF時のテキスト
+    function toggleOpt(key, btnId, labelOn, labelOff) {
+      viewerOpts[key] = !viewerOpts[key];
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        btn.classList.toggle('active', viewerOpts[key]);
+        btn.textContent = viewerOpts[key] ? labelOn : labelOff;
+      }
+      applyViewerOpts();
+    }
+
+    // スライダー値（0〜100）を rgb グレー値に変換
+    function sliderToGray(id) {
+      const val = parseInt(document.getElementById(id)?.value ?? 100);
+      const v = Math.round(val * 255 / 100);
+      return `rgb(${v},${v},${v})`;
+    }
+
+    // オプションをアバター表示領域に反映
+    // avtShowAvatar() の最後に呼ばれるほか、各オプション変更時にも呼ばれる
+    function applyViewerOpts() {
+      const nameEl  = document.getElementById('avt-name');
+      const descEl  = document.getElementById('avt-desc');
+      const labelEl = document.getElementById('avt-items-label');
+
+      // 文字色
+      const textColor = sliderToGray('opt-text-color');
+      if (nameEl)  nameEl.style.color  = textColor;
+      if (labelEl) labelEl.style.color = textColor;
+      if (descEl)  descEl.style.setProperty('--avt-desc-color', textColor);
+
+      // 文字の太さ（デフォルトはそれぞれのCSSに任せる）
+      const fw = viewerOpts.bold ? '800' : '';
+      [nameEl, descEl, labelEl].forEach(el => { if (el) el.style.fontWeight = fw; });
+
+      // 縁取り（縁取り色スライダーで色指定、text-shadow 多方向重ねで実装）
+      const outlineColor = sliderToGray('opt-outline-color');
+      const c = outlineColor;
+      const outlineShadow = viewerOpts.outline
+        ? `-1px -1px 0 ${c}, 1px -1px 0 ${c}, -1px 1px 0 ${c}, 1px 1px 0 ${c}`
+        : 'none';
+      if (nameEl)  nameEl.style.textShadow = outlineShadow;
+      if (descEl)  descEl.style.setProperty('--avt-desc-tshadow', outlineShadow);
+    }
+
+    // アバター表示領域の上端にスクロール（ヘッダー高さ分オフセット）
+    function scrollToDisplayArea() {
+      if (!viewerOpts.autoScroll) return;
+      const el = document.getElementById('avt-display-area');
+      if (!el) return;
+      const headerH = document.getElementById('header')?.offsetHeight || 60;
+      const y = el.getBoundingClientRect().top + window.scrollY - headerH;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    }
+
+    // グローバルに公開（onclick から呼び出すため）
+    window.toggleAvtOptions  = toggleAvtOptions;
+    window.toggleOpt         = toggleOpt;
+    window.applyViewerOpts   = applyViewerOpts;
 
     // モジュールscriptはDOMが準備されてから実行されるため、直接呼び出しでOK
     avtLoadData();
