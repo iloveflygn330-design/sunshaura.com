@@ -272,7 +272,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1040_neruHinata"
+    "savedId": "1040_neruHinata",
+    "bgPatternSize": ""
   },
   "1100.png": {
     "id": "7040_karen",
@@ -297,7 +298,8 @@
       "bgPattern": "assets/images/ShareImg_pattern/watch.png",
       "bgImg": "assets/images/ShareImg_bg/purple.png"
     },
-    "savedId": "7040_karen"
+    "savedId": "7040_karen",
+    "bgPatternSize": ""
   },
   "1110.png": {
     "id": "1050_Torofinata",
@@ -323,7 +325,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1050_Torofinata"
+    "savedId": "1050_Torofinata",
+    "bgPatternSize": ""
   },
   "1120.png": {
     "id": "1060_hitonokohinata",
@@ -350,7 +353,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1060_hitonokohinata"
+    "savedId": "1060_hitonokohinata",
+    "bgPatternSize": ""
   },
   "1130.png": {
     "id": "1070_VketHinata",
@@ -376,7 +380,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1070_VketHinata"
+    "savedId": "1070_VketHinata",
+    "bgPatternSize": ""
   },
   "1140.png": {
     "id": "1080_SoraHinata",
@@ -404,7 +409,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1080_SoraHinata"
+    "savedId": "1080_SoraHinata",
+    "bgPatternSize": ""
   },
   "1150.png": {
     "id": "1090_HoloHinata",
@@ -432,7 +438,8 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1090_HoloHinata"
+    "savedId": "1090_HoloHinata",
+    "bgPatternSize": ""
   },
   "1160.png": {
     "id": "1100_NEUHinata",
@@ -460,6 +467,38 @@
     "templateRefs": [
       "Item_Mamehinata"
     ],
-    "savedId": "1100_NEUHinata"
+    "savedId": "1100_NEUHinata",
+    "bgPatternSize": ""
+  },
+  "1170.png": {
+    "id": "1170_syagaHinata",
+    "name": "シャガひなた",
+    "genre": "",
+    "cate": "",
+    "desc": "お正月の時期に改変。\nお正月系のアバターでコスプレ改変をしようといろいろ検索し、良いケモノを発見（シャガ）。\nコスプレするぞ～ってあれ、おお、これ、こんな衣装になってるのか。",
+    "bgPatternSize": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/water.png"
+    }
+  },
+  "1180.png": {
+    "id": "1180",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "bgPatternSize": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
