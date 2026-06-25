@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/25 12:38:49  /  19件
+// 生成日時: 2026/6/25 12:41:52  /  20件
 // =====================================================
 
 // テンプレート ========================================================
@@ -430,6 +430,38 @@ _avatars.push({
   descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'お正月の時期に改変。\nお正月系のアバターでコスプレ改変をしようといろいろ検索し、良いケモノを発見（シャガ）。\nコスプレするぞ～ってあれ、おお、これ、こんな衣装になってるのか。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1180_HareHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         '晴れひなた',
+  genre:        genre_org,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/water.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/cloud.png',
+  bgPatternSize: '40',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_squ.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_squ.png',
+  infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
+
+  desc: '晴れ着のまめひなた。晴れ着で会ってる？間違えてるかも。\nシャガひなたに男の子っぽい印象があったので、\n女の子っぽくもしたいと思い改変。\n白い毛がきれいなヒトノコちゃんの耳を借りています。',
 
   photos: [],
 
