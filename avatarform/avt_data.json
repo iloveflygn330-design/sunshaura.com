@@ -129,7 +129,8 @@
       "frameCTop": "assets/images/ShareImg_frame/frame_c_top_glass.png",
       "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_glass.png"
     },
-    "savedId": "7020_MeryuFlygon"
+    "savedId": "7020_MeryuFlygon",
+    "bgPatternSize": ""
   },
   "1030.png": {
     "id": "7030_zundaRED",
