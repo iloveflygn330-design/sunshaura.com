@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/6/25 12:32:36  /  18件
+// 生成日時: 2026/6/25 12:38:49  /  19件
 // =====================================================
 
 // テンプレート ========================================================
@@ -237,6 +237,7 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3145167' },
   ]
 });
 
@@ -269,6 +270,7 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/4717337' },
   ]
 });
 
@@ -301,6 +303,7 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/6691155' },
   ]
 });
 
@@ -333,6 +336,7 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://uri880.booth.pm/items/5032831' },
   ]
 });
 
@@ -365,6 +369,7 @@ _avatars.push({
 
   orgAvt: [
     Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://nyarbera.booth.pm/items/4076902' },
   ]
 });
 
@@ -392,6 +397,39 @@ _avatars.push({
   descStyle:    { color: 'white', shadow: false, outline: false },
 
   desc: 'フレンドがよく使うシャムシールNEU君がすごくかわいい。\nかなり固有の雰囲気を持っているけどこういうコスプレ改変もできるかな？という動機。',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/4236463' },
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1170_syagaHinata';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'シャガひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/water.png',
+  bgPattern:    DicBase + 'ShareImg_pattern/pattern.png',
+  bgPatternSize: '40',
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',
+  infoImg:      defo_infoImg,
+
+  nameStyle:    { color: 'white', shadow: true, outline: false },
+  descStyle:    { color: 'white', shadow: false, outline: false },
+
+  desc: 'お正月の時期に改変。\nお正月系のアバターでコスプレ改変をしようといろいろ検索し、良いケモノを発見（シャガ）。\nコスプレするぞ～ってあれ、おお、これ、こんな衣装になってるのか。',
 
   photos: [],
 
@@ -588,7 +626,9 @@ _avatars.push({
 
   photos: [],
 
-  orgAvt: []
+  orgAvt: [
+    { img: my_Dic + '/thumbnail/ref_01.png', url: 'https://booth.pm/ja/items/3470989' },
+  ]
 });
 
 /* ─── 次のアバター ─── */
