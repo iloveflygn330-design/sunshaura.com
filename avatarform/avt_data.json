@@ -604,7 +604,8 @@
     "code": "my_avatarid = '1230_Rasyu';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ラシュひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/purple.png',\n  bgPattern:    defo_bgPattern,\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'フレンドのラシューシャに会うために',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [],
+      "main": true
     },
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/purple.png",
@@ -613,7 +614,8 @@
     },
     "templateRefs": [
       "Item_Mamehinata"
-    ]
+    ],
+    "savedId": "1230_Rasyu"
   },
   "1240.png": {
     "id": "1240_Str",
@@ -621,6 +623,27 @@
     "genre": "genre_copy_avatar",
     "cate": "cate_mame",
     "desc": "フレンドのため",
+    "completed": true,
+    "code": "my_avatarid = '1240_Str';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ストラひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/red.png',\n  bgPattern:    defo_bgPattern,\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'フレンドのため',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/red.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_cir.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_cir.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ]
+  },
+  "1250.png": {
+    "id": "1250_Mur",
+    "name": "メルひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "コピー元の質感とデザインが好きで",
     "completed": false,
     "code": "",
     "up": {
@@ -628,7 +651,7 @@
       "refs": []
     },
     "templates": {
-      "bgImg": "assets/images/ShareImg_bg/yellow.png"
+      "bgImg": "assets/images/ShareImg_bg/water.png"
     }
   }
 }
