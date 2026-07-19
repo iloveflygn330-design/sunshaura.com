@@ -548,16 +548,19 @@
     "savedId": "1190_ShipiHinata"
   },
   "1200.png": {
-    "id": "1200",
-    "name": "",
-    "genre": "",
-    "cate": "",
-    "desc": "",
+    "id": "1200_DaruHinata",
+    "name": "ダルひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "コピー先のアバターがセクシーなので、衣装の追加が必須だった",
     "completed": false,
     "code": "",
     "up": {
       "photoCount": 0,
       "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/yellow.png"
     }
   }
 }
