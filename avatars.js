@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/7/19 15:27:21  /  24件
+// 生成日時: 2026/7/19 15:29:59  /  25件
 // =====================================================
 
 // テンプレート ========================================================
@@ -527,6 +527,34 @@ _avatars.push({
   infoImg:      defo_infoImg,
 
   desc: 'フレンドのラシューシャに会うために',
+
+  photos: [],
+
+  orgAvt: [
+    Item_Mamehinata,
+  ]
+});
+
+/* ─── 次のアバター ─── */
+my_avatarid = '1240_Str';
+my_Dic      = DicBase + my_avatarid;
+_avatars.push({
+  id:           my_avatarid,
+  name:         'ストラひなた',
+  genre:        genre_copy_avatar,
+  category:     cate_mame,
+
+  mainImg:      my_Dic + '/thumbnail/main.png',
+  miniImgPC:    defo_miniImgPC,
+  miniImgSP:    defo_miniImgSP,
+
+  bgImg:        DicBase + 'ShareImg_bg/red.png',
+  bgPattern:    defo_bgPattern,
+  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',
+  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',
+  infoImg:      defo_infoImg,
+
+  desc: 'フレンドのため',
 
   photos: [],
 
