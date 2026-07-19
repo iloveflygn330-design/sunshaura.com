@@ -133,40 +133,12 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
   .section-title, .img-slots, .media-wrap,
   .btn-area, .github-area, .output-area,
   .grid-wrap, .add-media-wrap,
-  .img-tpl-wrap, .img-tpl-bar, .template-refs, .preview-wrap {
+  .img-tpl-wrap, .img-tpl-bar, .template-refs {
     max-width: 50%;
     margin-left: auto;
     margin-right: auto;
   }
 }
-
-/* テキストスタイル選択（名前・説明文） */
-.style-selectors{margin-top:8px;}
-.style-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-.style-group{display:flex;align-items:center;gap:5px;}
-.sg-label{font-size:11px;color:var(--muted);white-space:nowrap;}
-.bopt.style-sel{background:var(--main);color:#fff;border-color:var(--main);}
-
-/* bgPatternサイズ入力エリア */
-.pattern-size-bar{padding:8px 0;}
-
-/* 簡易プレビュー */
-.preview-wrap{padding:10px 14px 14px;background:var(--bg);}
-.preview-area{position:relative;width:100%;aspect-ratio:3/1;overflow:hidden;border-radius:8px;border:1px solid var(--border);}
-.pv-layer{position:absolute;inset:0;}
-.pv-bg-img{background-size:cover;background-position:center;background-color:#87CEEB;}
-.pv-bg-pattern{background-repeat:repeat;opacity:0.5;}
-.pv-frame-c{position:absolute;left:0;right:0;height:45%;background-size:100% 100%;background-repeat:no-repeat;mix-blend-mode:screen;pointer-events:none;z-index:20;}
-.pv-frame-c-top{top:0;}
-.pv-frame-c-bottom{bottom:0;}
-.pv-info{position:absolute;top:0;bottom:0;left:5%;width:42%;z-index:30;display:flex;flex-direction:column;justify-content:center;padding:6px 14px;}
-.pv-name{font-size:clamp(9px,2.5vw,17px);font-weight:800;line-height:1.25;margin-bottom:2px;}
-.pv-name-line{width:36px;height:2px;background:#CC2244;border-radius:2px;margin-bottom:5px;}
-.pv-desc{font-size:clamp(6px,1vw,9px);line-height:1.6;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;}
-.pv-main-img{position:absolute;right:0;top:0;bottom:0;width:50%;background-size:contain;background-repeat:no-repeat;background-position:right bottom;z-index:50;pointer-events:none;}
-.pv-frame-a{position:absolute;left:0;right:0;height:6px;background:#FF9500;z-index:70;}
-.pv-frame-a-top{top:0;}
-.pv-frame-a-bottom{bottom:0;}
 
 /* add-media-wrap のスタイル */
 .add-media-wrap{padding:0 14px 12px;background:var(--bg);}
@@ -203,6 +175,20 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
 .dot-partial{background:#f0a000;color:#fff;}
 .dot-empty{background:#ddd;color:#aaa;}
 .dot-current{outline:2.5px solid var(--main);outline-offset:1px;}
+
+/* ID入力（数値＋名前の2フィールド） */
+.id-fields{display:grid;grid-template-columns:1fr 1.6fr;gap:8px;}
+.combined-preview{font-size:12px;color:var(--muted);margin-top:5px;}
+.combined-preview strong{color:var(--text);font-family:'SF Mono','Fira Code',monospace;}
+
+/* 最大ID一覧パネル */
+.id-maxinfo{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:10px 12px;margin-top:4px;}
+.id-maxinfo-title{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.04em;}
+.id-max-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;border-bottom:1px solid var(--border);}
+.id-max-row:last-child{border-bottom:none;}
+.id-max-label{color:var(--text);}
+.id-max-val{font-weight:700;color:var(--main);font-family:'SF Mono','Fira Code',monospace;font-size:13px;}
+.id-max-none{color:var(--muted);font-size:11px;}
 </style>
 </head>
 <body>
@@ -276,34 +262,32 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
 
   <!-- 基本情報 -->
   <div class="form-body">
+    <!-- アバターID: 数値と名前を別フィールドで入力し「数値_名前」として管理 -->
     <div class="fg">
-      <label>アバターID ★必須　半角英数・アンダーバーのみ使えます</label>
-      <input type="text" id="fId" placeholder="例: avatar01" autocomplete="off" autocorrect="off" spellcheck="false" oninput="onIdInput()">
-    </div>
-    <div class="fg">
-      <label>アバター名 ★必須</label>
-      <input type="text" id="fName" placeholder="例: まめひなた改変" oninput="autoSave()">
-    </div>
-    <!-- アバター名 表示スタイル（白/黒・シャドー・縁取り） -->
-    <div class="fg style-selectors">
-      <div class="tr-label">アバター名 表示スタイル</div>
-      <div class="style-row">
-        <div class="style-group">
-          <span class="sg-label">文字色</span>
-          <button class="bopt style-btn" data-field="nameColor" data-val="white" onclick="selStyle(this)">白</button>
-          <button class="bopt style-btn" data-field="nameColor" data-val="black" onclick="selStyle(this)">黒</button>
+      <label>アバターID ★必須</label>
+      <div class="id-fields">
+        <div>
+          <input type="text" id="fIdNum" placeholder="例: 1010" inputmode="numeric"
+                 autocomplete="off" spellcheck="false" oninput="onIdNumInput()"
+                 style="text-align:center;font-weight:700;">
+          <p class="hint" style="text-align:center;">数値のみ</p>
         </div>
-        <div class="style-group">
-          <span class="sg-label">シャドー</span>
-          <button class="bopt style-btn" data-field="nameShadow" data-val="true" onclick="selStyle(this)">あり</button>
-          <button class="bopt style-btn" data-field="nameShadow" data-val="false" onclick="selStyle(this)">なし</button>
-        </div>
-        <div class="style-group">
-          <span class="sg-label">縁取り</span>
-          <button class="bopt style-btn" data-field="nameOutline" data-val="true" onclick="selStyle(this)">あり</button>
-          <button class="bopt style-btn" data-field="nameOutline" data-val="false" onclick="selStyle(this)">なし</button>
+        <div>
+          <input type="text" id="fIdName" placeholder="例: mamehinata"
+                 autocomplete="off" spellcheck="false" oninput="onIdNameInput()">
+          <p class="hint">半角英数・アンダーバー推奨</p>
         </div>
       </div>
+      <p class="combined-preview">結合ID（内部管理）: <strong id="combinedIdPreview">-</strong></p>
+      <!-- 現在の最大ID一覧（カテゴリ別） -->
+      <div class="id-maxinfo">
+        <div class="id-maxinfo-title">現在の最大ID（カテゴリ別）</div>
+        <div id="idMaxRows"></div>
+      </div>
+    </div>
+    <div class="fg">
+      <label>アバター表示名 ★必須</label>
+      <input type="text" id="fName" placeholder="例: まめひなた改変" oninput="autoSave()">
     </div>
     <div class="fg">
       <label>ジャンル ★必須</label>
@@ -326,27 +310,6 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
     <div class="fg">
       <label>説明文（改行可）</label>
       <textarea id="fDesc" placeholder="アバターの説明テキスト（Enterで改行できます）" oninput="autoSave()"></textarea>
-    </div>
-    <!-- 説明文 表示スタイル -->
-    <div class="fg style-selectors">
-      <div class="tr-label">説明文 表示スタイル</div>
-      <div class="style-row">
-        <div class="style-group">
-          <span class="sg-label">文字色</span>
-          <button class="bopt style-btn" data-field="descColor" data-val="white" onclick="selStyle(this)">白</button>
-          <button class="bopt style-btn" data-field="descColor" data-val="black" onclick="selStyle(this)">黒</button>
-        </div>
-        <div class="style-group">
-          <span class="sg-label">シャドー</span>
-          <button class="bopt style-btn" data-field="descShadow" data-val="true" onclick="selStyle(this)">あり</button>
-          <button class="bopt style-btn" data-field="descShadow" data-val="false" onclick="selStyle(this)">なし</button>
-        </div>
-        <div class="style-group">
-          <span class="sg-label">縁取り</span>
-          <button class="bopt style-btn" data-field="descOutline" data-val="true" onclick="selStyle(this)">あり</button>
-          <button class="bopt style-btn" data-field="descOutline" data-val="false" onclick="selStyle(this)">なし</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -425,18 +388,6 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
         <button class="btn-reset-slot" onclick="resetSingle(event,'bgPattern')">×</button>
         <div class="slot-label">ループパターン（プレビュー）</div>
       </div>
-    </div>
-  </div>
-  <!-- パターン タイルサイズ入力 -->
-  <div class="img-tpl-wrap">
-    <div class="img-tpl-bar">
-      <div class="tr-label">パターン タイルサイズ（空白=デフォルト）</div>
-      <div class="pattern-size-bar" style="display:flex;gap:8px;align-items:center;">
-        <input type="text" id="fPatternSize" placeholder="例: 100px　または　200px 150px"
-               style="flex:1;" oninput="onPatternSizeInput(this.value)">
-        <button class="bopt" onclick="resetPatternSize()" style="white-space:nowrap;padding:8px 12px;">リセット</button>
-      </div>
-      <p class="hint">background-size のCSS値を直接指定します。大きい値ほどタイルが大きくなります</p>
     </div>
   </div>
 
@@ -524,26 +475,6 @@ pre{background:#1e1e1e;color:#d4d4d4;padding:12px;border-radius:var(--r);font-si
   <div class="media-wrap" id="refsList"></div>
   <div class="add-media-wrap">
     <button class="btn-add-media" onclick="addRef()">＋ 参照画像を追加（カスタム）</button>
-  </div>
-
-  <!-- 簡易プレビュー -->
-  <div class="section-title">プレビュー（簡易）</div>
-  <div class="preview-wrap">
-    <div class="preview-area" id="previewArea">
-      <div class="pv-layer pv-bg-img"  id="pv-bg-img"></div>
-      <div class="pv-layer pv-bg-pattern" id="pv-bg-pattern"></div>
-      <div class="pv-frame-c pv-frame-c-top"    id="pv-frame-c-top"></div>
-      <div class="pv-frame-c pv-frame-c-bottom" id="pv-frame-c-bottom"></div>
-      <div class="pv-info">
-        <div class="pv-name" id="pv-name">アバター名</div>
-        <div class="pv-name-line"></div>
-        <div class="pv-desc" id="pv-desc"></div>
-      </div>
-      <div class="pv-main-img" id="pv-main-img"></div>
-      <div class="pv-frame-a pv-frame-a-top"></div>
-      <div class="pv-frame-a pv-frame-a-bottom"></div>
-    </div>
-    <p class="hint" style="margin-top:6px;">※ 近似プレビューです。実際のサイトと完全一致はしません</p>
   </div>
 
   <hr class="divider">
@@ -681,7 +612,7 @@ async function forceUpdateMain(){
   if(!settings.token){ alert('PATが設定されていません'); return; }
   const key=images[cur]?.name; if(!key) return;
   const d=db[key];
-  const id=d?.id||document.getElementById('fId').value.trim();
+  const id=d?.id||getCombinedId();
   if(!id){ alert('アバターIDを入力してください'); return; }
 
   const btn=document.getElementById('btnUpdateMain');
@@ -939,7 +870,13 @@ function render(){
   // フォーム復元
   const d=db[f.name];
   selG=''; selC='';
-  document.getElementById('fId').value   = d?.id   || autoId(f.name);
+  // 結合IDを数値部分と名前部分に分割して復元
+  const autoGenId = d?.id || autoId(f.name);
+  const splitResult = splitId(autoGenId);
+  document.getElementById('fIdNum').value  = splitResult.num;
+  document.getElementById('fIdName').value = splitResult.name;
+  updateCombinedPreview();
+  updateMaxIds();
   document.getElementById('fName').value = d?.name || '';
   document.getElementById('fDesc').value = d?.desc || '';
   document.querySelectorAll('#genreGrp .bopt').forEach(b=>{ b.classList.remove('ag'); if(d?.genre===b.dataset.v){ b.classList.add('ag'); selG=d.genre; } });
@@ -947,24 +884,6 @@ function render(){
   // テンプレートボタンの選択状態を復元
   const tRefs = d?.templateRefs||[];
   document.querySelectorAll('.tr-btn').forEach(b=>b.classList.toggle('tr-sel', tRefs.includes(b.dataset.code)));
-
-  // テキストスタイルボタンの復元
-  const ns = d?.nameStyle || { color:'white', shadow:true,  outline:false };
-  const ds = d?.descStyle || { color:'white', shadow:false, outline:false };
-  const styleMap = {
-    nameColor:   String(ns.color),
-    nameShadow:  String(ns.shadow),
-    nameOutline: String(ns.outline),
-    descColor:   String(ds.color),
-    descShadow:  String(ds.shadow),
-    descOutline: String(ds.outline),
-  };
-  document.querySelectorAll('.style-btn').forEach(b=>{
-    b.classList.toggle('style-sel', styleMap[b.dataset.field]===b.dataset.val);
-  });
-  // パターンサイズ入力の復元
-  const psSel = document.getElementById('fPatternSize');
-  if(psSel) psSel.value = d?.bgPatternSize||'';
 
   // 単体画像スロット
   renderSingleSlots(f.name, d);
@@ -998,7 +917,7 @@ function imgError(){
 // =====================================================================
 function renderSingleSlots(key, d){
   const s=getSession(key);
-  const avatarId = d?.id || document.getElementById('fId').value.trim() || autoId(images[cur]?.name||'');
+  const avatarId = d?.id || getCombinedId() || autoId(images[cur]?.name||'');
 
   Object.keys(DEFO_IMAGES).forEach(type=>{
     const slotEl=document.getElementById('slot-'+type);
@@ -1052,7 +971,6 @@ function selectSingle(input, type){
   slotEl.classList.add('custom');
   imgEl.src=objectUrl;
   autoSave();
-  updatePreview();
 }
 
 function resetSingle(e, type){
@@ -1069,7 +987,6 @@ function resetSingle(e, type){
   slotEl.classList.remove('custom');
   document.getElementById('prev-'+type).src=settings.owner ? rawDefoUrl(type) : '';
   autoSave();
-  updatePreview();
 }
 
 // =====================================================================
@@ -1080,7 +997,7 @@ function renderPhotos(key){
   const list=document.getElementById('photosList');
   list.innerHTML='';
   (s.photos||[]).filter(p=>!p.deleted).forEach(p=>{
-    const avatarId=db[key]?.id||document.getElementById('fId').value.trim();
+    const avatarId=db[key]?.id||getCombinedId();
     const previewSrc = p.objectUrl || ((!p.isNew&&avatarId) ? rawUrl(avatarId,`photos/photo_${pad2(p.idx)}.png`)+'?t='+Date.now() : '');
     const div=document.createElement('div');
     div.className='media-item';
@@ -1143,7 +1060,7 @@ function renderRefs(key){
   const list=document.getElementById('refsList');
   list.innerHTML='';
   (s.refs||[]).filter(r=>!r.deleted).forEach(r=>{
-    const avatarId=db[key]?.id||document.getElementById('fId').value.trim();
+    const avatarId=db[key]?.id||getCombinedId();
     const previewSrc = r.objectUrl || ((!r.isNew&&avatarId) ? rawUrl(avatarId,`thumbnail/ref_${pad2(r.idx)}.png`)+'?t='+Date.now() : '');
     const div=document.createElement('div');
     div.className='media-item';
@@ -1230,133 +1147,9 @@ function selectImgTpl(btn){
   saveDB();
   // プレビューを更新
   renderSingleSlots(key, db[key]);
-  updatePreview();
   pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
 }
 
-
-
-// =====================================================================
-// テキストスタイル選択（名前・説明文の色・シャドー・縁取り）
-// =====================================================================
-function selStyle(btn){
-  const key=images[cur]?.name; if(!key) return;
-  const field=btn.dataset.field;
-  const val=btn.dataset.val;
-
-  // ラジオ動作：同じfieldの他ボタンを解除
-  document.querySelectorAll(`.style-btn[data-field="${field}"]`).forEach(b=>b.classList.remove('style-sel'));
-  btn.classList.add('style-sel');
-
-  if(!db[key]) db[key]={};
-  // 値を変換（'true'/'false' → bool）
-  const parsed = val==='true' ? true : val==='false' ? false : val;
-
-  if(field.startsWith('name')){
-    if(!db[key].nameStyle) db[key].nameStyle={color:'white',shadow:true,outline:false};
-    const prop=field.replace('name','').toLowerCase(); // color/shadow/outline
-    db[key].nameStyle[prop]=parsed;
-  } else {
-    if(!db[key].descStyle) db[key].descStyle={color:'white',shadow:false,outline:false};
-    const prop=field.replace('desc','').toLowerCase();
-    db[key].descStyle[prop]=parsed;
-  }
-  saveDB();
-  updatePreview();
-  pushDataToGitHub().catch(e=>console.warn('同期スキップ:',e.message));
-}
-
-// =====================================================================
-// パターンサイズ入力
-// =====================================================================
-function onPatternSizeInput(val){
-  const key=images[cur]?.name; if(!key) return;
-  if(!db[key]) db[key]={};
-  db[key].bgPatternSize=val.trim();
-  saveDB();
-  updatePreview();
-}
-
-function resetPatternSize(){
-  const key=images[cur]?.name; if(!key) return;
-  const el=document.getElementById('fPatternSize');
-  if(el) el.value='';
-  if(db[key]) db[key].bgPatternSize='';
-  saveDB();
-  updatePreview();
-}
-
-// =====================================================================
-// 簡易プレビュー更新
-// =====================================================================
-function updatePreview(){
-  // text-shadow で縁取り+シャドーを統合（-webkit-text-strokeは不安定なため）
-  function pvBuildShadow(shadow, outline) {
-    const p=[]; const c='rgba(0,0,0,0.85)';
-    if(outline){ p.push(`-1px -1px 0 ${c}`,` 1px -1px 0 ${c}`,`-1px 1px 0 ${c}`,` 1px 1px 0 ${c}`); }
-    if(shadow) { p.push('0 2px 5px rgba(0,0,0,0.6)'); }
-    return p.length ? p.join(', ') : 'none';
-  }
-  const key=images[cur]?.name;
-  const d=key ? (db[key]||{}) : {};
-  const s=key ? getSession(key) : null;
-  const avatarId=d?.id||document.getElementById('fId')?.value.trim()||'';
-
-  // 画像URL決定ヘルパー
-  function pvUrl(type){
-    const template=d?.templates?.[type];
-    const sess=s?.singleImages?.[type];
-    if(template && template!=='CUSTOM')
-      return `https://raw.githubusercontent.com/${settings.owner}/${settings.repo}/${settings.branch}/${template}`;
-    if(sess?.objectUrl) return sess.objectUrl;
-    if((template==='CUSTOM'||d?.up?.[type]) && avatarId)
-      return rawUrl(avatarId, SAVE_PATH[type])+'?t='+Date.now();
-    if(settings.owner) return rawDefoUrl(type);
-    return '';
-  }
-
-  const bgImgEl =document.getElementById('pv-bg-img');   if(!bgImgEl) return;
-  const bgPatEl =document.getElementById('pv-bg-pattern');
-  const fcTopEl =document.getElementById('pv-frame-c-top');
-  const fcBotEl =document.getElementById('pv-frame-c-bottom');
-  const pvName  =document.getElementById('pv-name');
-  const pvDesc  =document.getElementById('pv-desc');
-  const pvMain  =document.getElementById('pv-main-img');
-
-  // 背景
-  const bgUrl=pvUrl('bgImg');
-  bgImgEl.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : '';
-  const patUrl=pvUrl('bgPattern');
-  bgPatEl.style.backgroundImage = patUrl ? `url('${patUrl}')` : 'none';
-  bgPatEl.style.backgroundSize  = d?.bgPatternSize||'';
-
-  // 枠C
-  const ctUrl=pvUrl('frameCTop');
-  const cbUrl=pvUrl('frameCBottom');
-  fcTopEl.style.backgroundImage = ctUrl ? `url('${ctUrl}')` : 'none';
-  fcBotEl.style.backgroundImage = cbUrl ? `url('${cbUrl}')` : 'none';
-
-  // 名前テキスト＋スタイル
-  pvName.textContent = document.getElementById('fName')?.value||'アバター名';
-  const ns=d.nameStyle||{color:'white',shadow:true,outline:false};
-  pvName.style.color      = ns.color==='black' ? 'rgba(0,0,0,0.9)' : '#fff';
-  pvName.style.textShadow = pvBuildShadow(ns.shadow, ns.outline);
-
-  // 説明文＋スタイル
-  pvDesc.textContent = document.getElementById('fDesc')?.value||'';
-  const ds=d.descStyle||{color:'white',shadow:false,outline:false};
-  pvDesc.style.color      = ds.color==='black' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.88)';
-  pvDesc.style.textShadow = pvBuildShadow(ds.shadow, ds.outline);
-
-  // メイン画像（アップロード済みまたはセッション中ファイル）
-  if(avatarId && d?.up?.main){
-    pvMain.style.backgroundImage=`url('${rawUrl(avatarId,'thumbnail/main.png')}?t=${Date.now()}')`;
-  } else if(s?.singleImages?.miniPC?.objectUrl){
-    pvMain.style.backgroundImage=`url('${s.singleImages.miniPC.objectUrl}')`;
-  } else {
-    pvMain.style.backgroundImage='';
-  }
-}
 
 // インラインオブジェクトとしてコードに追加される
 function toggleTRef(btn){
@@ -1380,10 +1173,74 @@ function toggleTRef(btn){
 // =====================================================================
 // フォーム入力・自動保存
 // =====================================================================
-function onIdInput(){
-  const v=document.getElementById('fId').value;
-  // 半角英数・アンダーバー以外を除去
-  document.getElementById('fId').value=v.replace(/[^a-zA-Z0-9_]/g,'');
+// =====================================================================
+// ID分割管理（数値 + 名前 → 「数値_名前」として結合して管理）
+// =====================================================================
+
+// フルIDを数値部分と名前部分に分割
+function splitId(fullId){
+  if(!fullId) return {num:'', name:''};
+  const idx=fullId.indexOf('_');
+  if(idx===-1) return {num:fullId, name:''};
+  return {num:fullId.substring(0,idx), name:fullId.substring(idx+1)};
+}
+
+// 現在の入力から結合IDを生成
+function getCombinedId(){
+  const num =(document.getElementById('fIdNum')?.value||'').trim();
+  const name=(document.getElementById('fIdName')?.value||'').trim();
+  if(num && name) return num+'_'+name;
+  return num || name;
+}
+
+// 結合IDプレビュー更新
+function updateCombinedPreview(){
+  const el=document.getElementById('combinedIdPreview');
+  if(el) el.textContent=getCombinedId()||'-';
+}
+
+// カテゴリ別の最大ID一覧を計算・表示
+function updateMaxIds(){
+  const ranges=[
+    {label:'まめひなた', min:1000, max:4000},
+    {label:'るり',       min:4000, max:5000},
+    {label:'フォシュ',   min:5000, max:6000},
+    {label:'シャロ',     min:6000, max:7000},
+    {label:'その他',     min:7000, max:Infinity},
+  ];
+  // dbの全エントリから数値部分を抽出して最大値を算出
+  ranges.forEach(r=>{ r.currentMax=0; });
+  Object.values(db).forEach(entry=>{
+    if(!entry.id) return;
+    const num=parseInt(entry.id.split('_')[0]);
+    if(isNaN(num)) return;
+    ranges.forEach(r=>{
+      if(num>=r.min && num<r.max && num>r.currentMax) r.currentMax=num;
+    });
+  });
+  const container=document.getElementById('idMaxRows');
+  if(!container) return;
+  container.innerHTML=ranges.map(r=>{
+    const rangeStr=r.max===Infinity ? `${r.min}～` : `${r.min}～${r.max}`;
+    const valStr=r.currentMax>0
+      ? `<span class="id-max-val">${r.currentMax}</span>`
+      : `<span class="id-max-none">なし</span>`;
+    return `<div class="id-max-row"><span class="id-max-label">${r.label} <small style="color:var(--muted)">(${rangeStr})</small></span>${valStr}</div>`;
+  }).join('');
+}
+
+function onIdNumInput(){
+  const el=document.getElementById('fIdNum');
+  // 数値のみ許可
+  el.value=el.value.replace(/[^0-9]/g,'');
+  updateCombinedPreview();
+  autoSave();
+}
+
+function onIdNameInput(){
+  const el=document.getElementById('fIdName');
+  // 半角英数・アンダーバー・日本語を許可
+  updateCombinedPreview();
   autoSave();
 }
 
@@ -1395,7 +1252,8 @@ function sel(btn, type){
 
 function autoSave(){
   const key=images[cur]?.name; if(!key) return;
-  const id  =document.getElementById('fId').value.trim();
+  // 数値_名前 の形式で結合ID生成
+  const id  =getCombinedId();
   const name=document.getElementById('fName').value.trim();
   const desc=document.getElementById('fDesc').value;
   const hasData=id||name||selG||selC||desc;
@@ -1409,7 +1267,6 @@ function autoSave(){
   db[key]={
     ...(db[key]||{}),
     id, name, genre:selG, cate:selC, desc,
-    bgPatternSize: document.getElementById('fPatternSize')?.value.trim()||'',
     completed:db[key]?.completed||false,
     code:db[key]?.code||'',
     up:{
@@ -1420,7 +1277,6 @@ function autoSave(){
   };
   saveDB();
   updateStatus(); updateProgress(); renderDots();
-  updatePreview();
 }
 
 // =====================================================================
@@ -1468,15 +1324,6 @@ function buildEntry(key){
   // 説明文（改行を\nにエスケープ）
   const descEscaped=(desc||'アバターの説明テキスト。').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r\n|\r|\n/g,'\\n');
 
-  // テキストスタイル（デフォルト値を持つ）
-  const ns = d.nameStyle || { color:'white', shadow:true,  outline:false };
-  const ds = d.descStyle || { color:'white', shadow:false, outline:false };
-  const nsStr = `{ color: '${ns.color}', shadow: ${ns.shadow}, outline: ${ns.outline} }`;
-  const dsStr = `{ color: '${ds.color}', shadow: ${ds.shadow}, outline: ${ds.outline} }`;
-
-  // パターンサイズ
-  const patSize = d.bgPatternSize ? `'${d.bgPatternSize}'` : "''";
-
   return `my_avatarid = '${id}';
 my_Dic      = DicBase + my_avatarid;
 _avatars.push({
@@ -1491,13 +1338,9 @@ _avatars.push({
 
   bgImg:        ${imgLine('bgImg')},
   bgPattern:    ${imgLine('bgPattern')},
-  bgPatternSize: ${patSize},
   frameCTop:    ${imgLine('frameCTop')},
   frameCBottom: ${imgLine('frameCBottom')},
   infoImg:      ${imgLine('infoImg')},
-
-  nameStyle:    ${nsStr},
-  descStyle:    ${dsStr},
 
   desc: '${descEscaped}',
 
@@ -1509,7 +1352,8 @@ _avatars.push({
 
 function generate(andNext){
   const key=images[cur]?.name;
-  const id  =document.getElementById('fId').value.trim();
+  // 数値_名前 の形式で結合ID生成
+  const id  =getCombinedId();
   const name=document.getElementById('fName').value.trim();
   if(!id)   { alert('アバターIDを入力してください'); return; }
   if(!name) { alert('アバター名を入力してください'); return; }
