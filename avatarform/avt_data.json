@@ -557,7 +557,8 @@
     "code": "my_avatarid = '1200_DaruHinata';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ダルひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/water.png',\n  bgPattern:    DicBase + 'ShareImg_pattern/power.png',\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_cir.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_cir.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'コピー先のアバターがセクシーなので、衣装の追加が必須だった',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
     "up": {
       "photoCount": 0,
-      "refs": []
+      "refs": [],
+      "main": true
     },
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/water.png",
@@ -567,7 +568,8 @@
     },
     "templateRefs": [
       "Item_Mamehinata"
-    ]
+    ],
+    "savedId": "1200_DaruHinata"
   },
   "1210.png": {
     "id": "1210_Rag",
@@ -575,6 +577,27 @@
     "genre": "genre_copy_avatar",
     "cate": "cate_mame",
     "desc": "テキスト",
+    "completed": true,
+    "code": "my_avatarid = '1210_Rag';\nmy_Dic      = DicBase + my_avatarid;\n_avatars.push({\n  id:           my_avatarid,\n  name:         'ラグひなた',\n  genre:        genre_copy_avatar,\n  category:     cate_mame,\n\n  mainImg:      my_Dic + '/thumbnail/main.png',\n  miniImgPC:    defo_miniImgPC,\n  miniImgSP:    defo_miniImgSP,\n\n  bgImg:        DicBase + 'ShareImg_bg/purple.png',\n  bgPattern:    defo_bgPattern,\n  frameCTop:    DicBase + 'ShareImg_frame/frame_c_top_6.png',\n  frameCBottom: DicBase + 'ShareImg_frame/frame_c_bottom_6.png',\n  infoImg:      defo_infoImg,\n\n  desc: 'テキスト',\n\n  photos: [],\n\n  orgAvt: [\n    Item_Mamehinata,\n  ]\n});",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/purple.png",
+      "frameCTop": "assets/images/ShareImg_frame/frame_c_top_6.png",
+      "frameCBottom": "assets/images/ShareImg_frame/frame_c_bottom_6.png"
+    },
+    "templateRefs": [
+      "Item_Mamehinata"
+    ]
+  },
+  "1230.png": {
+    "id": "1230_Rasyu",
+    "name": "ラシュひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "フレンドのラシューシャに会うために",
     "completed": false,
     "code": "",
     "up": {
