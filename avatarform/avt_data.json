@@ -662,5 +662,21 @@
       "Item_Mamehinata"
     ],
     "savedId": "1250_Mur"
+  },
+  "1260.png": {
+    "id": "7050_Mamesha",
+    "name": "まめーシャ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_other",
+    "desc": "ラシューシャにまめひなたの格好",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    },
+    "templates": {
+      "bgImg": "assets/images/ShareImg_bg/purple.png"
+    }
   }
 }
