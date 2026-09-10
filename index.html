@@ -532,6 +532,113 @@
     }
 
     /* =====================================================
+       ミニゲームページ
+       ===================================================== */
+    #page-minigame { padding: 32px 20px 60px; }
+
+    /* ゲーム選択画面 ⇔ 各ゲーム画面の切り替え
+       ★拡張予定: ゲームを追加する場合もこの .mg-screen クラスを付ける */
+    .mg-screen        { display: none; }
+    .mg-screen.active { display: block; }
+
+    .mg-select-title {
+      text-align: center; font-size: 18px; font-weight: 800;
+      color: var(--color-main); margin-bottom: 28px;
+    }
+    #mg-game-list {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+      max-width: 640px; margin: 0 auto;
+    }
+    .mg-game-card {
+      width: 220px; padding: 28px 16px; border: none; border-radius: 20px;
+      background: var(--color-white); color: var(--color-text);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      cursor: pointer; font-family: inherit;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      transition: transform var(--duration-ui), box-shadow var(--duration-ui);
+    }
+    .mg-game-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16); }
+    .mg-game-icon { font-size: 40px; }
+    .mg-game-name { font-size: 15px; font-weight: 700; }
+
+    .mg-game-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; max-width: 640px; margin: 0 auto 16px;
+    }
+    .mg-back-btn {
+      border: none; background: none; color: var(--color-main);
+      font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer;
+      padding: 6px 4px;
+    }
+    .mg-back-btn:hover { text-decoration: underline; }
+    .mg-hud { display: flex; gap: 14px; font-size: 13px; font-weight: 700; color: var(--color-text); }
+    .mg-hud b { color: var(--color-main); }
+
+    .mg-primary-btn {
+      border: none; border-radius: 50px; padding: 12px 32px;
+      background: var(--color-main); color: var(--color-white);
+      font-family: inherit; font-weight: 800; font-size: 15px; cursor: pointer;
+      transition: background var(--duration-ui), transform var(--duration-ui);
+    }
+    .mg-primary-btn:hover { background: var(--color-main-dark); transform: translateY(-1px); }
+
+    /* --- まとあてシューティング --- */
+    #mg-sh-field {
+      position: relative; max-width: 640px; height: 420px; margin: 0 auto;
+      background: linear-gradient(135deg, var(--color-main-pale), var(--color-white));
+      border: 2px solid rgba(204, 34, 68, 0.15); border-radius: 20px;
+      overflow: hidden; touch-action: manipulation;
+    }
+    @media (max-width: 759px) { #mg-sh-field { height: 320px; } }
+
+    #mg-sh-start-overlay, #mg-sh-result-overlay {
+      position: absolute; inset: 0; z-index: 5;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: rgba(255, 255, 255, 0.92); text-align: center; padding: 20px;
+    }
+    #mg-sh-start-overlay p, #mg-sh-result-overlay p {
+      font-size: 14px; color: var(--color-text); font-weight: 700; max-width: 320px;
+    }
+    #mg-sh-final-score { color: var(--color-main); font-size: 22px; font-weight: 800; }
+
+    .mg-target {
+      position: absolute; width: 56px; height: 56px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #FF7A90, var(--color-main) 70%, var(--color-main-dark));
+      border: 3px solid var(--color-white); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+      cursor: pointer; transform: scale(0); animation: mgTargetPop 0.18s ease-out forwards;
+    }
+    .mg-target::before, .mg-target::after { content: ''; position: absolute; border-radius: 50%; }
+    .mg-target::after  { inset: 14px; background: var(--color-white); }
+    .mg-target::before { inset: 22px; background: var(--color-main); z-index: 1; }
+    @keyframes mgTargetPop { to { transform: scale(1); } }
+    .mg-target.mg-target-hit { animation: mgTargetHit 0.18s ease-out forwards; pointer-events: none; }
+    @keyframes mgTargetHit { to { transform: scale(1.5); opacity: 0; } }
+
+    /* --- じゃんけんゲーム --- */
+    #mg-jk-field {
+      max-width: 480px; margin: 0 auto; text-align: center;
+      background: var(--color-white); border-radius: 20px; padding: 32px 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    .mg-jk-battle { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 20px; }
+    .mg-jk-hand {
+      width: 80px; height: 80px; border-radius: 50%; background: var(--color-main-pale);
+      display: flex; align-items: center; justify-content: center; font-size: 36px;
+    }
+    .mg-jk-hand.mg-jk-shake { animation: mgJkShake 0.3s ease-in-out 2; }
+    @keyframes mgJkShake { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .mg-jk-vs { font-weight: 800; color: var(--color-placeholder); font-size: 14px; }
+    #mg-jk-message { font-size: 15px; font-weight: 700; color: var(--color-text); min-height: 22px; margin-bottom: 20px; }
+    .mg-jk-buttons { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .mg-jk-btn {
+      width: 84px; padding: 14px 0; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 16px;
+      background: var(--color-white); font-family: inherit; font-size: 13px; font-weight: 700;
+      cursor: pointer; line-height: 1.8; transition: all var(--duration-ui);
+    }
+    .mg-jk-btn:hover:not(:disabled) { border-color: var(--color-main); transform: translateY(-2px); }
+    .mg-jk-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+    /* =====================================================
        アバター改変ページ
        ===================================================== */
     :root {
@@ -983,6 +1090,7 @@
           <button class="nav-btn" data-page="shop"    onclick="navigateTo('shop', this)">ショップ</button>
           <button class="nav-btn" data-page="photo"   onclick="navigateTo('photo', this)">フォトギャラリー</button>
           <button class="nav-btn" data-page="event"   onclick="navigateTo('event', this)">イベント</button>
+          <button class="nav-btn" data-page="minigame" onclick="navigateTo('minigame', this)">ミニゲーム</button>
           <button class="nav-btn" data-page="about"   onclick="navigateTo('about', this)">このサイトについて</button>
         </div>
       </div>
@@ -1300,6 +1408,78 @@
       </div>
     </div>
 
+    <div class="page" id="page-minigame">
+
+      <!-- ゲーム選択画面 -->
+      <div class="mg-screen active" id="mg-select">
+        <p class="mg-select-title">遊びたいミニゲームを選んでね！</p>
+        <!--
+          ★拡張予定: ゲームを追加する場合
+            1. 下に <button class="mg-game-card" onclick="mgStartGame('ゲームID')"> を追記
+            2. 対応する <div class="mg-screen" id="mg-ゲームID"> をこのページ内に追記
+            3. mgStartGame() の switch にゲームIDを追記（初期化処理が必要な場合）
+        -->
+        <div id="mg-game-list">
+          <button class="mg-game-card" onclick="mgStartGame('shooting')">
+            <span class="mg-game-icon">🎯</span>
+            <span class="mg-game-name">まとあてシューティング</span>
+          </button>
+          <button class="mg-game-card" onclick="mgStartGame('janken')">
+            <span class="mg-game-icon">✊</span>
+            <span class="mg-game-name">じゃんけんゲーム</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- まとあてシューティング -->
+      <div class="mg-screen" id="mg-shooting">
+        <div class="mg-game-header">
+          <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+          <div class="mg-hud">
+            <span>スコア: <b id="mg-sh-score">0</b></span>
+            <span>残り時間: <b id="mg-sh-time">30</b>秒</span>
+          </div>
+        </div>
+        <div id="mg-sh-field">
+          <div id="mg-sh-start-overlay">
+            <p>制限時間30秒！　出てくる的をクリックしてスコアを稼ごう！</p>
+            <button class="mg-primary-btn" onclick="mgShootingStart()">スタート</button>
+          </div>
+          <div id="mg-sh-result-overlay" style="display:none">
+            <p>タイムアップ！</p>
+            <p>スコア：<span id="mg-sh-final-score">0</span></p>
+            <button class="mg-primary-btn" onclick="mgShootingStart()">もう一度あそぶ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- じゃんけんゲーム -->
+      <div class="mg-screen" id="mg-janken">
+        <div class="mg-game-header">
+          <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+          <div class="mg-hud">
+            <span>勝ち: <b id="mg-jk-win">0</b></span>
+            <span>負け: <b id="mg-jk-lose">0</b></span>
+            <span>あいこ: <b id="mg-jk-draw">0</b></span>
+          </div>
+        </div>
+        <div id="mg-jk-field">
+          <div class="mg-jk-battle">
+            <div class="mg-jk-hand" id="mg-jk-cpu-hand">？</div>
+            <span class="mg-jk-vs">VS</span>
+            <div class="mg-jk-hand" id="mg-jk-player-hand">？</div>
+          </div>
+          <p id="mg-jk-message">手を選んでね！</p>
+          <div class="mg-jk-buttons">
+            <button class="mg-jk-btn" onclick="mgJankenPlay('rock')">✊<br>グー</button>
+            <button class="mg-jk-btn" onclick="mgJankenPlay('scissors')">✌️<br>チョキ</button>
+            <button class="mg-jk-btn" onclick="mgJankenPlay('paper')">✋<br>パー</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /#page-minigame -->
+
     <div class="page" id="page-about">
       <div class="page-placeholder">
         <p class="placeholder-title">このサイトについて</p>
@@ -1367,6 +1547,7 @@
     function navigateTo(pageId, clickedBtn) {
       const currentPage = document.querySelector('.page.active');
       if (currentPage?.id === 'page-' + pageId || isNavigating) return;
+      if (currentPage?.id === 'page-minigame') mgShootingStop(); // ページ離脱時は裏でタイマーを回さない
       isNavigating = true;
       const bar = document.getElementById('loading-bar');
       const barText = document.getElementById('loading-bar-text');
@@ -1397,6 +1578,161 @@
       updateNavArrows();
       // avtLoadData() はモジュールscript側で呼び出します
     });
+
+    // =====================================================
+    // ミニゲームページ
+    // =====================================================
+
+    /* --- 共通：ゲーム選択 ⇔ 各ゲーム画面 --- */
+    function mgShowSelect() {
+      document.querySelectorAll('#page-minigame .mg-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('mg-select').classList.add('active');
+    }
+
+    function mgStartGame(gameId) {
+      mgShootingStop();
+      document.querySelectorAll('#page-minigame .mg-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('mg-' + gameId);
+      if (target) target.classList.add('active');
+      /*
+       * ★拡張予定: 新しいゲームを追加する場合はここに
+       *   if (gameId === 'ゲームID') { 初期化処理 }
+       *   を追記する
+       */
+      if (gameId === 'janken') mgJankenReset();
+    }
+
+    function mgBackToSelect() {
+      mgShootingStop();
+      mgShowSelect();
+    }
+
+    /* --- まとあてシューティング --- */
+    const MG_SH_DURATION_SEC = 30;
+    const MG_SH_SPAWN_MS     = 700;
+    const MG_SH_TARGET_LIFE_MS = 900;
+
+    let mgShScore = 0, mgShTimeLeft = MG_SH_DURATION_SEC;
+    let mgShSpawnTimer = null, mgShCountdownTimer = null, mgShPlaying = false;
+
+    function mgShootingStart() {
+      mgShootingStop();
+      const field = document.getElementById('mg-sh-field');
+      field.querySelectorAll('.mg-target').forEach(t => t.remove());
+      document.getElementById('mg-sh-start-overlay').style.display  = 'none';
+      document.getElementById('mg-sh-result-overlay').style.display = 'none';
+
+      mgShScore = 0; mgShTimeLeft = MG_SH_DURATION_SEC; mgShPlaying = true;
+      document.getElementById('mg-sh-score').textContent = mgShScore;
+      document.getElementById('mg-sh-time').textContent  = mgShTimeLeft;
+
+      mgShSpawnTimer = setInterval(mgShootingSpawnTarget, MG_SH_SPAWN_MS);
+      mgShCountdownTimer = setInterval(() => {
+        mgShTimeLeft--;
+        document.getElementById('mg-sh-time').textContent = mgShTimeLeft;
+        if (mgShTimeLeft <= 0) mgShootingEnd();
+      }, 1000);
+    }
+
+    function mgShootingSpawnTarget() {
+      const field = document.getElementById('mg-sh-field');
+      if (!field || !mgShPlaying) return;
+      const size = 56;
+      const maxX = field.clientWidth  - size;
+      const maxY = field.clientHeight - size;
+      if (maxX <= 0 || maxY <= 0) return;
+
+      const target = document.createElement('div');
+      target.className = 'mg-target';
+      target.style.left = Math.random() * maxX + 'px';
+      target.style.top  = Math.random() * maxY + 'px';
+      target.onclick = () => mgShootingHit(target);
+      field.appendChild(target);
+
+      target._mgTimeout = setTimeout(() => target.remove(), MG_SH_TARGET_LIFE_MS);
+    }
+
+    function mgShootingHit(target) {
+      if (!mgShPlaying || target.classList.contains('mg-target-hit')) return;
+      clearTimeout(target._mgTimeout);
+      target.classList.add('mg-target-hit');
+      setTimeout(() => target.remove(), 180);
+      mgShScore++;
+      document.getElementById('mg-sh-score').textContent = mgShScore;
+    }
+
+    function mgShootingEnd() {
+      mgShootingStop();
+      const field = document.getElementById('mg-sh-field');
+      if (field) field.querySelectorAll('.mg-target').forEach(t => t.remove());
+      document.getElementById('mg-sh-final-score').textContent = mgShScore;
+      document.getElementById('mg-sh-result-overlay').style.display = 'flex';
+    }
+
+    function mgShootingStop() {
+      mgShPlaying = false;
+      clearInterval(mgShSpawnTimer); clearInterval(mgShCountdownTimer);
+      mgShSpawnTimer = null; mgShCountdownTimer = null;
+    }
+
+    /* --- じゃんけんゲーム --- */
+    const MG_JK_HAND_EMOJI = { rock: '✊', scissors: '✌️', paper: '✋' };
+    const MG_JK_HAND_LABEL = { rock: 'グー', scissors: 'チョキ', paper: 'パー' };
+    const MG_JK_BEATS      = { rock: 'scissors', scissors: 'paper', paper: 'rock' }; // key が勝つ相手
+
+    let mgJkWin = 0, mgJkLose = 0, mgJkDraw = 0, mgJkBusy = false;
+
+    function mgJankenReset() {
+      mgJkWin = 0; mgJkLose = 0; mgJkDraw = 0; mgJkBusy = false;
+      document.getElementById('mg-jk-win').textContent  = mgJkWin;
+      document.getElementById('mg-jk-lose').textContent = mgJkLose;
+      document.getElementById('mg-jk-draw').textContent = mgJkDraw;
+      document.getElementById('mg-jk-cpu-hand').textContent    = '？';
+      document.getElementById('mg-jk-player-hand').textContent = '？';
+      document.getElementById('mg-jk-message').textContent = '手を選んでね！';
+      document.querySelectorAll('.mg-jk-btn').forEach(b => b.disabled = false);
+    }
+
+    function mgJankenJudge(player, cpu) {
+      if (player === cpu) return 'draw';
+      return MG_JK_BEATS[player] === cpu ? 'win' : 'lose';
+    }
+
+    function mgJankenPlay(playerHand) {
+      if (mgJkBusy) return;
+      mgJkBusy = true;
+      document.querySelectorAll('.mg-jk-btn').forEach(b => b.disabled = true);
+
+      const hands = Object.keys(MG_JK_HAND_EMOJI);
+      const cpuHand = hands[Math.floor(Math.random() * hands.length)];
+
+      const cpuEl    = document.getElementById('mg-jk-cpu-hand');
+      const playerEl = document.getElementById('mg-jk-player-hand');
+      const msgEl    = document.getElementById('mg-jk-message');
+
+      playerEl.textContent = MG_JK_HAND_EMOJI[playerHand];
+      cpuEl.textContent = '？';
+      cpuEl.classList.add('mg-jk-shake');
+      msgEl.textContent = 'せーの...';
+
+      setTimeout(() => {
+        cpuEl.classList.remove('mg-jk-shake');
+        cpuEl.textContent = MG_JK_HAND_EMOJI[cpuHand];
+
+        const result = mgJankenJudge(playerHand, cpuHand);
+        const vsText = `（${MG_JK_HAND_LABEL[playerHand]} vs ${MG_JK_HAND_LABEL[cpuHand]}）`;
+        if (result === 'win')       { mgJkWin++;  msgEl.textContent = '勝ち！' + vsText; }
+        else if (result === 'lose') { mgJkLose++; msgEl.textContent = '負け...' + vsText; }
+        else                        { mgJkDraw++; msgEl.textContent = 'あいこ！' + vsText; }
+
+        document.getElementById('mg-jk-win').textContent  = mgJkWin;
+        document.getElementById('mg-jk-lose').textContent = mgJkLose;
+        document.getElementById('mg-jk-draw').textContent = mgJkDraw;
+
+        document.querySelectorAll('.mg-jk-btn').forEach(b => b.disabled = false);
+        mgJkBusy = false;
+      }, 600);
+    }
   </script>
 
 
