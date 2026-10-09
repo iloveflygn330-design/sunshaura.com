@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-10",
+  "title": "VRChatが「Safety Center」とボイス刷新を予告ほか、今日のVRニュース5本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "今日はVRChatの最新Developer Updateを中心にお届けします。違反時の処分を見直す新しいSafety Centerやボイス機能の作り直し、ワールド・アバター制作者向けの仕様変更予告など、話題が盛りだくさんです。あわせて、BOOTHのアバター改変ツールの動向と、MetaのVRスポーツ中継の話題も紹介します。",
+  "items": [
+    {
+      "headline": "VRChat、処分内容を確認できる「Safety Center」を予告",
+      "category": "VRChat公式",
+      "overview": "VRChatは10月8日（日本時間9日朝）のDeveloper Updateで、クライアント内に新しい「Safety Center」画面を近日追加すると発表しました。Trust & Safetyによる処分を受けたユーザーが、その理由や現在の制限内容を確認できるようになります。あわせて、アカウント全体を停止するのではなく、違反に関係する機能だけを一時的に制限する「機能単位」の処分へ移行する方針も示されました。たとえばアバターに関する違反なら、アカウントは使えたまま特定のアバターの使用だけが制限される、といった形です。",
+      "points": [
+        "アカウントの状態や過去の違反履歴をクライアント内で確認できる",
+        "停止を含む一部の処分は、クライアントから異議申し立てが可能に",
+        "処分が「アカウント停止」から「機能ごとの制限」中心へ",
+        "公開された画面写真の処分内容はテスト用の表示とのこと"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum「Developer Update - 8 October 2026」", "url": "https://ask.vrchat.com/t/developer-update-8-october-2026/49095" }
+      ]
+    },
+    {
+      "headline": "ボイス機能の作り直しが進行、インドネシア語にも対応",
+      "category": "VRChat公式",
+      "overview": "同じDeveloper Updateでは、ボイス（音声）機能の新しい実装が、対応する全プラットフォームで最初の機能完成段階に達したことが報告されました。通信が不安定なときの処理や録音、エンコードなど、内部をまるごと書き直しているとのことです。また、VRChatのメニューがインドネシア語に対応したほか、Steam Frameのスタンドアロン動作でGPU性能が落ちる問題について、Valveと協力して修正したことも明らかになりました。",
+      "points": [
+        "効きが穏やかなノイズキャンセルや調整できる自動音量調整が追加予定",
+        "従来の「Legacy」設定も引き続き選べる",
+        "メニューの表示言語にインドネシア語が追加",
+        "Steam Frameの修正はベータ版OSに入り、近く安定版にも反映予定"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum「Developer Update - 8 October 2026」", "url": "https://ask.vrchat.com/t/developer-update-8-october-2026/49095" }
+      ]
+    },
+    {
+      "headline": "ワールド・アバター制作者向けの仕様変更を予告",
+      "category": "ワールド",
+      "overview": "Developer Updateでは、制作者に関わる変更もいくつか予告されました。ワールド用のVRCRaycastコンポーネントはバージョン1.1でトリガーへの当たり判定を選べるようになり、将来のアップデートでは他プレイヤー（リモートプレイヤー）の当たり判定が足元の球体から、ローカルプレイヤーと同じカプセル形状に変わります。アバターでは、同期パラメーターをほかの人から見たときの補間時間を、パラメーターごとに調整できるようにすることが検討されています。VRChatはいずれの変更についても制作者からのフィードバックを求めています。",
+      "points": [
+        "VRCRaycast 1.1に「Collide With Triggers」の切り替えが追加",
+        "当たり判定の形が変わるため、既存ワールドの挙動確認が必要になる場合も",
+        "同期パラメーターの補間時間の調整は、主にfloat型が対象",
+        "ワールドやアバター以外の作品を募る企画「#VRCtober26」も告知"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum「Developer Update - 8 October 2026」", "url": "https://ask.vrchat.com/t/developer-update-8-october-2026/49095" }
+      ]
+    },
+    {
+      "headline": "BOOTHトレンドに簡単色改変・メッシュ補正ツール",
+      "category": "アバター・制作",
+      "overview": "メタカル最前線が、VRChat向けBOOTH商品の週間トレンドをまとめた10月9日号を公開しました。9月26日〜10月2日に公開された商品が対象で、アバターの色を手軽に変えられる「Tocolo」や、メッシュの境界をなめらかにするModular Avatar（MA）対応ツール「Mesh Mellow」といった改変ツールが入っています。そのほかは、対応アバター向けの衣装や、動くプリズムのマテリアルなどが紹介されています。",
+      "points": [
+        "改変ツールが2本トレンド入り",
+        "「Tocolo」は無料の体験版が用意されている",
+        "「Mesh Mellow」はMA（Modular Avatar）ベースのツール",
+        "衣装を中心に計10商品を紹介"
+      ],
+      "sources": [
+        { "name": "メタカル最前線", "url": "https://metacul-frontier.com/?p=38178" }
+      ]
+    },
+    {
+      "headline": "Meta、Questでカレッジフットボールを180度ライブ配信",
+      "category": "VR機器・技術",
+      "overview": "MetaはESPNと提携し、アメリカの大学フットボールの一部の試合を、Questの「TV」アプリで180度の没入型映像としてライブ配信すると発表しました。最初の試合は10月10日のテキサス大学対オクラホマ大学戦で、8KとDolby Atmosで配信されます。試合のリプレイやハイライトは、各試合のあと1週間オンデマンドで見られます。Metaは、来春発売予定の「VR Glasses」の登場時には100以上のスポーツイベントを配信する計画も示しています。",
+      "points": [
+        "Questの「TV」アプリで視聴できる",
+        "レギュラーシーズン中は毎週配信、2027年1月の決勝まで予定",
+        "配信の全日程はまだ発表されていない",
+        "2027年はMLBやUFCなどとも提携し100以上のイベントを予定"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/meta-vr-glasses-live-football-2026-schedule/" }
+      ]
+    }
+  ],
+  "outro": "VRChatのSafety Centerやボイス刷新は、正式な配信時期の発表が待たれます。制作者向けの変更は、公式フォーラムでフィードバックを受け付けているので、気になる方はチェックしてみてください。"
+}
