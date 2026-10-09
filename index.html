@@ -1092,6 +1092,15 @@
           <button class="nav-btn" data-page="event"   onclick="navigateTo('event', this)">イベント</button>
           <button class="nav-btn" data-page="minigame" onclick="navigateTo('minigame', this)">ミニゲーム</button>
           <button class="nav-btn" data-page="about"   onclick="navigateTo('about', this)">このサイトについて</button>
+          <!--
+            ニュースは index.html 内のページ（div）ではなく、別フォルダ news/ の独立ページ。
+            そのため navigateTo() ではなく、通常のページ遷移（location.href）で移動する。
+            ★拡張予定: 同じように別フォルダの独立ページを追加する場合
+              <button class="nav-btn" data-page="フォルダ名" onclick="location.href='フォルダ名/'">ボタン名</button>
+              を追記し、news/assets/news.js の NEWS_NAV_ITEMS にも同じボタンを追記すること
+              （ニュース側のヘッダーにも同じボタンを並べるため）
+          -->
+          <button class="nav-btn" data-page="news"    onclick="location.href='news/'">ニュース</button>
         </div>
       </div>
       <button class="nav-arrow" id="nav-next" onclick="slideNav(1)" aria-label="次のボタンへ">›</button>
@@ -1522,13 +1531,26 @@
       const scrollWrap = document.getElementById('nav-scroll-wrap');
       const prevBtn    = document.getElementById('nav-prev');
       const nextBtn    = document.getElementById('nav-next');
-      const maxOffset  = Math.max(0, buttons.length - CONFIG.NAV_VISIBLE);
       if (buttons.length > CONFIG.NAV_VISIBLE) {
         prevBtn.style.display = 'flex'; nextBtn.style.display = 'flex';
         scrollWrap.classList.add('has-overflow');
         wrapper.style.marginLeft = '0'; wrapper.style.marginRight = '0';
+        /*
+         * ボタンの位置を実測して送る
+         *   ボタンの幅は文字数で130pxより広がる（例:「このサイトについて」）ため、
+         *   固定幅で計算するとスマホで最後のボタンまで届かない。
+         *   各ボタンの実際の左端位置まで動かし、最後のボタンが見えた時点を最大移動量にする。
+         */
+        const btns     = Array.from(buttons);
+        const base     = btns[0].offsetLeft;
+        const lefts    = btns.map(b => b.offsetLeft - base);
+        const last     = btns[btns.length - 1];
+        const totalW   = last.offsetLeft + last.offsetWidth - base;
+        const visibleW = scrollWrap.clientWidth;
+        let maxOffset  = lefts.findIndex(l => totalW - l <= visibleW);
+        if (maxOffset < 0) maxOffset = btns.length - 1;
         navOffset = Math.max(0, Math.min(navOffset, maxOffset));
-        wrapper.style.transform = `translateX(-${navOffset * (CONFIG.NAV_BTN_WIDTH + CONFIG.NAV_BTN_GAP)}px)`;
+        wrapper.style.transform = `translateX(-${lefts[navOffset]}px)`;
         prevBtn.disabled = (navOffset <= 0); nextBtn.disabled = (navOffset >= maxOffset);
         updateMask(navOffset, maxOffset);
       } else {
@@ -1577,6 +1599,20 @@
     document.addEventListener('DOMContentLoaded', () => {
       updateNavArrows();
       // avtLoadData() はモジュールscript側で呼び出します
+
+      /*
+       * URLの「#ページID」で指定ページを開く処理
+       *   ニュースページのヘッダーから戻ってきたとき用。
+       *   例: index.html#avatar → アバター改変ページを開く
+       * ★拡張予定: 新しいページを追加しても、ここは変更不要。
+       *   <div class="page" id="page-ページID"> と
+       *   data-page="ページID" のボタンがあれば自動で対応する。
+       */
+      const hashPage = decodeURIComponent(location.hash.slice(1));
+      if (hashPage && hashPage !== 'welcome' && document.getElementById('page-' + hashPage)) {
+        const hashBtn = document.querySelector(`.nav-btn[data-page="${CSS.escape(hashPage)}"]`);
+        navigateTo(hashPage, hashBtn);
+      }
     });
 
     // =====================================================

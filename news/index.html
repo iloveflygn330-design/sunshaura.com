@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ニュース | sunshaura.com</title>
+  <meta name="description" content="VRChatまわりのニュースを毎日まとめてお届けします。">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/news.css">
+</head>
+<!--
+  ニュース トップページ
+    data-news-page="top"  : news.js にトップページとして描画させる
+    data-news-root="./"   : このHTMLから news/ フォルダへの相対パス
+  中身（ヘッダー・カード・月別リスト）は assets/news.js が自動で組み立てる。
+  ★拡張予定: トップだけに表示したいもの（お知らせ・バナー等）は
+    <div class="news-month-band"> の上に追記する。
+-->
+<body data-news-page="top" data-news-root="./">
+
+  <!-- ヘッダー（news.js が index.html と同じボタンを組み立てる） -->
+  <header id="header"></header>
+
+  <main id="news-body">
+    <div class="news-layout">
+
+      <div class="news-main">
+        <!-- 「◯月の記事」帯 -->
+        <h1 class="news-month-band" id="news-month-band">ニュース</h1>
+        <!-- 記事カード一覧 -->
+        <div class="news-grid" id="news-grid">
+          <div class="news-empty">読み込み中...</div>
+        </div>
+      </div>
+
+      <!-- 月別リスト -->
+      <aside class="news-side" id="news-side"></aside>
+
+    </div>
+  </main>
+
+  <footer class="news-footer">sunshaura.com</footer>
+
+  <script src="assets/news.js"></script>
+</body>
+</html>

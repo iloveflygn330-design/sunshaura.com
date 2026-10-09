@@ -1,0 +1,97 @@
+# =====================================================
+# ニュース記事の公開を Discord に通知する
+#
+# 仕組み:
+#   news/data/articles.json が main ブランチに push されたとき、
+#   1つ前のコミットと比べて「新しく増えた記事」を探し、
+#   Discord の Webhook に「見出し + URL」を送る。
+#
+# 事前設定（1回だけ。GitHub のリポジトリ画面で行う）:
+#   Settings → Secrets and variables → Actions → New repository secret
+#     Name : DISCORD_WEBHOOK_URL
+#     Value: Discord のチャンネル設定 → 連携サービス → ウェブフック で発行したURL
+#   ※ Webhook URL は公開リポジトリのファイルに直接書かないこと（誰でも投稿できてしまう）
+#
+# ★拡張予定: サイトのURLが変わった場合
+#   Settings → Secrets and variables → Actions → Variables タブ で
+#     Name : NEWS_BASE_URL
+#     Value: https://新しいドメイン/news/
+#   を登録する（未登録なら下の既定値 https://sunshaura.com/news/ を使う）
+#
+# ★拡張予定: 通知の文面を変える場合
+#   下の「メッセージ本文」の content を書き換える。
+#   {title}=見出し、{date}=2026.10.10 形式の日付、{url}=記事URL
+# =====================================================
+name: News to Discord
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'news/data/articles.json'
+  # 手動で再送したいとき用（Actions タブ → News to Discord → Run workflow）
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # 1つ前のコミットと比較するため
+
+      - name: Discord に新着記事を送る
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          NEWS_BASE_URL: ${{ vars.NEWS_BASE_URL || 'https://sunshaura.com/news/' }}
+          IS_MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          node <<'EOF'
+          const { execSync } = require('child_process');
+          const fs = require('fs');
+
+          const webhook = process.env.DISCORD_WEBHOOK_URL;
+          if (!webhook) {
+            console.log('DISCORD_WEBHOOK_URL が未設定のため、通知をスキップします。');
+            process.exit(0);
+          }
+
+          const file = 'news/data/articles.json';
+          const now = JSON.parse(fs.readFileSync(file, 'utf8'));
+
+          let before = [];
+          try {
+            before = JSON.parse(execSync(`git show HEAD^:${file}`, { encoding: 'utf8' }));
+          } catch (e) {
+            // 初回コミットなど、前のバージョンがない場合は空扱い
+          }
+
+          let added;
+          if (process.env.IS_MANUAL === 'true') {
+            // 手動実行のときは最新の1件を送り直す
+            added = now.slice(0, 1);
+          } else {
+            const known = new Set(before.map(a => a.date));
+            added = now.filter(a => !known.has(a.date));
+          }
+          if (added.length === 0) { console.log('新しい記事はありません。'); process.exit(0); }
+
+          const base = process.env.NEWS_BASE_URL.replace(/\/?$/, '/');
+
+          (async () => {
+            // 古い日付から順に送る
+            for (const a of added.sort((x, y) => x.date < y.date ? -1 : 1)) {
+              const [y, m, d] = a.date.split('-');
+              const url = `${base}column/${y}${m}/${d}/`;
+              // ---- メッセージ本文 ----
+              const content = `📰 **${a.title}**\n${y}.${m}.${d} のVRニュースを公開しました\n${url}`;
+              const res = await fetch(webhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content, allowed_mentions: { parse: [] } })
+              });
+              console.log(a.date, res.status);
+              if (!res.ok) process.exitCode = 1;
+            }
+          })();
+          EOF
