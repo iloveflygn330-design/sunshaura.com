@@ -106,7 +106,39 @@
 
 ---
 
-## 5. ファイルの置き方
+## 5. サムネイル
+
+自分で用意した画像を、カテゴリごとのフォルダから選んで使う。**他サイトの画像は使わない。**
+
+1. その日の **1件目のニュースのカテゴリ** に対応するフォルダを見る（下の表）
+2. フォルダ内の画像（.jpg / .jpeg / .png / .webp）のうち、**news/data/articles.json の直近の記事で使っていないもの** を選ぶ
+   - 未使用の画像が複数あれば、どれを選んでもよい
+   - すべて使用済みなら、いちばん前に使われたもの（articles.json で最も古い使用）を選ぶ
+3. article.json と articles.json の thumb に、news/ からの相対パスを書く（例: `"assets/thumbs/world/world-sunset-01.jpg"`）
+4. フォルダに画像が1枚もないときは、thumb は空文字 `""` にする（カテゴリ色とアイコンの自動サムネイルになる）
+5. 画像ファイルはコピー・移動・編集しない（パスを書くだけ）
+
+| カテゴリ | フォルダ |
+|---|---|
+| VRChat公式 | news/assets/thumbs/vrchat/ |
+| イベント | news/assets/thumbs/event/ |
+| アバター・制作 | news/assets/thumbs/avatar/ |
+| ワールド | news/assets/thumbs/world/ |
+| VR機器・技術 | news/assets/thumbs/device/ |
+| AI | news/assets/thumbs/ai/ |
+| その他 | news/assets/thumbs/other/ |
+
+<!--
+  ★拡張予定: サムネイル画像を増やす場合
+    上の表のフォルダに画像を入れて push するだけでよい（形式などは news/assets/thumbs/README.md を参照）。
+  ★拡張予定: カテゴリを追加する場合
+    この表・「4. カテゴリ」・news/assets/news.js の NEWS_CATEGORIES・news/assets/thumbs/README.md に追記し、
+    news/assets/thumbs/ に新しいフォルダを作る。
+-->
+
+---
+
+## 6. ファイルの置き方
 
 日付が 2026-10-10 の場合:
 
@@ -138,7 +170,7 @@ news/data/articles.json            ← 先頭に一覧用の1件を追加
 }
 ```
 
-- thumb は通常は空文字 ""（カテゴリ色とアイコンでサムネイルが自動表示される）
+- thumb は「5. サムネイル」の手順で選んだ画像のパス。画像がないカテゴリは空文字 ""（カテゴリ色とアイコンでサムネイルが自動表示される）
 
 ### 一覧データの形式（articles.json に追加する1件）
 
@@ -151,7 +183,7 @@ news/data/articles.json            ← 先頭に一覧用の1件を追加
 
 ---
 
-## 6. 公開
+## 7. 公開
 
 1. JSONが正しい形式か確認する（`python3 -m json.tool` 等で読み込めること）
 2. コミットメッセージ: `news: 2026-10-10 記事タイトル`

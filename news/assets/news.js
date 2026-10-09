@@ -207,9 +207,11 @@
   /* =====================================================
      サムネイル（カテゴリ帯 + 画像）
      記事に thumb（画像パス）があればその画像、なければカテゴリ色＋アイコンで自動生成。
-     ★拡張予定: 自分で作った画像を使いたい記事は、article.json と articles.json の
-       "thumb" に news/ からの相対パス（例: "column/202610/10/thumb.png"）を書き、
-       その画像を記事フォルダに置く。他サイトの画像を転載するのは不可。
+     ★拡張予定: 自分で用意した画像は news/assets/thumbs/<カテゴリ>/ に入れておくと、
+       毎日のタスクが選んで article.json と articles.json の "thumb" に
+       news/ からの相対パス（例: "assets/thumbs/world/world-sunset-01.jpg"）を書く。
+       手順は news/GUIDE.md「5. サムネイル」、画像の形式は news/assets/thumbs/README.md を参照。
+       他サイトの画像を転載するのは不可。
      ===================================================== */
   function buildThumb(entry, withDate) {
     var info  = catInfo(entry.category);
