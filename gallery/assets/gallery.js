@@ -2,9 +2,7 @@
    sunshaura.com フォトギャラリー JS（gallery/index.html で読み込む）
 
    仕組み:
-     1. 写真の一覧を読む
-          通常   : gallery/data/photos.json（GitHub Actions が自動で作る一覧）
-          予備   : photos.json がまだ無い・空のときは、GitHub API で gallery/photos/ の中身を直接見る
+     1. 写真の一覧（gallery/data/photos.json）を読む
      2. 選んだアルバムの写真から、ランダムに3枚選ぶ（「画像を変更」では直前の3枚は選ばない）
      3. 毎回ちがう位置・角度に、重なりすぎないように配置する
      4. 1枚ずつ、透明な状態から横にスライドインして表示する
@@ -12,9 +10,9 @@
 
    表示する画像:
      並べるとき   … 軽量版（gallery/generated/thumb/ … 横960pxのWebP）
-     拡大表示     … 大きめ版（gallery/generated/large/ … 長辺2000pxのWebP）
-     どちらも、写真を push したときに GitHub Actions（.github/workflows/gallery-build.yml）が自動で作る。
-     まだ作られていない写真は、元の画像（gallery/photos/）をそのまま表示する。
+     拡大表示     … 大きめ版（gallery/generated/large/ … 長辺1920pxのWebP）
+     元の写真（gallery/photos/）は容量が大きいので GitHub には上げていない（PCにだけある）。
+     圧縮版と一覧は .github/scripts/gallery-build.js で作る（手順はそのファイルの先頭コメント）。
    ===================================================== */
 (function () {
   'use strict';
@@ -38,29 +36,8 @@
   /* 全アルバムをまとめたボタンの名前（最初はこれが選ばれている） */
   var ALL_ALBUM_LABEL = 'すべて';
 
-  /* -----------------------------------------------------
-     写真を置くフォルダ（GitHub 上の場所）
-       リポジトリ名やブランチ名を変えたら、ここも書き換える。
-       ※ photos.json が使えないときの予備（GitHub API）でだけ使う
-  ----------------------------------------------------- */
-  var GALLERY_SOURCE = {
-    owner:  'iloveflygn330-design',
-    repo:   'sunshaura.com',
-    branch: 'main',
-    path:   'gallery/photos/'   // リポジトリのトップからのパス（最後の / まで）
-  };
-
-  /* ★拡張予定: 表示できる画像の種類を増やす場合は、この正規表現に拡張子を追加する
-       .github/scripts/gallery-build.js の PHOTO_EXT も同じにそろえること */
-  var PHOTO_EXT = /\.(jpe?g|png|webp|gif|avif)$/i;
-
   /* 一度に表示する枚数（ワイヤーどおり3枚。変える場合は LAYOUT の PC_COLUMNS も同じ数にする） */
   var SHOW_COUNT = 3;
-
-  /* GitHub API の結果をブラウザに覚えておく時間（分）
-     API は1時間に60回までなので、予備の読み込みのときだけ使う */
-  var LIST_CACHE_MINUTES = 10;
-  var LIST_CACHE_KEY = 'sun-gallery-tree';
 
   /* -----------------------------------------------------
      ★拡張予定: 写真の並べ方（大きさ・散らばり具合・角度）
@@ -118,7 +95,7 @@
   var modalNext  = document.getElementById('gal-modal-next');
 
   var ALL = '*';        // 「すべて」を表すアルバムID
-  var allPhotos = [];   // 全写真 [{ id, album, src, thumb, large }]
+  var allPhotos = [];   // 全写真 [{ id, album, thumb, large }]
   var albums    = [];   // [{ dir, label, count }]
   var current   = ALL;  // 選択中のアルバム
   var shown     = [];   // いま表示中の写真 [{ photo, el, pc:{...}, sp:{...}, from }]
@@ -155,73 +132,24 @@
   }
 
   /* =====================================================
-     写真の一覧を取得
-       ① gallery/data/photos.json（GitHub Actions が自動で作る。軽量版の場所も入っている）
-       ② ①が無い・空・読めないとき → GitHub API で gallery/photos/ を直接見る（元画像をそのまま表示）
-     photos.json は自動生成なので、手で書き換えないこと（次の push で上書きされる）。
+     写真の一覧を取得（gallery/data/photos.json）
+     photos.json は .github/scripts/gallery-build.js が自動で作るので、手で書き換えないこと。
      ===================================================== */
-  function fetchManifest() {
+  function loadPhotoList() {
     return fetch('data/photos.json', { cache: 'no-cache' }).then(function (res) {
       if (!res.ok) throw new Error('photos.json : ' + res.status);
       return res.json();
     }).then(function (data) {
-      var list = (data.photos || []).filter(function (p) { return p && p.src && PHOTO_EXT.test(p.src); });
-      if (!list.length) throw new Error('photos.json に写真がありません');
-      return list.map(function (p) {
-        return {
-          id: p.src,
-          album: p.album || '',
-          src: encodePath(p.src),
-          thumb: p.thumb ? encodePath(p.thumb) : null,
-          large: p.large ? encodePath(p.large) : null
-        };
-      });
-    });
-  }
-
-  function fetchFromGitHub() {
-    var cached = null;
-    try {
-      var c = JSON.parse(sessionStorage.getItem(LIST_CACHE_KEY) || 'null');
-      if (c && Date.now() - c.time < LIST_CACHE_MINUTES * 60000) cached = c.paths;
-    } catch (e) { /* 読めなければ取り直す */ }
-
-    // Authorization ヘッダーは付けない（付けると CORS の事前確認で失敗するため）
-    var url = 'https://api.github.com/repos/' + GALLERY_SOURCE.owner + '/' + GALLERY_SOURCE.repo +
-      '/git/trees/' + encodeURIComponent(GALLERY_SOURCE.branch) + '?recursive=1';
-    var p = cached ? Promise.resolve(cached) : fetch(url, { headers: { Accept: 'application/vnd.github+json' } })
-      .then(function (res) {
-        if (!res.ok) throw new Error('GitHub API : ' + res.status);
-        return res.json();
-      })
-      .then(function (data) {
-        var paths = (data.tree || [])
-          .filter(function (it) { return it.type === 'blob' && it.path.indexOf(GALLERY_SOURCE.path) === 0 && PHOTO_EXT.test(it.path); })
-          .map(function (it) { return it.path.slice(GALLERY_SOURCE.path.length); });   // "event/a.png" や "a.png"
-        try { sessionStorage.setItem(LIST_CACHE_KEY, JSON.stringify({ time: Date.now(), paths: paths })); } catch (e) {}
-        return paths;
-      });
-
-    return p.then(function (paths) {
-      return paths
-        .filter(function (rel) { return rel.split('/').length <= 2; })   // アルバムは1階層まで
-        .map(function (rel) {
-          var parts = rel.split('/');
+      return (data.photos || [])
+        .filter(function (p) { return p && p.thumb && p.large; })
+        .map(function (p) {
           return {
-            id: 'photos/' + rel,
-            album: parts.length === 2 ? parts[0] : '',
-            src: encodePath('photos/' + rel),
-            thumb: null,
-            large: null
+            id: p.thumb,
+            album: p.album || '',
+            thumb: encodePath(p.thumb),
+            large: encodePath(p.large)
           };
         });
-    });
-  }
-
-  function loadPhotoList() {
-    return fetchManifest().catch(function (e) {
-      console.warn('photos.json を使えないので、GitHub API から一覧を取得します:', e.message);
-      return fetchFromGitHub();
     });
   }
 
@@ -299,7 +227,7 @@
     return fresh.concat(rest);   // 先頭から順に使う（読み込めなかった写真は飛ばして次へ）
   }
 
-  /* 画像を読み込んでから表示する。軽量版が無ければ元画像、それも無ければその写真は飛ばす */
+  /* 画像を読み込んでから表示する。どちらも読めなかった写真は飛ばして次の候補へ */
   function loadImage(urls) {
     return new Promise(function (resolve) {
       var i = 0;
@@ -319,7 +247,7 @@
       var batch = candidates.slice(i, i + need);
       i += need;
       return Promise.all(batch.map(function (p) {
-        return loadImage([p.thumb, p.src].filter(Boolean));
+        return loadImage([p.thumb, p.large]);   // 軽量版が読めなければ大きめ版で表示
       })).then(function (imgs) {
         imgs.forEach(function (img, k) {
           if (img) result.push({ photo: batch[k], img: img });
@@ -530,7 +458,7 @@
      拡大表示（モーダル）
        背景クリック・×ボタン・Escキーで閉じる。
        ‹ › ボタン・← → キー・スワイプで、いま表示中の3枚を切り替えられる。
-       大きめ版（generated/large）→ 元画像 の順で表示する。
+       大きめ版（generated/large）を表示する。読めなければ軽量版で表示する。
      ===================================================== */
   var modalIndex = 0;
   var lastFocus = null;
@@ -539,7 +467,7 @@
     var n = shown.length;
     modalIndex = (index + n) % n;
     var p = shown[modalIndex].photo;
-    var urls = [p.large, p.src].filter(Boolean);
+    var urls = [p.large, p.thumb];
     var k = 0;
     modalImg.onerror = function () { k++; if (k < urls.length) modalImg.src = urls[k]; };
     modalImg.src = urls[0];
@@ -611,7 +539,7 @@
       current = albumFromHash();
       renderAlbums();
       if (!allPhotos.length) {
-        showMessage('まだ写真がありません。\ngallery/photos/ に画像を入れると、ここに表示されます。');
+        showMessage('まだ写真がありません。');
         return;
       }
       return showSet([], waitForPanel);

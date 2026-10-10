@@ -16,9 +16,9 @@
     写真の一覧の取得・配置・アニメーション・拡大表示はすべて assets/gallery.js が行う。
 
     ★拡張予定: 写真を追加する方法
-      gallery/photos/<アルバム名>/ に画像ファイル（.jpg / .jpeg / .png / .webp / .gif / .avif）を入れて
-      GitHub に push するだけ。このHTMLやJSを書き換える必要はない。
-      軽量版の画像は GitHub Actions が自動で作る。詳しくは gallery/photos/README.md を参照。
+      gallery/photos/<アルバム名>/ に画像ファイル（.jpg / .jpeg / .png / .webp / .gif / .avif）を入れて、
+      圧縮版を作って GitHub に上げる（元の写真は GitHub には上げない）。このHTMLやJSを書き換える必要はない。
+      手順は gallery/photos/README.md を参照。
 
     ★拡張予定: ページに要素を足したい場合（説明文・お知らせ等）
       <main> の中、<nav class="gal-albums"> の上か、<div class="gal-controls"> の下に追記する。

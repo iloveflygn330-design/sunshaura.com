@@ -37,14 +37,11 @@
       ├─ assets/
       │   ├─ gallery.css        ← 見た目（白フチ・アルバムボタン・拡大表示）
       │   └─ gallery.js         ← 一覧取得・アルバム・ランダム配置・アニメーション・拡大表示
-      ├─ photos/                ← ★拡張予定: 写真はここに入れて push するだけ（README.md 参照）
-      │   ├─ event/             ← フォルダ1つ = アルバム1つ
-      │   └─ world/
-      ├─ generated/             ← 自動生成（軽量版 WebP）。触らない
-      │   ├─ thumb/
-      │   └─ large/
+      ├─ photos/                ← ★拡張予定: 元の写真置き場（PCだけ。GitHubには上げない）
+      │   └─ event/ など        ← フォルダ1つ = アルバム1つ
+      ├─ generated/             ← 圧縮版 WebP（GitHubに上げる）。手で触らない
+      │   ├─ thumb/             ← 並べる用（横960px）
+      │   └─ large/             ← 拡大表示用（長辺1920px）
       └─ data/
-          └─ photos.json        ← 自動生成（写真の一覧）。触らない
-  .github/
-      ├─ workflows/gallery-build.yml ← 写真を push したら軽量版と一覧を作る
-      └─ scripts/gallery-build.js    ← その処理の中身
+          └─ photos.json        ← 写真の一覧（自動生成）。手で触らない
+  .github/scripts/gallery-build.js ← 元の写真 → 圧縮版と一覧を作るスクリプト
