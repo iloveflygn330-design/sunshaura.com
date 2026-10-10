@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-11",
+  "title": "VRChatのSpookality受賞作が16日公開へほか、今日のVR・AIニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日はVRChat恒例のハロウィン企画「Spookality 2026」の今後の予定からお届けします。あわせて、Quest 3向けVRアドベンチャーの発売日決定、XREALのグラスをSteam DeckでVRヘッドセットとして使う非公式ツール、そして画像生成AI「Qwen-Image-2.1」の高速版の話題を紹介します。",
+  "items": [
+    {
+      "headline": "Spookality 2026、受賞作は10月16日から公開予定",
+      "category": "イベント",
+      "overview": "VRChat公式のハロウィン向け制作企画「Spookality 2026」は、作品の応募受付が10月1日に締め切られ、現在は10月15日までの審査期間に入っています。今年のテーマは80年代ホラーへのオマージュをうたう「Camp Whispering Screams」です。10月16日から11月2日までがショーケース期間で、選ばれたワールドとアバターがVRChat内の専用の列で紹介されます。VR.orgがまとめたハロウィンのVRイベント一覧でも、この日程が取り上げられています。",
+      "points": [
+        "受賞はワールド12作品・アバター12作品の予定",
+        "応募作はPC・Android・iOSのクロスプラットフォーム対応が条件",
+        "Quest（Android版）やスマホからも受賞ワールドを遊べる見込み",
+        "アバター部門のテーマは「In the Safe Zone」"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum「Spookality 2026 World & Avatar Jam OPEN」", "url": "https://ask.vrchat.com/t/spookality-2026-world-avatar-jam-open-camp-whispering-screams/48905" },
+        { "name": "VR.org「Halloween 2026 in VR」", "url": "https://vr.org/articles/vr-halloween-2026-events-calendar-crimson-eye-spookality-steam-scream" }
+      ]
+    },
+    {
+      "headline": "VRアドベンチャー『Terry's Terraforming』10月22日発売",
+      "category": "その他",
+      "overview": "スウェーデンのインディースタジオReally Interactiveは、VRアドベンチャー『Terry's Terraforming』をMeta Quest 3向けに10月22日に発売すると発表しました。滅びかけた惑星を、さまざまな宇宙人が暮らせる環境に作り変えていく内容で、物語は約6時間のボリュームです。5月に『Janet's Planets』として発表された作品が、名前を変えて登場します。Steam版は後日の発売予定です。",
+      "points": [
+        "価格は14.99ドル、期間限定で予約割引あり",
+        "惑星の地表へすぐ移動できる「Terry's SweetView」を搭載",
+        "自由に試せるサンドボックスモードも用意",
+        "デイリーチャレンジと世界ランキングに対応"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/vr-narrative-adventure-terrys-terraforming-gets-release-date/" }
+      ]
+    },
+    {
+      "headline": "XREAL 1SをSteam DeckでVR化する非公式ツール公開",
+      "category": "VR機器・技術",
+      "overview": "XREALのARグラス「XREAL 1S」を、Steam Deck上でSteamVR用のヘッドセットとして動かすオープンソースのツール「xreal-linux」が、最初のテスト版（リリース候補）を公開しました。MIXED Reality Newsによると、グラス内蔵のセンサーで頭の向きを読み取る3DoF方式で、前後左右の移動（ポジショントラッキング）には対応していません。XREALやValveは関わっていない、個人によるプロジェクトです。",
+      "points": [
+        "動作確認はSteam Deck＋Bazzite（デスクトップモード）のみ",
+        "SteamVR起動時に左右の目に別々の映像を出すモードへ切り替わる",
+        "地磁気センサーが使えず、向きが少しずつずれる課題がある",
+        "公開されたのはリリース候補版（rc1・rc2）の段階"
+      ],
+      "sources": [
+        { "name": "MIXED Reality News", "url": "https://mixed-news.com/en/xreal-linux-1s-3dof-steamvr-headset-steam-deck/" }
+      ]
+    },
+    {
+      "headline": "画像生成AI「Qwen-Image-2.1」に8ステップの高速版",
+      "category": "AI",
+      "overview": "AlibabaのQwenチームは、画像生成AI「Qwen-Image-2.1」の高速版「Qwen-Image-2.1-Turbo」を10月9日に公開しました。元のモデルでは40ステップかけていた生成処理を、8ステップで行えるようにしたものです。モデルの重みはHugging FaceとModelScopeで配布され、ComfyUIでも使えるようになっています。",
+      "points": [
+        "画像を作る部分のモデル規模は70億パラメーター（7B）",
+        "重みはQwen Research Licenseで、商用利用には別途ライセンスが必要",
+        "Alibaba Cloudでは有料のAPIとしても提供",
+        "ComfyUI向けに省メモリ版（INT8）なども用意"
+      ],
+      "sources": [
+        { "name": "ComfyUI Wiki", "url": "https://comfyui-wiki.com/en/news/2026-10-09-qwen-image-2-1-turbo" },
+        { "name": "Kingy AI", "url": "https://kingy.ai/blog/qwen-image-2-1-turbo-eight-steps-license/" }
+      ]
+    }
+  ],
+  "outro": "Spookalityの受賞作は16日からVRChat内で見られる予定です。ハロウィンシーズンのワールド巡りの参考にしてみてください。"
+}
