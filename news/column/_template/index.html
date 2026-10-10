@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ページ間遷移の到着判定（index.html の <head> と同じもの。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
   <title>ニュース | sunshaura.com</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../../assets/news.css">
@@ -26,11 +28,18 @@
     ・このテンプレートを変えた場合は、過去の記事フォルダの index.html にも
       同じ内容を上書きコピーする（中身は全記事で同一なので一括コピーでOK）
 -->
-<body data-news-page="article" data-news-root="../../../">
+<body data-transition-manual-ready data-news-page="article" data-news-root="../../../">
 
   <header id="header"></header>
 
-  <main id="news-body">
+  <!-- ページ間遷移アニメーション用（index.html と同じ構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon">🌸</div>
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="news-body" data-transition-body>
     <div class="news-layout">
 
       <div class="news-main">
@@ -48,6 +57,7 @@
 
   <footer class="news-footer">sunshaura.com</footer>
 
+  <script src="../../../../assets/page-transition.js"></script>
   <script src="../../../assets/news.js"></script>
 </body>
 </html>

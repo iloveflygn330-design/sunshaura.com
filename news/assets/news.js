@@ -124,11 +124,12 @@
     var header = document.getElementById('header');
     if (!header) return;
 
-    var logo = '<a id="logo-area" href="' + SITE + 'index.html">' +
+    // data-transition を付けたリンクは、移動時に「ちょっとまってね...」の演出が入る（assets/page-transition.js）
+    var logo = '<a id="logo-area" data-transition href="' + SITE + 'index.html">' +
       NEWS_LOGO_HTML.replace(/\{ROOT\}/g, SITE) + '</a>';
     var buttons = NEWS_NAV_ITEMS.map(function (item) {
       var href = item.href ? SITE + item.href : SITE + 'index.html#' + item.page;
-      return '<a class="nav-btn' + (item.current ? ' active' : '') + '" href="' + href + '">' +
+      return '<a class="nav-btn' + (item.current ? ' active' : '') + '" data-transition href="' + href + '">' +
         item.label + '</a>';
     }).join('');
 
@@ -241,6 +242,7 @@
      ===================================================== */
   function buildCard(entry) {
     var card = el('a', 'news-card');
+    card.setAttribute('data-transition', '');
     card.href = ROOT + articlePath(entry.date);
     card.appendChild(buildThumb(entry, false));
     card.appendChild(el('p', 'news-card-title', entry.title));
@@ -291,6 +293,7 @@
         .forEach(function (a) {
           var item = el('li');
           var link = el('a', a.date === currentDate ? 'current' : '', a.title);
+          link.setAttribute('data-transition', '');
           link.href = ROOT + articlePath(a.date);
           link.title = dotDate(a.date);
           item.appendChild(link);
@@ -507,6 +510,7 @@
       pager.innerHTML = '';
       function pagerLink(entry, label, cls) {
         var a = el('a', cls);
+        a.setAttribute('data-transition', '');
         a.href = ROOT + articlePath(entry.date);
         a.appendChild(el('small', '', label + '　' + dotDate(entry.date)));
         a.appendChild(document.createTextNode(entry.title));
@@ -514,6 +518,7 @@
       }
       if (idx > 0) pager.appendChild(pagerLink(sorted[idx - 1], '← 前の記事', 'news-pager-prev'));
       var top = el('a', '');
+      top.setAttribute('data-transition', '');
       top.href = ROOT + '#' + monthKey(article.date);
       top.appendChild(el('small', '', '一覧'));
       top.appendChild(document.createTextNode(monthKey(article.date).replace('-', '年') + '月の記事一覧へ'));
@@ -525,7 +530,8 @@
     renderSide(list, monthKey(article.date), null, article.date);
     // スマホの年月ボタン：選んだ年月の一覧（トップ）へ移動する
     renderPicker(list, monthKey(article.date), function (key) {
-      location.href = ROOT + '#' + key;
+      var url = ROOT + '#' + key;
+      if (window.SunTransition) SunTransition.go(url); else location.href = url;
     });
   }
 
@@ -540,12 +546,20 @@
     return [];
   });
 
+  /* 中身の描画が終わったら、遷移パネルに「おまたせ！」を出して開く
+     （直接URLを開いた場合など、演出なしで来たときは何もしない） */
+  function notifyReady() {
+    if (window.SunTransition) SunTransition.ready();
+  }
+
   if (PAGE === 'top') {
-    indexPromise.then(renderTop);
+    indexPromise.then(renderTop).then(notifyReady, notifyReady);
   } else if (PAGE === 'article') {
     Promise.all([fetchJSON('./article.json'), indexPromise])
       .then(function (r) { renderArticle(r[0], r[1]); })
+      .then(notifyReady)
       .catch(function (e) {
+        notifyReady();
         console.error(e);
         var box = document.getElementById('news-article');
         if (box) {

@@ -19,6 +19,10 @@
   --header-height-pc:  60px;
   --header-height-sp: 120px;
   --duration-ui:      300ms;
+  --duration-panel:   600ms;
+  --ease-decel:       cubic-bezier(0.22, 1, 0.36, 1);
+  --color-loading-bar: #2E2E2E;
+  --loading-bar-height: 50px;
   --nav-btn-width:    130px;
   --nav-btn-gap:       10px;
 
@@ -91,7 +95,10 @@ body {
   background-image: radial-gradient(var(--season-bg-sub) 2px, transparent 2px);
   background-size: 22px 22px;
   min-height: 100svh;
+  /* 記事が少なくてもフッターが画面の一番下に来るようにする */
+  display: flex; flex-direction: column;
 }
+#news-body { flex: 1 0 auto; }
 a { color: inherit; }
 
 /* =====================================================
@@ -175,6 +182,7 @@ a { color: inherit; }
 #news-body {
   padding: calc(var(--header-height-pc) + 32px) 20px 64px;
   position: relative;
+  transition: transform var(--duration-ui) ease;
 }
 @media (max-width: 759px) {
   #news-body { padding-top: calc(var(--header-height-sp) + 20px); padding-left: 14px; padding-right: 14px; }
@@ -466,7 +474,7 @@ a { color: inherit; }
   #news-fab {
     position: fixed; right: 16px;
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-    z-index: 30;
+    z-index: 7; /* 遷移パネル（8）より下。移動中はパネルに隠れる */
     height: 52px; padding: 0 16px 0 12px;
     border: none; border-radius: 26px;
     background: var(--season-accent); color: var(--color-white);
@@ -536,3 +544,61 @@ a { color: inherit; }
   /* 右下ボタンで最後のカードが隠れないよう、下に余白を足す */
   #news-body { padding-bottom: 96px; }
 }
+
+
+/* =====================================================
+   ページ間遷移アニメーション
+   index.html の #loading-bar / #loading-panel と同じ見た目。
+   動きは assets/page-transition.js が担当する。
+   index.html 側の見た目を変えたときは、ここも合わせて変更する。
+
+   ★拡張予定: パネルのアイコンを画像にする場合
+     news/index.html と news/column/_template/index.html の <div id="panel-icon"> の中身を
+     <img src="（相対パス）assets/panel-icon.png" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+     に書き換える（過去の記事フォルダの index.html にもテンプレートを上書きコピーする）
+   ===================================================== */
+#loading-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--loading-bar-height);
+  background: var(--color-loading-bar); color: var(--color-white);
+  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9; transform: translateY(0);
+  transition: transform var(--duration-ui) ease;
+}
+@media (min-width: 760px) { #loading-bar.reveal { transform: translateY(var(--header-height-pc)); } }
+@media (max-width: 759px) { #loading-bar.reveal { transform: translateY(var(--header-height-sp)); } }
+@keyframes loadingDots { 0% { content: '・'; } 33% { content: '・・'; } 66% { content: '・・・'; } }
+.dots-anim::after { content: '・'; animation: loadingDots 1.2s steps(1, end) infinite; }
+
+#news-body.loading { transform: translateY(var(--loading-bar-height)); }
+
+#loading-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 100vh;
+  background: var(--color-main-dark);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 22px; z-index: 8;
+  padding-top: calc(var(--header-height-pc) + var(--loading-bar-height));
+  transform: translateY(100%);
+  transition: transform var(--duration-panel) var(--ease-decel);
+}
+@media (max-width: 759px) {
+  #loading-panel { padding-top: calc(var(--header-height-sp) + var(--loading-bar-height)); }
+}
+#loading-panel.slide-up { transform: translateY(0); }
+#panel-icon {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex; align-items: center; justify-content: center; font-size: 44px;
+}
+#panel-message {
+  color: var(--color-white); font-size: clamp(20px, 4vw, 28px);
+  font-weight: 800; letter-spacing: 0.08em;
+}
+
+/* 別のHTMLから移動してきた直後：アニメーションなしで、最初から覆った状態にする */
+.is-arriving #loading-panel { transform: translateY(0); transition: none; }
+.is-arriving #news-body     { transform: translateY(var(--loading-bar-height)); transition: none; }
+.is-arriving #loading-bar   { transition: none; }
+@media (min-width: 760px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-pc)); } }
+@media (max-width: 759px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-sp)); } }

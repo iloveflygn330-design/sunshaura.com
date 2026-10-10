@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    ページ間遷移の到着判定（assets/page-transition.js とセット）
+      別のHTML（ニュース等）から演出つきで移動してきた場合だけ、
+      画面が表示される前に <html class="is-arriving"> を付けて、パネルで覆った状態から始める。
+      ※ 表示前に判定する必要があるため、ファイルを分けずに <head> に直接書いている
+  -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
   <title>sunshaura.com</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
   <!-- GSAP + ScrollTrigger（CDN） -->
@@ -178,6 +185,14 @@
       #loading-panel { padding-top: calc(var(--header-height-sp) + var(--loading-bar-height)); }
     }
     #loading-panel.slide-up { transform: translateY(0); }
+
+    /* 別のHTMLから移動してきた直後：アニメーションなしで、最初から覆った状態にする
+       （assets/page-transition.js が準備完了後に「おまたせ！」→ パネルを下げる） */
+    .is-arriving #loading-panel { transform: translateY(0); transition: none; }
+    .is-arriving #body-content  { transform: translateY(var(--loading-bar-height)); transition: none; }
+    .is-arriving #loading-bar   { transition: none; }
+    @media (min-width: 760px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-pc)); } }
+    @media (max-width: 759px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-sp)); } }
     #panel-icon {
       /*
        * ★拡張予定: アイコン画像への差し替え
@@ -1094,13 +1109,14 @@
           <button class="nav-btn" data-page="about"   onclick="navigateTo('about', this)">このサイトについて</button>
           <!--
             ニュースは index.html 内のページ（div）ではなく、別フォルダ news/ の独立ページ。
-            そのため navigateTo() ではなく、通常のページ遷移（location.href）で移動する。
+            そのため navigateTo() ではなく、SunTransition.go()（assets/page-transition.js）で移動する。
+            navigateTo() と同じ「ちょっとまってね...」→「おまたせ！」の演出が付く。
             ★拡張予定: 同じように別フォルダの独立ページを追加する場合
-              <button class="nav-btn" data-page="フォルダ名" onclick="location.href='フォルダ名/'">ボタン名</button>
+              <button class="nav-btn" data-page="フォルダ名" onclick="SunTransition.go('フォルダ名/')">ボタン名</button>
               を追記し、news/assets/news.js の NEWS_NAV_ITEMS にも同じボタンを追記すること
               （ニュース側のヘッダーにも同じボタンを並べるため）
           -->
-          <button class="nav-btn" data-page="news"    onclick="location.href='news/'">ニュース</button>
+          <button class="nav-btn" data-page="news"    onclick="SunTransition.go('news/')">ニュース</button>
         </div>
       </div>
       <button class="nav-arrow" id="nav-next" onclick="slideNav(1)" aria-label="次のボタンへ">›</button>
@@ -1116,7 +1132,7 @@
     <div id="panel-message">ちょっとまってね...</div>
   </div>
 
-  <main id="body-content">
+  <main id="body-content" data-transition-body>
 
     <div class="page active" id="page-welcome">
       <!-- 専用スクロールコンテナ: GSAPのscrollerとして使用（windowと分離） -->
@@ -1500,6 +1516,9 @@
   </main>
 
 
+  <!-- ページ間遷移アニメーション（ニュース等の別HTMLとの行き来用） -->
+  <script src="assets/page-transition.js"></script>
+
   <script>
     const CONFIG = {
       NAV_VISIBLE:     3,
@@ -1566,6 +1585,16 @@
 
     let isNavigating = false;
 
+    // ページの表示切り替えだけを行う（演出なし）
+    // navigateTo() の途中と、別HTMLから #ページID 付きで戻ってきたときに使う
+    function activatePage(pageId, clickedBtn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const nextPage = document.getElementById('page-' + pageId);
+      if (nextPage) nextPage.classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      if (clickedBtn) clickedBtn.classList.add('active');
+    }
+
     function navigateTo(pageId, clickedBtn) {
       const currentPage = document.querySelector('.page.active');
       if (currentPage?.id === 'page-' + pageId || isNavigating) return;
@@ -1582,11 +1611,7 @@
       body.classList.add('loading');
       requestAnimationFrame(() => { requestAnimationFrame(() => { panel.classList.add('slide-up'); }); });
       setTimeout(() => {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const nextPage = document.getElementById('page-' + pageId);
-        if (nextPage) nextPage.classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        if (clickedBtn) clickedBtn.classList.add('active');
+        activatePage(pageId, clickedBtn);
         barText.textContent = '移動完了！'; panelMsg.textContent = 'おまたせ！';
         setTimeout(() => {
           panel.classList.remove('slide-up');
@@ -1611,7 +1636,10 @@
       const hashPage = decodeURIComponent(location.hash.slice(1));
       if (hashPage && hashPage !== 'welcome' && document.getElementById('page-' + hashPage)) {
         const hashBtn = document.querySelector(`.nav-btn[data-page="${CSS.escape(hashPage)}"]`);
-        navigateTo(hashPage, hashBtn);
+        // ニュース等から演出つきで来た場合は、すでにパネルで覆っているので直接切り替える
+        // （覆っていない状態で直接URLを開いた場合は、通常の演出で切り替える）
+        if (window.SunTransition && SunTransition.isArriving) activatePage(hashPage, hashBtn);
+        else navigateTo(hashPage, hashBtn);
       }
     });
 

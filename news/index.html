@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ページ間遷移の到着判定（index.html の <head> と同じもの。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
   <title>ニュース | sunshaura.com</title>
   <meta name="description" content="VRChatまわりのニュースを毎日まとめてお届けします。">
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -16,12 +18,19 @@
   ★拡張予定: トップだけに表示したいもの（お知らせ・バナー等）は
     <div class="news-month-band"> の上に追記する。
 -->
-<body data-news-page="top" data-news-root="./">
+<body data-transition-manual-ready data-news-page="top" data-news-root="./">
 
   <!-- ヘッダー（news.js が index.html と同じボタンを組み立てる） -->
   <header id="header"></header>
 
-  <main id="news-body">
+  <!-- ページ間遷移アニメーション用（index.html と同じ構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon">🌸</div>
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="news-body" data-transition-body>
     <div class="news-layout">
 
       <div class="news-main">
@@ -41,6 +50,7 @@
 
   <footer class="news-footer">sunshaura.com</footer>
 
+  <script src="../assets/page-transition.js"></script>
   <script src="assets/news.js"></script>
 </body>
 </html>
