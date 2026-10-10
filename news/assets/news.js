@@ -12,33 +12,6 @@
   'use strict';
 
   /* -----------------------------------------------------
-     ★拡張予定: ヘッダーのナビボタン
-       index.html の #nav-buttons-wrap と同じ並びにする。
-       index.html にボタンを追加したら、ここにも1行追記する。
-         page : index.html 内のページID → index.html#ページID に移動
-         href : 別フォルダの独立ページ（news/ からの相対パスではなく、サイトルートからのパス）
-       ニュース自身は current: true にしておくと、選択中の色になる。
-  ----------------------------------------------------- */
-  var NEWS_NAV_ITEMS = [
-    { label: 'アバター改変',       page: 'avatar' },
-    { label: '作ったワールド',     page: 'world' },
-    { label: 'ショップ',           page: 'shop' },
-    { label: 'フォトギャラリー',   page: 'photo' },
-    { label: 'イベント',           page: 'event' },
-    { label: 'ミニゲーム',         page: 'minigame' },
-    { label: 'このサイトについて', page: 'about' },
-    { label: 'ニュース',           href: 'news/', current: true }
-  ];
-
-  /* ★拡張予定: index.html でロゴを画像に差し替えたら、ここも同じHTMLにする
-       例: '<img src="{ROOT}assets/logo.png" alt="sunshaura" style="height:32px">'
-       {ROOT} はサイトのトップへの相対パスに自動で置き換わる */
-  var NEWS_LOGO_HTML = 'サイトロゴ';
-
-  /* ヘッダーのナビ表示数（index.html の CONFIG と同じ値） */
-  var NAV_CONFIG = { NAV_VISIBLE: 3, NAV_BTN_WIDTH: 130, NAV_BTN_GAP: 10 };
-
-  /* -----------------------------------------------------
      ★拡張予定: 記事カテゴリ
        カテゴリを増やすときは、ここに1行追加するだけ。
        毎日の記事作成タスクは news/GUIDE.md のカテゴリ一覧から選ぶので、
@@ -119,90 +92,20 @@
 
   /* =====================================================
      ヘッダー
+       ナビボタンの並び・ロゴは assets/site-header.js で全ページ共通管理している。
+       ★拡張予定: ボタンを追加・並べ替えする場合は assets/site-header.js の SITE_NAV_ITEMS を編集する
+         （このファイルは書き換え不要）
+       HTML 側で site-header.js を読み込んでいないページ（古いテンプレートからコピーした記事など）でも
+       表示されるよう、無ければここで読み込んでから組み立てる。
      ===================================================== */
   function renderHeader() {
-    var header = document.getElementById('header');
-    if (!header) return;
-
-    // data-transition を付けたリンクは、移動時に「ちょっとまってね...」の演出が入る（assets/page-transition.js）
-    var logo = '<a id="logo-area" data-transition href="' + SITE + 'index.html">' +
-      NEWS_LOGO_HTML.replace(/\{ROOT\}/g, SITE) + '</a>';
-    var buttons = NEWS_NAV_ITEMS.map(function (item) {
-      var href = item.href ? SITE + item.href : SITE + 'index.html#' + item.page;
-      return '<a class="nav-btn' + (item.current ? ' active' : '') + '" data-transition href="' + href + '">' +
-        item.label + '</a>';
-    }).join('');
-
-    header.innerHTML =
-      '<div id="header1">' + logo + '</div>' +
-      '<div id="header2">' +
-        '<button class="nav-arrow" id="nav-prev" aria-label="前のボタンへ">‹</button>' +
-        '<div id="nav-scroll-wrap"><div id="nav-buttons-wrap">' + buttons + '</div></div>' +
-        '<button class="nav-arrow" id="nav-next" aria-label="次のボタンへ">›</button>' +
-      '</div>';
-
-    // index.html と同じく先頭から並べる（画面が狭くて選択中のボタンが隠れる場合だけ、下でずらす）
-    var navOffset = 0;
-
-    /*
-     * ボタンの位置を実測して送る方式
-     *   ボタンの幅は文字数で130pxより広がる（例:「このサイトについて」）ため、
-     *   固定幅で計算せず、各ボタンの実際の左端位置まで動かす。
-     */
-    function measure() {
-      var wrapper    = document.getElementById('nav-buttons-wrap');
-      var scrollWrap = document.getElementById('nav-scroll-wrap');
-      var prevBtn    = document.getElementById('nav-prev');
-      var btns       = Array.prototype.slice.call(wrapper.children);
-      var base       = btns[0].offsetLeft;
-      var lefts      = btns.map(function (b) { return b.offsetLeft - base; });
-      var last       = btns[btns.length - 1];
-      // 矢印ボタンがまだ非表示のとき（初回）は、矢印2個ぶん（約72px）狭くなる前提で計算する
-      var visibleW   = scrollWrap.clientWidth - (prevBtn.style.display === 'flex' ? 0 : 72);
-      var totalW     = last.offsetLeft + last.offsetWidth - base;
-      // 最後のボタンが見える最小の送り数 = 最大移動量
-      var maxOffset  = lefts.findIndex(function (l) { return totalW - l <= visibleW; });
-      if (maxOffset < 0) maxOffset = btns.length - 1;
-      return { btns: btns, lefts: lefts, visibleW: visibleW, maxOffset: maxOffset };
-    }
-
-    function update() {
-      var count      = NEWS_NAV_ITEMS.length;
-      var wrapper    = document.getElementById('nav-buttons-wrap');
-      var scrollWrap = document.getElementById('nav-scroll-wrap');
-      var prevBtn    = document.getElementById('nav-prev');
-      var nextBtn    = document.getElementById('nav-next');
-      if (count > NAV_CONFIG.NAV_VISIBLE) {
-        prevBtn.style.display = 'flex'; nextBtn.style.display = 'flex';
-        wrapper.style.marginLeft = '0'; wrapper.style.marginRight = '0';
-        var m = measure();
-        navOffset = Math.max(0, Math.min(navOffset, m.maxOffset));
-        wrapper.style.transform = 'translateX(-' + m.lefts[navOffset] + 'px)';
-        prevBtn.disabled = navOffset <= 0; nextBtn.disabled = navOffset >= m.maxOffset;
-        var FADE = 30;
-        var l = navOffset <= 0 ? 'black 0px' : 'transparent 0px, black ' + FADE + 'px';
-        var r = navOffset >= m.maxOffset ? 'black 100%' : 'black calc(100% - ' + FADE + 'px), transparent 100%';
-        scrollWrap.style.webkitMaskImage = scrollWrap.style.maskImage = 'linear-gradient(to right, ' + l + ', ' + r + ')';
-      } else {
-        prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
-        wrapper.style.transform = 'translateX(0)';
-      }
-    }
-    document.getElementById('nav-prev').onclick = function () { navOffset--; update(); };
-    document.getElementById('nav-next').onclick = function () { navOffset++; update(); };
-    update();
-
-    // 選択中のボタン（ニュース）が画面外にあれば、見える位置までずらす
-    var activeBtn = header.querySelector('.nav-btn.active');
-    if (activeBtn) {
-      var m0 = measure();
-      var idx = m0.btns.indexOf(activeBtn);
-      var activeRight = m0.lefts[idx] + activeBtn.offsetWidth;
-      if (activeRight > m0.visibleW) {
-        navOffset = m0.lefts.findIndex(function (l) { return activeRight - l <= m0.visibleW; });
-        update();
-      }
-    }
+    function draw() { window.SunHeader.render({ root: SITE, current: 'news' }); }
+    if (window.SunHeader) { draw(); return; }
+    var s = document.createElement('script');
+    s.src = SITE + 'assets/site-header.js';
+    s.onload = draw;
+    s.onerror = function () { console.error('assets/site-header.js を読み込めませんでした'); };
+    document.head.appendChild(s);
   }
 
   /* =====================================================

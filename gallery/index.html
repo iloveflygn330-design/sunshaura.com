@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ページ間遷移の到着判定（index.html の <head> と同じもの。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
+  <title>フォトギャラリー | sunshaura.com</title>
+  <meta name="description" content="VRChatで撮った写真をランダムに3枚ずつ表示するフォトギャラリーです。">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/gallery.css">
+</head>
+<!--
+  フォトギャラリー
+    gallery/photos/ に入れた画像の中から、ランダムに3枚を表示する。
+    写真の一覧の取得・配置・アニメーション・拡大表示はすべて assets/gallery.js が行う。
+
+    ★拡張予定: 写真を追加する方法
+      gallery/photos/<アルバム名>/ に画像ファイル（.jpg / .jpeg / .png / .webp / .gif / .avif）を入れて
+      GitHub に push するだけ。このHTMLやJSを書き換える必要はない。
+      軽量版の画像は GitHub Actions が自動で作る。詳しくは gallery/photos/README.md を参照。
+
+    ★拡張予定: ページに要素を足したい場合（説明文・お知らせ等）
+      <main> の中、<nav class="gal-albums"> の上か、<div class="gal-controls"> の下に追記する。
+      見た目は assets/gallery.css の末尾に追記する。
+
+  data-transition-manual-ready : 写真の読み込みが終わってから gallery.js が「おまたせ！」を出す
+-->
+<body data-transition-manual-ready>
+
+  <!-- ヘッダー（assets/site-header.js が index.html と同じボタンを組み立てる） -->
+  <header id="header"></header>
+
+  <!-- ページ間遷移アニメーション用（index.html と同じ構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon">🌸</div>
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="gal-body" data-transition-body>
+    <h1 class="gal-visually-hidden">フォトギャラリー</h1>
+
+    <!-- アルバムの切り替えボタン（gallery.js が作る。アルバムが1つだけのときは表示しない） -->
+    <nav class="gal-albums" id="gal-albums" aria-label="アルバム" hidden></nav>
+
+    <!-- 写真を並べる台。中身（写真3枚）は gallery.js が配置する -->
+    <div class="gal-stage" id="gal-stage" aria-live="polite">
+      <p class="gal-message" id="gal-message">写真を読み込み中...</p>
+    </div>
+
+    <div class="gal-controls">
+      <button type="button" class="gal-shuffle" id="gal-shuffle" disabled>
+        <span class="gal-shuffle-icon" aria-hidden="true">🔀</span>画像を変更
+      </button>
+      <p class="gal-count" id="gal-count"></p>
+    </div>
+  </main>
+
+  <footer class="gal-footer">sunshaura.com</footer>
+
+  <!-- 写真の拡大表示（モーダル）。開く・閉じる・前後の切り替えは gallery.js -->
+  <div class="gal-modal" id="gal-modal" role="dialog" aria-modal="true" aria-label="写真の拡大表示" hidden>
+    <div class="gal-modal-backdrop" data-gal-close></div>
+    <figure class="gal-modal-figure">
+      <img class="gal-modal-img" id="gal-modal-img" alt="">
+      <figcaption class="gal-modal-caption" id="gal-modal-caption"></figcaption>
+    </figure>
+    <button type="button" class="gal-modal-close" data-gal-close aria-label="閉じる">×</button>
+    <button type="button" class="gal-modal-nav gal-modal-prev" id="gal-modal-prev" aria-label="前の写真">‹</button>
+    <button type="button" class="gal-modal-nav gal-modal-next" id="gal-modal-next" aria-label="次の写真">›</button>
+  </div>
+
+  <script src="../assets/page-transition.js"></script>
+  <script src="../assets/site-header.js"></script>
+  <script src="assets/gallery.js"></script>
+</body>
+</html>

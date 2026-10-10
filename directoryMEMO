@@ -25,3 +25,26 @@
               ├─ foshunya.png
               ├─ sharo.png
               └─ other.png
+
+共通スクリプト
+  assets/
+      ├─ page-transition.js     ← ページ移動の「ちょっとまってね...」演出
+      └─ site-header.js         ← ★拡張予定: ナビボタンの並び（SITE_NAV_ITEMS）。全ページ共通
+
+フォトギャラリー（別ページ）
+  gallery/
+      ├─ index.html             ← フォトギャラリー本体（ランダムで3枚表示）
+      ├─ assets/
+      │   ├─ gallery.css        ← 見た目（白フチ・アルバムボタン・拡大表示）
+      │   └─ gallery.js         ← 一覧取得・アルバム・ランダム配置・アニメーション・拡大表示
+      ├─ photos/                ← ★拡張予定: 写真はここに入れて push するだけ（README.md 参照）
+      │   ├─ event/             ← フォルダ1つ = アルバム1つ
+      │   └─ world/
+      ├─ generated/             ← 自動生成（軽量版 WebP）。触らない
+      │   ├─ thumb/
+      │   └─ large/
+      └─ data/
+          └─ photos.json        ← 自動生成（写真の一覧）。触らない
+  .github/
+      ├─ workflows/gallery-build.yml ← 写真を push したら軽量版と一覧を作る
+      └─ scripts/gallery-build.js    ← その処理の中身

@@ -118,7 +118,7 @@
     .nav-btn {
       /*
        * ★拡張予定: ナビボタンを追加する手順
-       *   #nav-buttons-wrap 内に追記 + 対応ページdivを #body-content に追加
+       *   assets/site-header.js の SITE_NAV_ITEMS に1行追記 + 対応ページdivを #body-content に追加
        */
       min-width: var(--nav-btn-width); height: 40px;
       background: rgba(255, 255, 255, 0.88); color: var(--color-main);
@@ -1094,30 +1094,15 @@
     <div id="header2">
       <button class="nav-arrow" id="nav-prev" onclick="slideNav(-1)" aria-label="前のボタンへ">‹</button>
       <div id="nav-scroll-wrap">
-        <div id="nav-buttons-wrap">
-          <!--
-            ★拡張予定: ボタンを追加する場合は以下の形式で追記
-              <button class="nav-btn" data-page="ページID" onclick="navigateTo('ページID', this)">ページ名</button>
-              対応するページ div（#body-content 内）も忘れずに追加
-          -->
-          <button class="nav-btn" data-page="avatar"  onclick="navigateTo('avatar', this)">アバター改変</button>
-          <button class="nav-btn" data-page="world"   onclick="navigateTo('world', this)">作ったワールド</button>
-          <button class="nav-btn" data-page="shop"    onclick="navigateTo('shop', this)">ショップ</button>
-          <button class="nav-btn" data-page="photo"   onclick="navigateTo('photo', this)">フォトギャラリー</button>
-          <button class="nav-btn" data-page="event"   onclick="navigateTo('event', this)">イベント</button>
-          <button class="nav-btn" data-page="minigame" onclick="navigateTo('minigame', this)">ミニゲーム</button>
-          <button class="nav-btn" data-page="about"   onclick="navigateTo('about', this)">このサイトについて</button>
-          <!--
-            ニュースは index.html 内のページ（div）ではなく、別フォルダ news/ の独立ページ。
-            そのため navigateTo() ではなく、SunTransition.go()（assets/page-transition.js）で移動する。
-            navigateTo() と同じ「ちょっとまってね...」→「おまたせ！」の演出が付く。
-            ★拡張予定: 同じように別フォルダの独立ページを追加する場合
-              <button class="nav-btn" data-page="フォルダ名" onclick="SunTransition.go('フォルダ名/')">ボタン名</button>
-              を追記し、news/assets/news.js の NEWS_NAV_ITEMS にも同じボタンを追記すること
-              （ニュース側のヘッダーにも同じボタンを並べるため）
-          -->
-          <button class="nav-btn" data-page="news"    onclick="SunTransition.go('news/')">ニュース</button>
-        </div>
+        <!--
+          ナビボタンは assets/site-header.js の SITE_NAV_ITEMS から自動で作る
+          （ニュース・フォトギャラリーのヘッダーとも共通）。
+          ★拡張予定: ボタンを追加・並べ替えする場合は assets/site-header.js の SITE_NAV_ITEMS に1行追記する。
+            index.html の中のページなら、対応するページ div（#body-content 内）も忘れずに追加する。
+        -->
+        <div id="nav-buttons-wrap"></div>
+        <script src="assets/site-header.js"></script>
+        <script>SunHeader.renderIndexButtons(document.getElementById('nav-buttons-wrap'));</script>
       </div>
       <button class="nav-arrow" id="nav-next" onclick="slideNav(1)" aria-label="次のボタンへ">›</button>
     </div>
@@ -1414,16 +1399,10 @@
     <!--
       ★拡張予定: 新しいページを追加する手順
         1. <div class="page" id="page-ページID"> をここに追記
-        2. ヘッダー②の #nav-buttons-wrap にも対応ボタンを追記
+        2. assets/site-header.js の SITE_NAV_ITEMS に対応ボタンを1行追記（全ページのヘッダーに反映される）
     -->
 
-    <div class="page" id="page-photo">
-      <div class="page-placeholder">
-        <p class="placeholder-title">フォトギャラリー</p>
-        <p class="placeholder-desc">コンテンツは後から追加します</p>
-        <div class="placeholder-box">コンテンツを追加してください</div>
-      </div>
-    </div>
+    <!-- フォトギャラリーは gallery/index.html（別ページ）に移動しました。写真の追加方法は gallery/photos/README.md -->
 
     <div class="page" id="page-event">
       <div class="page-placeholder">

@@ -123,7 +123,7 @@ a { color: inherit; }
 #logo-area {
   /*
    * ★拡張予定: ロゴ画像（PNG）への差し替え手順
-   *   index.html でロゴを差し替えたら、news.js の NEWS_LOGO_HTML も同じ内容に変更する
+   *   index.html でロゴを差し替えたら、assets/site-header.js の SITE_LOGO_HTML も同じ内容に変更する
    */
   height: 44px; min-width: 108px;
   background: rgba(255, 255, 255, 0.15); border-radius: 10px;

@@ -1,0 +1,424 @@
+/* =====================================================
+   sunshaura.com フォトギャラリー CSS
+   gallery/index.html で読み込む。
+   写真の位置・角度は gallery.js が毎回ランダムに決めて style に書き込むので、
+   ここでは「写真の見た目（白フチ・影）」「台の大きさ」「ボタン」「拡大表示」を決めている。
+   ===================================================== */
+
+/* =====================================================
+   ★ 定義変数（ヘッダーまわりは index.html と同じ値）
+   ===================================================== */
+:root {
+  --color-main:        #CC2244;
+  --color-main-dark:   #8B1228;
+  --color-main-mid:    #B01D3A;
+  --color-main-light:  #E03355;
+  --color-main-pale:   #FFF0F3;
+  --color-text:        #2A0A10;
+  --color-white:       #FFFFFF;
+  --header1-height:    60px;
+  --header2-height:    60px;
+  --header-height-pc:  60px;
+  --header-height-sp: 120px;
+  --duration-ui:      300ms;
+  --duration-panel:   600ms;
+  --ease-decel:       cubic-bezier(0.22, 1, 0.36, 1);
+  --color-loading-bar: #2E2E2E;
+  --loading-bar-height: 50px;
+  --nav-btn-width:    130px;
+  --nav-btn-gap:       10px;
+
+  /*
+   * ★拡張予定: ギャラリーの見た目を変える場合はここを書き換える
+   *   --gal-max-width   : 写真を並べる台の最大幅（PC）
+   *   --gal-bg          : ページ背景
+   *   --gal-bg-dot      : 背景のドット模様の色
+   *   --gal-frame       : 写真の白フチの色
+   *   --gal-frame-size  : 白フチの太さ
+   *   --gal-shadow      : 写真の影
+   *   --gal-button      : 「画像を変更」ボタンの色（ワイヤーの黄色）
+   *   --gal-modal-bg    : 拡大表示のときの背景の暗さ
+   *   写真の大きさ・散らばり具合・角度は gallery.js の LAYOUT で変える
+   */
+  --gal-max-width:  1100px;
+  --gal-bg:         #FFF6F0;
+  --gal-bg-dot:     #F7E3DA;
+  --gal-frame:      #FFFFFF;
+  --gal-frame-size: 10px;
+  --gal-shadow:     0 6px 18px rgba(42, 10, 16, 0.18), 0 2px 4px rgba(42, 10, 16, 0.12);
+  --gal-button:     #FCE29A;
+  --gal-button-border: #A8D5A2;
+  --gal-modal-bg:   rgba(12, 4, 6, 0.82);
+}
+@media (max-width: 759px) {
+  :root { --gal-frame-size: 7px; }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: hidden; }
+body {
+  font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--color-text);
+  background-color: var(--gal-bg);
+  background-image: radial-gradient(var(--gal-bg-dot) 2px, transparent 2px);
+  background-size: 22px 22px;
+  min-height: 100svh;
+  display: flex; flex-direction: column;   /* 写真が少なくてもフッターを画面の一番下に */
+}
+body.gal-modal-lock { overflow: hidden; }  /* 拡大表示中は背面をスクロールさせない */
+a { color: inherit; }
+[hidden] { display: none !important; }   /* display を指定した要素でも hidden 属性で確実に隠す */
+.gal-visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* =====================================================
+   ヘッダー（index.html と同じ見た目。news/assets/news.css と同じ内容）
+   index.html のヘッダーを変えたときは、ここも合わせて変更する
+   ===================================================== */
+#header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 10;
+  height: var(--header-height-pc);
+}
+@media (max-width: 759px) { #header { height: var(--header-height-sp); } }
+
+#header1 {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: var(--header1-height);
+  background: var(--color-main);
+  display: flex; align-items: center; padding: 0 16px; gap: 12px;
+  z-index: 1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+#logo-area {
+  /* ★拡張予定: ロゴを画像にしたら assets/site-header.js の SITE_LOGO_HTML も同じ内容に変更する */
+  height: 44px; min-width: 108px;
+  background: rgba(255, 255, 255, 0.15); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 14px; color: var(--color-white); text-decoration: none;
+  font-weight: 800; font-size: 14px; letter-spacing: 0.05em; flex-shrink: 0;
+}
+
+#header2 {
+  position: absolute; height: var(--header2-height);
+  background: var(--color-main-mid);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px; gap: 6px; z-index: 2;
+}
+@media (min-width: 760px) { #header2 { top: 0; left: 152px; right: 0; } }
+@media (max-width: 759px) { #header2 { top: var(--header1-height); left: 0; right: 0; } }
+
+#nav-scroll-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
+#nav-buttons-wrap {
+  display: flex; gap: var(--nav-btn-gap);
+  transition: transform var(--duration-ui) ease;
+  will-change: transform; margin: 0 auto;
+}
+.nav-btn {
+  min-width: var(--nav-btn-width); height: 40px;
+  background: rgba(255, 255, 255, 0.88); color: var(--color-main);
+  border: none; border-radius: 50px; padding: 0 18px;
+  font-family: inherit; font-weight: 700; font-size: 14px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  transition: background var(--duration-ui), color var(--duration-ui),
+    transform var(--duration-ui), box-shadow var(--duration-ui);
+}
+.nav-btn:hover {
+  background: var(--color-white); transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.nav-btn.active {
+  background: var(--color-main); color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.nav-arrow {
+  background: rgba(255, 255, 255, 0.18); color: var(--color-white);
+  border: none; width: 30px; height: 30px; border-radius: 50%;
+  cursor: pointer; font-size: 18px; line-height: 1;
+  display: none; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background var(--duration-ui);
+}
+.nav-arrow:hover    { background: rgba(255, 255, 255, 0.32); }
+.nav-arrow:disabled { opacity: 0.3; cursor: default; }
+
+/* =====================================================
+   本体
+   ===================================================== */
+#gal-body {
+  flex: 1 0 auto;
+  padding: calc(var(--header-height-pc) + 28px) 24px 40px;
+  transition: transform var(--duration-ui) ease;
+}
+@media (max-width: 759px) {
+  #gal-body { padding: calc(var(--header-height-sp) + 18px) 16px 32px; }
+}
+
+/*
+ * アルバムの切り替えボタン
+ *   ★拡張予定: 見た目を変える場合はここを編集する（ボタンの中身・並び順は gallery.js の GALLERY_ALBUMS）
+ *   スマホでは1行に収まらない分を横スクロールで見せる
+ */
+.gal-albums {
+  max-width: var(--gal-max-width);
+  margin: 0 auto 8px;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+}
+.gal-album-btn {
+  height: 36px; padding: 0 16px;
+  border: 2px solid var(--color-main); border-radius: 50px;
+  background: var(--color-white); color: var(--color-main);
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: background var(--duration-ui), color var(--duration-ui), transform var(--duration-ui);
+}
+.gal-album-btn small { font-size: 11px; font-weight: 500; opacity: 0.7; }
+.gal-album-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.gal-album-btn.active { background: var(--color-main); color: var(--color-white); }
+.gal-album-btn:disabled:not(.active) { opacity: 0.6; cursor: default; }
+@media (max-width: 759px) {
+  .gal-albums {
+    flex-wrap: nowrap; justify-content: flex-start;
+    overflow-x: auto; scrollbar-width: none;
+    margin: 0 -16px 4px; padding: 2px 16px 6px;
+  }
+  .gal-albums::-webkit-scrollbar { display: none; }
+}
+
+/*
+ * 写真を並べる台
+ *   高さは gallery.js が写真の配置に合わせて style.height に書き込む。
+ *   写真の位置は台の左上を (0,0) とした px で指定される。
+ */
+.gal-stage {
+  position: relative;
+  max-width: var(--gal-max-width);
+  margin: 0 auto;
+  min-height: 240px;
+}
+
+/* 読み込み中・写真なし・エラーのメッセージ */
+.gal-message {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; white-space: pre-line;
+  font-size: 15px; font-weight: 700; line-height: 1.9;
+  color: rgba(42, 10, 16, 0.55);
+}
+
+/*
+ * 写真1枚（外側）
+ *   位置（left/top）と角度（--rot）は gallery.js が決める。
+ *   回転しているのはこの要素そのものなので、クリックできる範囲も見た目どおり傾いた四角形になる。
+ *   登場・退場のアニメーションも、この要素に gallery.js が付ける。
+ */
+.gal-photo {
+  position: absolute;
+  transform: rotate(var(--rot, 0deg));
+  border: none; background: none; padding: 0;
+  cursor: zoom-in;
+  font: inherit; color: inherit;
+}
+.gal-photo:focus-visible { outline: none; }
+.gal-photo:focus-visible .gal-photo-frame {
+  outline: 3px solid var(--color-main); outline-offset: 3px;
+}
+
+/* 写真1枚（内側：白フチと影）。ホバーの動きは回転と混ざらないよう、内側にだけ付ける */
+.gal-photo-frame {
+  display: block;
+  background: var(--gal-frame);
+  padding: var(--gal-frame-size);
+  box-shadow: var(--gal-shadow);
+  transition: transform var(--duration-ui) var(--ease-decel), box-shadow var(--duration-ui);
+}
+@media (hover: hover) {
+  .gal-photo:hover .gal-photo-frame {
+    transform: scale(1.03);
+    box-shadow: 0 14px 30px rgba(42, 10, 16, 0.25), 0 3px 6px rgba(42, 10, 16, 0.15);
+  }
+}
+/*
+ * 写真の表示枠（3:2）
+ *   ★拡張予定: 枠の比率を変える場合は aspect-ratio を書き換える（例: 16 / 9）
+ *   はみ出した部分は object-fit: cover で切り取って表示する（拡大表示では元の比率で全体を表示）
+ */
+.gal-photo-img {
+  display: block; width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  background: #EEE;
+  pointer-events: none;   /* クリックは外側の .gal-photo で受ける */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* =====================================================
+   「画像を変更」ボタン
+   ===================================================== */
+.gal-controls {
+  max-width: var(--gal-max-width);
+  margin: 28px auto 0;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.gal-shuffle {
+  width: min(560px, 100%); height: 48px;
+  background: var(--gal-button);
+  border: 2px solid var(--gal-button-border); border-radius: 6px;
+  font-family: inherit; font-size: 17px; font-weight: 800; letter-spacing: 0.08em;
+  color: var(--color-text);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(42, 10, 16, 0.12);
+  transition: transform var(--duration-ui), box-shadow var(--duration-ui), opacity var(--duration-ui);
+}
+.gal-shuffle:hover:not(:disabled)  { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(42, 10, 16, 0.12); }
+.gal-shuffle:active:not(:disabled) { transform: translateY(1px);  box-shadow: 0 1px 0 rgba(42, 10, 16, 0.12); }
+.gal-shuffle:disabled { opacity: 0.55; cursor: default; }
+.gal-shuffle-icon { font-size: 18px; }
+@media (max-width: 759px) {
+  .gal-controls { margin-top: 18px; }
+  .gal-shuffle { height: 46px; font-size: 16px; }
+}
+.gal-count { font-size: 12px; color: rgba(42, 10, 16, 0.5); letter-spacing: 0.04em; }
+
+/* =====================================================
+   フッター（ニュースと同じ）
+   ===================================================== */
+.gal-footer {
+  background: var(--color-main); color: rgba(255, 255, 255, 0.7);
+  text-align: center; padding: 20px; font-size: 12px; letter-spacing: 0.08em;
+  position: relative; z-index: 1;
+}
+
+/* =====================================================
+   拡大表示（モーダル）
+   背景をうす暗くして、写真を元の比率のまま画面いっぱいまで大きく表示する。
+   ===================================================== */
+.gal-modal {
+  position: fixed; inset: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  padding: 56px 72px;
+  opacity: 0;
+  transition: opacity var(--duration-ui) ease;
+}
+.gal-modal[hidden] { display: none; }
+.gal-modal.open { opacity: 1; }
+@media (max-width: 759px) { .gal-modal { padding: 64px 12px 72px; } }
+
+.gal-modal-backdrop {
+  position: absolute; inset: 0;
+  background: var(--gal-modal-bg);
+  cursor: zoom-out;
+}
+.gal-modal-figure {
+  position: relative;
+  max-width: 100%; max-height: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  transform: scale(0.94);
+  transition: transform var(--duration-panel) var(--ease-decel);
+  pointer-events: none;    /* 写真の外側（余白）をクリックしても閉じるように */
+}
+.gal-modal.open .gal-modal-figure { transform: scale(1); }
+.gal-modal-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100svh - 150px);
+  object-fit: contain;
+  background: var(--gal-frame);
+  padding: var(--gal-frame-size);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+.gal-modal-caption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+  text-align: center;
+}
+.gal-modal-close,
+.gal-modal-nav {
+  position: absolute;
+  border: none; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16); color: var(--color-white);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; line-height: 1;
+  transition: background var(--duration-ui);
+}
+.gal-modal-close:hover,
+.gal-modal-nav:hover { background: rgba(255, 255, 255, 0.32); }
+.gal-modal-close { top: 14px; right: 14px; width: 44px; height: 44px; font-size: 26px; }
+.gal-modal-nav   { top: 50%; width: 48px; height: 48px; font-size: 30px; transform: translateY(-50%); }
+.gal-modal-prev  { left: 14px; }
+.gal-modal-next  { right: 14px; }
+@media (max-width: 759px) {
+  /* スマホでは前後ボタンを写真の下に並べる（写真と重ならないように） */
+  .gal-modal-nav  { top: auto; bottom: 14px; transform: none; }
+  .gal-modal-prev { left: calc(50% - 60px); }
+  .gal-modal-next { right: calc(50% - 60px); }
+}
+
+/* 動きを減らす設定の人には、アニメーションを最小限にする */
+@media (prefers-reduced-motion: reduce) {
+  .gal-photo-frame, .gal-modal, .gal-modal-figure { transition: none; }
+}
+
+/* =====================================================
+   ページ間遷移アニメーション
+   index.html の #loading-bar / #loading-panel と同じ見た目（news.css と同じ内容）。
+   動きは assets/page-transition.js が担当する。
+   index.html 側の見た目を変えたときは、ここも合わせて変更する。
+
+   ★拡張予定: パネルのアイコンを画像にする場合
+     gallery/index.html の <div id="panel-icon"> の中身を
+     <img src="../assets/panel-icon.png" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+     に書き換える（index.html・ニュース側も同じように書き換える）
+   ===================================================== */
+#loading-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--loading-bar-height);
+  background: var(--color-loading-bar); color: var(--color-white);
+  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9; transform: translateY(0);
+  transition: transform var(--duration-ui) ease;
+}
+@media (min-width: 760px) { #loading-bar.reveal { transform: translateY(var(--header-height-pc)); } }
+@media (max-width: 759px) { #loading-bar.reveal { transform: translateY(var(--header-height-sp)); } }
+@keyframes loadingDots { 0% { content: '・'; } 33% { content: '・・'; } 66% { content: '・・・'; } }
+.dots-anim::after { content: '・'; animation: loadingDots 1.2s steps(1, end) infinite; }
+
+#gal-body.loading { transform: translateY(var(--loading-bar-height)); }
+
+#loading-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 100vh;
+  background: var(--color-main-dark);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 22px; z-index: 8;
+  padding-top: calc(var(--header-height-pc) + var(--loading-bar-height));
+  transform: translateY(100%);
+  transition: transform var(--duration-panel) var(--ease-decel);
+}
+@media (max-width: 759px) {
+  #loading-panel { padding-top: calc(var(--header-height-sp) + var(--loading-bar-height)); }
+}
+#loading-panel.slide-up { transform: translateY(0); }
+#panel-icon {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex; align-items: center; justify-content: center; font-size: 44px;
+}
+#panel-message {
+  color: var(--color-white); font-size: clamp(20px, 4vw, 28px);
+  font-weight: 800; letter-spacing: 0.08em;
+}
+
+/* 別のHTMLから移動してきた直後：アニメーションなしで、最初から覆った状態にする */
+.is-arriving #loading-panel { transform: translateY(0); transition: none; }
+.is-arriving #gal-body      { transform: translateY(var(--loading-bar-height)); transition: none; }
+.is-arriving #loading-bar   { transition: none; }
+@media (min-width: 760px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-pc)); } }
+@media (max-width: 759px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-sp)); } }
