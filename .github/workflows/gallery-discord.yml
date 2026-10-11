@@ -1,0 +1,78 @@
+# =====================================================
+# フォトギャラリー：Discord に投稿された画像を毎朝取り込む
+#
+# 仕組み:
+#   毎朝7時15分ごろ（日本時間）に、Discord のチャンネルに新しく投稿された画像を読み、
+#   圧縮版（gallery/generated/）と一覧（gallery/data/photos.json）を作って main に自動コミットする。
+#   追加があれば、ニュースと同じ Webhook に「◯枚追加しました」と通知する。
+#   処理の中身は .github/scripts/discord-gallery.js（取り込むチャンネルもそこで設定）。
+#
+# 事前設定（GitHub の Settings → Secrets and variables → Actions → Secrets）:
+#   DISCORD_BOT_TOKEN   : 画像を読む Bot のトークン
+#   DISCORD_WEBHOOK_URL : 完了通知用（ニュース通知と共通）
+#
+# 動いたかどうかの確認:
+#   Actions タブ → 「Gallery from Discord」。緑のチェックなら成功。
+#   すぐに取り込みたいときは、同じ画面の「Run workflow」で手動実行できる。
+#
+# ★拡張予定: 実行時刻を変える場合
+#   下の cron を書き換える（UTC で書く。日本時間 = UTC + 9時間）。
+#     例: 日本時間の 7:15 → '15 22 * * *'、日本時間の 21:00 → '0 12 * * *'
+#   ※ GitHub の混雑で、数分〜数十分遅れて動くことがある
+# =====================================================
+name: Gallery from Discord
+
+on:
+  schedule:
+    - cron: '15 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# 続けて実行されたときに、同時に2つ動いてぶつからないようにする（順番に実行）
+concurrency:
+  group: gallery-discord
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 画像変換ライブラリ（sharp）を入れる
+        working-directory: .github/scripts
+        run: npm install --no-save --no-package-lock --no-audit --no-fund sharp@0.33.5
+
+      - name: Discord の新しい画像を取り込む
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        run: node .github/scripts/discord-gallery.js
+
+      - name: 変更があればコミットする
+        id: commit
+        run: |
+          echo "count=$(cat "${RUNNER_TEMP:-/tmp}/gallery-added-count" 2>/dev/null || cat /tmp/gallery-added-count 2>/dev/null || echo 0)" >> "$GITHUB_OUTPUT"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A gallery/generated gallery/data
+          if git diff --cached --quiet; then
+            echo "変更なし"
+            exit 0
+          fi
+          git commit -m "フォトギャラリー: Discord から写真を取り込み"
+          # 実行中に別の push（毎朝のニュースなど）があっても失敗しないよう、最新を取り込んでから push する
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: 完了を通知する
+        if: steps.commit.outputs.count != '0'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GALLERY_BASE_URL: ${{ vars.GALLERY_BASE_URL || 'https://sunshaura.com/gallery/' }}
+        run: node .github/scripts/discord-gallery.js --notify "${{ steps.commit.outputs.count }}"

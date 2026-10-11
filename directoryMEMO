@@ -43,7 +43,10 @@
       │   └─ large/             ← 拡大表示用（長辺1920px）
       └─ data/
           └─ photos.json        ← 写真の一覧（自動生成）。手で触らない
-  .github/scripts/gallery-build.js ← 元の写真 → 圧縮版と一覧を作るスクリプト
+  .github/scripts/gallery-build.js   ← 元の写真（PC）→ 圧縮版と一覧を作るスクリプト
+  .github/scripts/discord-gallery.js ← ★拡張予定: Discord の投稿画像 → 圧縮版（取り込むチャンネルはここで設定）
+  .github/workflows/gallery-discord.yml ← 毎朝7:15ごろ discord-gallery.js を実行して自動コミット
+  gallery/data/discord-state.json   ← Discord をどこまで取り込んだかの記録（自動生成）
 
 元の写真（リポジトリの外。PCにだけある）
   C:\Users\sdra_\Documents\MyWebSites_photo\   ← ★拡張予定: 写真はここに入れる

@@ -12,6 +12,8 @@
           gallery/generated/thumb/<アルバム>/<ファイル名>.webp … 並べて表示する用（横 960px）
           gallery/generated/large/<アルバム>/<ファイル名>.webp … 拡大表示用（長辺 1920px）
      3. 元の写真が消えていたら、対応する圧縮版も消す（--no-prune を付けたときは消さない）
+        ※ Discord から取り込んだ写真（ファイル名が discord_ で始まる圧縮版）は消さない。
+          元の写真が PC ではなく Discord にあるため（.github/scripts/discord-gallery.js 参照）
      4. gallery/data/photos.json（ギャラリーが読む一覧）を、圧縮版の中身から作り直す
 
    ★拡張予定: 写真を追加したときの手順（どちらか）
@@ -28,6 +30,7 @@
      --src <フォルダ>  元の写真の場所を変える（既定: 下の PHOTOS_DIR_DEFAULT）
      --no-prune       元の写真が見つからなくても、圧縮版を消さない
      --force          すでにある圧縮版も作り直す（大きさ・画質を変えたとき）
+                      ※ Discord から取り込んだ写真は作り直されない（PC に元の写真がないため）
    ===================================================== */
 'use strict';
 
@@ -49,6 +52,8 @@ const srcAt = args.indexOf('--src');
 const PHOTOS_DIR_DEFAULT = path.resolve(REPO, '..', '..', 'MyWebSites_photo');
 const PHOTOS = srcAt >= 0 ? path.resolve(args[srcAt + 1]) : PHOTOS_DIR_DEFAULT;
 const PRUNE = !opt('--no-prune');
+/* Discord から取り込んだ圧縮版のファイル名の頭（discord-gallery.js と同じにすること） */
+const DISCORD_PREFIX = 'discord_';
 const FORCE = opt('--force');
 
 /* ★拡張予定: 対応する画像の種類を増やす場合は、ここに拡張子を追加する */
@@ -108,6 +113,29 @@ function removeEmptyDirs(dir) {
   if (dir !== GENERATED && fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
 }
 
+/* 一覧（photos.json）を「thumb と large の両方がそろっている圧縮版」から作り直す。
+   discord-gallery.js からも呼ばれる。戻り値は一覧の中身 */
+function writeManifest() {
+  const thumbBase = path.join(GENERATED, 'thumb');
+  const entries = walk(thumbBase)
+    .map((f) => toPosix(path.relative(thumbBase, f)))
+    .filter((rel) => fs.existsSync(path.join(GENERATED, 'large', rel)))
+    .sort()
+    .map((rel) => ({
+      album: rel.includes('/') ? rel.split('/')[0] : '',
+      thumb: 'generated/thumb/' + rel,
+      large: 'generated/large/' + rel
+    }));
+
+  const json = JSON.stringify({
+    _note: 'このファイルは .github/scripts/gallery-build.js が自動で作っています。手で編集しないでください。',
+    photos: entries
+  }, null, 2) + '\n';
+  fs.mkdirSync(path.dirname(MANIFEST), { recursive: true });
+  fs.writeFileSync(MANIFEST, json);
+  return entries;
+}
+
 async function main() {
   if (!fs.existsSync(PHOTOS)) {
     // 写真フォルダが見つからないまま進むと、圧縮版が全部「元が消えた」扱いで削除されてしまうので止める
@@ -140,32 +168,21 @@ async function main() {
     for (const kind of ['thumb', 'large']) {
       const base = path.join(GENERATED, kind);
       for (const f of walk(base)) {
+        if (path.basename(f).startsWith(DISCORD_PREFIX)) continue;   // Discord 由来は消さない
         if (!keep.has(toPosix(path.relative(base, f)))) { fs.unlinkSync(f); removed++; }
       }
     }
     removeEmptyDirs(GENERATED);
   }
 
-  // 一覧は「thumb と large の両方がそろっている圧縮版」から作る
-  const thumbBase = path.join(GENERATED, 'thumb');
-  const entries = walk(thumbBase)
-    .map((f) => toPosix(path.relative(thumbBase, f)))
-    .filter((rel) => fs.existsSync(path.join(GENERATED, 'large', rel)))
-    .sort()
-    .map((rel) => ({
-      album: rel.includes('/') ? rel.split('/')[0] : '',
-      thumb: 'generated/thumb/' + rel,
-      large: 'generated/large/' + rel
-    }));
-
-  const json = JSON.stringify({
-    _note: 'このファイルは .github/scripts/gallery-build.js が自動で作っています。手で編集しないでください。',
-    photos: entries
-  }, null, 2) + '\n';
-  fs.mkdirSync(path.dirname(MANIFEST), { recursive: true });
-  fs.writeFileSync(MANIFEST, json);
+  const entries = writeManifest();
 
   console.log(`元の写真 ${photos.length} 枚 / 作成 ${made} / 作成済み ${skipped} / 失敗 ${failed} / 削除 ${removed} / 一覧 ${entries.length} 枚`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+// 直接実行したときだけ動く（discord-gallery.js から読み込まれたときは関数だけ貸す）
+if (require.main === module) {
+  main().catch((e) => { console.error(e); process.exit(1); });
+}
+
+module.exports = { GENERATED, SIZES, DISCORD_PREFIX, makeWebp, writeManifest };

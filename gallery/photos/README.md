@@ -37,6 +37,14 @@ C:\Users\sdra_\Documents\MyWebSites_photo          ← 元の写真（PCにだ�
     .github/scripts/gallery-build.js の PHOTOS_DIR_DEFAULT を書き換える。
 -->
 
+## Discord から追加する（毎朝自動）
+
+Discord のチャンネル（ID: 1558828712688881674）に画像を投稿すると、毎朝7時15分ごろに自動で取り込まれます。
+- 取り込まれた投稿には ✅ が付き、ニュースと同じチャンネルに「◯枚追加しました」と通知されます
+- アルバムは「その他」になります（チャンネルごとにアルバムを決める設定は .github/scripts/discord-gallery.js の DISCORD_CHANNELS）
+- すぐ取り込みたいときは、GitHub の Actions タブ →「Gallery from Discord」→「Run workflow」
+- 元の画像は Discord に残ります（PCの MyWebSites_photo には入りません）
+
 ## 入れられるファイル
 
 - 形式：`.jpg` `.jpeg` `.png` `.webp` `.gif` `.avif`
