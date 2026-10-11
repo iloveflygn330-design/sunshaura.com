@@ -1,6 +1,6 @@
 # 圧縮版の写真（自動生成・手で触らない）
 
-`.github/scripts/gallery-build.js` が `gallery/photos/` の元の写真から作ったものです。
+`.github/scripts/gallery-build.js` が 元の写真フォルダ（MyWebSites_photo）から作ったものです。
 手で追加・編集・削除しないでください（写真の追加・削除は gallery/photos/README.md の手順で）。
 
 - `thumb/` … ギャラリーに並べる用（横960pxの WebP）

@@ -1,11 +1,13 @@
 /* =====================================================
    フォトギャラリー：写真の圧縮と写真一覧の作成
 
-   元の写真（gallery/photos/）は容量が大きいので GitHub には上げず、PCにだけ置いておく。
+   元の写真は容量が大きいので、リポジトリの外のフォルダ（PCにだけある）に置いておく。
+     リポジトリ  : C:\Users\sdra_\Documents\MyWebSites\sunshaura.com
+     元の写真    : C:\Users\sdra_\Documents\MyWebSites_photo   ← リポジトリの2つ上の階層の隣
    このスクリプトで圧縮版を作り、圧縮版と一覧だけを GitHub に上げる。
 
    やること:
-     1. gallery/photos/ の写真（直下と、1階層下のアルバムフォルダ）を探す
+     1. 元の写真フォルダ（直下と、1階層下のアルバムフォルダ）の写真を探す
      2. まだ圧縮版が無い写真について、WebP を2種類作る
           gallery/generated/thumb/<アルバム>/<ファイル名>.webp … 並べて表示する用（横 960px）
           gallery/generated/large/<アルバム>/<ファイル名>.webp … 拡大表示用（長辺 1920px）
@@ -23,7 +25,7 @@
           終わったら GitHub Desktop で gallery/generated と gallery/data をコミットして Push
 
    オプション:
-     --src <フォルダ>  元の写真の場所を変える（既定: gallery/photos）
+     --src <フォルダ>  元の写真の場所を変える（既定: 下の PHOTOS_DIR_DEFAULT）
      --no-prune       元の写真が見つからなくても、圧縮版を消さない
      --force          すでにある圧縮版も作り直す（大きさ・画質を変えたとき）
    ===================================================== */
@@ -41,7 +43,11 @@ const MANIFEST  = path.join(GALLERY, 'data', 'photos.json');
 const args  = process.argv.slice(2);
 const opt   = (name) => args.includes(name);
 const srcAt = args.indexOf('--src');
-const PHOTOS = srcAt >= 0 ? path.resolve(args[srcAt + 1]) : path.join(GALLERY, 'photos');
+/* ★拡張予定: 元の写真フォルダを移動した場合は、ここを書き換える
+     リポジトリのフォルダ（REPO）からの相対パス。
+     今は MyWebSites\sunshaura.com から見て ..\..\MyWebSites_photo */
+const PHOTOS_DIR_DEFAULT = path.resolve(REPO, '..', '..', 'MyWebSites_photo');
+const PHOTOS = srcAt >= 0 ? path.resolve(args[srcAt + 1]) : PHOTOS_DIR_DEFAULT;
 const PRUNE = !opt('--no-prune');
 const FORCE = opt('--force');
 
@@ -103,6 +109,12 @@ function removeEmptyDirs(dir) {
 }
 
 async function main() {
+  if (!fs.existsSync(PHOTOS)) {
+    // 写真フォルダが見つからないまま進むと、圧縮版が全部「元が消えた」扱いで削除されてしまうので止める
+    console.error('元の写真フォルダが見つかりません: ' + PHOTOS);
+    console.error('PHOTOS_DIR_DEFAULT を直すか、--src で場所を指定してください。');
+    process.exit(1);
+  }
   const photos = listPhotos();
   let made = 0, skipped = 0, failed = 0, removed = 0;
 

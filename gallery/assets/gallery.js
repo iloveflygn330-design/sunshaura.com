@@ -11,18 +11,18 @@
    表示する画像:
      並べるとき   … 軽量版（gallery/generated/thumb/ … 横960pxのWebP）
      拡大表示     … 大きめ版（gallery/generated/large/ … 長辺1920pxのWebP）
-     元の写真（gallery/photos/）は容量が大きいので GitHub には上げていない（PCにだけある）。
+     元の写真は容量が大きいので GitHub には上げていない（PCの MyWebSites_photo フォルダにだけある）。
      圧縮版と一覧は .github/scripts/gallery-build.js で作る（手順はそのファイルの先頭コメント）。
    ===================================================== */
 (function () {
   'use strict';
 
   /* -----------------------------------------------------
-     ★拡張予定: アルバム（gallery/photos/ の中のフォルダ）
-       gallery/photos/<フォルダ名>/ に写真を入れると、そのフォルダが1つのアルバムになる。
+     ★拡張予定: アルバム（元の写真フォルダ MyWebSites_photo の中のフォルダ）
+       MyWebSites_photo\<フォルダ名>\ に写真を入れて圧縮すると、そのフォルダが1つのアルバムになる。
        ここに書いたアルバムは、この順番・この表示名でボタンが並ぶ。
        ここに書いていないフォルダも自動で表示される（ボタン名＝フォルダ名、上のものの後ろに名前順）。
-         dir   : gallery/photos/ の中のフォルダ名（半角英数字・_・- がおすすめ）
+         dir   : MyWebSites_photo の中のフォルダ名（半角英数字・_・- がおすすめ）
          label : ボタンに表示する名前（日本語OK）
        写真が1枚もないアルバムはボタンを出さない。
        アルバムが1つしかないときは、アルバムのボタン自体を出さない。
@@ -31,7 +31,7 @@
     { dir: 'event', label: 'イベント' },
     { dir: 'world', label: 'ワールド' }
   ];
-  /* gallery/photos/ の直下（フォルダに入れていない写真）のアルバム名 */
+  /* MyWebSites_photo の直下（フォルダに入れていない写真）のアルバム名 */
   var ROOT_ALBUM_LABEL = 'その他';
   /* 全アルバムをまとめたボタンの名前（最初はこれが選ばれている） */
   var ALL_ALBUM_LABEL = 'すべて';
@@ -119,7 +119,7 @@
     message.textContent = text;
     message.hidden = !text;
   }
-  /* "photos/event/a b.png" → "photos/event/a%20b.png"（フォルダ区切りの / は残す） */
+  /* "generated/thumb/event/a b.png.webp" → "generated/thumb/event/a%20b.png.webp"（フォルダ区切りの / は残す） */
   function encodePath(path) {
     return path.split('/').map(encodeURIComponent).join('/');
   }
