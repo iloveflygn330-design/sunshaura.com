@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-12",
+  "title": "オランダでカメラ付きメガネのEU規制論が浮上ほか、今日のVR・AIニュース3本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "週末はVRChat本体の大きな発表がなく、静かな1日でした。今日は、ヨーロッパで広がるカメラ付きスマートグラスの規制論の続報からお届けします。あわせて、MicrosoftのCEOによるAIの「緊急ブレーキ」の提案と、NVIDIAによるAIスタートアップ買収の可能性という、AI関連の話題を2本紹介します。",
+  "items": [
+    {
+      "headline": "オランダ議会でカメラ付きメガネのEU規制を求める声",
+      "category": "VR機器・技術",
+      "overview": "オランダ議会の政党CDAとPROが、カメラ付きメガネ（スマートグラス）の規制について政府に質問を出しました。CDAは、ドイツなどと連携し、公共の場での使用禁止も含めたヨーロッパ全体での対応を検討するよう求めています。一方、オランダ政府は9月の時点で、録画ランプなどの設計ルールをEUで義務化することに「今は考えていない」と答えていました。10月12日〜13日にはEUの非公式な通信関係閣僚会合が予定されており、この話題が取り上げられるかが注目されています。",
+      "points": [
+        "あくまで議員からの質問で、決まった方針ではない",
+        "政府は欧州データ保護会議（EDPB）の報告を待つ姿勢",
+        "録画中のランプが見えにくい点は政府も認めている",
+        "ノルウェーでは政府自らが一時的な禁止を提案中"
+      ],
+      "sources": [
+        { "name": "MIXED「Two Dutch parties want a European camera glasses ban」", "url": "https://mixed-news.com/en/dutch-parliament-european-camera-glasses-ban-telecom-council/" }
+      ]
+    },
+    {
+      "headline": "Microsoftナデラ氏、AIに人が操作する「緊急ブレーキ」を",
+      "category": "AI",
+      "overview": "MicrosoftのCEOサティア・ナデラ氏は、10月10日（米国時間）の朝にXへ投稿し、高度なAIには人間が止められる「緊急ブレーキ」が必要だと訴えました。権限を持つ人が、作業の途中でもAIモデルを一時停止・停止できるようにするべきだという考えです。あわせて、AIモデルと、その作業を動かす仕組み（ハーネス）を分けて、安全のための制御をモデルの外に置くことも提案しています。AI企業がモデルを制御しきれなかったとする報告が続いていることが背景にあります。",
+      "points": [
+        "ブレーキを操作するのはAIではなく権限を持つ人間",
+        "AIの重要な操作は、改ざんできない形で記録する",
+        "AIが乗っ取られる可能性を前提に、最初から隔離する",
+        "AIをブラックボックスのまま使う時代は終わりと主張"
+      ],
+      "sources": [
+        { "name": "TechCrunch「Microsoft's Satya Nadella says AI models need an 'emergency brake'」", "url": "https://techcrunch.com/2026/10/10/microsofts-satya-nadella-says-ai-models-need-an-emergency-brake/" }
+      ]
+    },
+    {
+      "headline": "NVIDIA、AIスタートアップReflection AIの買収を検討か",
+      "category": "AI",
+      "overview": "英フィナンシャル・タイムズは10月10日（現地時間）、NVIDIAがAIスタートアップのReflection AIへの追加出資や買収について話し合っていると報じました。Reflection AIは元DeepMindの研究者が2024年に設立した会社で、誰でも使える形でモデルを公開する「オープンウェイト」のAIを開発しています。話し合いはまだ初期の段階で、まとまらない可能性もあるとされています。ロイターはこの報道を独自に確認できておらず、両社もコメントしていません。",
+      "points": [
+        "NVIDIAはすでに同社へ8億ドルを出資済み",
+        "人材と技術だけを取り込む「アクハイヤー」の形も候補",
+        "Reflection AIの企業評価額は約250億ドル",
+        "プログラミング向けAIモデル「Beam」を公開している"
+      ],
+      "sources": [
+        { "name": "WHBL（ロイター配信）「Nvidia in talks to invest further in Reflection AI or buy it, FT reports」", "url": "https://whbl.com/2026/10/10/nvidia-in-talks-to-invest-further-in-reflection-ai-or-buy-it-ft-reports/" },
+        { "name": "Benzinga「Report: Nvidia Eyes Reflection AI Takeover」", "url": "https://www.benzinga.com/m-a/26/10/62288564/report-nvidia-eyes-reflection-ai-takeover-as-the-ai-arms-race-heats-up" }
+      ]
+    }
+  ],
+  "outro": "スマートグラスの規制とAIの安全対策は、どちらもこれからの動きが気になる話題です。週明けの続報もチェックしていきます。"
+}
