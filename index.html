@@ -195,8 +195,9 @@
     @media (max-width: 759px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-sp)); } }
     #panel-icon {
       /*
-       * ★拡張予定: アイコン画像への差し替え
-       *   <img src="assets/panel-icon.png" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+       * パネルのアイコンは assets/page-transition.js がランダムな画像セットを入れる（画像のときの大きさもそちら）
+       * ★拡張予定: アイコンを増やす → Discord のアイコン用チャンネルに画像を2枚まとめて投稿する
+       *   （手順は assets/panel-icons/README.md）
        */
       width: 90px; height: 90px; border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
@@ -1113,7 +1114,7 @@
   </div>
 
   <div id="loading-panel" aria-hidden="true">
-    <div id="panel-icon">🌸</div>
+    <div id="panel-icon"></div><!-- アイコンは assets/page-transition.js が入れる -->
     <div id="panel-message">ちょっとまってね...</div>
   </div>
 
@@ -1586,12 +1587,14 @@
       const body = document.getElementById('body-content');
       barText.innerHTML = '<span class="dots-anim">移動中</span>';
       panelMsg.textContent = 'ちょっとまってね...';
+      if (window.SunTransition) SunTransition.iconWait();   // パネルのアイコン（ランダムなセット。assets/page-transition.js）
       bar.classList.add('reveal');
       body.classList.add('loading');
       requestAnimationFrame(() => { requestAnimationFrame(() => { panel.classList.add('slide-up'); }); });
       setTimeout(() => {
         activatePage(pageId, clickedBtn);
         barText.textContent = '移動完了！'; panelMsg.textContent = 'おまたせ！';
+        if (window.SunTransition) SunTransition.iconDone();
         setTimeout(() => {
           panel.classList.remove('slide-up');
           body.classList.remove('loading'); bar.classList.remove('reveal');

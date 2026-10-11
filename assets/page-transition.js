@@ -27,6 +27,14 @@
      本文の要素に data-transition-body（移動中にバーの高さぶん下にずらす）
      <head> 内に「到着判定」の script（下の ARRIVAL_KEY を読むもの）
 
+   パネルのアイコン（丸いキャラクター画像）:
+     assets/panel-icons/sets.json に登録された「ちょっとまってね / おまたせ」の2枚セットから、
+     ページ移動のたびにランダムに1セットを選んで表示する。
+       移動元で「ちょっとまってね...」の画像 → 移動先で同じセットの「おまたせ！」の画像
+     セットは Discord に投稿すると毎朝自動で登録される（.github/scripts/discord-panel-icons.py）。
+     セットが1つもない・画像が読めないときだけ 🌸 を表示する。
+     index.html の中だけの移動（navigateTo）でも SunTransition.iconWait() / iconDone() で同じように表示する。
+
    ★拡張予定: この演出を新しいHTMLページにも付ける手順
      1. 上の「必要なHTML」をそのページに入れる（CSSは news/assets/news.css の
         「ページ遷移アニメーション」をコピー、またはそのCSSファイルを読み込む）
@@ -57,6 +65,17 @@
 
   var ARRIVAL_KEY = 'sun-transition'; // head 内の到着判定 script と同じ名前にすること
 
+  /* ★拡張予定: パネルのアイコンの見た目を変える場合はここを書き換える
+       ICON.size     : 画像のときの丸の大きさ（px）。🌸 のときは各ページの CSS の #panel-icon（90px）のまま
+       ICON.fallback : セットがない・画像が読めないときに表示する文字 */
+  var ICON = { size: 120, fallback: '🌸' };
+  var ICON_KEY = 'sun-transition-icon';   // 移動先に「どのセットを使ったか」を引き継ぐ名前
+  // assets/panel-icons/ の場所（このスクリプトと同じ assets フォルダの中）
+  var ICON_BASE = (function () {
+    var src = document.currentScript && document.currentScript.src;
+    return src ? new URL('panel-icons/', src).href : null;
+  }());
+
   var bar      = document.getElementById('loading-bar');
   var barText  = document.getElementById('loading-bar-text');
   var panel    = document.getElementById('loading-panel');
@@ -73,6 +92,79 @@
     if (bodyEl) bodyEl.classList.toggle('loading', on);
   }
 
+  /* ---------- パネルのアイコン ---------- */
+  var iconEl   = document.getElementById('panel-icon');
+  var iconSets = null;     // sets.json の中身（読み込み前は null）
+  var nextSet  = null;     // 次の移動で使うセット（先に選んで画像を読み込んでおく）
+  var curSet   = null;     // いま表示中のセット
+
+  (function injectIconStyle() {
+    var st = document.createElement('style');
+    st.textContent =
+      '#panel-icon.has-img{width:' + ICON.size + 'px;height:' + ICON.size + 'px;background:transparent;}' +
+      '#panel-icon.has-img img{width:100%;height:100%;display:block;border-radius:50%;}';
+    document.head.appendChild(st);
+  }());
+
+  function preload(set) {
+    if (!set) return;
+    [set.wait, set.done].forEach(function (u) { var im = new Image(); im.src = u; });
+  }
+
+  // 前回と違うセットをランダムに選ぶ（セットが1つならそれ）
+  function pickSet() {
+    if (!iconSets || !iconSets.length) return null;
+    var pool = iconSets.length > 1 && curSet
+      ? iconSets.filter(function (s) { return s.id !== curSet.id; }) : iconSets;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function showIcon(set, kind) {
+    if (!iconEl) return;
+    if (!set) {
+      iconEl.classList.remove('has-img');
+      iconEl.textContent = ICON.fallback;
+      return;
+    }
+    var img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.onerror = function () { iconEl.classList.remove('has-img'); iconEl.textContent = ICON.fallback; };
+    img.src = set[kind];
+    iconEl.textContent = '';
+    iconEl.appendChild(img);
+    iconEl.classList.add('has-img');
+  }
+
+  function loadIconSets() {
+    if (!ICON_BASE) return;
+    fetch(ICON_BASE + 'sets.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : { sets: [] }; })
+      .then(function (data) {
+        iconSets = (data.sets || []).map(function (s) {
+          return { id: s.id, wait: ICON_BASE + s.wait, done: ICON_BASE + s.done };
+        });
+        nextSet = pickSet();
+        preload(nextSet);
+      })
+      .catch(function () { iconSets = []; });
+  }
+
+  // 「ちょっとまってね...」のアイコンを出す（セットを決めて、移動先にも引き継ぐ）
+  function iconWait() {
+    curSet = nextSet || pickSet();
+    try {
+      if (curSet) sessionStorage.setItem(ICON_KEY, JSON.stringify(curSet));
+      else sessionStorage.removeItem(ICON_KEY);
+    } catch (e) {}
+    showIcon(curSet, 'wait');
+    nextSet = pickSet();      // 次の移動用を選び直して読み込んでおく
+    preload(nextSet);
+    return curSet;
+  }
+  // 「おまたせ！」のアイコンを出す（いまのセットの2枚目）
+  function iconDone() { showIcon(curSet, 'done'); }
+
   /* ---------- 移動元：パネルを上げてから移動 ---------- */
   function go(url) {
     if (busy) return;
@@ -80,6 +172,7 @@
     try { sessionStorage.setItem(ARRIVAL_KEY, String(Date.now())); } catch (e) { /* 保存できなくても移動はする */ }
     barText.innerHTML = TEXT.waitBar;
     panelMsg.textContent = TEXT.waitPanel;
+    iconWait();
     requestAnimationFrame(function () { requestAnimationFrame(function () { cover(true); }); });
     setTimeout(function () { location.href = url; }, T.PANEL_RISE_MS);
   }
@@ -107,6 +200,7 @@
     readyDone = true;
     barText.textContent = TEXT.doneBar;
     panelMsg.textContent = TEXT.donePanel;
+    iconDone();
     setTimeout(function () {
       cover(false);
       setTimeout(function () { barText.innerHTML = ''; }, T.PANEL_DROP_MS + T.BAR_HIDE_MS);
@@ -119,6 +213,9 @@
     // 同じ状態をクラスで作り直してから is-arriving を外す（ここから先はアニメーションが効く）
     barText.innerHTML = TEXT.waitBar;
     panelMsg.textContent = TEXT.waitPanel;
+    // 移動元で選んだセットの「ちょっとまってね...」をそのまま表示する（画像は移動元で読み込み済み）
+    try { curSet = JSON.parse(sessionStorage.getItem(ICON_KEY) || 'null'); } catch (e) { curSet = null; }
+    showIcon(curSet, 'wait');
     cover(true);
     void panel.offsetHeight; // 状態を確定させる（これがないと一瞬パネルが動くことがある）
     root.classList.remove('is-arriving');
@@ -139,5 +236,7 @@
     barText.innerHTML = '';
   });
 
-  window.SunTransition = { go: go, ready: ready, isArriving: arriving };
+  loadIconSets();
+
+  window.SunTransition = { go: go, ready: ready, isArriving: arriving, iconWait: iconWait, iconDone: iconDone };
 }());

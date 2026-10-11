@@ -552,10 +552,9 @@ a { color: inherit; }
    動きは assets/page-transition.js が担当する。
    index.html 側の見た目を変えたときは、ここも合わせて変更する。
 
-   ★拡張予定: パネルのアイコンを画像にする場合
-     news/index.html と news/column/_template/index.html の <div id="panel-icon"> の中身を
-     <img src="（相対パス）assets/panel-icon.png" alt="" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
-     に書き換える（過去の記事フォルダの index.html にもテンプレートを上書きコピーする）
+   パネルのアイコン（丸いキャラクター画像）は assets/page-transition.js がランダムに入れる。
+   ★拡張予定: アイコンを増やす → Discord のアイコン用チャンネルに画像を2枚まとめて投稿する
+     （手順は assets/panel-icons/README.md。画像のときの丸の大きさは page-transition.js の ICON.size）
    ===================================================== */
 #loading-bar {
   position: fixed; top: 0; left: 0; right: 0;

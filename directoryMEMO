@@ -51,3 +51,10 @@
 元の写真（リポジトリの外。PCにだけある）
   C:\Users\sdra_\Documents\MyWebSites_photo\   ← ★拡張予定: 写真はここに入れる
       └─ event\ など                            ← フォルダ1つ = アルバム1つ
+
+ページ移動アイコン（「ちょっとまってね / おまたせ」の丸い画像）
+  assets/panel-icons/            ← 自動生成（Discord から取り込み）。手で触らない。README.md に手順
+      ├─ sets.json               ← 登録セットの一覧（page-transition.js がランダムに1セット選ぶ）
+      └─ <投稿ID>_wait.webp / _done.webp
+  .github/scripts/discord-panel-icons.py   ← ★拡張予定: 顔検出・丸切り抜き（寄り具合 FACE_RATIO はここ）
+  .github/scripts/data/lbpcascade_animeface.xml ← アニメ顔検出用データ（MIT License, nagadomi）

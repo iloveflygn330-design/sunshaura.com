@@ -7,6 +7,10 @@
 #   追加があれば、ニュースと同じ Webhook に「◯枚追加しました」と通知する。
 #   処理の中身は .github/scripts/discord-gallery.js（取り込むチャンネルもそこで設定）。
 #
+#   同じタイミングで、ページ移動アイコン（「ちょっとまってね / おまたせ」の丸い画像）も取り込む。
+#   アイコン用チャンネルに2枚まとめて投稿された画像を、顔を中心に丸く切り抜いて assets/panel-icons/ に登録する。
+#   処理の中身は .github/scripts/discord-panel-icons.py（Bot がプレビューやエラーを返信する）。
+#
 # 事前設定（GitHub の Settings → Secrets and variables → Actions → Secrets）:
 #   DISCORD_BOT_TOKEN   : 画像を読む Bot のトークン
 #   DISCORD_WEBHOOK_URL : 完了通知用（ニュース通知と共通）
@@ -54,18 +58,34 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
         run: node .github/scripts/discord-gallery.js
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: ページ移動アイコン用のライブラリを入れる
+        # OpenCV は 4 系に固定（5 系では顔検出の機能が別パッケージに分かれたため）
+        run: pip install --quiet opencv-python-headless==4.10.0.84 pillow==11.0.0 "numpy<2.3"
+
+      - name: ページ移動アイコンを取り込む
+        # 写真の取り込みが失敗していても、こちらは実行する
+        if: success() || failure()
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        run: python .github/scripts/discord-panel-icons.py
+
       - name: 変更があればコミットする
         id: commit
+        if: success() || failure()
         run: |
           echo "count=$(cat "${RUNNER_TEMP:-/tmp}/gallery-added-count" 2>/dev/null || cat /tmp/gallery-added-count 2>/dev/null || echo 0)" >> "$GITHUB_OUTPUT"
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A gallery/generated gallery/data
+          git add -A gallery/generated gallery/data assets/panel-icons
           if git diff --cached --quiet; then
             echo "変更なし"
             exit 0
           fi
-          git commit -m "フォトギャラリー: Discord から写真を取り込み"
+          git commit -m "Discord から写真・ページ移動アイコンを取り込み"
           # 実行中に別の push（毎朝のニュースなど）があっても失敗しないよう、最新を取り込んでから push する
           git pull --rebase origin main
           git push origin HEAD:main
