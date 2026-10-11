@@ -164,8 +164,7 @@ async function notify(count) {
 /* ---------- 本体 ---------- */
 async function main() {
   if (!TOKEN) {
-    console.error('DISCORD_BOT_TOKEN が設定されていません（GitHub の Settings → Secrets に登録してください）');
-    process.exit(1);
+    throw new Error('DISCORD_BOT_TOKEN が設定されていません（GitHub の Settings → Secrets に登録してください）');
   }
 
   const state = readState();
@@ -178,7 +177,7 @@ async function main() {
       messages = await fetchMessagesAfter(ch.id, after);
     } catch (e) {
       if (e.status === 403 || e.status === 401) {
-        console.error(`チャンネル ${ch.id} を読めません。Bot のトークン・チャンネル権限（View Channels / Read Message History）を確認してください。`);
+        e.message = `チャンネル ${ch.id} を読めません（${e.status}）。Bot のトークン・チャンネル権限（View Channels / Read Message History）を確認してください。 ` + e.message;
       }
       throw e;
     }
@@ -219,5 +218,10 @@ async function main() {
 if (process.argv[2] === '--notify') {
   notify(Number(process.argv[3] || 0)).catch((e) => { console.error(e); process.exit(1); });
 } else {
-  main().catch((e) => { console.error(e); process.exit(1); });
+  main().catch((e) => {
+    console.error(e);
+    // GitHub Actions の画面（Annotations）にも原因が出るようにする
+    if (process.env.GITHUB_ACTIONS) console.log('::error::' + String(e.message || e).replace(/\r?\n/g, ' '));
+    process.exit(1);
+  });
 }
