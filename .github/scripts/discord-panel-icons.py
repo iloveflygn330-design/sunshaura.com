@@ -185,6 +185,13 @@ def make_circle(blob):
         cx, cy = W / 2, H * FALLBACK_CENTER_Y
         diameter = min(W, H) * FALLBACK_SIZE
     diameter = max(32, int(diameter))
+    # 切り抜きの判断材料を Actions の画面（Annotations）に出す（うまく切り抜けないときの調査用）
+    if os.environ.get('GITHUB_ACTIONS'):
+        a = np.array(img.getchannel('A'))
+        print(f'::notice::アイコン切り抜き: 画像 {W}x{H} / 不透明な割合 {(a > 16).mean():.2f} / '
+              f'顔 {kind or "なし"} {tuple(int(v) for v in face) if face else ""} / '
+              f'キャラ範囲 {tuple(int(v) for v in subject) if subject else "なし"} / '
+              f'中心 ({int(cx)},{int(cy)}) 直径 {diameter}')
     # 画像からはみ出す部分は透明で埋める（丸が画像の外にかかっても形が崩れないように）
     left, top = int(round(cx - diameter / 2)), int(round(cy - diameter / 2))
     square = Image.new('RGBA', (diameter, diameter), (0, 0, 0, 0))
