@@ -1,0 +1,112 @@
+/* =====================================================
+   sunshaura.com ミニゲームページ専用CSS
+   minigame/index.html で読み込む。
+   ヘッダー・フッター・ページ移動の演出はサイト共通の assets/site-common.css。
+   ===================================================== */
+
+/* =====================================================
+   ミニゲームページ
+   ===================================================== */
+#minigame-inner { padding: 32px 20px 60px; }
+
+/* ゲーム選択画面 ⇔ 各ゲーム画面の切り替え
+   ★拡張予定: ゲームを追加する場合もこの .mg-screen クラスを付ける */
+.mg-screen        { display: none; }
+.mg-screen.active { display: block; }
+
+.mg-select-title {
+  text-align: center; font-size: 18px; font-weight: 800;
+  color: var(--color-main); margin-bottom: 28px;
+}
+#mg-game-list {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+  max-width: 640px; margin: 0 auto;
+}
+.mg-game-card {
+  width: 220px; padding: 28px 16px; border: none; border-radius: 20px;
+  background: var(--color-white); color: var(--color-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  cursor: pointer; font-family: inherit;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  transition: transform var(--duration-ui), box-shadow var(--duration-ui);
+}
+.mg-game-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16); }
+.mg-game-icon { font-size: 40px; }
+.mg-game-name { font-size: 15px; font-weight: 700; }
+
+.mg-game-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; max-width: 640px; margin: 0 auto 16px;
+}
+.mg-back-btn {
+  border: none; background: none; color: var(--color-main);
+  font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer;
+  padding: 6px 4px;
+}
+.mg-back-btn:hover { text-decoration: underline; }
+.mg-hud { display: flex; gap: 14px; font-size: 13px; font-weight: 700; color: var(--color-text); }
+.mg-hud b { color: var(--color-main); }
+
+.mg-primary-btn {
+  border: none; border-radius: 50px; padding: 12px 32px;
+  background: var(--color-main); color: var(--color-white);
+  font-family: inherit; font-weight: 800; font-size: 15px; cursor: pointer;
+  transition: background var(--duration-ui), transform var(--duration-ui);
+}
+.mg-primary-btn:hover { background: var(--color-main-dark); transform: translateY(-1px); }
+
+/* --- まとあてシューティング --- */
+#mg-sh-field {
+  position: relative; max-width: 640px; height: 420px; margin: 0 auto;
+  background: linear-gradient(135deg, var(--color-main-pale), var(--color-white));
+  border: 2px solid rgba(204, 34, 68, 0.15); border-radius: 20px;
+  overflow: hidden; touch-action: manipulation;
+}
+@media (max-width: 759px) { #mg-sh-field { height: 320px; } }
+
+#mg-sh-start-overlay, #mg-sh-result-overlay {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; background: rgba(255, 255, 255, 0.92); text-align: center; padding: 20px;
+}
+#mg-sh-start-overlay p, #mg-sh-result-overlay p {
+  font-size: 14px; color: var(--color-text); font-weight: 700; max-width: 320px;
+}
+#mg-sh-final-score { color: var(--color-main); font-size: 22px; font-weight: 800; }
+
+.mg-target {
+  position: absolute; width: 56px; height: 56px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FF7A90, var(--color-main) 70%, var(--color-main-dark));
+  border: 3px solid var(--color-white); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  cursor: pointer; transform: scale(0); animation: mgTargetPop 0.18s ease-out forwards;
+}
+.mg-target::before, .mg-target::after { content: ''; position: absolute; border-radius: 50%; }
+.mg-target::after  { inset: 14px; background: var(--color-white); }
+.mg-target::before { inset: 22px; background: var(--color-main); z-index: 1; }
+@keyframes mgTargetPop { to { transform: scale(1); } }
+.mg-target.mg-target-hit { animation: mgTargetHit 0.18s ease-out forwards; pointer-events: none; }
+@keyframes mgTargetHit { to { transform: scale(1.5); opacity: 0; } }
+
+/* --- じゃんけんゲーム --- */
+#mg-jk-field {
+  max-width: 480px; margin: 0 auto; text-align: center;
+  background: var(--color-white); border-radius: 20px; padding: 32px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+.mg-jk-battle { display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 20px; }
+.mg-jk-hand {
+  width: 80px; height: 80px; border-radius: 50%; background: var(--color-main-pale);
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+}
+.mg-jk-hand.mg-jk-shake { animation: mgJkShake 0.3s ease-in-out 2; }
+@keyframes mgJkShake { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.mg-jk-vs { font-weight: 800; color: var(--color-placeholder); font-size: 14px; }
+#mg-jk-message { font-size: 15px; font-weight: 700; color: var(--color-text); min-height: 22px; margin-bottom: 20px; }
+.mg-jk-buttons { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.mg-jk-btn {
+  width: 84px; padding: 14px 0; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 16px;
+  background: var(--color-white); font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; line-height: 1.8; transition: all var(--duration-ui);
+}
+.mg-jk-btn:hover:not(:disabled) { border-color: var(--color-main); transform: translateY(-2px); }
+.mg-jk-btn:disabled { opacity: 0.4; cursor: default; transform: none; }

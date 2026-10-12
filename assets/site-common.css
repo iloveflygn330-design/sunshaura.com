@@ -1,0 +1,238 @@
+/* =====================================================
+   sunshaura.com サイト共通CSS（全ページで読み込む）
+
+   ここにあるもの:
+     ・色・高さなどの定義変数（:root）
+     ・ヘッダー（#header）… 中身は assets/site-header.js が組み立てる
+     ・フッター（.site-footer）… 中身は assets/site-header.js が入れる
+     ・ページ移動の「ちょっとまってね...」演出（#loading-bar / #loading-panel）
+     ・中身がまだないページ用のプレースホルダー（.page-placeholder）
+
+   読み込み方:
+     サイトのトップ直下のページ … <link rel="stylesheet" href="assets/site-common.css">
+     1階層下のページ（avatar/ など）… <link rel="stylesheet" href="../assets/site-common.css">
+     ニュース・ギャラリー … news.css / gallery.css の先頭で @import している（HTMLの変更は不要）
+
+   ★拡張予定: サイト全体の色やヘッダーの高さを変える場合
+     下の :root の値を書き換えるだけで、全ページ（ニュース・ギャラリー含む）に反映される。
+     ページ専用の見た目は、そのページのCSS（例: avatar/assets/avatar.css）に書く。
+   ===================================================== */
+
+:root {
+  --bp-sp: 760px;
+  --color-main:        #CC2244;
+  --color-main-dark:   #8B1228;
+  --color-main-mid:    #B01D3A;
+  --color-main-light:  #E03355;
+  --color-main-pale:   #FFF0F3;
+  --color-text:        #2A0A10;
+  --color-white:       #FFFFFF;
+  --color-loading-bar: #2E2E2E;
+  --color-placeholder: #CC8899;
+  --header1-height:    60px;
+  --header2-height:    60px;
+  --header-height-pc:  60px;
+  --header-height-sp: 120px;
+  --loading-bar-height: 50px;
+  --ease-decel:       cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-panel:   600ms;
+  --duration-ui:      300ms;
+  --duration-complete: 900ms;
+  --nav-btn-width:    130px;
+  --nav-btn-gap:       10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: hidden; }
+body {
+  font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--color-main-pale);
+  color: var(--color-text);
+}
+
+/* =====================================================
+   ページの基本レイアウト（avatar/ など、トップ以外の通常ページ）
+     <body class="site-page">
+       <header id="header"></header>
+       <main id="body-content" data-transition-body> … </main>
+       <footer class="site-footer" data-site-footer></footer>
+     中身が少なくても、フッターが画面の一番下に来るようにしている。
+   ===================================================== */
+body.site-page {
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+}
+body.site-page > #body-content { flex: 1 0 auto; }
+
+#body-content {
+  padding-top: var(--header-height-pc);
+  position: relative; z-index: 1;
+  background: var(--color-main-pale);
+}
+@media (max-width: 759px) { #body-content { padding-top: var(--header-height-sp); } }
+
+/* =====================================================
+   ヘッダー（中身は assets/site-header.js が組み立てる）
+   ===================================================== */
+#header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 10;
+  height: var(--header-height-pc);
+}
+@media (max-width: 759px) { #header { height: var(--header-height-sp); } }
+
+#header1 {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: var(--header1-height);
+  background: var(--color-main);
+  display: flex; align-items: center; padding: 0 16px; gap: 12px;
+  z-index: 1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+#logo-area {
+  /*
+   * ★拡張予定: ロゴ画像（PNG）への差し替え手順
+   *   1. assets/site-header.js の SITE_LOGO_HTML を画像のHTMLに書き換える（全ページに反映）
+   *   2. 画像に合わせて、ここの height / min-width を調整する
+   */
+  height: 44px; min-width: 108px;
+  background: rgba(255, 255, 255, 0.15); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 14px; color: var(--color-white); text-decoration: none;
+  font-weight: 800; font-size: 14px; letter-spacing: 0.05em; flex-shrink: 0;
+}
+#header1-extra {
+  /* ★拡張予定: ロゴの右側（SNSアイコンなど）は assets/site-header.js の SITE_HEADER_EXTRA_HTML に書く */
+  flex: 1; display: flex; align-items: center; justify-content: flex-end;
+}
+.placeholder-label {
+  font-size: 11px; color: rgba(255, 255, 255, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.3); border-radius: 6px;
+  padding: 3px 10px; pointer-events: none; white-space: nowrap;
+}
+
+#header2 {
+  position: absolute; height: var(--header2-height);
+  background: var(--color-main-mid);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px; gap: 6px; z-index: 2;
+}
+@media (min-width: 760px) { #header2 { top: 0; left: 152px; right: 0; } }
+@media (max-width: 759px) { #header2 { top: var(--header1-height); left: 0; right: 0; } }
+
+#nav-scroll-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
+#nav-buttons-wrap {
+  display: flex; gap: var(--nav-btn-gap);
+  transition: transform var(--duration-ui) ease;
+  will-change: transform; margin: 0 auto;
+}
+.nav-btn {
+  /* ★拡張予定: ナビボタンの追加・並べ替えは assets/site-header.js の SITE_NAV_ITEMS に1行追記する */
+  min-width: var(--nav-btn-width); height: 40px;
+  background: rgba(255, 255, 255, 0.88); color: var(--color-main);
+  border: none; border-radius: 50px; padding: 0 18px;
+  font-family: inherit; font-weight: 700; font-size: 14px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  transition: background var(--duration-ui), color var(--duration-ui),
+    transform var(--duration-ui), box-shadow var(--duration-ui);
+}
+.nav-btn:hover {
+  background: var(--color-white); transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.nav-btn.active {
+  background: var(--color-main); color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.nav-arrow {
+  background: rgba(255, 255, 255, 0.18); color: var(--color-white);
+  border: none; width: 30px; height: 30px; border-radius: 50%;
+  cursor: pointer; font-size: 18px; line-height: 1;
+  display: none; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background var(--duration-ui);
+}
+.nav-arrow:hover    { background: rgba(255, 255, 255, 0.32); }
+.nav-arrow:disabled { opacity: 0.3; cursor: default; }
+
+/* =====================================================
+   フッター（中身は assets/site-header.js の SITE_FOOTER_HTML）
+   ニュース（.news-footer）・ギャラリー（.gal-footer）も同じ見た目
+   ===================================================== */
+.site-footer, .news-footer, .gal-footer {
+  background: var(--color-main); color: rgba(255, 255, 255, 0.7);
+  text-align: center; padding: 20px; font-size: 12px; letter-spacing: 0.08em;
+  position: relative; z-index: 1;
+}
+.site-footer a, .news-footer a, .gal-footer a { color: rgba(255, 255, 255, 0.85); }
+
+/* =====================================================
+   ページ移動の「ちょっとまってね...」→「おまたせ！」演出
+   動きは assets/page-transition.js が担当する。
+   本文の要素に data-transition-body を付けると、移動中にバーの高さぶん下にずれる。
+
+   パネルのアイコン（丸いキャラクター画像）は assets/page-transition.js がランダムに入れる。
+   ★拡張予定: アイコンを増やす → Discord のアイコン用チャンネルに画像を2枚まとめて投稿する
+     （手順は assets/panel-icons/README.md。画像のときの丸の大きさは page-transition.js の ICON.size）
+   ===================================================== */
+#loading-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--loading-bar-height);
+  background: var(--color-loading-bar); color: var(--color-white);
+  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9; transform: translateY(0);
+  transition: transform var(--duration-ui) ease;
+}
+@media (min-width: 760px) { #loading-bar.reveal { transform: translateY(var(--header-height-pc)); } }
+@media (max-width: 759px) { #loading-bar.reveal { transform: translateY(var(--header-height-sp)); } }
+@keyframes loadingDots { 0% { content: '・'; } 33% { content: '・・'; } 66% { content: '・・・'; } }
+.dots-anim::after { content: '・'; animation: loadingDots 1.2s steps(1, end) infinite; }
+
+[data-transition-body] { transition: transform var(--duration-ui) ease; }
+[data-transition-body].loading { transform: translateY(var(--loading-bar-height)); }
+
+#loading-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 100vh;
+  background: var(--color-main-dark);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 22px; z-index: 8;
+  padding-top: calc(var(--header-height-pc) + var(--loading-bar-height));
+  transform: translateY(100%);
+  transition: transform var(--duration-panel) var(--ease-decel);
+}
+@media (max-width: 759px) {
+  #loading-panel { padding-top: calc(var(--header-height-sp) + var(--loading-bar-height)); }
+}
+#loading-panel.slide-up { transform: translateY(0); }
+#panel-icon {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex; align-items: center; justify-content: center; font-size: 44px;
+}
+#panel-message {
+  color: var(--color-white); font-size: clamp(20px, 4vw, 28px);
+  font-weight: 800; letter-spacing: 0.08em;
+}
+
+/* 別のHTMLから移動してきた直後：アニメーションなしで、最初から覆った状態にする
+   （各ページのCSSが #news-body などに transition を書いていても確実に止めるため !important） */
+.is-arriving #loading-panel { transform: translateY(0); transition: none; }
+.is-arriving [data-transition-body] { transform: translateY(var(--loading-bar-height)); transition: none !important; }
+.is-arriving #loading-bar   { transition: none; }
+@media (min-width: 760px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-pc)); } }
+@media (max-width: 759px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-sp)); } }
+
+/* =====================================================
+   中身がまだないページ用のプレースホルダー
+   （world/ shop/ event/ about/ などで使用。中身を作ったら外してよい）
+   ===================================================== */
+.page-placeholder { padding: 80px 24px; text-align: center; }
+.placeholder-title { font-size: 24px; font-weight: 800; color: var(--color-placeholder); margin-bottom: 12px; opacity: 0.7; }
+.placeholder-desc { font-size: 14px; color: var(--color-placeholder); opacity: 0.55; }
+.placeholder-box {
+  display: inline-block; margin-top: 24px; padding: 14px 28px;
+  border: 2px dashed var(--color-placeholder); border-radius: 12px;
+  font-size: 12px; color: var(--color-placeholder); opacity: 0.5;
+}

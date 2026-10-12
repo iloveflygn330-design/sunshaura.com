@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ページ間遷移の到着判定（全ページ共通。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
+  <title>ミニゲーム | sunshaura.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- サイト共通（ヘッダー・フッター・ページ移動の演出） -->
+  <link rel="stylesheet" href="../assets/site-common.css">
+  <!-- このページ専用の見た目 -->
+  <link rel="stylesheet" href="assets/minigame.css">
+</head>
+<!--
+  ミニゲームページ（minigame/index.html）
+    ゲームの動きは assets/minigame.js、見た目は assets/minigame.css。
+    ヘッダー・フッター・「ちょっとまってね...」の演出は共通パーツ（assets/site-header.js / assets/page-transition.js）。
+-->
+<body class="site-page">
+
+  <!-- ヘッダー（中身は assets/site-header.js が全ページ共通で組み立てる） -->
+  <header id="header"></header>
+
+  <!-- ページ間遷移アニメーション用（全ページ共通の構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon"></div><!-- アイコンは assets/page-transition.js が入れる -->
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="body-content" data-transition-body>
+    <div id="minigame-inner">
+
+      <!-- ゲーム選択画面 -->
+      <div class="mg-screen active" id="mg-select">
+        <p class="mg-select-title">遊びたいミニゲームを選んでね！</p>
+        <!--
+          ★拡張予定: ゲームを追加する場合
+            1. 下に <button class="mg-game-card" onclick="mgStartGame('ゲームID')"> を追記
+            2. 対応する <div class="mg-screen" id="mg-ゲームID"> をこのページ内に追記
+            3. mgStartGame() の switch にゲームIDを追記（初期化処理が必要な場合）
+        -->
+        <div id="mg-game-list">
+          <button class="mg-game-card" onclick="mgStartGame('shooting')">
+            <span class="mg-game-icon">🎯</span>
+            <span class="mg-game-name">まとあてシューティング</span>
+          </button>
+          <button class="mg-game-card" onclick="mgStartGame('janken')">
+            <span class="mg-game-icon">✊</span>
+            <span class="mg-game-name">じゃんけんゲーム</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- まとあてシューティング -->
+      <div class="mg-screen" id="mg-shooting">
+        <div class="mg-game-header">
+          <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+          <div class="mg-hud">
+            <span>スコア: <b id="mg-sh-score">0</b></span>
+            <span>残り時間: <b id="mg-sh-time">30</b>秒</span>
+          </div>
+        </div>
+        <div id="mg-sh-field">
+          <div id="mg-sh-start-overlay">
+            <p>制限時間30秒！　出てくる的をクリックしてスコアを稼ごう！</p>
+            <button class="mg-primary-btn" onclick="mgShootingStart()">スタート</button>
+          </div>
+          <div id="mg-sh-result-overlay" style="display:none">
+            <p>タイムアップ！</p>
+            <p>スコア：<span id="mg-sh-final-score">0</span></p>
+            <button class="mg-primary-btn" onclick="mgShootingStart()">もう一度あそぶ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- じゃんけんゲーム -->
+      <div class="mg-screen" id="mg-janken">
+        <div class="mg-game-header">
+          <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+          <div class="mg-hud">
+            <span>勝ち: <b id="mg-jk-win">0</b></span>
+            <span>負け: <b id="mg-jk-lose">0</b></span>
+            <span>あいこ: <b id="mg-jk-draw">0</b></span>
+          </div>
+        </div>
+        <div id="mg-jk-field">
+          <div class="mg-jk-battle">
+            <div class="mg-jk-hand" id="mg-jk-cpu-hand">？</div>
+            <span class="mg-jk-vs">VS</span>
+            <div class="mg-jk-hand" id="mg-jk-player-hand">？</div>
+          </div>
+          <p id="mg-jk-message">手を選んでね！</p>
+          <div class="mg-jk-buttons">
+            <button class="mg-jk-btn" onclick="mgJankenPlay('rock')">✊<br>グー</button>
+            <button class="mg-jk-btn" onclick="mgJankenPlay('scissors')">✌️<br>チョキ</button>
+            <button class="mg-jk-btn" onclick="mgJankenPlay('paper')">✋<br>パー</button>
+          </div>
+        </div>
+      </div>
+
+
+    </div><!-- /#minigame-inner -->
+  </main>
+
+  <!-- フッター（中身は assets/site-header.js の SITE_FOOTER_HTML。全ページ共通） -->
+  <footer class="site-footer" data-site-footer>sunshaura.com</footer>
+
+  <script src="../assets/page-transition.js"></script>
+  <script src="../assets/site-header.js"></script>
+  <script>SunHeader.render({ root: '../', current: 'minigame' });</script>
+
+  <!-- ミニゲーム本体 -->
+  <script src="assets/minigame.js"></script>
+</body>
+</html>

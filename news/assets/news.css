@@ -2,30 +2,16 @@
    sunshaura.com ニュースページ 共通CSS
    トップ（news/index.html）と各記事ページの両方で読み込む。
    ここを変えると、過去の記事ページすべての見た目に反映される。
+
+   ヘッダー・フッター・ページ移動の演出の見た目は、サイト共通の
+   assets/site-common.css を下の @import で読み込んでいる（ここには書かない）。
    ===================================================== */
+@import url('../../assets/site-common.css');
 
 /* =====================================================
-   ★ 定義変数（ヘッダーは index.html と同じ値）
+   ★ 定義変数（ニュース専用。色・ヘッダーの高さなどサイト共通の値は assets/site-common.css）
    ===================================================== */
 :root {
-  --color-main:        #CC2244;
-  --color-main-dark:   #8B1228;
-  --color-main-mid:    #B01D3A;
-  --color-main-light:  #E03355;
-  --color-text:        #2A0A10;
-  --color-white:       #FFFFFF;
-  --header1-height:    60px;
-  --header2-height:    60px;
-  --header-height-pc:  60px;
-  --header-height-sp: 120px;
-  --duration-ui:      300ms;
-  --duration-panel:   600ms;
-  --ease-decel:       cubic-bezier(0.22, 1, 0.36, 1);
-  --color-loading-bar: #2E2E2E;
-  --loading-bar-height: 50px;
-  --nav-btn-width:    130px;
-  --nav-btn-gap:       10px;
-
   /* ニュース本体のレイアウト */
   --news-max-width:   1080px;
   --news-side-width:   240px;
@@ -85,8 +71,6 @@
   --season-deco:      "❄";
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { overflow-x: hidden; }
 body {
   font-family: 'M PLUS Rounded 1c', 'Helvetica Neue', Arial, sans-serif;
   color: var(--color-text);
@@ -100,81 +84,6 @@ body {
 }
 #news-body { flex: 1 0 auto; }
 a { color: inherit; }
-
-/* =====================================================
-   ヘッダー（index.html と同じ見た目）
-   index.html のヘッダーを変えたときは、ここも合わせて変更する
-   ===================================================== */
-#header {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 10;
-  height: var(--header-height-pc);
-}
-@media (max-width: 759px) { #header { height: var(--header-height-sp); } }
-
-#header1 {
-  position: absolute; top: 0; left: 0; right: 0;
-  height: var(--header1-height);
-  background: var(--color-main);
-  display: flex; align-items: center; padding: 0 16px; gap: 12px;
-  z-index: 1;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-#logo-area {
-  /*
-   * ★拡張予定: ロゴ画像（PNG）への差し替え手順
-   *   index.html でロゴを差し替えたら、assets/site-header.js の SITE_LOGO_HTML も同じ内容に変更する
-   */
-  height: 44px; min-width: 108px;
-  background: rgba(255, 255, 255, 0.15); border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  padding: 0 14px; color: var(--color-white); text-decoration: none;
-  font-weight: 800; font-size: 14px; letter-spacing: 0.05em; flex-shrink: 0;
-}
-
-#header2 {
-  position: absolute; height: var(--header2-height);
-  background: var(--color-main-mid);
-  display: flex; align-items: center; justify-content: center;
-  padding: 0 8px; gap: 6px; z-index: 2;
-}
-@media (min-width: 760px) { #header2 { top: 0; left: 152px; right: 0; } }
-@media (max-width: 759px) { #header2 { top: var(--header1-height); left: 0; right: 0; } }
-
-#nav-scroll-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
-#nav-buttons-wrap {
-  display: flex; gap: var(--nav-btn-gap);
-  transition: transform var(--duration-ui) ease;
-  will-change: transform; margin: 0 auto;
-}
-.nav-btn {
-  min-width: var(--nav-btn-width); height: 40px;
-  background: rgba(255, 255, 255, 0.88); color: var(--color-main);
-  border: none; border-radius: 50px; padding: 0 18px;
-  font-family: inherit; font-weight: 700; font-size: 14px;
-  cursor: pointer; white-space: nowrap; flex-shrink: 0;
-  display: inline-flex; align-items: center; justify-content: center;
-  text-decoration: none;
-  transition: background var(--duration-ui), color var(--duration-ui),
-    transform var(--duration-ui), box-shadow var(--duration-ui);
-}
-.nav-btn:hover {
-  background: var(--color-white); transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-.nav-btn.active {
-  background: var(--color-main); color: var(--color-white);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-}
-.nav-arrow {
-  background: rgba(255, 255, 255, 0.18); color: var(--color-white);
-  border: none; width: 30px; height: 30px; border-radius: 50%;
-  cursor: pointer; font-size: 18px; line-height: 1;
-  display: none; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: background var(--duration-ui);
-}
-.nav-arrow:hover   { background: rgba(255, 255, 255, 0.32); }
-.nav-arrow:disabled { opacity: 0.3; cursor: default; }
 
 /* =====================================================
    本体レイアウト（左：メイン / 右：月別リスト）
@@ -448,11 +357,6 @@ a { color: inherit; }
   margin-top: 18px; font-size: 11px; line-height: 1.8; color: rgba(0,0,0,0.45);
 }
 
-.news-footer {
-  background: var(--color-main); color: rgba(255,255,255,0.7);
-  text-align: center; padding: 20px; font-size: 12px; letter-spacing: 0.08em;
-  position: relative; z-index: 1;
-}
 
 /* =====================================================
    スマホ用：右下の年月選択ボタン（折り畳み式）
@@ -544,60 +448,3 @@ a { color: inherit; }
   /* 右下ボタンで最後のカードが隠れないよう、下に余白を足す */
   #news-body { padding-bottom: 96px; }
 }
-
-
-/* =====================================================
-   ページ間遷移アニメーション
-   index.html の #loading-bar / #loading-panel と同じ見た目。
-   動きは assets/page-transition.js が担当する。
-   index.html 側の見た目を変えたときは、ここも合わせて変更する。
-
-   パネルのアイコン（丸いキャラクター画像）は assets/page-transition.js がランダムに入れる。
-   ★拡張予定: アイコンを増やす → Discord のアイコン用チャンネルに画像を2枚まとめて投稿する
-     （手順は assets/panel-icons/README.md。画像のときの丸の大きさは page-transition.js の ICON.size）
-   ===================================================== */
-#loading-bar {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: var(--loading-bar-height);
-  background: var(--color-loading-bar); color: var(--color-white);
-  font-size: 14px; font-weight: 700; letter-spacing: 0.12em;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9; transform: translateY(0);
-  transition: transform var(--duration-ui) ease;
-}
-@media (min-width: 760px) { #loading-bar.reveal { transform: translateY(var(--header-height-pc)); } }
-@media (max-width: 759px) { #loading-bar.reveal { transform: translateY(var(--header-height-sp)); } }
-@keyframes loadingDots { 0% { content: '・'; } 33% { content: '・・'; } 66% { content: '・・・'; } }
-.dots-anim::after { content: '・'; animation: loadingDots 1.2s steps(1, end) infinite; }
-
-#news-body.loading { transform: translateY(var(--loading-bar-height)); }
-
-#loading-panel {
-  position: fixed; left: 0; right: 0; bottom: 0; height: 100vh;
-  background: var(--color-main-dark);
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 22px; z-index: 8;
-  padding-top: calc(var(--header-height-pc) + var(--loading-bar-height));
-  transform: translateY(100%);
-  transition: transform var(--duration-panel) var(--ease-decel);
-}
-@media (max-width: 759px) {
-  #loading-panel { padding-top: calc(var(--header-height-sp) + var(--loading-bar-height)); }
-}
-#loading-panel.slide-up { transform: translateY(0); }
-#panel-icon {
-  width: 90px; height: 90px; border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex; align-items: center; justify-content: center; font-size: 44px;
-}
-#panel-message {
-  color: var(--color-white); font-size: clamp(20px, 4vw, 28px);
-  font-weight: 800; letter-spacing: 0.08em;
-}
-
-/* 別のHTMLから移動してきた直後：アニメーションなしで、最初から覆った状態にする */
-.is-arriving #loading-panel { transform: translateY(0); transition: none; }
-.is-arriving #news-body     { transform: translateY(var(--loading-bar-height)); transition: none; }
-.is-arriving #loading-bar   { transition: none; }
-@media (min-width: 760px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-pc)); } }
-@media (max-width: 759px) { .is-arriving #loading-bar { transform: translateY(var(--header-height-sp)); } }

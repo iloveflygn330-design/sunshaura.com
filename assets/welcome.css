@@ -1,0 +1,309 @@
+/* =====================================================
+   sunshaura.com トップページ（ようこそ）専用CSS
+   index.html で読み込む。
+   ヘッダー・フッター・ページ移動の演出はサイト共通の assets/site-common.css。
+   ===================================================== */
+
+/* トップページは #wlc-scroll の中だけがスクロールする作りなので、画面の高さに固定する */
+html, body { height: 100%; }
+#body-content {
+  /* welcomeページの #page-welcome が position:absolute で
+     この要素を基準に広がるため、height を明示する */
+  min-height: 100svh;
+}
+
+/* =====================================================
+   ようこそページ全体
+   ===================================================== */
+
+/*
+ * page-welcome: 専用スクロールコンテナ方式（方法B）
+ *
+ * 仕組み:
+ *   #page-welcome は画面サイズに固定（overflow: hidden）
+ *   内側の #wlc-scroll が実際にスクロールするコンテナ
+ *   GSAPの scroller をこの #wlc-scroll に向けることで
+ *   window スクロールと完全に分離 → Edge の引っかかりが解消
+ *
+ *   ページはそれぞれ別のHTMLになったので、トップに戻るたびにページごと読み直される
+ *   （スクロール位置のリセットは不要）
+ */
+#page-welcome {
+  /*
+   * #body-content が padding-top でヘッダー分を押し下げているため、
+   * page-welcome 自体は padding なしで残り画面を全部使う。
+   * position: absolute で #body-content の padding 内側に貼り付ける。
+   */
+  position: absolute;
+  top: var(--header-height-pc);
+  left: 0; right: 0;
+  bottom: 0;
+  overflow: hidden; /* スクロールは #wlc-scroll が担う */
+}
+@media (max-width: 759px) {
+  #page-welcome { top: var(--header-height-sp); }
+}
+
+/* 専用スクロールコンテナ
+   ここが実際にスクロールする。GSAPの scroller として指定する。
+   position: absolute の親を基準に 100% 高さを確保する。 */
+#wlc-scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* スクロールバーを非表示にしたい場合は下記をコメント解除
+  scrollbar-width: none;
+  */
+}
+#wlc-scroll::-webkit-scrollbar {
+  /* ★拡張予定: スクロールバーのスタイル変更
+       幅や色を変えたい場合はここを編集する
+       完全に消すには display: none; */
+  width: 6px;
+}
+#wlc-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-main-light);
+  border-radius: 3px;
+}
+
+/* -------------------------------------------------------
+   セクション1: ようこそ（初期表示テキスト群）
+   ------------------------------------------------------- */
+.wlc-sec1 {
+  /* #wlc-scroll コンテナの中で画面1枚分を確保する
+     100svh からヘッダー高さを引いた値がちょうど1画面 */
+  min-height: calc(100svh - var(--header-height-pc));
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 24px 60px;
+  text-align: center;
+  background: var(--color-main-pale);
+  overflow: hidden;
+}
+@media (max-width: 759px) {
+  .wlc-sec1 { min-height: calc(100svh - var(--header-height-sp)); }
+}
+
+/* ① ようこそ！タイトル（初期から表示） */
+.wlc-title {
+  font-size: clamp(36px, 7vw, 64px);
+  font-weight: 800; color: var(--color-main);
+  line-height: 1.15; margin-bottom: 28px;
+  opacity: 1; /* 初期から見える */
+}
+
+/* ② メインキャッチコピー（0.4秒後フェードイン） */
+.wlc-catch {
+  font-size: clamp(18px, 3.5vw, 28px);
+  font-weight: 700; color: var(--color-text);
+  line-height: 1.6; margin-bottom: 32px;
+  opacity: 0; /* JS でフェードイン */
+}
+
+/* ③ 注意書き＋矢印（0.7秒後フェードイン） */
+.wlc-note {
+  font-size: clamp(12px, 1.8vw, 15px);
+  color: var(--color-text); opacity: 0; /* JS でフェードイン */
+  line-height: 1.85; margin-bottom: 40px;
+}
+.wlc-arrows {
+  font-size: 20px; letter-spacing: 4px;
+  color: var(--color-main); opacity: 0; /* wlc-note と同タイミング */
+  animation: wlcBounce 1.4s ease-in-out infinite;
+  display: block;
+}
+@keyframes wlcBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+
+/* -------------------------------------------------------
+   セクション2: 自己紹介
+   pin/scrub 廃止済み。スクロールでアニメが順番に起動する方式。
+   各アニメブロックが画面に入ったとき ScrollTrigger で発火する。
+   ------------------------------------------------------- */
+.wlc-sec2 {
+  background: var(--color-main-pale);
+  overflow: hidden; /* 横スライドの飛び出し防止 */
+  padding: 80px 0 100px;
+}
+
+/* ピン留め対象エリア
+   GSAPが pin: true でこの要素をスクロールコンテナ内に固定する
+   コンテナが #wlc-scroll なので window への干渉がない */
+.wlc-sec2-sticky {
+  /* pin留め中に画面1枚分を占有する高さ */
+  height: calc(100svh - var(--header-height-pc));
+  width: 100%;
+  display: flex; align-items: center;
+  overflow: hidden;
+  position: relative;
+  clip-path: inset(0); /* 横スライドの飛び出しを隠す */
+}
+@media (max-width: 759px) {
+  .wlc-sec2-sticky { height: calc(100svh - var(--header-height-sp)); }
+}
+
+/* キャラクター画像エリア（右半分に固定表示） */
+.wlc-chara-wrap {
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 50%; height: 100%;
+  display: flex; align-items: flex-end; justify-content: center;
+  pointer-events: none;
+}
+@media (max-width: 759px) {
+  .wlc-chara-wrap { width: 55%; }
+}
+
+/*
+ * ★拡張予定: キャラクタースプライトシート差し替え手順
+ *
+ *   【スプライトシートとは】
+ *     複数のポーズを1枚の画像に横並びにした画像ファイルです。
+ *     例: 8ポーズなら横8マス×縦1マスの画像を用意します。
+ *
+ *   【差し替え手順】
+ *     1. スプライトシート画像を assets/images/welcome_sprite.png として配置
+ *     2. 下記 CSS の background-image を変更:
+ *          background-image: url('assets/images/welcome_sprite.png');
+ *     3. --wlc-sprite-cols にポーズ（コマ）数を設定（例: 8コマなら 8）
+ *     4. --wlc-sprite-rows に行数を設定（通常 1）
+ *     5. background-size: calc(100% * var(--wlc-sprite-cols)) auto; に変更
+ *     6. JS側の WLC_SPRITE_TOTAL をコマ数に合わせて変更（下記参照）
+ *
+ *   【スプライトシートのコマ割り目安（8コマの場合）】
+ *     0: 腕を振って登場（右スライドイン用）
+ *     1: テキストボックスに気づく（振り向く）
+ *     2: テキストボックスに手をかける
+ *     3: 左へ押す（力を込めた動作）
+ *     4: 左から飛んできたテキストを受け止める
+ *     5: ポーズ（笑顔・決めポーズ）
+ *     6: 上へ退場（消える直前）
+ *     7: 退場完了（非表示）
+ */
+:root {
+  --wlc-sprite-cols: 1; /* ★ スプライトのコマ数（差し替え時に変更） */
+}
+.wlc-chara {
+  width: min(380px, 90%);
+  aspect-ratio: 1 / 1.4;
+
+  /* ★拡張予定: 下記 background-image をスプライトシート画像に差し替え */
+  background-color: rgba(180, 100, 80, 0.15);
+  background-image: none; /* ← url('assets/images/welcome_sprite.png') に変更 */
+  background-size: calc(100% * var(--wlc-sprite-cols)) auto;
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+
+  /* プレースホルダー表示（差し替え後は下記 border/display を削除） */
+  border: 3px dashed rgba(180, 100, 80, 0.35);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.wlc-chara-placeholder {
+  /*
+   * ★拡張予定: スプライトシート差し替え後、この要素ごと削除する
+   *   <div class="wlc-chara-placeholder"> を HTML から消せばOK
+   */
+  font-size: 12px; color: rgba(180, 100, 80, 0.6);
+  text-align: center; padding: 16px; pointer-events: none;
+}
+
+/* テキストボックス（左側に表示されるカード） */
+.wlc-textbox {
+  position: absolute;
+  left: 5%; top: 50%; transform: translateY(-50%);
+  width: min(400px, 48%);
+  background: rgba(255, 220, 120, 0.92);
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 4px 6px 20px rgba(0,0,0,0.12);
+  backdrop-filter: blur(2px);
+}
+@media (max-width: 759px) {
+  .wlc-textbox {
+    left: 4%; width: 56%;
+    padding: 16px 18px;
+    top: 30%; transform: none;
+  }
+}
+.wlc-textbox-title {
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 800; color: var(--color-text);
+  margin-bottom: 10px;
+}
+.wlc-textbox-body {
+  font-size: clamp(12px, 1.8vw, 15px);
+  color: var(--color-text); line-height: 1.85;
+}
+/* テキストボックス内の各行（スクロールで順次表示） */
+.wlc-textbox-line {
+  display: block;
+  opacity: 0; /* ScrollTrigger で表示 */
+  transform: translateY(8px);
+}
+/* テキストボックス下のハイライト線（装飾） */
+.wlc-textbox-lines {
+  margin-top: 16px; display: flex; flex-direction: column; gap: 7px;
+}
+.wlc-textbox-bar {
+  height: 7px; border-radius: 4px;
+  background: var(--color-main-light); opacity: 0.7;
+}
+.wlc-textbox-bar:nth-child(2) { width: 80%; }
+.wlc-textbox-bar:nth-child(3) { width: 55%; }
+
+/* -------------------------------------------------------
+   セクション3: コンテンツ紹介フッター
+   ------------------------------------------------------- */
+.wlc-sec3 {
+  background: var(--color-main-pale);
+  padding: 64px 24px 80px;
+  text-align: center;
+}
+.wlc-sec3-title {
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 700; color: var(--color-text);
+  margin-bottom: 36px;
+  opacity: 0; transform: translateY(24px); /* ScrollTrigger で表示 */
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 12px; padding: 18px 28px;
+  display: inline-block;
+}
+.wlc-sec3-grid {
+  /*
+   * ★拡張予定: PC は4枚・SP は2枚並べる画像グリッド
+   *   画像を追加する場合は .wlc-sec3-grid 内に
+   *   <div class="wlc-preview-card"> を追記するだけ
+   */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px; max-width: 860px; margin: 0 auto;
+}
+@media (max-width: 759px) {
+  .wlc-sec3-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.wlc-preview-card {
+  aspect-ratio: 1 / 1;
+  background: rgba(0,0,0,0.07);
+  border-radius: 12px;
+  border: 2px dashed rgba(0,0,0,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: rgba(0,0,0,0.3);
+  opacity: 0; transform: translateY(20px); /* ScrollTrigger で順次表示 */
+  overflow: hidden;
+}
+.wlc-preview-card img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 10px; display: block;
+}
+/*
+ * ★拡張予定: SPで非表示にするカード（PC専用の3・4枚目）
+ *   SP表示で不要なカードに .wlc-sp-hidden クラスを付与するだけ
+ */
+@media (max-width: 759px) {
+  .wlc-sp-hidden { display: none; }
+}
