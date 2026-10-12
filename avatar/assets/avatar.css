@@ -1,0 +1,427 @@
+/* =====================================================
+   sunshaura.com アバター改変ページ専用CSS
+   avatar/index.html で読み込む。
+   ヘッダー・フッター・ページ移動の演出はサイト共通の assets/site-common.css。
+   ===================================================== */
+
+/* =====================================================
+   アバター改変ページ
+   ===================================================== */
+:root {
+  --avt-genre-h:       50px;
+  --avt-category-h:    55px;
+  --avt-optext-h:      40px;
+  --avt-thumb-gap:     10px;
+  --avt-frame-a-h:     12px;
+  --avt-door-bar-h:    22px;
+  --avt-door-dur:      0.4s;
+  --avt-bg-scroll-x:   200px;
+  --avt-bg-scroll-y:    50px;
+  --avt-bg-scroll-dur: 10s;
+  --avt-info-bg:       rgba(20, 5, 10, 0.0);
+  --avt-name-blob:     rgba(175, 165, 170, 0.45);
+  --avt-frame-a-clr:   #FF9500;
+  --avt-filter-clr:    #00BBCC;
+
+  /* ★ avt-info の左端からの距離（PCのみ）
+     0    = 左端ぴったり / 5% = 少し右にずれて左よりの中央 / 10% = より中央寄り */
+  --avt-info-left-pc:      5%;
+
+  /* ★ infoImg アイコンの透かし設定
+     --avt-info-img-opacity : 透明度（0=完全透明 / 1=不透明）
+     --avt-info-img-size-pc : PC時の表示サイズ（auto/40%/cover など）
+     --avt-info-img-size-sp : SP時の表示サイズ                        */
+  --avt-info-img-opacity:  0.2;
+  --avt-info-img-size-pc:  40%;
+  --avt-info-img-size-sp:  60%;
+
+  /* ★ リファレンスアイコンのサイズ（ここを変えるだけで変更できます） */
+  --avt-ref-size: 34px;
+
+  /* ★ PCでのアバター画像の横位置（ここを変えるだけで変更できます）
+     right bottom = 右端 / center bottom = 中央 / 70% bottom = やや右寄り中央
+     数値が大きいほど右寄り、小さいほど左寄り                              */
+  --avt-main-img-pos-pc: 65% bottom;
+}
+
+/* カテゴリバー直下のお知らせテキスト */
+#avt-notice {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-main);
+  background: var(--color-main-pale);
+  padding: 6px 16px;
+  border-bottom: 1px solid rgba(204, 34, 68, 0.15);
+}
+
+#avt-genre-bar {
+  /* height を min-height に変更: ボタンが改行された場合でも自動拡張 */
+  min-height: var(--avt-genre-h); height: auto;
+  background: rgba(0,0,0,0.06);
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 6px 16px; flex-wrap: wrap;
+}
+.avt-genre-btn {
+  /*
+   * ★拡張予定: ジャンルを追加する場合は #avt-genre-bar 内に
+   *   同形式のボタンを追記し、avatars.js の "genre" と一致させること
+   */
+  height: 32px; padding: 0 18px; border-radius: 50px;
+  border: 2px solid rgba(0,0,0,0.12);
+  background: var(--color-white); color: var(--color-text);
+  font-family: inherit; font-weight: 700; font-size: 12px;
+  cursor: pointer; white-space: nowrap; opacity: 0.4;
+  transition: all var(--duration-ui);
+}
+.avt-genre-btn.active {
+  background: var(--avt-filter-clr); color: var(--color-white);
+  border-color: var(--avt-filter-clr); opacity: 1;
+  box-shadow: 0 2px 8px rgba(0,187,204,0.35);
+}
+.avt-genre-btn:hover { opacity: 0.8; transform: translateY(-1px); }
+
+#avt-category-bar {
+  height: var(--avt-category-h); background: rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 0 16px;
+}
+.avt-cat-btn {
+  /*
+   * ★拡張予定: カテゴリを追加する場合は #avt-category-bar 内に
+   *   同形式のボタンを追記し、avatars.js の "category" と一致させること
+   */
+  width: 44px; height: 44px; border-radius: 8px;
+  border: 3px solid transparent; background: rgba(0,0,0,0.08);
+  cursor: pointer; padding: 0; overflow: hidden; opacity: 0.4;
+  transition: all var(--duration-ui);
+}
+.avt-cat-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avt-cat-btn.active {
+  border-color: var(--avt-filter-clr); opacity: 1;
+  box-shadow: 0 2px 8px rgba(0,187,204,0.35);
+}
+.avt-cat-btn:hover { opacity: 0.8; transform: translateY(-1px); }
+
+#avt-display-area {
+  position: relative; width: 100%;
+  aspect-ratio: 3 / 1;
+  overflow: hidden; user-select: none;
+  /* 自動スクロール時にヘッダーで隠れないようオフセット */
+  scroll-margin-top: calc(var(--header-height-pc) + 4px);
+}
+@media (max-width: 759px) { #avt-display-area { aspect-ratio: 5 / 4; scroll-margin-top: calc(var(--header-height-sp) + 4px); } }
+
+/* ⑦ 背景 */
+#avt-bg { position: absolute; inset: 0; z-index: 10; }
+#avt-bg-img {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  background-color: #87CEEB;
+}
+#avt-bg-pattern {
+  position: absolute; inset: 0;
+  background-repeat: repeat; opacity: 0.5;
+  animation: avtBgScroll var(--avt-bg-scroll-dur) linear infinite;
+  animation-play-state: paused;
+}
+@keyframes avtBgScroll {
+  from { background-position: 0px 0px; }
+  to   { background-position: var(--avt-bg-scroll-x) var(--avt-bg-scroll-y); }
+}
+
+/* ⑥ 枠C 斜め装飾 */
+#avt-frame-c-top, #avt-frame-c-bottom {
+  /*
+   * ★拡張予定: 装飾の高さを変えたい場合は height を調整
+   *   アバターごとに frameCTop / frameCBottom で画像を個別指定
+   */
+  position: absolute; left: 0; right: 0; height: 45%; z-index: 20;
+  background-size: 100% 100%; background-repeat: no-repeat;
+  pointer-events: none;
+  /* frame_c画像が黒背景PNGの場合に黒を透明扱いにする
+     ★ 画像を透過PNGで再出力できたらこの行を削除してください */
+  mix-blend-mode: screen;
+}
+#avt-frame-c-top    { top: 0; }
+#avt-frame-c-bottom { bottom: 0; }
+@media (max-width: 759px) {
+  #avt-frame-c-top, #avt-frame-c-bottom { height: 15vw; }
+}
+
+/* ⑤ 情報テキスト枠 */
+#avt-info {
+  position: absolute; top: 0; bottom: 0;
+  left: 0;             /* SP: 左端から（デフォルト） */
+  width: 45%;
+  z-index: 30; display: flex; flex-direction: column;
+  justify-content: center; padding: 12px 28px;
+  background-color: var(--avt-info-bg);
+}
+/* PC: --avt-info-left-pc で左端からの距離を変更できます */
+@media (min-width: 760px) {
+  #avt-info { left: var(--avt-info-left-pc); }
+}
+@media (max-width: 759px) { #avt-info { width: 65%; padding: 10px 16px; } }
+
+/* infoImg 透かしレイヤー（avt-info 内部に絶対配置）
+   テキストより後ろに表示されるよう z-index: 0 */
+#avt-info-bg-layer {
+  position: absolute; inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* ★ PC時の透かしサイズ: :root の --avt-info-img-size-pc で変更 */
+  background-size: var(--avt-info-img-size-pc);
+  /* ★ 透明度: :root の --avt-info-img-opacity で変更（0=透明 / 1=不透明） */
+  opacity: var(--avt-info-img-opacity);
+  z-index: 0;
+  pointer-events: none;
+}
+/* SP: --avt-info-img-size-sp でサイズ切り替え */
+@media (max-width: 759px) {
+  #avt-info-bg-layer { background-size: var(--avt-info-img-size-sp); }
+}
+
+/* テキスト・refs 各要素を bg-layer の上に表示する */
+#avt-name-wrap, #avt-desc, #avt-items-label, #avt-refs {
+  position: relative;
+  z-index: 1;
+}
+#avt-name-wrap { position: relative; margin-bottom: 6px; }
+#avt-name-blob {
+  position: absolute; inset: -14px -22px;
+  background: var(--avt-name-blob); border-radius: 42% 55% 50% 44%;
+  filter: blur(16px); z-index: 0; pointer-events: none;
+}
+#avt-name {
+  position: relative; z-index: 1;
+  font-size: clamp(16px, 3.5vw, 26px); font-weight: 800;
+  color: var(--color-white); text-shadow: 0 1px 4px rgba(0,0,0,0.6); line-height: 1.25;
+}
+#avt-name-line {
+  position: relative; z-index: 1;
+  width: 56px; height: 3px; background: var(--color-main);
+  border-radius: 2px; margin-top: 5px; margin-bottom: 10px;
+}
+#avt-desc {
+  font-size: clamp(10px, 1.4vw, 12px);
+  /* ★ JSからCSS変数で色・シャドー・縁取りを動的に変更する */
+  color:       var(--avt-desc-color,   rgba(255,255,255,0.88));
+  text-shadow: var(--avt-desc-tshadow, none);
+  line-height: 1.75; margin-bottom: 10px;
+  white-space: pre-line; /* ★ 説明文の改行（\n）を表示に反映 */
+  display: -webkit-box; -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+@media (max-width: 759px) { #avt-desc { -webkit-line-clamp: 4; } }
+#avt-items-label { font-size: 10px; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
+
+/* ④ リファレンス枠 */
+#avt-refs {
+  /*
+   * ★拡張予定: リファレンスアイテムのサイズを変えたい場合は
+   *   :root の --avt-ref-size を変更してください
+   */
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap; margin-top: 4px;
+}
+.avt-ref-item {
+  display: block;
+  width: var(--avt-ref-size); height: var(--avt-ref-size);
+  border-radius: 6px; overflow: hidden;
+  border: 2px solid transparent; background: transparent;
+  transition: transform var(--duration-ui), border-color var(--duration-ui);
+}
+.avt-ref-item:hover { transform: scale(1.12); border-color: white; }
+.avt-ref-item img   { width: 100%; height: 100%; object-fit: cover; }
+
+/* ③ アバター枠 */
+#avt-main-img {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 50%;
+  z-index: 50; background-size: contain;
+  background-repeat: no-repeat;
+  /* SP: right bottom のまま（現状完璧） */
+  background-position: right bottom;
+  pointer-events: none;
+}
+/* PC: :root の --avt-main-img-pos-pc で横位置を調整できます */
+@media (min-width: 760px) {
+  #avt-main-img { background-position: var(--avt-main-img-pos-pc); }
+}
+@media (max-width: 759px) { #avt-main-img { width: 60%; } }
+
+/* ② 扉 */
+.avt-door {
+  position: absolute; left: 0; right: 0; z-index: 60;
+  background-color: var(--color-main);
+  background-image: repeating-linear-gradient(
+    -55deg, transparent 0px, transparent 14px,
+    rgba(255,255,255,0.07) 14px, rgba(255,255,255,0.07) 18px
+  );
+  transition: height var(--avt-door-dur) cubic-bezier(0.65, 0, 0.35, 1);
+}
+.avt-door::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(
+    -55deg,
+    transparent           calc(50% - 4px),
+    rgba(255,255,255,0.6) calc(50% - 4px),
+    rgba(255,255,255,0.6) calc(50% + 4px),
+    transparent           calc(50% + 4px)
+  );
+}
+#avt-door-top {
+  top: 0;
+  height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h));
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 88%,
+    87.5% 88%, 87.5% 100%, 75% 100%, 75% 88%,
+    62.5% 88%, 62.5% 100%, 50% 100%, 50% 88%,
+    37.5% 88%, 37.5% 100%, 25% 100%, 25% 88%,
+    12.5% 88%, 12.5% 100%, 0% 100%
+  );
+}
+#avt-door-top.door-closed    { height: calc(55% + 5px); } /* +5px オーバーラップで中央の隙間を塞ぐ */
+#avt-door-bottom {
+  bottom: 0;
+  height: calc(var(--avt-frame-a-h) + var(--avt-door-bar-h));
+  clip-path: polygon(
+    0% 12%,
+    12.5% 12%, 12.5% 0%, 25% 0%, 25% 12%,
+    37.5% 12%, 37.5% 0%, 50% 0%, 50% 12%,
+    62.5% 12%, 62.5% 0%, 75% 0%, 75% 12%,
+    87.5% 12%, 87.5% 0%, 100% 0%,
+    100% 100%, 0% 100%
+  );
+}
+#avt-door-bottom.door-closed { height: calc(55% + 5px); }
+
+/* ① 枠A */
+.avt-frame-a {
+  position: absolute; left: 0; right: 0;
+  height: var(--avt-frame-a-h); background: var(--avt-frame-a-clr); z-index: 70;
+}
+#avt-frame-a-top    { top: 0; }
+#avt-frame-a-bottom { bottom: 0; }
+
+
+/* =====================================================
+   視聴者オプションパネル（#avt-options-wrap）
+   ★拡張予定: opt-row を追加するだけで項目を増やせます
+   ===================================================== */
+#avt-options-wrap {
+  background: #f0f0f0;
+  border-top:    2px solid #d8d8d8;
+  border-bottom: 2px solid #d8d8d8;
+  margin: 6px 0;
+}
+#avt-options-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px; cursor: pointer; user-select: none;
+  font-size: 13px; font-weight: 700; color: var(--color-main);
+  transition: background var(--duration-ui);
+}
+#avt-options-toggle:hover { background: rgba(204,34,68,0.06); }
+#avt-opts-arrow { font-size: 10px; transition: transform var(--duration-ui); }
+#avt-opts-arrow.open { transform: rotate(90deg); }
+
+#avt-options-panel {
+  display: none;
+  padding: 4px 20px 16px;
+  gap: 10px;
+}
+#avt-options-panel.open { display: grid; }
+
+/*
+ * ★拡張予定: オプション項目の追加方法
+ *   #avt-options-panel 内に .opt-row を追記するだけ
+ *   <div class="opt-row">
+ *     <label class="opt-label">ラベル名</label>
+ *     ... ボタン or スライダー ...
+ *   </div>
+ */
+.opt-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.opt-label {
+  font-size: 12px; font-weight: 700; color: var(--color-text);
+  min-width: 160px;
+}
+@media (max-width: 759px) { .opt-label { min-width: 100%; } }
+.opt-btn {
+  height: 30px; padding: 0 14px; border-radius: 50px;
+  border: 2px solid rgba(0,0,0,0.12);
+  background: var(--color-white); color: var(--color-text);
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all var(--duration-ui);
+}
+.opt-btn:hover { transform: translateY(-1px); }
+.opt-btn.active {
+  background: var(--color-main); color: var(--color-white);
+  border-color: var(--color-main);
+}
+.opt-slider-wrap {
+  display: flex; align-items: center; gap: 6px; flex: 1; min-width: 160px; max-width: 260px;
+}
+.opt-slider-wrap input[type=range] {
+  flex: 1; accent-color: var(--color-main); cursor: pointer;
+}
+.opt-swatch {
+  width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+.opt-swatch-black { background: #000; }
+.opt-swatch-white { background: #fff; }
+#avt-op-text {
+  height: var(--avt-optext-h); display: flex; align-items: center;
+  padding: 0 20px; font-size: clamp(14px, 2vw, 16px);
+  font-weight: 700; color: var(--color-text);
+}
+
+#avt-main-wrap { width: 100%; }
+@media (min-width: 760px) { #avt-main-wrap { width: 80%; margin: 0 auto; } }
+
+#avt-thumb-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: var(--avt-thumb-gap); padding: 12px 16px 28px;
+}
+.avt-thumb-item {
+  cursor: pointer; border-radius: 10px; overflow: hidden;
+  border: 3px solid transparent; background: rgba(0,0,0,0.07);
+  position: relative; /* アバター名ラベルの絶対配置に必要 */
+  transition: border-color var(--duration-ui), transform var(--duration-ui), box-shadow var(--duration-ui);
+}
+.avt-thumb-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.avt-thumb-item.selected {
+  border-color: var(--color-main); box-shadow: 0 0 0 2px var(--color-main-light);
+}
+.avt-thumb-pc { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.avt-thumb-sp { display: none;  width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+@media (max-width: 759px) {
+  .avt-thumb-pc { display: none; }
+  .avt-thumb-sp { display: block; }
+}
+
+/* アバター名ラベル（PC専用・各サムネイル下辺から5px上） */
+.avt-thumb-name {
+  display: none; /* SP: 非表示 */
+}
+@media (min-width: 760px) {
+  .avt-thumb-name {
+    display: block;
+    position: absolute;
+    bottom: 5px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-white);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.85), 0 0 6px rgba(0,0,0,0.6);
+    padding: 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+  }
+}

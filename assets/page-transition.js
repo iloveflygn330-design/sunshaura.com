@@ -1,9 +1,8 @@
 /* =====================================================
    sunshaura.com ページ間遷移アニメーション（共通）
 
-   index.html の navigateTo()（ページ内の切り替え）と同じ演出を、
-   別のHTMLファイルへ移動するときにも行うためのスクリプト。
-     index.html ⇔ news/ ⇔ 各記事ページ
+   サイト内のページ（HTMLファイル）を移動するときの演出を行うスクリプト。全ページで読み込む。
+     index.html ⇔ avatar/ ⇔ world/ ⇔ … ⇔ news/ ⇔ 各記事ページ
 
    流れ:
      【移動元】下からパネルが上がる「ちょっとまってね...」
@@ -21,7 +20,7 @@
          （ニュースは記事データの読み込み後に news.js が呼ぶ）
          指定がないページは、画像などの読み込み完了（window load）で自動的に完了扱いになる
 
-   必要なHTML（index.html / news の各ページに設置済み）:
+   必要なHTML（全ページに設置済み。新しいページは world/index.html をコピーすれば最初から入っている）:
      <div id="loading-bar"><span id="loading-bar-text"></span></div>
      <div id="loading-panel"><div id="panel-icon">🌸</div><div id="panel-message">ちょっとまってね...</div></div>
      本文の要素に data-transition-body（移動中にバーの高さぶん下にずらす）
@@ -33,20 +32,19 @@
        移動元で「ちょっとまってね...」の画像 → 移動先で同じセットの「おまたせ！」の画像
      セットは Discord に投稿すると毎朝自動で登録される（.github/scripts/discord-panel-icons.py）。
      セットが1つもない・画像が読めないときだけ 🌸 を表示する。
-     index.html の中だけの移動（navigateTo）でも SunTransition.iconWait() / iconDone() で同じように表示する。
 
    ★拡張予定: この演出を新しいHTMLページにも付ける手順
-     1. 上の「必要なHTML」をそのページに入れる（CSSは news/assets/news.css の
-        「ページ遷移アニメーション」をコピー、またはそのCSSファイルを読み込む）
-     2. <head> に到着判定の script をコピーする（news/index.html の <head> 参照）
+     （world/index.html をフォルダごとコピーして作れば、以下は全部入っている）
+     1. 上の「必要なHTML」をそのページに入れる（見た目は assets/site-common.css を読み込めばOK）
+     2. <head> に到着判定の script をコピーする（world/index.html の <head> 参照）
      3. </body> の直前で <script src="（相対パス）assets/page-transition.js"></script> を読み込む
      4. そのページへのリンクに data-transition を付ける
    ===================================================== */
 (function () {
   'use strict';
 
-  /* ★拡張予定: 演出の時間を変える場合
-       index.html の CONFIG（PANEL_RISE_MS など）と同じ値にそろえること */
+  /* ★拡張予定: 演出の時間を変える場合はここを書き換える
+       （パネル・バーの動く速さは assets/site-common.css の --duration-panel / --duration-ui） */
   var T = {
     PANEL_RISE_MS:  600,   // パネルが上がりきるまで
     COMPLETE_MS:    400,   // 「おまたせ！」の表示時間
@@ -66,7 +64,7 @@
   var ARRIVAL_KEY = 'sun-transition'; // head 内の到着判定 script と同じ名前にすること
 
   /* ★拡張予定: パネルのアイコンの見た目を変える場合はここを書き換える
-       ICON.size     : 画像のときの丸の大きさ（px）。🌸 のときは各ページの CSS の #panel-icon（90px）のまま
+       ICON.size     : 画像のときの丸の大きさ（px）。🌸 のときは assets/site-common.css の #panel-icon（90px）のまま
        ICON.fallback : セットがない・画像が読めないときに表示する文字 */
   var ICON = { size: 120, fallback: '🌸' };
   var ICON_KEY = 'sun-transition-icon';   // 移動先に「どのセットを使ったか」を引き継ぐ名前

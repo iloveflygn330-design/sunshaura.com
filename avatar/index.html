@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ページ間遷移の到着判定（全ページ共通。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
+  <title>アバター改変 | sunshaura.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- サイト共通（ヘッダー・フッター・ページ移動の演出） -->
+  <link rel="stylesheet" href="../assets/site-common.css">
+  <!-- このページ専用の見た目 -->
+  <link rel="stylesheet" href="assets/avatar.css">
+</head>
+<!--
+  アバター改変ページ（avatar/index.html）
+    アバターのデータはサイトのトップの avatars.js（avatarform/avatar_form.html で編集・自動生成）。
+    表示・絞り込み・扉アニメーション・視聴者オプションは assets/avatar.js、見た目は assets/avatar.css。
+    ヘッダー・フッター・「ちょっとまってね...」の演出は共通パーツ（assets/site-header.js / assets/page-transition.js）。
+-->
+<body class="site-page">
+
+  <!-- ヘッダー（中身は assets/site-header.js が全ページ共通で組み立てる） -->
+  <header id="header"></header>
+
+  <!-- ページ間遷移アニメーション用（全ページ共通の構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon"></div><!-- アイコンは assets/page-transition.js が入れる -->
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="body-content" data-transition-body>
+
+    <div id="avt-genre-bar">
+      <!--
+        ★拡張予定: ジャンルを追加する場合
+          <button class="avt-genre-btn" data-genre="ジャンル名"
+                  onclick="avtToggleGenre(this.dataset.genre,this)">ジャンル名</button>
+          avatars.js の "genre" フィールドと完全一致させること
+      -->
+      <button class="avt-genre-btn" data-genre="元ネタあり（別アバター）" onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（別アバター）</button>
+      <button class="avt-genre-btn" data-genre="元ネタあり（その他）"     onclick="avtToggleGenre(this.dataset.genre,this)">元ネタあり（その他）</button>
+      <button class="avt-genre-btn" data-genre="元ネタなし"               onclick="avtToggleGenre(this.dataset.genre,this)">元ネタなし</button>
+    </div>
+
+    <div id="avt-category-bar">
+      <!--
+        ★拡張予定: カテゴリを追加する場合
+          <button class="avt-cat-btn" data-category="カテゴリ名"
+                  onclick="avtToggleCat(this.dataset.category,this)">
+            <img src="../assets/images/categories/xxx.png" alt="カテゴリ名">
+          </button>
+          avatars.js の "category" と一致させること
+      -->
+      <button class="avt-cat-btn" data-category="まめひなた" onclick="avtToggleCat(this.dataset.category,this)">
+        <!-- ★拡張予定: src にカテゴリ画像パスを設定 -->
+        <img src="../assets/images/categories/mame_hinata.png" alt="まめひなた">
+      </button>
+      <button class="avt-cat-btn" data-category="フォシュニア" onclick="avtToggleCat(this.dataset.category,this)">
+        <img src="../assets/images/categories/foshunya.png" alt="フォシュニア">
+      </button>
+      <button class="avt-cat-btn" data-category="シャロ" onclick="avtToggleCat(this.dataset.category,this)">
+        <img src="../assets/images/categories/sharo.png" alt="シャロ">
+      </button>
+      <button class="avt-cat-btn" data-category="その他" onclick="avtToggleCat(this.dataset.category,this)">
+        <img src="../assets/images/categories/other.png" alt="その他">
+      </button>
+    </div>
+
+    <!-- お知らせテキスト（カテゴリバーの直下） -->
+    <div id="avt-notice">現在更新中！　サムネイルやアバターはゆっくり追加されていきます。</div>
+
+    <div id="avt-display-area">
+      <div id="avt-bg">
+        <div id="avt-bg-img"></div>
+        <div id="avt-bg-pattern"></div>
+      </div>
+      <div id="avt-frame-c-top"></div>
+      <div id="avt-frame-c-bottom"></div>
+      <div id="avt-info">
+        <!-- 透かし背景レイヤー（infoImgがJSで設定される） -->
+        <div id="avt-info-bg-layer"></div>
+        <div id="avt-name-wrap">
+          <div id="avt-name-blob"></div>
+          <div id="avt-name">アバターを選択してください</div>
+          <div id="avt-name-line"></div>
+        </div>
+        <div id="avt-desc"></div>
+        <div id="avt-items-label">使用したアイテム</div>
+        <!-- ④ リファレンス枠（orgAvt の内容がJSで動的挿入）
+             ★拡張予定: アバターの orgAvt にアイテム情報を追加 -->
+        <div id="avt-refs"></div>
+      </div>
+      <div id="avt-main-img"></div>
+      <div class="avt-door" id="avt-door-top"></div>
+      <div class="avt-door" id="avt-door-bottom"></div>
+      <div class="avt-frame-a" id="avt-frame-a-top"></div>
+      <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
+    </div>
+
+    <div id="avt-main-wrap">
+      <!--
+      オプション領域（折り畳み式）
+      ★拡張予定: .opt-row を #avt-options-panel 内に追記するだけで項目を増やせます
+    -->
+    <div id="avt-options-wrap">
+      <div id="avt-options-toggle" onclick="toggleAvtOptions()">
+        <span>⚙ オプション設定</span>
+        <span id="avt-opts-arrow">▶</span>
+      </div>
+      <div id="avt-options-panel">
+
+        <!-- ★ 自動スクロール -->
+        <div class="opt-row">
+          <label class="opt-label">アバター切替時に自動スクロール</label>
+          <button class="opt-btn active" id="opt-scroll-btn" onclick="toggleOpt('autoScroll','opt-scroll-btn','ON','OFF')">ON</button>
+        </div>
+
+        <!-- ★ 文字色（名前・説明文・ラベル共通） -->
+        <div class="opt-row">
+          <label class="opt-label">文字色</label>
+          <div class="opt-slider-wrap">
+            <span class="opt-swatch opt-swatch-black" title="#000"></span>
+            <input type="range" id="opt-text-color" min="0" max="100" value="100"
+                   oninput="applyViewerOpts()" title="文字色（左=黒 / 右=白）">
+            <span class="opt-swatch opt-swatch-white" title="#fff"></span>
+          </div>
+        </div>
+
+        <!-- ★ 文字の太さ -->
+        <div class="opt-row">
+          <label class="opt-label">文字の太さ</label>
+          <button class="opt-btn" id="opt-bold-btn" onclick="toggleOpt('bold','opt-bold-btn','太字','通常')">通常</button>
+        </div>
+
+        <!-- ★ 縁取り -->
+        <div class="opt-row">
+          <label class="opt-label">縁取り</label>
+          <button class="opt-btn" id="opt-outline-btn" onclick="toggleOpt('outline','opt-outline-btn','あり','なし')">なし</button>
+        </div>
+
+        <!-- ★ 縁取り色 -->
+        <div class="opt-row">
+          <label class="opt-label">縁取り色</label>
+          <div class="opt-slider-wrap">
+            <span class="opt-swatch opt-swatch-black" title="#000"></span>
+            <input type="range" id="opt-outline-color" min="0" max="100" value="0"
+                   oninput="applyViewerOpts()" title="縁取り色（左=黒 / 右=白）">
+            <span class="opt-swatch opt-swatch-white" title="#fff"></span>
+          </div>
+        </div>
+
+      </div><!-- /#avt-options-panel -->
+    </div><!-- /#avt-options-wrap -->
+
+    <div id="avt-op-text">見たいアバターをクリック：</div>
+      <div id="avt-thumb-grid">
+        <div style="grid-column:1/-1;text-align:center;color:var(--color-placeholder);padding:20px;font-size:13px;">
+          読み込み中...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- フッター（中身は assets/site-header.js の SITE_FOOTER_HTML。全ページ共通） -->
+  <footer class="site-footer" data-site-footer>sunshaura.com</footer>
+
+  <script src="../assets/page-transition.js"></script>
+  <script src="../assets/site-header.js"></script>
+  <script>SunHeader.render({ root: '../', current: 'avatar' });</script>
+
+  <!-- アバター表示（ES module。onclick から呼ぶ関数は avatar.js が window に公開している） -->
+  <script type="module" src="assets/avatar.js"></script>
+</body>
+</html>
