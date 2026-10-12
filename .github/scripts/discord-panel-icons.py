@@ -47,6 +47,7 @@ CHANNEL_ID = '1558856353685045248'
 FACE_RATIO = 0.35           # 顔の大きさ（幅と高さの大きい方）÷ 丸の直径
 FALLBACK_CENTER_Y = 0.40    # 顔が見つからないとき：画像の高さの何割の位置を中心にするか
 FALLBACK_SIZE = 0.80        # 顔が見つからないとき：丸の直径を「画像の短い辺」の何割にするか
+MAX_SUBJECT_RATIO = 1.1     # 丸の直径の上限：キャラクター部分の短い辺の何倍まで（大きすぎる切り抜き防止）
 FALLBACK_SUBJECT_SIZE = 1.0 # 顔が見つからない＆背景が透明なとき：丸の直径を「キャラクター部分の短い辺」の何倍にするか
 OUTPUT_SIZE = 256           # 保存する丸アイコンの大きさ（px）。サイトでは 120px 前後で表示
 WEBP_QUALITY = 85
@@ -184,6 +185,14 @@ def make_circle(blob):
     else:
         cx, cy = W / 2, H * FALLBACK_CENTER_Y
         diameter = min(W, H) * FALLBACK_SIZE
+    # 顔の検出が頭全体などを「顔」として大きく拾ったときに、キャラクターが小さくなりすぎないよう上限を付ける
+    #   上限 = キャラクター部分の短い辺 × MAX_SUBJECT_RATIO（背景が透明な画像）／画像の短い辺（それ以外）
+    cap = min(subject[2] - subject[0], subject[3] - subject[1]) * MAX_SUBJECT_RATIO if subject else min(W, H)
+    if diameter > cap:
+        diameter = cap
+        if subject and face:
+            # 丸が小さくなった分、顔が丸の上の方に寄りすぎないよう中心をキャラクター側へ寄せる
+            cy = max(cy, subject[1] + diameter / 2)
     diameter = max(32, int(diameter))
     # 切り抜きの判断材料を Actions の画面（Annotations）に出す（うまく切り抜けないときの調査用）
     if os.environ.get('GITHUB_ACTIONS'):

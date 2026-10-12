@@ -1,10 +1,4 @@
 {
   "_note": "ページ移動アイコンの一覧（.github/scripts/discord-panel-icons.py が自動で更新）。手で編集しないでください。",
-  "sets": [
-    {
-      "id": "1558996216950300693",
-      "wait": "1558996216950300693_wait.webp",
-      "done": "1558996216950300693_done.webp"
-    }
-  ]
+  "sets": []
 }
