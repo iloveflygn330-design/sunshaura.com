@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-13",
+  "title": "Steam Frameの更新でバッテリー最大12%改善ほか、今日のVR・AIニュース4本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "今日はVRChat本体の大きな発表はありませんでしたが、VR機器まわりで動きがありました。ValveのSteam Frameにはソフトウェア更新と出荷待ちの案内が出て、Picoの次期ハイエンド機とみられる端末の画像も見つかっています。最後にAI関連としてMicrosoftの新しい推論用チップを紹介します。",
+  "items": [
+    {
+      "headline": "Steam Frameの更新でバッテリー持ちと配信画質が向上",
+      "category": "VR機器・技術",
+      "overview": "Valveは単体型VRヘッドセット「Steam Frame」向けにSteamOS 0.4の配信を始めました。PCからのストリーミングとヘッドセット単体での利用の両方で電力効率が上がり、バッテリー持ちは最大12%改善するとしています。PCVRストリーミング時の色の鮮明さの向上や、接続が切れる「Error 17」の軽減も含まれます。あわせて、本体のCADデータと電気的なインターフェース情報が非商用の改造向けに公開されています。",
+      "points": [
+        "PCVRストリーミングと単体利用の両方でバッテリー持ちが最大12%向上",
+        "Error 17の軽減にはSteamVR 2.18.2以降（ベータ版）が必要",
+        "一部の国で起きていたワイヤレスアダプターの接続問題も修正",
+        "CADデータが公開され、非商用ならアクセサリー自作などに使える"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/steam-frame-battery-streaming-update-oct-26/" }
+      ]
+    },
+    {
+      "headline": "Steam Frameの出荷待ちが2027年までに",
+      "category": "VR機器・技術",
+      "overview": "Valveによると、Steam Frameの注文待ちの列は2027年まで延びています。購入案内のメールは12月に届く人と2027年に届く人に分かれ、2027年組には1月までに詳しい時期が知らされる予定です。待ちの列は地域ごとに分かれており、予約者より後からウェイトリストに入った人が先に案内されることはないと説明しています。",
+      "points": [
+        "自分の購入時期はSteamにログインして製品ページで確認できる",
+        "2027年組には1月までに詳しい時期が案内される予定",
+        "地域ごとに別の列なので、進み具合は地域によって異なる"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/steam-frame-backorder-queue-2027/" }
+      ]
+    },
+    {
+      "headline": "Picoの次期ハイエンド機「Space Pro」の画像が流出",
+      "category": "VR機器・技術",
+      "overview": "Picoの次期フラッグシップ機とみられる「Space Pro」の外観と内部の写真が、日本の総務省の認証データベースから見つかりました。Space ProはApple Vision Proの対抗機と位置づけられており、以前は「Project Swan」という開発名で呼ばれていました。2026年第4四半期の発売が見込まれていますが、公式な発売日はまだ発表されていません。",
+      "points": [
+        "総務省の技術基準適合証明の公開データから写真が見つかった",
+        "Apple Vision Proに対抗するハイエンド機という位置づけ",
+        "10月に予定されていた発表イベントは中止され、発表は延期中"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/pico-space-pro-leak-photos-external-internal/" }
+      ]
+    },
+    {
+      "headline": "Microsoft、推論用AIチップ「Maia 300」を発表",
+      "category": "AI",
+      "overview": "Microsoftは自社開発のAI推論用チップの次世代版「Maia 300」を発表しました。2027年からギガワット規模でデータセンターへの導入を進め、自社製品の主要な推論基盤にする計画です。前世代のMaia 200と比べ、ラック単位で最大7倍のトークン処理量を見込んでいるとしています。長い文脈を扱う推論や、何段階もの作業を続けるAIエージェントでの利用を想定しています。",
+      "points": [
+        "2027年からギガワット規模での導入を予定",
+        "1メガワットあたりのトークン数は約40%増える見込み",
+        "GitHubやCopilot、Teamsなどでの利用が想定されている"
+      ],
+      "sources": [
+        { "name": "HPCwire", "url": "https://hpcwire.com/off-the-wire/microsoft-announces-maia-300-its-next-gen-custom-ai-chip" }
+      ]
+    }
+  ],
+  "outro": "Steam Frameをお持ちの方は、SteamOS 0.4への更新を確認してみてください。"
+}
