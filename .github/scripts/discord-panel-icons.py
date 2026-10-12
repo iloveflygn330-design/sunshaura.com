@@ -13,7 +13,8 @@
 やること:
   1. 前回より後の投稿を読む
   2. 画像から顔を探し、顔が丸の 3〜4割の大きさで中央に来るように丸く切り抜く
-     （アニメ顔の検出 → 見つからなければ普通の顔の検出 → それでもなければ画像の中央より少し上）
+     （アニメ顔の検出 → 見つからなければ普通の顔の検出 →
+       それでもなければ、背景が透明な画像はキャラクター部分の上側、そうでなければ画像の中央より少し上）
      丸の外と、元の画像の透明な部分は透明のまま（サイトの背景が透けて見える）
   3. assets/panel-icons/<投稿ID>_wait.webp / _done.webp に保存し、assets/panel-icons/sets.json に登録
   4. 元の投稿に ✅ を付け、切り抜いた結果のプレビュー画像を返信する
@@ -46,6 +47,7 @@ CHANNEL_ID = '1558856353685045248'
 FACE_RATIO = 0.35           # 顔の大きさ（幅と高さの大きい方）÷ 丸の直径
 FALLBACK_CENTER_Y = 0.40    # 顔が見つからないとき：画像の高さの何割の位置を中心にするか
 FALLBACK_SIZE = 0.80        # 顔が見つからないとき：丸の直径を「画像の短い辺」の何割にするか
+FALLBACK_SUBJECT_SIZE = 1.0 # 顔が見つからない＆背景が透明なとき：丸の直径を「キャラクター部分の短い辺」の何倍にするか
 OUTPUT_SIZE = 256           # 保存する丸アイコンの大きさ（px）。サイトでは 120px 前後で表示
 WEBP_QUALITY = 85
 
@@ -149,6 +151,18 @@ def detect_face(rgba):
     return None, None
 
 
+def subject_box(rgba):
+    """背景が透明な画像なら、透明でない部分（キャラクター）の範囲 (x0, y0, x1, y1) を返す。透明でなければ None"""
+    alpha = np.array(rgba.getchannel('A'))
+    solid = alpha > 16
+    if solid.mean() > 0.95:          # ほぼ全面が不透明 → 背景つきの画像
+        return None
+    ys, xs = np.nonzero(solid)
+    if len(xs) == 0:
+        return None
+    return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+
+
 def make_circle(blob):
     """画像の bytes → (丸く切り抜いた RGBA 画像, 顔が見つかったか)"""
     img = Image.open(io.BytesIO(blob))
@@ -156,9 +170,17 @@ def make_circle(blob):
     img = img.convert('RGBA')
     W, H = img.size
     face, kind = detect_face(img)
+    subject = subject_box(img)
     if face:
         cx, cy, size = face
         diameter = size / FACE_RATIO
+    elif subject:
+        # 顔が見つからず、背景が透明な画像：キャラクターの部分（透明でないところ）の上の方を丸に収める
+        #   丸の直径 = キャラクターの幅と高さの短い方 × FALLBACK_SUBJECT_SIZE、頭がある上側を中心にする
+        x0, y0, x1, y1 = subject
+        diameter = min(x1 - x0, y1 - y0) * FALLBACK_SUBJECT_SIZE
+        cx, cy = (x0 + x1) / 2, y0 + diameter / 2
+        kind = None
     else:
         cx, cy = W / 2, H * FALLBACK_CENTER_Y
         diameter = min(W, H) * FALLBACK_SIZE
@@ -262,7 +284,7 @@ def import_new(sets, state):
         sets[:] = [s for s in sets if s['id'] != msg['id']] + [{'id': msg['id'], **files}]
         added += 1
         state['last'] = msg['id']
-        found = ' / '.join(f'{label}: ' + (f'{k}を検出' if k else '顔が見つからず中央より少し上で切り抜き')
+        found = ' / '.join(f'{label}: ' + (f'{k}を検出' if k else '顔が見つからず、キャラクターの上側（透明な背景なら）または画像の中央より少し上で切り抜き')
                            for label, k in zip(('1枚目', '2枚目'), notes))
         print(f'  {msg["id"]}: 登録（{found}）')
         try_discord('PUT', f'/channels/{CHANNEL_ID}/messages/{msg["id"]}/reactions/{CHECK}/@me')
