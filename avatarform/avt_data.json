@@ -1978,5 +1978,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2280.png": {
+    "id": "7170_sukip",
+    "name": "ｽｷﾌﾟ",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2290.png": {
+    "id": "1950_dan_hinata",
+    "name": "ダンボールひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2300.png": {
+    "id": "4110_zol_ruri",
+    "name": "るりゾロアーク",
+    "genre": "genre_copy_game",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
