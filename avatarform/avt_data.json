@@ -1445,5 +1445,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1870.png": {
+    "id": "6030_kuro_chalo",
+    "name": "黒シャロ",
+    "genre": "genre_org",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1880.png": {
+    "id": "1830_emoken_hinata",
+    "name": "えも研ひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
