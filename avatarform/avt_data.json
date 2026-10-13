@@ -1835,5 +1835,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2170.png": {
+    "id": "6040_daihuku_fosyu",
+    "name": "フォシュ大福",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2180.png": {
+    "id": "5140_chalonia",
+    "name": "シャロニア",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2190.png": {
+    "id": "1940_moude_hinata",
+    "name": "初詣ひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
