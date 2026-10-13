@@ -1263,5 +1263,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1730.png": {
+    "id": "1710_holo_hiinata",
+    "name": "ホログラムひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1740.png": {
+    "id": "7130_aki_mato",
+    "name": "秋マト",
+    "genre": "genre_org",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
