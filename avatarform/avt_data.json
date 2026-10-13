@@ -873,5 +873,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1430.png": {
+    "id": "7090_mame_mururu",
+    "name": "まめムルル",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
