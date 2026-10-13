@@ -1198,5 +1198,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1680.png": {
+    "id": "1680_hitonoko_mini",
+    "name": "ミニヒトノこ",
+    "genre": "genre_org",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1690.png": {
+    "id": "1690_kapusu_hinata",
+    "name": "カピスひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
