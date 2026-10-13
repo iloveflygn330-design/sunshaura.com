@@ -1120,5 +1120,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1620.png": {
+    "id": "1620_mame_friends",
+    "name": "まめフレンズ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1630.png": {
+    "id": "1630_mimi_hinata",
+    "name": "ミミひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
