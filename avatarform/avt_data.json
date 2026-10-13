@@ -2134,5 +2134,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2400.png": {
+    "id": "6090_muru_chalo",
+    "name": "ムルシャロ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2410.png": {
+    "id": "6100_fire_fosyu",
+    "name": "フレアニア",
+    "genre": "genre_org",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2420.png": {
+    "id": "6110_yue_chalo",
+    "name": "ユエシャロ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
