@@ -1523,5 +1523,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1930.png": {
+    "id": "1860_mistely_hinata",
+    "name": "遺跡ひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1940.png": {
+    "id": "4030_dakko_ruri",
+    "name": "だっこるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1950.png": {
+    "id": "4040_cool_ruri",
+    "name": "クールるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
