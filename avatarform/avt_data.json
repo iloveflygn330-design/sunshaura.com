@@ -680,8 +680,8 @@
     }
   },
   "1270.png": {
-    "id": "1310_黒猫ひなた",
-    "name": "",
+    "id": "1310_Kuroneko_hinata",
+    "name": "黒猫ひなた",
     "genre": "",
     "cate": "",
     "desc": "",
@@ -693,8 +693,8 @@
     }
   },
   "1290.png": {
-    "id": "1320_MMDひなた",
-    "name": "",
+    "id": "1320_MMD_hinata",
+    "name": "MMDひなた",
     "genre": "",
     "cate": "",
     "desc": "",
@@ -707,7 +707,20 @@
   },
   "1300.png": {
     "id": "7060_meido_neu",
-    "name": "",
+    "name": "メイドNEU",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1310.png": {
+    "id": "1330_Meido_hinata",
+    "name": "メイドひなた",
     "genre": "",
     "cate": "",
     "desc": "",
