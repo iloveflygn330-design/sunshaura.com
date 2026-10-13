@@ -1341,5 +1341,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1790.png": {
+    "id": "1750_onbu_hinata",
+    "name": "おんぶひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1800.png": {
+    "id": "1760_mimi_hinata",
+    "name": "ミミノこひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
