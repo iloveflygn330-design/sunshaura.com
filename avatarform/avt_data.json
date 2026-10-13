@@ -1146,5 +1146,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1640.png": {
+    "id": "1640_nopu_hinata",
+    "name": "ノプカひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1650.png": {
+    "id": "1650_fosyu_hinata",
+    "name": "フォシュひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
