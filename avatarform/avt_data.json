@@ -886,5 +886,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1440.png": {
+    "id": "1450_kure_hinata",
+    "name": "クレひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
