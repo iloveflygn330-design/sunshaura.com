@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-14",
+  "title": "VRChatで生成AIコンテンツへの抗議が拡大ほか、今日のVR・AIニュース4本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "おはようございます。今日は、VRChatで広がっている生成AIコンテンツへの抗議と公式の対応を中心にお届けします。ほかに、Questのサイドロードを手軽にするSideQuestの更新、全方向トレッドミル「Omni One」のMeta公式リセラー化、Facebookのおすすめを言葉で調整できる新機能の、合わせて4本です。",
+  "items": [
+    {
+      "headline": "VRChatで生成AIコンテンツへの抗議が広がる",
+      "category": "VRChat公式",
+      "overview": "VRChatで、AIで作られたワールドや、中身と違うAI生成のサムネイルが増えて良いコンテンツが見つけにくくなっているとして、コミュニティの抗議が広がっていると海外メディアのKotakuが報じました。ファン運営のWikiで活動するボランティアが活動を休止し、AIを使っていないことを示すバナーを掲げるワールドも増えています。VRChat公式はすでに、実際の内容と異なるサムネイルをガイドラインで禁止する方針を示しており、制作でのAI利用の扱いについてはアンケートで意見を集めています。",
+      "points": [
+        "中身と違う誤解を招くサムネイルはAI以外も含め禁止へ",
+        "翻訳やコード補助などツールとしてのAI利用は認める方針",
+        "AIラベルや表示フィルターの導入はまだ決まっていない",
+        "検索で良質なコンテンツを見つけやすくする実験も予定"
+      ],
+      "sources": [
+        { "name": "Kotaku", "url": "https://kotaku.com/vr-chat-community-protests-an-influx-of-ai-slop-onto-platform-hurting-discoverability-2000742109" },
+        { "name": "VRChat Ask Forum（公式）", "url": "https://ask.vrchat.com/t/regarding-ai-usage-on-vrchat/49058" }
+      ]
+    },
+    {
+      "headline": "SideQuestが更新、PCなしでQuestにアプリを導入可能に",
+      "category": "VR機器・技術",
+      "overview": "Quest向けの非公式アプリストア「SideQuest」が大きく更新されたと、Road to VRが報じました。これまで必要だった開発者登録や開発者モードの有効化、USBケーブルでの接続が不要になり、MetaアカウントでサインインしてBluetooth経由で接続を許可するだけで使えるようになります。インストールしたアプリは自動でQuestのライブラリに追加され、ヘッドセット内でSteamアカウントにサインインすると、対応する移植版ゲームを直接ダウンロードできます。",
+      "points": [
+        "開発者登録やUSB接続なしでサイドロードが可能に",
+        "スマホやヘッドセットのブラウザからも導入できる",
+        "Steam向けゲームの一部の移植版を直接ダウンロード",
+        "ヘッドセット単体の方法では本体設定の変更は不可"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/the-best-way-to-sideload-games-on-quest-just-got-better/" }
+      ]
+    },
+    {
+      "headline": "全方向トレッドミル「Omni One」がMeta公式リセラーに",
+      "category": "VR機器・技術",
+      "overview": "VR用の全方向トレッドミル「Omni One」を手がける米Virtuixが、Metaの公式リセラーになったと発表しました。Meta Quest 3やQuest 3Sとアクセサリーをセットにしたバンドルを、Virtuixから直接購入できるようになります。同社によると、Quest対応版のOmni Oneの注文は前年同期比で約3倍に増えているとのことです。",
+      "points": [
+        "Quest本体とOmni Oneをまとめて購入できるバンドルを発売",
+        "その場で歩く・走る・しゃがむなど360度の移動に対応",
+        "Questの75本以上のゲームが対応済みまたは対応予定",
+        "注文数約3倍は同社発表の数字で、第三者の検証はなし"
+      ],
+      "sources": [
+        { "name": "GlobeNewswire（Virtuixプレスリリース）", "url": "https://www.globenewswire.com/news-release/2026/10/13/3379823/0/en/virtuix-becomes-official-meta-reseller-as-omni-one-for-quest-orders-surge.html" }
+      ]
+    },
+    {
+      "headline": "Facebook、見たい話題を言葉で伝えられる新機能",
+      "category": "AI",
+      "overview": "Metaは、Facebookのフィードとリールで表示されるおすすめを、自分の言葉で調整できる「Your algorithm」機能を発表しました。投稿のメニューから見たい話題を追加・管理できるほか、「興味あり」「興味なし」を押したあとに追加の質問が出て、より細かく好みを伝えられます。入力された文章は大規模言語モデル（LLM）で読み取られ、おすすめにほぼリアルタイムで反映されるとしています。",
+      "points": [
+        "Instagramで先行していた機能をFacebookにも展開",
+        "見たい話題を文章で入力しておすすめを調整できる",
+        "LLMが文章の意図を読み取り、ランキングに反映",
+        "提供地域や全体の展開スケジュールは示されていない"
+      ],
+      "sources": [
+        { "name": "Meta Newsroom", "url": "https://about.fb.com/news/2026/10/introducing-your-algorithm-facebook/" },
+        { "name": "TechCrunch", "url": "https://techcrunch.com/2026/10/13/facebook-is-giving-users-more-control-over-their-algorithm/" }
+      ]
+    }
+  ],
+  "outro": "VRChatのAI利用に関する方針は、アンケート結果を踏まえて今後公式から案内される見込みです。続報が出たらまたお伝えします。"
+}
