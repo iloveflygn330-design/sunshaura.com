@@ -1224,5 +1224,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1700.png": {
+    "id": "7120_rakugaki_guidance",
+    "name": "らくがきガイダンス",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1710.png": {
+    "id": "5000_gill_chalo_mon",
+    "name": "ギルシャロモン",
+    "genre": "genre_copy_game",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
