@@ -682,8 +682,8 @@
   "1270.png": {
     "id": "1310_Kuroneko_hinata",
     "name": "黒猫ひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
@@ -695,8 +695,8 @@
   "1290.png": {
     "id": "1320_MMD_hinata",
     "name": "MMDひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
@@ -708,8 +708,8 @@
   "1300.png": {
     "id": "7060_meido_neu",
     "name": "メイドNEU",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_org",
+    "cate": "cate_other",
     "desc": "",
     "completed": false,
     "code": "",
@@ -721,8 +721,8 @@
   "1310.png": {
     "id": "1330_Meido_hinata",
     "name": "メイドひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
@@ -734,8 +734,8 @@
   "1320.png": {
     "id": "1340_Rask_hinata",
     "name": "ラスクひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
@@ -747,8 +747,8 @@
   "1330.png": {
     "id": "1350_Haishima_hinata",
     "name": "灰島ひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
@@ -760,8 +760,8 @@
   "1340.png": {
     "id": "6020_Slime_chalo",
     "name": "スライムシャロ",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_org",
+    "cate": "cate_chalo",
     "desc": "",
     "completed": false,
     "code": "",
@@ -773,8 +773,8 @@
   "1350.png": {
     "id": "1360_ruruko_hinata",
     "name": "るるこひなた",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
@@ -786,8 +786,21 @@
   "1360.png": {
     "id": "7070_kuro_phie",
     "name": "クロフィエ",
-    "genre": "",
-    "cate": "",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1370.png": {
+    "id": "7080_uzu_shipi",
+    "name": "ウズルカ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
     "desc": "",
     "completed": false,
     "code": "",
