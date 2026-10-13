@@ -1471,5 +1471,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1890.png": {
+    "id": "7140_Vket_zil",
+    "name": "Vketジル",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1900.png": {
+    "id": "1840_kuro_yoku_hinata",
+    "name": "黒浴衣ひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
