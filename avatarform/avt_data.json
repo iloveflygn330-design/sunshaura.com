@@ -1029,5 +1029,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1550.png": {
+    "id": "1560_taokaka_hinata",
+    "name": "タオカカひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1560.png": {
+    "id": "1560_guidance_hinata",
+    "name": "ガイダンスひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
