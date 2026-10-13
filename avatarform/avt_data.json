@@ -834,5 +834,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1400.png": {
+    "id": "1400_remifa_nata",
+    "name": "レミファなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
