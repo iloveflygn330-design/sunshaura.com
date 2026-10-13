@@ -925,5 +925,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1470.png": {
+    "id": "7110_rask_kip",
+    "name": "ラスクキプ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1480.png": {
+    "id": "1460_ton_hinata",
+    "name": "TONひなた",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
