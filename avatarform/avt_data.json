@@ -1315,5 +1315,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1770.png": {
+    "id": "1740_sans_hinata",
+    "name": "サンズひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1780.png": {
+    "id": "1450_foti_hinata",
+    "name": "フォティひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
