@@ -1081,5 +1081,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1590.png": {
+    "id": "1590_mame_zunda",
+    "name": "まめずんだ",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1600.png": {
+    "id": "1600_kip_hinata",
+    "name": "キプひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1610.png": {
+    "id": "1610_cyber_hinata",
+    "name": "サイバーひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
