@@ -1,0 +1,89 @@
+# =====================================================
+# アバター改変ページ：サムネイル・軽量版（WebP）・共有用ページを自動で作る
+#
+# 仕組み:
+#   avatar_form.html で保存したとき（avatars.js や画像が更新されたとき）に自動で動いて、
+#   次の3つを作り、main に自動コミットする。数分後にサイトに反映される。
+#     1. サムネイル（PC用・スマホ用。顔を中心に切り抜き）… .github/scripts/avatar-thumbs.py
+#          avatarform/profile/ の画像から assets/images/<ID>/thumbnail/mini_pc.png・mini_sp.png
+#     2. 画像の軽量版（WebP）                         … .github/scripts/avatar-webp.js
+#          assets/images/ の PNG・JPG から、同じ場所に .webp と一覧 assets/images/webp.json
+#     3. アバターごとの共有用ページ（SNS のカード表示）  … .github/scripts/avatar-share.mjs
+#          avatar/p/<ID>/index.html と、カード画像 avatar/p/<ID>/ogp.jpg
+#   どれも、元の画像などが変わったものだけ作り直す（何も変わっていなければコミットしない）。
+#
+# 動いたかどうかの確認:
+#   Actions タブ → 「Avatar images」。緑のチェックなら成功。
+#   全部を作り直したいときは、同じ画面の「Run workflow」で手動実行できる。
+#
+# ★拡張予定: サムネイルの切り抜きがずれたアバターがあったとき
+#   avatarform/thumb-focus.json に顔の位置を書いて push すると、そのアバターだけ作り直される
+#   （書き方は .github/scripts/avatar-thumbs.py の先頭のコメント）
+# =====================================================
+name: Avatar images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'avatars.js'
+      - 'assets/images/**'
+      - 'avatarform/profile/**'
+      - 'avatarform/avt_data.json'
+      - 'avatarform/thumb-focus.json'
+      - '.github/scripts/avatar-*'
+      - '.github/workflows/avatar-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# avatar_form.html の保存は何回かに分けて push されるので、続けて動いたときは順番に実行する
+concurrency:
+  group: avatar-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: サムネイル用のライブラリを入れる
+        # OpenCV は 4 系に固定（5 系では顔検出の機能が別パッケージに分かれたため）
+        run: pip install --quiet opencv-python-headless==4.10.0.84 pillow==11.0.0 "numpy<2.3"
+
+      - name: サムネイルを作る
+        run: python .github/scripts/avatar-thumbs.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 画像変換ライブラリ（sharp）を入れる
+        working-directory: .github/scripts
+        run: npm install --no-save --no-package-lock --no-audit --no-fund sharp@0.33.5
+
+      - name: 軽量版（WebP）を作る
+        run: node .github/scripts/avatar-webp.js
+
+      - name: 共有用ページを作る
+        run: node .github/scripts/avatar-share.mjs
+
+      - name: 変更があればコミットする
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets/images avatar/p avatarform/thumb-state.json
+          if git diff --cached --quiet; then
+            echo "変更なし"
+            exit 0
+          fi
+          git commit -m "アバターのサムネイル・WebP・共有用ページを更新"
+          # 実行中に別の push（フォームの保存・毎朝のニュースなど）があっても失敗しないよう、最新を取り込んでから push する
+          git pull --rebase origin main
+          git push origin HEAD:main

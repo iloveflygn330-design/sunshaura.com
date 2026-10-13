@@ -1302,6 +1302,10 @@ function buildEntry(key){
       return `DicBase + '${rel}'`;
     }
     if(template==='CUSTOM' || sess || uploaded) return `my_Dic + '/${SAVE_PATH[type]}'`;
+    // PC用・スマホ用サムネイルは、保存後に GitHub 上で自動で作られる（顔を中心に切り抜き）
+    //   → .github/workflows/avatar-build.yml / .github/scripts/avatar-thumbs.py
+    //   作られるまでの数分間は、アバター改変ページが共通のサムネイルを代わりに表示する
+    if(type==='miniPC' || type==='miniSP') return `my_Dic + '/${SAVE_PATH[type]}'`;
     return DEFO_VAR[type];
   };
 

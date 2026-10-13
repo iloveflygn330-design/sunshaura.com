@@ -99,6 +99,15 @@
       <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
     </div>
 
+    <!--
+      共有ボタン（表示中のアバターの URL を共有する。動きは assets/avatar.js の avtShare / avtShareX）
+      ★拡張予定: 共有先のボタンを増やす場合は、ここに <button class="avt-share-btn"> を追加し、avatar.js に関数を足す
+    -->
+    <div id="avt-share-bar">
+      <button type="button" class="avt-share-btn" onclick="avtShare()">🔗 このアバターを共有</button>
+      <button type="button" class="avt-share-btn avt-share-x" onclick="avtShareX()" aria-label="X でポスト">𝕏 でポスト</button>
+    </div>
+
     <div id="avt-main-wrap">
       <!--
       オプション領域（折り畳み式）

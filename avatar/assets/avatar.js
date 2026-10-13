@@ -15,8 +15,54 @@ const AVT_CONFIG = {
  * （https:// で始まるURLはそのまま。空のときは空文字を返す）
  */
 const AVT_SITE_URL = new URL(AVT_CONFIG.SITE_ROOT, location.href);
+
+/*
+ * 軽量版（WebP）の一覧
+ *   assets/images/webp.json に載っている画像は、同じ場所の .webp を使う（PNG の 1/10 くらいの重さ）。
+ *   一覧は GitHub 上で自動で作られる（.github/scripts/avatar-webp.js）。
+ *   載っていない画像（追加した直後など）は、元の PNG をそのまま使う。
+ */
+const AVT_WEBP_LIST = 'assets/images/webp.json';
+const AVT_IMAGES_DIR = 'assets/images/';
+let avtWebp = new Set();
+async function avtLoadWebpList() {
+  try {
+    const res = await fetch(new URL(AVT_WEBP_LIST, AVT_SITE_URL), { cache: 'no-cache' });
+    if (res.ok) avtWebp = new Set((await res.json()).files || []);
+  } catch (e) { /* 一覧が読めなくても、PNG で表示できる */ }
+}
+
 function avtUrl(path) {
-  return path ? new URL(path, AVT_SITE_URL).href : '';
+  if (!path) return '';
+  if (path.startsWith(AVT_IMAGES_DIR) && avtWebp.has(path.slice(AVT_IMAGES_DIR.length))) {
+    path = path.replace(/\.(png|jpe?g)$/i, '.webp');
+  }
+  return new URL(path, AVT_SITE_URL).href;
+}
+
+/* 画像が読めなかったときに出す画像（サムネイルが自動で作られる前など） */
+const AVT_FALLBACK = {
+  miniImgPC: 'assets/images/ShareImg/mini_pc.png',
+  miniImgSP: 'assets/images/ShareImg/mini_sp.png',
+};
+
+/*
+ * アバターごとの URL
+ *   avatar/?id=<アバターID> で開くと、そのアバターを最初に表示する。
+ *   アバターを切り替えると、アドレスバーの URL も ?id=<アバターID> に変わる（そのままブックマーク・コピーできる）。
+ *   「共有」ボタンでは、SNS でカード表示される avatar/p/<アバターID>/ の URL を共有する
+ *   （そのページは .github/scripts/avatar-share.mjs が自動で作る）。
+ */
+function avtIdFromUrl() {
+  return new URLSearchParams(location.search).get('id');
+}
+function avtSetUrl(id) {
+  const url = new URL(location.href);
+  url.searchParams.set('id', id);
+  history.replaceState(null, '', url);
+}
+function avtShareUrl(id) {
+  return new URL('p/' + encodeURIComponent(id) + '/', new URL('./', location.href)).href;
 }
 
 let avtData = [], avtCurrentId = null;
@@ -26,11 +72,18 @@ let avtDoorBusy = false, avtLoaded = false;
 async function avtLoadData() {
   if (avtLoaded) return;
   try {
-    const module = await import(avtUrl(AVT_CONFIG.DATA_PATH));
+    const [module] = await Promise.all([
+      import(new URL(AVT_CONFIG.DATA_PATH, AVT_SITE_URL).href),
+      avtLoadWebpList(),
+    ]);
     avtData = module.default;
     avtLoaded = true;
     if (avtData.length > 0) {
-      avtShowAvatar(avtData[Math.floor(Math.random() * avtData.length)], false);
+      // URL で指定されたアバター（?id=...）があればそれを、なければランダムに1体表示する
+      const wanted = avtData.find(a => a.id === avtIdFromUrl());
+      avtShowAvatar(wanted || avtData[Math.floor(Math.random() * avtData.length)], false);
+      // 共有リンクから来た人には、アバターの表示エリアを見せる
+      if (wanted) requestAnimationFrame(() => document.getElementById('avt-display-area')?.scrollIntoView({ block: 'start' }));
     }
     avtRenderThumbs();
   } catch (e) {
@@ -74,9 +127,11 @@ function avtRenderThumbs() {
     item.className = 'avt-thumb-item' + (avatar.id === avtCurrentId ? ' selected' : '');
     item.onclick = () => avtSelectAvatar(avatar.id);
     const imgPC = document.createElement('img');
-    imgPC.className = 'avt-thumb-pc'; imgPC.src = avtUrl(avatar.miniImgPC); imgPC.alt = avatar.name;
+    imgPC.className = 'avt-thumb-pc'; imgPC.loading = 'lazy'; imgPC.src = avtUrl(avatar.miniImgPC);
+    imgPC.onerror = () => { imgPC.onerror = null; imgPC.src = avtUrl(AVT_FALLBACK.miniImgPC); }; imgPC.alt = avatar.name;
     const imgSP = document.createElement('img');
-    imgSP.className = 'avt-thumb-sp'; imgSP.src = avtUrl(avatar.miniImgSP); imgSP.alt = avatar.name;
+    imgSP.className = 'avt-thumb-sp'; imgSP.loading = 'lazy'; imgSP.src = avtUrl(avatar.miniImgSP);
+    imgSP.onerror = () => { imgSP.onerror = null; imgSP.src = avtUrl(AVT_FALLBACK.miniImgSP); }; imgSP.alt = avatar.name;
     item.appendChild(imgPC); item.appendChild(imgSP);
 
     /* アバター名ラベル（PC専用・CSSで SP は非表示） */
@@ -124,6 +179,8 @@ function buildTextShadow(shadow, outline) {
 
 function avtShowAvatar(avatar, updateThumb) {
   avtCurrentId = avatar.id;
+  avtSetUrl(avatar.id);
+  document.title = `${avatar.name} | アバター改変 | sunshaura.com`;
 
   /* ⑦ 背景 */
   document.getElementById('avt-bg-img').style.backgroundImage = avatar.bgImg ? `url('${avtUrl(avatar.bgImg)}')` : '';
@@ -251,6 +308,56 @@ function applyViewerOpts() {
   if (descEl)  descEl.style.setProperty('--avt-desc-tshadow', outlineShadow);
 }
 
+// ================================================================
+// 共有ボタン
+//   「このアバターを共有」: スマホは共有メニュー（LINE・X・Discord など）を開く。
+//                           共有メニューが無いブラウザ（PC など）はリンクをコピーする。
+//   「X でポスト」       : X の投稿画面を開く
+// ★拡張予定: 共有するときの文言を変える場合は avtShareText() を書き換える
+// ================================================================
+function avtShareText(a) {
+  return `シャウラのアバター改変「${a.name}」`;
+}
+
+async function avtShare() {
+  const a = avtData.find(x => x.id === avtCurrentId);
+  if (!a) return;
+  const url = avtShareUrl(a.id);
+  if (navigator.share) {
+    try { await navigator.share({ title: a.name, text: avtShareText(a), url }); return; }
+    catch (e) { if (e.name === 'AbortError') return; /* 共有がキャンセルされた */ }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    avtToast('リンクをコピーしました');
+  } catch (e) {
+    window.prompt('このリンクをコピーしてください', url);
+  }
+}
+
+function avtShareX() {
+  const a = avtData.find(x => x.id === avtCurrentId);
+  if (!a) return;
+  const intent = 'https://x.com/intent/post?text=' + encodeURIComponent(avtShareText(a)) +
+    '&url=' + encodeURIComponent(avtShareUrl(a.id));
+  window.open(intent, '_blank', 'noopener');
+}
+
+// 画面下に少しだけ出るお知らせ
+function avtToast(msg) {
+  let el = document.getElementById('avt-toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'avt-toast';
+    el.setAttribute('role', 'status');
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
 // アバター表示領域の上端にスクロール（ヘッダー高さ分オフセット）
 function scrollToDisplayArea() {
   if (!viewerOpts.autoScroll) return;
@@ -272,4 +379,6 @@ avtLoadData();
 // onclick から呼び出せるようにグローバルに公開
 // （type="module" の関数はそのままだと外から見えないため）
 window.avtToggleGenre = avtToggleGenre;
+window.avtShare       = avtShare;
+window.avtShareX      = avtShareX;
 window.avtToggleCat   = avtToggleCat;
