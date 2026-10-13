@@ -1952,5 +1952,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2260.png": {
+    "id": "4090_yan_ruri",
+    "name": "グラサンるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2270.png": {
+    "id": "4100_val_ruri",
+    "name": "ヴァレンタインるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
