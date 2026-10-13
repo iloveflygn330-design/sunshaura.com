@@ -1562,5 +1562,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1960.png": {
+    "id": "1870_ral_hinata",
+    "name": "ラルひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1970.png": {
+    "id": "1880_boy_hinata",
+    "name": "まめキッサー",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1980.png": {
+    "id": "5010_fligon_fosyu",
+    "name": "フライゴンフォシュ",
+    "genre": "genre_copy_game",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
