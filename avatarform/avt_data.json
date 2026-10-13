@@ -1770,5 +1770,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2120.png": {
+    "id": "5090_kirby_fosyu",
+    "name": "カービィフォシュ",
+    "genre": "genre_copy_game",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2130.png": {
+    "id": "5100_skall_fosyu",
+    "name": "スカルニア",
+    "genre": "genre_org",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2140.png": {
+    "id": "5110_mame_nia",
+    "name": "まめニア",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
