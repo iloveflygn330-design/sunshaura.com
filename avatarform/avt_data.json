@@ -808,5 +808,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1380.png": {
+    "id": "1370_formal_hinata",
+    "name": "フォーマルひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1390.png": {
+    "id": "1380_mame_pato",
+    "name": "まめパト",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
