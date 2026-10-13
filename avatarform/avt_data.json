@@ -940,10 +940,23 @@
     }
   },
   "1480.png": {
-    "id": "1460_ton_hinata",
+    "id": "1500_ton_hinata",
     "name": "TONひなた",
     "genre": "",
     "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1490.png": {
+    "id": "4020_kimana_ruri",
+    "name": "きまなるり",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_ruri",
     "desc": "",
     "completed": false,
     "code": "",
