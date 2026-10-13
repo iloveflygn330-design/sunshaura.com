@@ -1016,5 +1016,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1540.png": {
+    "id": "1550_chalo_hinata",
+    "name": "シャロひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
