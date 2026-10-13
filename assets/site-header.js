@@ -9,6 +9,7 @@
        <script>SunHeader.render({ root: '../', current: 'avatar' });</script>
      ・ニュース（news.js）・ギャラリー（gallery.js）は、それぞれのJSの中から render() を呼んでいる
      ・見た目（CSS）は assets/site-common.css
+     ・ナビボタンは ‹ › の矢印のほか、スワイプ（指でなぞる・マウスでドラッグ）でも動かせる（enableSwipe()）
 
    ★拡張予定: ナビボタン（＝ページ）を追加・並べ替えする手順
      1. 下の SITE_NAV_ITEMS に1行追加する（上から順に左から並ぶ）
@@ -151,6 +152,86 @@
     document.getElementById('nav-prev').onclick = function () { navOffset--; update(); };
     document.getElementById('nav-next').onclick = function () { navOffset++; update(); };
     update();
+    enableSwipe();
+
+    /*
+     * スワイプ（指でなぞる）でナビボタンを動かす
+     *   ・なぞっている間はボタンが指についてくる
+     *   ・指を離すと、いちばん近いボタンの左端にピタッと止まる
+     *     （素早くはじいたときは、はじいた向きに1つ以上送る）
+     *   ・縦方向のスクロールはそのまま（横に動かしたときだけ反応する）
+     *   ・なぞった直後は、ボタンを押したことにしない（うっかりページ移動を防ぐ）
+     *   ・マウスでドラッグしても同じように動く
+     *
+     * ★拡張予定: スワイプの感度を変える場合は SWIPE の値を書き換える
+     *   START_PX : これ以上横に動いたら「スワイプ」とみなす距離（px）。小さいほど反応が早い
+     *   FLICK_PX : 指を離したとき、これ以上動かしていたら向きの方へ必ず1つ送る距離（px）
+     *   EDGE_RESIST : 端より先に引っぱったときの重さ（0〜1。小さいほど重い）
+     */
+    function enableSwipe() {
+      var SWIPE = { START_PX: 8, FLICK_PX: 30, EDGE_RESIST: 0.3 };
+      var scrollWrap = document.getElementById('nav-scroll-wrap');
+      var wrapper    = document.getElementById('nav-buttons-wrap');
+      var drag = null;          // なぞっている間の情報
+      var suppressClick = false;
+
+      // 横スワイプはこちらで処理し、縦スクロールはブラウザに任せる
+      scrollWrap.style.touchAction = 'pan-y';
+
+      scrollWrap.addEventListener('pointerdown', function (e) {
+        if (SITE_NAV_ITEMS.length <= NAV_VISIBLE) return;           // ボタンが全部見えているときは動かさない
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        var m = measure();
+        drag = { id: e.pointerId, x: e.clientX, y: e.clientY, base: m.lefts[navOffset],
+                 max: m.lefts[m.maxOffset], m: m, moving: false, dx: 0 };
+      });
+
+      scrollWrap.addEventListener('pointermove', function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (!drag.moving) {
+          if (Math.abs(dx) < SWIPE.START_PX) return;
+          if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; }   // 縦の動きならスワイプにしない
+          drag.moving = true;
+          wrapper.style.transition = 'none';                         // 指に直接ついてくるようにする
+          try { scrollWrap.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        drag.dx = dx;
+        var pos = drag.base - dx;
+        if (pos < 0) pos *= SWIPE.EDGE_RESIST;                                       // 左端より先は重く
+        if (pos > drag.max) pos = drag.max + (pos - drag.max) * SWIPE.EDGE_RESIST;   // 右端より先も重く
+        wrapper.style.transform = 'translateX(' + (-pos) + 'px)';
+      });
+
+      function endDrag(e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        var d = drag; drag = null;
+        if (!d.moving) return;                                       // ただのタップ → 通常どおりボタンを押す
+        wrapper.style.transition = '';
+        suppressClick = true;                                        // この直後のクリックは無視する
+        setTimeout(function () { suppressClick = false; }, 0);
+
+        // 指を離した位置にいちばん近いボタンを探す
+        var pos = d.base - d.dx, best = 0;
+        d.m.lefts.forEach(function (l, i) {
+          if (Math.abs(l - pos) < Math.abs(d.m.lefts[best] - pos)) best = i;
+        });
+        // 少しでも大きく動かしていたら、その向きに最低1つは送る
+        if (best === navOffset && Math.abs(d.dx) >= SWIPE.FLICK_PX) best += d.dx < 0 ? 1 : -1;
+        navOffset = best;
+        update();
+      }
+      scrollWrap.addEventListener('pointerup', endDrag);
+      scrollWrap.addEventListener('pointercancel', endDrag);
+
+      // なぞった直後に指を離したボタンへ移動しないようにする
+      scrollWrap.addEventListener('click', function (e) {
+        if (suppressClick) { e.preventDefault(); e.stopPropagation(); suppressClick = false; }
+      }, true);
+
+      // リンクや画像を「つかんで」ドラッグする標準の動きを止める（マウス用）
+      scrollWrap.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    }
     window.addEventListener('resize', update);
     // Webフォントの読み込みでボタン幅が変わるので、読み込み後にもう一度測り直す
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
