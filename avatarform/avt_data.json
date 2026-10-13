@@ -1705,5 +1705,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2070.png": {
+    "id": "5040_rask_fosyu",
+    "name": "ラスクフォシュ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2080.png": {
+    "id": "5050_kuro_fosyu",
+    "name": "黒フォシュ",
+    "genre": "genre_org",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2090.png": {
+    "id": "5060_abusol_fosyu",
+    "name": "アブソルフォシュ",
+    "genre": "genre_copy_game",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
