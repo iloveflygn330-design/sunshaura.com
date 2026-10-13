@@ -2095,5 +2095,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2370.png": {
+    "id": "6060_hai_chalo",
+    "name": "灰シャロ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2380.png": {
+    "id": "6070_zil_chalo",
+    "name": "ジルシャロ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2390.png": {
+    "id": "6080_pato_chalo",
+    "name": "パトシャロ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
