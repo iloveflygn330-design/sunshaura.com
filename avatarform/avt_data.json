@@ -1744,5 +1744,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2100.png": {
+    "id": "5070_pato_fosyu",
+    "name": "パトフォシュ",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2110.png": {
+    "id": "5080_NovaNia",
+    "name": "novaニア",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
