@@ -1510,5 +1510,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1920.png": {
+    "id": "7150_yue_lop",
+    "name": "ユエロップ",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
