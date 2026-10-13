@@ -1367,5 +1367,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1810.png": {
+    "id": "1770_test_hinata",
+    "name": "レシーバひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
