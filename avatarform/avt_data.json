@@ -1003,5 +1003,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1530.png": {
+    "id": "1540_staf_hinata",
+    "name": "ホールひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
