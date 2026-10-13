@@ -1640,5 +1640,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2020.png": {
+    "id": "1920_kuroneko_hinata",
+    "name": "黒猫ひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2030.png": {
+    "id": "1930_halloween_hinata",
+    "name": "ハロウィンひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2040.png": {
+    "id": "5020_halloween_fosyu",
+    "name": "ハロウィンフォシュ",
+    "genre": "genre_org",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
