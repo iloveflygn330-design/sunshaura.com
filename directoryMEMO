@@ -1,6 +1,7 @@
 リポジトリ TOP
   ├─ index.html                 ← トップページ（ようこそ）だけ
-  ├─ avatar/index.html          ← アバター改変（assets/avatar.css・avatar.js）
+  ├─ avatar/index.html          ← アバター改変（assets/avatar.css・avatar.js）。avatar/?id=<アバターID> でそのアバターを開く
+  │    └─ p/<アバターID>/         ← 共有用ページ（SNS のカード表示）とカード画像 ogp.jpg。自動生成。手で触らない
   ├─ world/index.html           ← 作ったワールド（中身はまだ。新しいページを作るときのコピー元）
   ├─ shop/index.html            ← ショップ
   ├─ event/index.html           ← イベント
@@ -68,3 +69,11 @@
       └─ <投稿ID>_wait.webp / _done.webp
   .github/scripts/discord-panel-icons.py   ← ★拡張予定: 顔検出・丸切り抜き（寄り具合 FACE_RATIO はここ）
   .github/scripts/data/lbpcascade_animeface.xml ← アニメ顔検出用データ（MIT License, nagadomi）
+
+アバター画像の自動処理（avatar_form.html で保存すると GitHub 上で自動実行。.github/workflows/avatar-build.yml）
+  .github/scripts/avatar-thumbs.py  ← avatarform/profile/ の画像から PC用・スマホ用サムネイル（顔を中心に切り抜き）
+  .github/scripts/avatar-webp.js    ← assets/images/ の PNG から軽量版 .webp と一覧 assets/images/webp.json
+  .github/scripts/avatar-share.mjs  ← avatar/p/<アバターID>/（共有用ページ・カード画像）
+  avatarform/thumb-focus.json       ← ★拡張予定: サムネイルの切り抜きがずれたとき、顔の位置を手で指定する
+  avatarform/thumb-state.json       ← 自動生成。手で触らない
+

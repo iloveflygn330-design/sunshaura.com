@@ -63,6 +63,9 @@
       <button class="avt-cat-btn" data-category="シャロ" onclick="avtToggleCat(this.dataset.category,this)">
         <img src="../assets/images/categories/sharo.png" alt="シャロ">
       </button>
+      <button class="avt-cat-btn" data-category="凪夜瑠璃" onclick="avtToggleCat(this.dataset.category,this)">
+        <img src="../assets/images/categories/ruri.png" alt="凪夜瑠璃">
+      </button>
       <button class="avt-cat-btn" data-category="その他" onclick="avtToggleCat(this.dataset.category,this)">
         <img src="../assets/images/categories/other.png" alt="その他">
       </button>
@@ -97,6 +100,15 @@
       <div class="avt-door" id="avt-door-bottom"></div>
       <div class="avt-frame-a" id="avt-frame-a-top"></div>
       <div class="avt-frame-a" id="avt-frame-a-bottom"></div>
+    </div>
+
+    <!--
+      共有ボタン（表示中のアバターの URL を共有する。動きは assets/avatar.js の avtShare / avtShareX）
+      ★拡張予定: 共有先のボタンを増やす場合は、ここに <button class="avt-share-btn"> を追加し、avatar.js に関数を足す
+    -->
+    <div id="avt-share-bar">
+      <button type="button" class="avt-share-btn" onclick="avtShare()">🔗 このアバターを共有</button>
+      <button type="button" class="avt-share-btn avt-share-x" onclick="avtShareX()" aria-label="X でポスト">𝕏 でポスト</button>
     </div>
 
     <div id="avt-main-wrap">
