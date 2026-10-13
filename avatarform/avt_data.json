@@ -1876,7 +1876,7 @@
     }
   },
   "2200.png": {
-    "id": "2200_flower_ruri",
+    "id": "4050_flower_ruri",
     "name": "花屋るり",
     "genre": "genre_org",
     "cate": "cate_ruri",
@@ -1902,7 +1902,7 @@
     }
   },
   "2220.png": {
-    "id": "2220_zunda_nia",
+    "id": "5160_zunda_nia",
     "name": "ずんだニア",
     "genre": "genre_copy_game",
     "cate": "cate_foshu",
@@ -1915,8 +1915,34 @@
     }
   },
   "2230.png": {
-    "id": "2230_wear_ruri",
+    "id": "4060_wear_ruri",
     "name": "着せ替えるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2240.png": {
+    "id": "4070_meido_ruri",
+    "name": "メイドるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2250.png": {
+    "id": "4080_shihuku_ruri",
+    "name": "部屋着るり",
     "genre": "genre_org",
     "cate": "cate_ruri",
     "desc": "",
