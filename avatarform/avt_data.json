@@ -990,5 +990,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1520.png": {
+    "id": "1530_natsu_rask_hinata",
+    "name": "夏ラスクひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
