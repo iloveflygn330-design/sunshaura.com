@@ -2056,5 +2056,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2340.png": {
+    "id": "1980_fotn_hinata",
+    "name": "フォトンひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2350.png": {
+    "id": "1990_abusol_hinata",
+    "name": "アブソルひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2360.png": {
+    "id": "6050_ruka_chalo",
+    "name": "ルカリオシャロ",
+    "genre": "genre_copy_game",
+    "cate": "cate_chalo",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
