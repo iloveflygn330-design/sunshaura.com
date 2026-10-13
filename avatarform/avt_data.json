@@ -1055,5 +1055,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1570.png": {
+    "id": "1570_boo_hinata",
+    "name": "おばけひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1580.png": {
+    "id": "1580_mame_ruvas",
+    "name": "まめルヴァス",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
