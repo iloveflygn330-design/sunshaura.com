@@ -1393,5 +1393,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1830.png": {
+    "id": "1790_task_hinata",
+    "name": "タスクひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
