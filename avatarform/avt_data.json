@@ -1679,5 +1679,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2050.png": {
+    "id": "5030_kid_fosyu",
+    "name": "子供フォシュ",
+    "genre": "genre_org",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2060.png": {
+    "id": "7160_rati_aru",
+    "name": "ラティアル",
+    "genre": "genre_copy_game",
+    "cate": "cate_other",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
