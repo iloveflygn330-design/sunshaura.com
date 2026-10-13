@@ -1406,5 +1406,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1840.png": {
+    "id": "1800_sister_hinata",
+    "name": "シスターひなた",
+    "genre": "genre_org",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
