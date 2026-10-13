@@ -678,5 +678,18 @@
     "templates": {
       "bgImg": "assets/images/ShareImg_bg/purple.png"
     }
+  },
+  "1270.png": {
+    "id": "1270",
+    "name": "",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
