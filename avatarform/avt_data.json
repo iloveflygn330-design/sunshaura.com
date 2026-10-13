@@ -730,5 +730,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1320.png": {
+    "id": "1340_Rask_hinata",
+    "name": "ラスクひなた",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1330.png": {
+    "id": "1350_Haishima_hinata",
+    "name": "灰島ひなた",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1340.png": {
+    "id": "6020_Slime_chalo",
+    "name": "スライムシャロ",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
