@@ -1,7 +1,7 @@
 // =====================================================
 // アバターデータ  avatars.js
 // avatar_form.html から自動生成
-// 生成日時: 2026/10/13 23:42:20  /  144件
+// 生成日時: 2026/10/13 23:42:20  /  142件
 // =====================================================
 
 // テンプレート ========================================================
@@ -3848,57 +3848,7 @@ _avatars.push({
   orgAvt: []
 });
 
-/* ─── 次のアバター ─── */
-my_avatarid = 'vrchat_20260307_004043964_1920x1080';
-my_Dic      = DicBase + my_avatarid;
-_avatars.push({
-  id:           my_avatarid,
-  name:         'test',
-  genre:        genre_org,
-  category:     cate_other,
 
-  mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    defo_miniImgPC,
-  miniImgSP:    defo_miniImgSP,
-
-  bgImg:        defo_bgImg,
-  bgPattern:    defo_bgPattern,
-  frameCTop:    defo_frameCTop,
-  frameCBottom: defo_frameCBottom,
-  infoImg:      defo_infoImg,
-
-  desc: 'アバターの説明テキスト。',
-
-  photos: [],
-
-  orgAvt: []
-});
-
-/* ─── 次のアバター ─── */
-my_avatarid = 'vrchat_20260315_021642369_1080x1920';
-my_Dic      = DicBase + my_avatarid;
-_avatars.push({
-  id:           my_avatarid,
-  name:         'test',
-  genre:        genre_org,
-  category:     cate_other,
-
-  mainImg:      my_Dic + '/thumbnail/main.png',
-  miniImgPC:    defo_miniImgPC,
-  miniImgSP:    defo_miniImgSP,
-
-  bgImg:        defo_bgImg,
-  bgPattern:    defo_bgPattern,
-  frameCTop:    defo_frameCTop,
-  frameCBottom: defo_frameCBottom,
-  infoImg:      defo_infoImg,
-
-  desc: 'tset',
-
-  photos: [],
-
-  orgAvt: []
-});
 
 // ★ アバターを追加する場合はここに追記
 
