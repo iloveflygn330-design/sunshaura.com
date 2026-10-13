@@ -1250,5 +1250,18 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1720.png": {
+    "id": "1700_rarantesu_hinata",
+    "name": "ラランテスひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
