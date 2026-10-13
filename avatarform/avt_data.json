@@ -1874,5 +1874,57 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "2200.png": {
+    "id": "2200_flower_ruri",
+    "name": "花屋るり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2210.png": {
+    "id": "5150_dakko_fosyu",
+    "name": "だっこフォシュ",
+    "genre": "genre_org",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2220.png": {
+    "id": "2220_zunda_nia",
+    "name": "ずんだニア",
+    "genre": "genre_copy_game",
+    "cate": "cate_foshu",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2230.png": {
+    "id": "2230_wear_ruri",
+    "name": "着せ替えるり",
+    "genre": "genre_org",
+    "cate": "cate_ruri",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
