@@ -1172,5 +1172,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1660.png": {
+    "id": "1660_hitonoko_hinata",
+    "name": "ヒトノコひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1670.png": {
+    "id": "1670_mahuyu_hinata",
+    "name": "真冬ひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
