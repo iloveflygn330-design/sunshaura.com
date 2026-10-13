@@ -1419,5 +1419,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1850.png": {
+    "id": "1810_switch2_hinata",
+    "name": "スイッチ2ひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1860.png": {
+    "id": "1820_mahuyu_hinata",
+    "name": "真冬ひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
