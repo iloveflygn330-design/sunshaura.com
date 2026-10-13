@@ -1601,5 +1601,44 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1990.png": {
+    "id": "1890_pop_hinata",
+    "name": "ポプひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2000.png": {
+    "id": "1900_shizue_hinata",
+    "name": "しずえひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "2010.png": {
+    "id": "1910_booster_hinata",
+    "name": "ブースターひなた",
+    "genre": "genre_copy_game",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
