@@ -964,5 +964,31 @@
       "photoCount": 0,
       "refs": []
     }
+  },
+  "1500.png": {
+    "id": "1510_pato_hinata",
+    "name": "パトひなた",
+    "genre": "",
+    "cate": "",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
+  },
+  "1510.png": {
+    "id": "1520_hitonoko_hinata",
+    "name": "ヒトノコひなた",
+    "genre": "genre_copy_avatar",
+    "cate": "cate_mame",
+    "desc": "",
+    "completed": false,
+    "code": "",
+    "up": {
+      "photoCount": 0,
+      "refs": []
+    }
   }
 }
