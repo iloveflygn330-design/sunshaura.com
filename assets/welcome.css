@@ -123,22 +123,31 @@ html, body { height: 100%; }
    pin/scrub 廃止済み。スクロールでアニメが順番に起動する方式。
    各アニメブロックが画面に入ったとき ScrollTrigger で発火する。
    ------------------------------------------------------- */
+/*
+ * 自己紹介のアニメーション中は、画面を止めたまま中身だけを動かす
+ *   .wlc-sec2-sticky を position: sticky で画面に貼りつけ（ブラウザ自身が固定するので、スクロールしてもガタつかない）、
+ *   そのあとの .wlc-sec2-runway（見えない余白）をスクロールしている間にアニメーションが進む。
+ *   ※ 以前は GSAP の pin で固定していたが、スクロールのたびに位置を書き換えるため、画面が細かく揺れていた
+ *   ※ .wlc-sec2 に overflow: hidden を付けると sticky が効かなくなるので付けない
+ *     （横スライドの飛び出しは .wlc-sec2-sticky 側で隠している）
+ *
+ * ★拡張予定: アニメーションの長さ（スクロール量）を変える場合は --wlc-sec2-run を書き換える
+ *   大きいほど、たくさんスクロールしないと進まない（＝ゆっくり）
+ */
 .wlc-sec2 {
+  --wlc-sec2-run: 3000px;
   background: var(--color-main-pale);
-  overflow: hidden; /* 横スライドの飛び出し防止 */
   padding: 80px 0 100px;
 }
+.wlc-sec2-runway { height: var(--wlc-sec2-run); }
 
-/* ピン留め対象エリア
-   GSAPが pin: true でこの要素をスクロールコンテナ内に固定する
-   コンテナが #wlc-scroll なので window への干渉がない */
+/* 画面に貼りつくエリア（画面1枚分の高さ） */
 .wlc-sec2-sticky {
-  /* pin留め中に画面1枚分を占有する高さ */
+  position: sticky; top: 0;
   height: calc(100svh - var(--header-height-pc));
   width: 100%;
   display: flex; align-items: center;
   overflow: hidden;
-  position: relative;
   clip-path: inset(0); /* 横スライドの飛び出しを隠す */
 }
 @media (max-width: 759px) {

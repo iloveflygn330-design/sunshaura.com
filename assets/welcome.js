@@ -80,7 +80,7 @@
          progress 0.88-1.00: キャラ・テキスト上へ退場
 
        ★アニメの長さを変えたい場合:
-         end の '+=3000' を変更する（大きいほどゆっくり）
+         assets/welcome.css の --wlc-sec2-run を変更する（大きいほどゆっくり）
        ====================================================== */
     var wlcScrollEl = document.getElementById('wlc-scroll');
     var sec2        = document.getElementById('wlc-sec2');
@@ -134,19 +134,23 @@
 
     /* --- タイムライン本体 ---
        scroller: wlcScrollEl … #wlc-scroll がスクロール源
-       pin: true             … .wlc-sec2-sticky を#wlc-scroll内で固定
-       scrub: true           … スクロール量にアニメを即時連動
+       （画面の固定は CSS の position: sticky。GSAP の pin は使わない）
+       scrub: 0.4            … スクロール量にアニメを連動（少しだけなめらかに追いつく）
        invalidateOnRefresh   … リサイズ時に位置を再計算
     */
     var tl = gsap.timeline({
       scrollTrigger: {
-        trigger: '.wlc-sec2-sticky',
+        /*
+         * 画面の固定は CSS（.wlc-sec2-sticky の position: sticky）に任せ、ここでは進み具合だけを読む。
+         *   見えない余白 .wlc-sec2-runway の上端が画面の下端に来たとき = 貼りつき始め（進捗 0）
+         *   余白の下端が画面の下端に来たとき                       = 貼りつき終わり（進捗 1）
+         * scrub: 0.4 … スクロールに 0.4 秒かけて追いつく（指の細かい動きでカクつかないように）
+         */
+        trigger: '#wlc-sec2-runway',
         scroller: wlcScrollEl,
-        start: 'top top',
-        end: '+=3000',
-        pin: true,
-        pinSpacing: true,
-        scrub: true,
+        start: 'top bottom',
+        end: 'bottom bottom',
+        scrub: 0.4,
         invalidateOnRefresh: true,
         // markers: true, // ★ デバッグ時はコメントを外す
 
