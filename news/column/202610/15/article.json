@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-15",
+  "title": "Valve Indexが生産終了、Steamで20%値下げほか、今日のVRニュース3本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "今日はVR機器の話題を3本お届けします。ValveのPC VRヘッドセット「Index」の生産終了、Meta VR Glasses向けの公式ストレージ、Steam Frame専用で登場したピンボールゲームの話題です。",
+  "items": [
+    {
+      "headline": "Valve Indexが生産終了、Steamで20%値下げ",
+      "category": "VR機器・技術",
+      "overview": "Valveは、2019年に発売したPC VRヘッドセット「Valve Index」の生産を終了しました。あわせてSteamストアでIndex関連製品が20%値下げされ、米国ではヘッドセットが499ドルから399.20ドルになっています。発表は、同社のスタンドアロン型VRヘッドセット「Steam Frame」の発売の翌月にあたります。既存のIndexは今後もSteamとSteamVRでサポートが続くとされています。",
+      "points": [
+        "生産終了にあわせ、ヘッドセットは米国で399.20ドルに",
+        "交換用コントローラーやケーブルも20%オフ",
+        "既存ユーザーはSteamVRで引き続き使える",
+        "ベースステーションはHTCが別途販売"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/valve-index-headset-discontinued-discount/" }
+      ]
+    },
+    {
+      "headline": "Sandisk、Meta VR Glasses向け公式ストレージを発表",
+      "category": "VR機器・技術",
+      "overview": "Sandiskが、Meta VR Glasses向けの「Made for Meta」認定ストレージを出すことが明らかになりました。microSD ExpressカードとUSB-Cフラッシュドライブが用意され、SandiskはMeta VR Glasses向けの独占的なフラッシュストレージ提供元になります。Meta VR Glassesは内蔵128GBで、最大1TBのmicroSDカードに対応するとされています。ストレージの価格と発売日はまだ発表されていません。",
+      "points": [
+        "microSD ExpressカードとUSB-Cドライブの2種類",
+        "本体は内蔵128GB、microSDで最大1TBまで拡張",
+        "Meta VR Glassesは2027年春に発売予定",
+        "ストレージの価格・発売日は未発表"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/sandisk-meta-vr-glasses-microsd-storage/" }
+      ]
+    },
+    {
+      "headline": "『Pinball FX VR』がSteam Frame専用で発売",
+      "category": "VR機器・技術",
+      "overview": "Zen Studiosは10月14日、『Pinball FX VR』をSteamで発売しました。ストアページではSteam Frame専用とされ、価格は米国で9.99ドルです。発売当日には購入済みDLCを正しく認識しない不具合が報告され、基本の3台以外の追加テーブルが一時的に遊べない場合があるとされています。Meta Quest版で購入した内容をSteam Frame版へ移すことはできません。",
+      "points": [
+        "Steam Frame専用、米国価格は9.99ドル",
+        "基本3台を収録、追加テーブルは20パックを別売り",
+        "DLC認識の不具合あり、修正時期は未定",
+        "Quest版からの購入引き継ぎは不可"
+      ],
+      "sources": [
+        { "name": "MIXED", "url": "https://mixed-news.com/en/pinball-fx-vr-steam-frame-only-launch-dlc-recognition-fault/" }
+      ]
+    }
+  ],
+  "outro": "Steam Frameの登場で、Valveのハードウェアも世代交代が進んでいます。Indexの購入を考えていた方は、ストアページを確認してみてください。"
+}
