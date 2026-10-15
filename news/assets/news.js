@@ -341,6 +341,49 @@
   }
 
   /* =====================================================
+     ずんだもんの読み上げ動画
+     記事フォルダに video.json（GitHub Actions が音声と一緒に作る）があるときだけ、
+     サムネイルの下に動画プレイヤーを表示する。ない記事では何も表示しない。
+     プレイヤー本体（assets/video/news-video.js）は、動画がある記事でだけ読み込む。
+
+     ★拡張予定: 動画の見た目を変える場合は tools/news-video/src/NewsVideo.jsx を編集し、
+       tools/news-video で npm run build を実行して news-video.js を作り直す
+     ===================================================== */
+  function loadVideoPlayer() {
+    if (window.SunNewsVideo) return Promise.resolve(window.SunNewsVideo);
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = ROOT + 'assets/video/news-video.js';
+      s.onload = function () { resolve(window.SunNewsVideo); };
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function mountVideo(box, article) {
+    var wrap = el('section', 'news-video');
+    wrap.hidden = true;
+    var label = el('p', 'news-video-label', '▶ ずんだもんが読み上げる動画版');
+    var stage = el('div', 'news-video-stage');
+    wrap.appendChild(label);
+    wrap.appendChild(stage);
+    box.appendChild(wrap);
+
+    fetch('./video.json', { method: 'HEAD', cache: 'no-cache' })
+      .then(function (res) {
+        if (!res.ok) return; // 動画がない記事
+        wrap.hidden = false;
+        return loadVideoPlayer().then(function (api) {
+          return api.mount(stage, { videoUrl: './video.json', article: article, base: ROOT });
+        });
+      })
+      .catch(function (e) {
+        console.warn('動画を表示できませんでした:', e);
+        wrap.remove();
+      });
+  }
+
+  /* =====================================================
      記事ページ
      article.json の形式は news/GUIDE.md の「記事データの形式」を参照
      ===================================================== */
@@ -353,6 +396,7 @@
     box.appendChild(el('p', 'news-article-date', dotDate(article.date)));
     box.appendChild(el('h1', 'news-article-title', article.title));
     box.appendChild(buildThumb(article, true));
+    mountVideo(box, article);
     if (article.intro) box.appendChild(el('p', 'news-article-intro', article.intro));
 
     (article.items || []).forEach(function (item, i) {

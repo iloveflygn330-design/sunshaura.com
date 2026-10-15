@@ -448,3 +448,19 @@ a { color: inherit; }
   /* 右下ボタンで最後のカードが隠れないよう、下に余白を足す */
   #news-body { padding-bottom: 96px; }
 }
+
+
+/* =====================================================
+   ずんだもんの読み上げ動画（記事ページ）
+   ★拡張予定: 動画枠の大きさを変える場合は .news-video の max-width を変更する
+   ===================================================== */
+.news-video { max-width: 760px; margin: -8px 0 28px; }
+.news-video-label {
+  font-size: 13px; font-weight: 800; color: var(--season-accent);
+  letter-spacing: 0.06em; margin-bottom: 8px;
+}
+.news-video-stage {
+  width: 100%; aspect-ratio: 16 / 9;
+  background: var(--season-bg); border-radius: 10px; overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}

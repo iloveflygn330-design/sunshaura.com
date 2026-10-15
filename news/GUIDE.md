@@ -145,6 +145,7 @@
 ```
 news/column/202610/10/index.html   ← news/column/_template/index.html をそのままコピー
 news/column/202610/10/article.json ← 記事の中身（下の形式）
+news/column/202610/10/script.json  ← 動画の読み上げ台本（「8. 動画の台本」の形式）
 news/data/articles.json            ← 先頭に一覧用の1件を追加
 ```
 
@@ -185,8 +186,86 @@ news/data/articles.json            ← 先頭に一覧用の1件を追加
 
 ## 7. 公開
 
-1. JSONが正しい形式か確認する（`python3 -m json.tool` 等で読み込めること）
+1. JSONが正しい形式か確認する（article.json / script.json / articles.json が `python3 -m json.tool` 等で読み込めること）
 2. コミットメッセージ: `news: 2026-10-10 記事タイトル`
 3. main ブランチに push する
 4. push されると GitHub Actions（.github/workflows/news-discord.yml）が
    Discord に記事のURLと見出しを自動で送る（タスク側で Discord に送る必要はない）
+5. 同じく push をきっかけに GitHub Actions（.github/workflows/news-voice.yml）が
+   script.json から読み上げ音声（voice.mp3）と video.json を作り、記事ページに動画が表示される
+   （タスク側で音声を作る必要はない。voice.mp3 と video.json は作らないこと）
+
+---
+
+## 8. 動画の台本（script.json）
+
+記事ページには、ずんだもん（VOICEVOX）が記事を読み上げる動画が表示される。
+タスクは記事と一緒に台本 script.json を作るだけでよい（音声と動画は GitHub Actions が自動で作る）。
+
+### 全体の構成と長さ
+
+- 目標の長さは **2〜4分**（読み上げ速度 1.15 で、セリフ1行がおよそ3〜4秒）
+- 順番は必ず「opening → news（記事の items の順に全件）→ fortune → ending」
+
+| type | 内容 | セリフの目安 |
+|---|---|---|
+| opening | あいさつ、日付、今日の本数 | 2〜3行 |
+| news | ニュース1件（item に記事の items の番号 0, 1, 2…） | 6〜8行。概要とポイントを話し言葉で。最後の1行はずんだもんの一言感想 |
+| fortune | 星座占い（12星座すべての順位を ranking に入れる） | 5行。1〜3位と12位だけ読み上げる |
+| ending | 締めのあいさつ | 2〜3行 |
+
+<!--
+  ★拡張予定: コーナーを増やす場合
+    上の表に type を追加し、tools/news-video/src/NewsVideo.jsx の PANELS にも同じ type の描画を追加する。
+-->
+
+### セリフの書き方
+
+- ずんだもんの口調（語尾「〜のだ」「〜なのだ」）。1行は **40文字以内**（字幕に出るため）
+- 記事の文章をそのまま読まない。自分の言葉で、耳で聞いて分かる短い文にする
+- `text` は字幕に表示する文。漢字・英語の表記のままでよい
+- `read` は読み上げ用の文。**英単語・略語・数字・記号がある行は必ず書く**（VOICEVOXが誤読するため）。すべてカタカナかひらがなで書く
+  - 例: text「Steamで20%値下げなのだ」→ read「スチームで、にじゅっパーセント値下げなのだ」
+  - 例: VRChat → ブイアールチャット、Meta → メタ、9.99ドル → きゅうてんきゅうきゅうドル
+  - 読み間違えようのない行は read を省略してよい
+- `face` は表情。`normal`（省略時）/ `smile` / `surprise` から、セリフの内容に合わせて選ぶ
+
+### 星座占い
+
+- 12星座すべてに 1〜12位 をつけ、それぞれ一言（15文字程度）とラッキーアイテムを書く
+- 毎日違う順位にする（前日の script.json と同じ順位にしない）
+- 内容は前向きなものにする。12位でも、ひどいこと・不安をあおることは書かない
+- 他の占いサイトの内容は使わない（ずんだもんが考えた、エンタメとしての占い）
+
+### 形式
+
+```json
+{
+  "date": "2026-10-10",
+  "speaker": 3,
+  "speed": 1.15,
+  "sections": [
+    { "type": "opening", "lines": [
+      { "text": "こんにちは、ずんだもんなのだ！", "face": "smile" },
+      { "text": "10月10日のVRニュースを読み上げるのだ。", "read": "じゅうがつとおかのブイアールニュースを読み上げるのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "text": "1本目。…なのだ。", "read": "いっぽんめ。…なのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "てんびん座", "comment": "新しい道具との出会いが吉", "lucky": "ワイヤレスイヤホン" }
+      ],
+      "lines": [
+        { "text": "最後は、ずんだもんの星座占いなのだ！", "face": "smile" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
+```
+
+- speaker は 3（ずんだもん・ノーマル）、speed は 1.15 のまま変えない
+- ranking は12件すべて書く（上の例は省略している）
