@@ -186,7 +186,10 @@ function Character({ talking, mouthOpen, face, chara, base }) {
   const eyeClosed = frame % 100 >= 96;
   // 話しているときは少し上下に揺れる
   const bob = talking ? Math.sin(frame / 4) * 4 : Math.sin(frame / 30) * 2;
-  const style = { position: 'absolute', right: 40, bottom: 0, width: 600, height: 960, transform: `translateY(${bob}px)` };
+  // ★拡張予定: 立ち絵の大きさ・位置はここで調整する（bottom をマイナスにすると足元が画面の外に出て、大きく映る）
+  const style = chara && chara.faces.length
+    ? { position: 'absolute', right: -10, bottom: -240, width: 760, height: 1160, transform: `translateY(${bob}px)` }
+    : { position: 'absolute', right: 40, bottom: 0, width: 600, height: 960, transform: `translateY(${bob}px)` };
 
   if (chara && chara.faces.length) {
     const f = chara.faces.includes(face) ? face : 'normal';
