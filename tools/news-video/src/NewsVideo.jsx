@@ -196,7 +196,7 @@ function Character({ talking, mouthOpen, face, chara, base }) {
       <div style={style}>
         {states.map((s) => (
           // 4枚とも読み込んでおき、表示だけ切り替える（ちらつき防止）
-          <img key={s} src={`${base}${chara.path}${f}_${s}.png`} alt=""
+          <img key={s} src={`${base}${chara.path}${f}_${s}.${chara.ext || 'png'}`} alt=""
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom', opacity: s === now ? 1 : 0 }} />
         ))}
       </div>

@@ -14,7 +14,7 @@
    出力:
      <記事フォルダ>/voice.mp3     … ナレーション + BGM（1本の音声ファイル）
      <記事フォルダ>/video.json    … 字幕・口パク・場面切り替えのタイミング
-     news/assets/video/chara/     … 立ち絵 PNG（素材リポジトリにある場合だけコピー）
+     news/assets/video/chara/     … 立ち絵（素材リポジトリの PNG を軽い WebP に変換して置く）
 
    必要なもの: Node.js 20 以上、ffmpeg
    ===================================================== */
@@ -45,7 +45,7 @@ const TIMING = {
 
 /* 立ち絵の表情。素材リポジトリの zundamon/ にあるファイル名と一致させる
    ★拡張予定: 表情を増やしたら、ここにも名前を追記する（news/GUIDE.md の face の一覧にも） */
-const FACES = ['normal', 'smile', 'surprise'];
+const FACES = ['normal', 'smile', 'surprise', 'amazement', 'look'];
 
 /* =====================================================
    VOICEVOX
@@ -199,7 +199,8 @@ async function main() {
   ffArgs.push('-ar', '44100', '-ac', '2', '-b:a', '96k', out);
   execFileSync('ffmpeg', ffArgs, { stdio: 'inherit' });
 
-  // ---------- 立ち絵（あれば公開側にコピー） ----------
+  // ---------- 立ち絵（あれば軽いWebPに変換して公開側に置く） ----------
+  // 原本のPNG（1枚600KB程度）はスマホでは重いため、高さ1000pxのWebP（1枚50KB程度）にする
   const charaSrc = path.join(assetsDir, 'zundamon');
   const charaDst = path.join('news', 'assets', 'video', 'chara');
   const faces = [];
@@ -208,7 +209,11 @@ async function main() {
       const names = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'].map((s) => `${face}_${s}.png`);
       if (names.every((n) => fs.existsSync(path.join(charaSrc, n)))) {
         fs.mkdirSync(charaDst, { recursive: true });
-        names.forEach((n) => fs.copyFileSync(path.join(charaSrc, n), path.join(charaDst, n)));
+        names.forEach((n) => {
+          const dst = path.join(charaDst, n.replace(/\.png$/, '.webp'));
+          execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(charaSrc, n),
+            '-vf', 'scale=-1:1000', '-c:v', 'libwebp', '-quality', '85', dst]);
+        });
         faces.push(face);
       }
     }
@@ -224,7 +229,7 @@ async function main() {
     sections,
     lines,
     mouth,
-    chara: faces.includes('normal') ? { path: 'assets/video/chara/', faces } : null,
+    chara: faces.includes('normal') ? { path: 'assets/video/chara/', ext: 'webp', faces } : null,
     credits: {
       voice: 'VOICEVOX:ずんだもん',
       chara: charaCredit,
