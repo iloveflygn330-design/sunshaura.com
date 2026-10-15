@@ -218,8 +218,16 @@ async function main() {
       }
     }
   }
-  let charaCredit = '';
-  try { charaCredit = fs.readFileSync(path.join(charaSrc, 'credit.txt'), 'utf8').trim(); } catch { /* なし */ }
+  // credit.txt：1行に1つ「項目：表記」（例: 立ち絵：坂本アヒル様）
+  let extraCredits = [];
+  try {
+    extraCredits = fs.readFileSync(path.join(charaSrc, 'credit.txt'), 'utf8')
+      .split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
+      .map((l) => {
+        const i = l.search(/[：:]/);
+        return i > 0 ? { label: l.slice(0, i).trim(), text: l.slice(i + 1).trim() } : { label: 'クレジット', text: l };
+      });
+  } catch { /* なし */ }
 
   // ---------- video.json ----------
   const video = {
@@ -232,7 +240,7 @@ async function main() {
     chara: faces.includes('normal') ? { path: 'assets/video/chara/', ext: 'webp', faces } : null,
     credits: {
       voice: 'VOICEVOX:ずんだもん',
-      chara: charaCredit,
+      extra: extraCredits,
       bgm: usedBgm.map((b) => ({ title: b.title || '', artist: b.artist || '', site: b.site || '' }))
     }
   };

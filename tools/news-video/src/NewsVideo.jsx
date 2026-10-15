@@ -152,7 +152,8 @@ function FortunePanel({ section, theme }) {
 function EndingPanel({ section, credits, theme }) {
   const rows = [
     ['音声', credits.voice],
-    ...(credits.chara ? [['立ち絵', credits.chara]] : []),
+    ...(credits.extra || []).map((c) => [c.label, c.text]),
+    ...(credits.chara ? [['立ち絵', credits.chara]] : []), // 旧形式の video.json 用
     ...credits.bgm.map((b) => ['BGM', [b.title, b.artist, b.site].filter(Boolean).join(' / ')])
   ];
   return (
@@ -295,6 +296,8 @@ export function NewsVideo({ video, article, base, audioSrc }) {
       {/* クレジット（VOICEVOXの利用規約により常時表示） */}
       <div style={{ position: 'absolute', right: 30, bottom: 14, fontSize: 24, fontWeight: 700, color: 'rgba(0,0,0,0.5)', background: 'rgba(255,255,255,0.7)', borderRadius: 8, padding: '2px 12px' }}>
         {video.credits.voice}
+        {/* キャラクターのクレジット（credit.txt の「キャラクター：」の行）も常時表示 */}
+        {(video.credits.extra || []).filter((c) => c.label === 'キャラクター').map((c) => ' ' + c.text).join('')}
       </div>
     </AbsoluteFill>
   );
