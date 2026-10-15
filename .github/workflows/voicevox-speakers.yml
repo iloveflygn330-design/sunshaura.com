@@ -1,0 +1,44 @@
+# =====================================================
+# VOICEVOX の話者（キャラクターと声の種類）一覧を表示する（手動実行用）
+#
+# 実行方法:
+#   Actions タブ → 「VOICEVOX speakers」→ Run workflow
+#   実行結果ページの Summary に、キャラクター名・スタイル・話者ID の表が出る
+#
+# 使い道:
+#   script.json の "speaker" に、ここで確認した話者IDを書くと声が変わる
+#   （例: 3 = ずんだもん ノーマル）
+#   ※キャラクターごとに利用規約とクレジット表記が異なるので、使う前に必ず確認すること
+# =====================================================
+name: VOICEVOX speakers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    services:
+      voicevox:
+        image: voicevox/voicevox_engine:cpu-latest
+        ports:
+          - 50021:50021
+    steps:
+      - name: VOICEVOX の起動を待つ
+        run: |
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:50021/version && exit 0
+            sleep 2
+          done
+          exit 1
+
+      - name: 話者の一覧を表示
+        run: |
+          curl -sf http://localhost:50021/speakers -o speakers.json
+          {
+            echo "## VOICEVOX 話者一覧（エンジン $(curl -sf http://localhost:50021/version)）"
+            echo
+            echo "| キャラクター | スタイルと話者ID |"
+            echo "|---|---|"
+            jq -r '.[] | "| \(.name) | \([.styles[] | "\(.name)=\(.id)"] | join(" / ")) |"' speakers.json
+          } | tee -a "$GITHUB_STEP_SUMMARY"
