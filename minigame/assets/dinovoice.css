@@ -1,0 +1,131 @@
+/* =====================================================
+   恐竜ボイスゲーム（dinovoice）の見た目
+   minigame/index.html で minigame.css のあとに読み込む。
+   色はサイト共通の :root（assets/site-common.css）の変数を使う。
+   ===================================================== */
+
+#dv-field {
+  position: relative; max-width: 640px; margin: 0 auto;
+  background: var(--color-white); border-radius: 20px; padding: 20px 16px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* --- スタート画面 --- */
+#dv-start-overlay {
+  position: absolute; inset: 0; z-index: 5; border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; background: rgba(255, 255, 255, 0.95); text-align: center; padding: 20px;
+}
+#dv-start-overlay p { font-size: 14px; font-weight: 700; line-height: 1.8; }
+#dv-loading { color: var(--color-placeholder); }
+
+/* --- 恐竜とずんだもんの吹き出し --- */
+#dv-stage { text-align: center; }
+#dv-bubble {
+  position: relative; display: inline-block; min-height: 22px; max-width: 100%;
+  padding: 8px 16px; border-radius: 16px; margin-bottom: 6px;
+  background: #E9F7D9; color: #2F5A12; font-size: 13px; font-weight: 700;
+}
+#dv-bubble:empty { visibility: hidden; }
+#dv-bubble::after {
+  content: ''; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%);
+  border: 7px solid transparent; border-top-color: #E9F7D9; border-bottom: 0;
+}
+#dv-bubble.is-pop { animation: dvPop 0.3s var(--ease-decel); }
+@keyframes dvPop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+#dv-dino-wrap { position: relative; width: 100%; max-width: 360px; margin: 0 auto; }
+#dv-dino { width: 100%; transform-origin: 50% 100%; transition: opacity 0.4s ease 0.3s; }
+#dv-dino-wrap.is-covered #dv-dino { opacity: 0; transition: none; }   /* 草むらからはみ出さないよう、隠している間は恐竜ごと消す */
+#dv-cover { position: absolute; inset: 0; transition: opacity 0.6s ease, transform 0.6s ease; }
+#dv-cover svg { display: block; width: 100%; height: auto; }
+#dv-cover.is-open { opacity: 0; transform: translateY(30px); pointer-events: none; }
+/* 草むらがゆれる（お手本の声が鳴っている間） */
+#dv-cover.is-rustle { animation: dvRustle 0.18s ease-in-out infinite alternate; }
+@keyframes dvRustle { from { transform: rotate(-1.2deg); } to { transform: rotate(1.2deg); } }
+#dv-name { font-weight: 800; font-size: 16px; color: var(--color-main); margin-top: 2px; }
+
+/* 恐竜のSVG（形は dinovoice-data.js、目は dinovoice.js の dvRenderDino） */
+.dv-dino-svg { display: block; width: 100%; height: auto; }
+.dv-dino-svg .dv-body { fill: var(--dino-color); transition: fill 0.8s ease; }
+.dv-dino-svg.silhouette .dv-body { fill: #1a1a1a; }
+.dv-dino-svg.silhouette .dv-eyes { display: none; }
+.dv-eye {
+  display: none; fill: none; stroke: #1a1a1a; stroke-width: 4;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.dv-tear { fill: #7cc8ff; stroke: none; }
+.dv-dino-svg.mood-normal .dv-eye-normal,
+.dv-dino-svg.mood-happy  .dv-eye-happy,
+.dv-dino-svg.mood-sad    .dv-eye-sad { display: inline; }
+/* ★拡張予定: 表情を増やしたら、ここに .dv-dino-svg.mood-<表情名> .dv-eye-<表情名> を足す（dinovoice.js の dvRenderDino も参照） */
+
+/* 成功：ぴょんぴょん跳ねる ／ ゲームオーバー：うなだれる */
+#dv-dino.dv-anim-happy { animation: dvJump 0.45s ease-out 3; }
+@keyframes dvJump {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  30%      { transform: translateY(0) scale(1.06, 0.94); }
+  60%      { transform: translateY(-22px) scale(0.97, 1.03); }
+}
+#dv-dino.dv-anim-sad { animation: dvDroop 1.2s ease-out forwards; }
+@keyframes dvDroop {
+  to { transform: translateY(6px) scale(1, 0.94) rotate(3deg); filter: saturate(0.6); }
+}
+
+/* --- 声を聴くボタン --- */
+.dv-voice-row { display: flex; justify-content: center; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+.dv-voice-btn {
+  border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 50px; padding: 10px 20px;
+  background: var(--color-white); font-family: inherit; font-weight: 700; font-size: 14px;
+  cursor: pointer; transition: all var(--duration-ui);
+}
+.dv-voice-btn:hover { border-color: var(--color-main); }
+.dv-voice-btn.is-playing { background: var(--color-main-pale); border-color: var(--color-main); color: var(--color-main); }
+
+/* --- 声を調整するつまみ --- */
+#dv-controls {
+  display: flex; gap: 20px; align-items: flex-start; justify-content: center; flex-wrap: wrap;
+  padding: 12px; border-radius: 16px; background: var(--color-main-pale);
+  user-select: none; -webkit-user-select: none;
+}
+#dv-controls.is-disabled { opacity: 0.45; pointer-events: none; }
+.dv-ctl-label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; }
+
+/* 口の形パッド（Pink Trombone の舌の位置にあたる） */
+.dv-pad-wrap { width: 220px; }
+#dv-pad {
+  position: relative; width: 220px; height: 180px; border-radius: 50% 50% 40% 40% / 30% 30% 60% 60%;
+  background: radial-gradient(ellipse at 50% 90%, #F7B4C1, #FFDCE3 70%);
+  border: 2px solid rgba(204, 34, 68, 0.25);
+  cursor: pointer; touch-action: none;
+}
+.dv-pad-mark {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: 13px; font-weight: 800; color: rgba(139, 18, 40, 0.45); pointer-events: none;
+}
+#dv-pad-knob {
+  position: absolute; width: 26px; height: 26px; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--color-main); border: 3px solid var(--color-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); pointer-events: none;
+}
+
+.dv-sliders { display: flex; flex-direction: column; gap: 12px; width: 260px; }
+.dv-slider input[type="range"] { width: 100%; accent-color: var(--color-main); touch-action: none; }
+.dv-slider-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-placeholder); font-weight: 700; }
+
+/* --- 答え合わせ --- */
+.dv-answer-row { text-align: center; margin-top: 16px; }
+#dv-result { text-align: center; font-size: 14px; line-height: 1.8; margin-top: 12px; min-height: 24px; }
+#dv-result .dv-ok { color: #2E8B3A; font-size: 18px; }
+#dv-result .dv-ng { color: var(--color-main); font-size: 16px; }
+.dv-answer-detail { font-weight: 800; margin-top: 6px; }
+.dv-dino-hint { font-size: 13px; color: #555; }
+#dv-tries { letter-spacing: 2px; }
+.dv-try-used { opacity: 0.2; filter: grayscale(1); }
+
+#dv-fallback-note { text-align: center; font-size: 11px; color: var(--color-placeholder); margin-top: 10px; }
+#dv-credit { text-align: right; font-size: 11px; color: #888; margin-top: 10px; }
+
+@media (max-width: 759px) {
+  .dv-sliders { width: 100%; }
+}
