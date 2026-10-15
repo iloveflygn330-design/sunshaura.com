@@ -28,6 +28,14 @@
        キャラクター①は左へ退場する */
   var WLC_EXIT_R_DIR = 'right';
 
+  /* ★拡張予定: 左右から現れるキャラクターの起き上がり方（①②と、スマホのフッターの左右の2人に共通）
+       WLC_LIE   : 現れる前・消えたあとの倒れ具合（度。90 で真横に倒れた姿勢）
+       WLC_SLIDE : 現れる前は、画面の外へさらにこれだけずらしておく（キャラクター自身の幅に対する %）
+       WLC_SWING : 起き上がるときの動き。'back.out(数字)' の数字を大きくすると、振り子の行き過ぎが大きくなる */
+  var WLC_LIE   = 95;
+  var WLC_SLIDE = 40;
+  var WLC_SWING = 'back.out(2.2)';
+
   /* ----------------------------------------------------------
      画像の一覧を読んで、ランダムに選ぶ
   ---------------------------------------------------------- */
@@ -148,9 +156,8 @@
       sticky.appendChild(textbox2);
     }
 
-    // 傾き（assets/welcome.css の --wlc-tilt / --wlc-tilt-enter。PC とスマホで値が違う）
+    // 傾き（assets/welcome.css の --wlc-tilt。PC とスマホで値が違う）
     var tilt      = cssNum(sticky, '--wlc-tilt', 16);
-    var tiltEnter = cssNum(sticky, '--wlc-tilt-enter', 40);
     // 画面の外に隠す量（--wlc-peek。キャラクター自身の幅に対する %）
     var peek      = cssNum(sticky, '--wlc-peek', 30);
     var viewW     = window.innerWidth;
@@ -159,8 +166,9 @@
        キャラクター①：左の画面外で、大きく傾いた姿勢
        キャラクター②：右の画面外で、大きく傾いた姿勢（左右反対）
        xPercent は自分の幅に対する割合（-140 = 自分の幅の 1.4 倍ぶん左） */
-    gsap.set(charL,    { xPercent: -140, rotation:  tiltEnter, opacity: 1 });
-    gsap.set(charR,    { xPercent:  140, rotation: -tiltEnter, opacity: 1 });
+    // 足元（下端のまん中）を軸にして、画面の外側へ倒れた姿勢から始める（左は左へ、右は右へ倒れている）
+    gsap.set(charL,    { xPercent: -(peek + WLC_SLIDE), rotation: -WLC_LIE, opacity: 1 });
+    gsap.set(charR,    { xPercent:  (peek + WLC_SLIDE), rotation:  WLC_LIE, opacity: 1 });
     gsap.set(textbox,  { x: -viewW, opacity: 0 });
     gsap.set(textbox2, { x: -viewW, opacity: 0 });
 
@@ -182,9 +190,13 @@
       }
     });
 
-    // 0〜10%: キャラクター①② 傾いて現れる（倒れた姿勢から起き上がりながら、画面の端から覗き込む位置まで入ってくる）
-    tl.to(charL, { xPercent: -peek, rotation:  tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
-    tl.to(charR, { xPercent:  peek, rotation: -tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
+    // 0〜10%: キャラクター①② 傾いて現れる
+    //   足元を軸にして、外側へ倒れた姿勢から起き上がり、内側へ少し行き過ぎてから戻る（振り子のような動き）。
+    //   足元は画面の下端に沿って、画面の端まで少しだけ滑り込む
+    tl.to(charL, { rotation:  tilt, duration: 0.10, ease: WLC_SWING }, 0.00);
+    tl.to(charR, { rotation: -tilt, duration: 0.10, ease: WLC_SWING }, 0.00);
+    tl.to(charL, { xPercent: -peek, duration: 0.06, ease: 'power2.out' }, 0.00);
+    tl.to(charR, { xPercent:  peek, duration: 0.06, ease: 'power2.out' }, 0.00);
 
     // 5〜12%: テキストボックス① 左から滑り込んでくる
     tl.to(textbox, { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.05);
@@ -208,8 +220,9 @@
 
     // 88〜100%: キャラクター① 左へ退場 / キャラクター② 退場（向きは WLC_EXIT_R_DIR）
     var exitR = WLC_EXIT_R_DIR === 'left' ? -1 : 1;
-    tl.to(charL, { xPercent: -140,        rotation:  tiltEnter,         duration: 0.12, ease: 'power2.in' }, 0.88);
-    tl.to(charR, { xPercent: 140 * exitR, rotation: -tiltEnter * exitR, duration: 0.12, ease: 'power2.in' }, 0.88);
+    //   登場の逆：足元を軸にして外側へ倒れながら、画面の外へ滑って出ていく
+    tl.to(charL, { xPercent: -(peek + WLC_SLIDE), rotation: -WLC_LIE, duration: 0.12, ease: 'power2.in' }, 0.88);
+    tl.to(charR, { xPercent: (peek + WLC_SLIDE) * exitR, rotation: WLC_LIE * exitR, duration: 0.12, ease: 'power2.in' }, 0.88);
 
     /* ======================================================
        セクション3: 最後の画面
@@ -275,8 +288,10 @@
         }
         sides.forEach(function (box, i) {
           var dir = box.classList.contains('wlc-foot-side-l') ? -1 : 1;
-          gsap.set(box, { xPercent: 140 * dir, rotation: -50 * dir });
-          footTl.to(box, { xPercent: sidePeek * dir, rotation: -sideTilt * dir, duration: 0.6, ease: 'back.out(1.4)' }, 0.25 + i * 0.12);
+          // ①②と同じく、足元を軸にして外側へ倒れた姿勢から起き上がる（足元は画面の外に隠したまま）
+          gsap.set(box, { xPercent: (sidePeek + WLC_SLIDE) * dir, rotation: WLC_LIE * dir });
+          footTl.to(box, { rotation: -sideTilt * dir, duration: 0.8, ease: WLC_SWING }, 0.25 + i * 0.12);
+          footTl.to(box, { xPercent: sidePeek * dir, duration: 0.45, ease: 'power2.out' }, 0.25 + i * 0.12);
         });
       }
     }
