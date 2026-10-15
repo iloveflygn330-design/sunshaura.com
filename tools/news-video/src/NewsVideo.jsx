@@ -207,8 +207,10 @@ function Character({ mouthOpen, face, chara, base, sectionStart }) {
   // ★拡張予定: はねる高さ・回数・長さは HOP_* で調整する
   const HOP_HEIGHT = 26, HOP_COUNT = 2, HOP_SEC = 0.7;
   const since = frame / FPS - sectionStart;
+  // sin² を使うと、動き出し・着地・はね終わりの速さが0になり、カクッとしない
+  const u = since / HOP_SEC;
   const bob = since >= 0 && since < HOP_SEC
-    ? -Math.abs(Math.sin((since / HOP_SEC) * Math.PI * HOP_COUNT)) * HOP_HEIGHT * (1 - since / HOP_SEC)
+    ? -Math.pow(Math.sin(u * Math.PI * HOP_COUNT), 2) * HOP_HEIGHT * (1 - u * 0.6)
     : 0;
   // ★拡張予定: 立ち絵の大きさ・位置はここで調整する（bottom をマイナスにすると足元が画面の外に出て、大きく映る）
   const style = chara && chara.faces.length

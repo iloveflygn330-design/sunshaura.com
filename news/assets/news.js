@@ -349,11 +349,15 @@
      ★拡張予定: 動画の見た目を変える場合は tools/news-video/src/NewsVideo.jsx を編集し、
        tools/news-video で npm run build を実行して news-video.js を作り直す
      ===================================================== */
+  // tools/news-video の npm run build が自動で書き換える（手で変えなくてよい）
+  var VIDEO_PLAYER_VERSION = 'dd82ebf87f';
+
   function loadVideoPlayer() {
     if (window.SunNewsVideo) return Promise.resolve(window.SunNewsVideo);
     return new Promise(function (resolve, reject) {
       var s = document.createElement('script');
-      s.src = ROOT + 'assets/video/news-video.js';
+      // ?v= はプレイヤーを作り直すたびに自動で変わる（ブラウザに古い版が残らないように）
+      s.src = ROOT + 'assets/video/news-video.js?v=' + VIDEO_PLAYER_VERSION;
       s.onload = function () { resolve(window.SunNewsVideo); };
       s.onerror = reject;
       document.head.appendChild(s);
