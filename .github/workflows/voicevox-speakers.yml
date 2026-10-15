@@ -42,3 +42,7 @@ jobs:
             echo "|---|---|"
             jq -r '.[] | "| \(.name) | \([.styles[] | "\(.name)=\(.id)"] | join(" / ")) |"' speakers.json
           } | tee -a "$GITHUB_STEP_SUMMARY"
+          # 一覧を注釈（Annotations）にも出す（実行結果ページの上部にも表示される）
+          list=$(jq -r '.[] | "\(.name): \([.styles[] | "\(.name)=\(.id)"] | join(" / "))"' speakers.json)
+          list="${list//'%'/'%25'}"; list="${list//$'\n'/'%0A'}"
+          echo "::notice title=VOICEVOX 話者一覧::${list}"
