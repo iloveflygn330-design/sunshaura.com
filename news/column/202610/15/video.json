@@ -2739,10 +2739,24 @@
  },
  "credits": {
   "voice": "VOICEVOX:ずんだもん",
-  "chara": "",
+  "extra": [
+   {
+    "label": "立ち絵",
+    "text": "坂本アヒル様"
+   },
+   {
+    "label": "キャラクター",
+    "text": "（ず・ω・きょ）"
+   }
+  ],
   "bgm": [
    {
     "title": "なんだいのいってめ",
+    "artist": "みそか",
+    "site": "PANICPUMPKIN"
+   },
+   {
+    "title": "わめくねこはねずみをのがす",
     "artist": "みそか",
     "site": "PANICPUMPKIN"
    }
