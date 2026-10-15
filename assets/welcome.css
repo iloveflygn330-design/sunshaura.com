@@ -166,14 +166,12 @@ html, body { height: 100%; }
                          大きいほど体が隠れて「覗き込む」感じになる。0 にすると全身が見える
      --wlc-char-sink   : 足元を画面の下に沈める量（隠れる分）
      --wlc-tilt        : 傾き（度。数字だけ書く。左のキャラは右へ、右のキャラは左へ、画面の内側に傾く）
-     --wlc-tilt-enter  : 現れ始めのときの傾き（大きいほど、倒れた姿勢から起き上がる感じになる）
    ------------------------------------------------------- */
 .wlc-sec2-sticky {
   --wlc-char-h: 58%;
   --wlc-peek: 40;
   --wlc-char-sink: 4%;
   --wlc-tilt: 16;
-  --wlc-tilt-enter: 50;
 }
 @media (max-width: 759px) {
   .wlc-sec2-sticky {
@@ -182,7 +180,6 @@ html, body { height: 100%; }
     --wlc-peek: 30;
     --wlc-char-sink: 3%;
     --wlc-tilt: 10;
-    --wlc-tilt-enter: 40;
   }
 }
 .wlc-char {
@@ -319,13 +316,15 @@ html, body { height: 100%; }
  *   --wlc-side-up   : 下端（フッターの上端）からの高さ
  *   --wlc-side-tilt : 傾き（度。数字だけ。画面の内側に傾く）
  *   --wlc-side-peek : 画面の外に隠す量（数字だけ。キャラクター自身の幅に対する %）
+ *   足元（下端）を画面の外に隠すには、傾きを大きく・隠す量を大きくする（今は 48度・80%）。
+ *   隠す量を減らすと体がたくさん見えるが、足元が画面に出てくる
  */
 .wlc-sec3 {
   position: relative;
   --wlc-side-h: min(30vh, 230px);
   --wlc-side-up: calc(var(--wlc-foot-h) * 0.5);
-  --wlc-side-tilt: 14;
-  --wlc-side-peek: 30;
+  --wlc-side-tilt: 48;
+  --wlc-side-peek: 80;
 }
 .wlc-foot-side {
   position: absolute;
@@ -344,7 +343,7 @@ html, body { height: 100%; }
 .wlc-foot-side:not(.has-img) { display: none; }
 @media (max-width: 759px) {
   .wlc-sec3 {
-    --wlc-side-h: min(24vh, 46vw);
+    --wlc-side-h: min(30vh, 58vw);
     --wlc-side-up: calc(var(--wlc-foot-h) * 0.95);
   }
 }
