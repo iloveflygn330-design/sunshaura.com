@@ -154,89 +154,84 @@ html, body { height: 100%; }
   .wlc-sec2-sticky { height: calc(100svh - var(--header-height-sp)); }
 }
 
-/* キャラクター画像エリア（右半分に固定表示） */
-.wlc-chara-wrap {
-  position: absolute;
-  right: 0; bottom: 0;
-  width: 50%; height: 100%;
-  display: flex; align-items: flex-end; justify-content: center;
-  pointer-events: none;
+
+/* -------------------------------------------------------
+   キャラクター①（左）・②（右）
+     画面の外から傾いて現れ、黄色いテキストボックスの両脇に立つ。
+     画像は assets/images/welcome/left/・right/ からランダムに1枚ずつ（assets/welcome.js）。
+     PC  : 画面の左右の端に、足元を少し画面の下に隠して立つ
+     スマホ: テキストボックスの下に、2人並んで立つ
+
+   ★拡張予定: キャラクターの大きさ・位置・傾きを変える場合は、下の変数を書き換える
+     --wlc-char-h      : キャラクターの高さ（画面に貼りつくエリアの高さに対する割合）
+     --wlc-char-side   : 画面の端からの位置（マイナスにすると画面の外にはみ出す）
+     --wlc-char-sink   : 足元を画面の下に沈める量（隠れる分）
+     --wlc-tilt        : 傾き（度。数字だけ書く。左のキャラは右に、右のキャラは左に傾く）
+     --wlc-tilt-enter  : 現れ始めのときの傾き（大きいほど、倒れた姿勢から起き上がる感じになる）
+   ------------------------------------------------------- */
+.wlc-sec2-sticky {
+  --wlc-char-h: 64%;
+  --wlc-char-side: -2%;
+  --wlc-char-sink: 6%;
+  --wlc-tilt: 22;
+  --wlc-tilt-enter: 50;
 }
 @media (max-width: 759px) {
-  .wlc-chara-wrap { width: 55%; }
+  .wlc-sec2-sticky {
+    --wlc-char-h: 44%;
+    --wlc-char-side: 6%;
+    --wlc-char-sink: 4%;
+    --wlc-tilt: 14;
+    --wlc-tilt-enter: 40;
+  }
 }
-
-/*
- * ★拡張予定: キャラクタースプライトシート差し替え手順
- *
- *   【スプライトシートとは】
- *     複数のポーズを1枚の画像に横並びにした画像ファイルです。
- *     例: 8ポーズなら横8マス×縦1マスの画像を用意します。
- *
- *   【差し替え手順】
- *     1. スプライトシート画像を assets/images/welcome_sprite.png として配置
- *     2. 下記 CSS の background-image を変更:
- *          background-image: url('assets/images/welcome_sprite.png');
- *     3. --wlc-sprite-cols にポーズ（コマ）数を設定（例: 8コマなら 8）
- *     4. --wlc-sprite-rows に行数を設定（通常 1）
- *     5. background-size: calc(100% * var(--wlc-sprite-cols)) auto; に変更
- *     6. JS側の WLC_SPRITE_TOTAL をコマ数に合わせて変更（下記参照）
- *
- *   【スプライトシートのコマ割り目安（8コマの場合）】
- *     0: 腕を振って登場（右スライドイン用）
- *     1: テキストボックスに気づく（振り向く）
- *     2: テキストボックスに手をかける
- *     3: 左へ押す（力を込めた動作）
- *     4: 左から飛んできたテキストを受け止める
- *     5: ポーズ（笑顔・決めポーズ）
- *     6: 上へ退場（消える直前）
- *     7: 退場完了（非表示）
- */
-:root {
-  --wlc-sprite-cols: 1; /* ★ スプライトのコマ数（差し替え時に変更） */
+.wlc-char {
+  position: absolute;
+  bottom: calc(var(--wlc-char-sink) * -1);
+  height: var(--wlc-char-h);
+  /* 足元を軸にして傾ける（傾き自体は assets/welcome.js が --wlc-tilt から付ける） */
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  z-index: 1;
 }
-.wlc-chara {
-  width: min(380px, 90%);
-  aspect-ratio: 1 / 1.4;
-
-  /* ★拡張予定: 下記 background-image をスプライトシート画像に差し替え */
-  background-color: rgba(180, 100, 80, 0.15);
-  background-image: none; /* ← url('assets/images/welcome_sprite.png') に変更 */
-  background-size: calc(100% * var(--wlc-sprite-cols)) auto;
-  background-repeat: no-repeat;
-  background-position: 0% 100%;
-
-  /* プレースホルダー表示（差し替え後は下記 border/display を削除） */
-  border: 3px dashed rgba(180, 100, 80, 0.35);
-  border-bottom: none;
-  border-radius: 12px 12px 0 0;
-  display: flex; align-items: center; justify-content: center;
+.wlc-char img {
+  height: 100%; width: auto; display: block;
+  filter: drop-shadow(0 6px 10px rgba(42, 10, 16, 0.18));
 }
-.wlc-chara-placeholder {
-  /*
-   * ★拡張予定: スプライトシート差し替え後、この要素ごと削除する
-   *   <div class="wlc-chara-placeholder"> を HTML から消せばOK
-   */
-  font-size: 12px; color: rgba(180, 100, 80, 0.6);
-  text-align: center; padding: 16px; pointer-events: none;
+.wlc-char-l { left: var(--wlc-char-side); }
+.wlc-char-r { right: var(--wlc-char-side); }
+/* スマホ：2人ともテキストボックスの下、まん中寄りに並べる */
+/*   --wlc-char-gap : 2人の間隔（まん中からの距離。マイナスにすると少し重なる） */
+@media (max-width: 759px) {
+  .wlc-sec2-sticky { --wlc-char-gap: -6%; }
+  .wlc-char-l { left: auto; right: calc(50% + var(--wlc-char-gap)); }
+  .wlc-char-r { right: auto; left: calc(50% + var(--wlc-char-gap)); }
 }
+/* 画像が用意されていないとき・読み込めなかったときは出さない */
+.wlc-char:not(.has-img) { display: none; }
 
-/* テキストボックス（左側に表示されるカード） */
+/* -------------------------------------------------------
+   黄色いテキストボックス（①・②とも同じ位置）
+     PC  : 画面のまん中より少し上
+     スマホ: 画面の上の方（下にキャラクターが並ぶ）
+   ------------------------------------------------------- */
 .wlc-textbox {
   position: absolute;
-  left: 5%; top: 50%; transform: translateY(-50%);
-  width: min(400px, 48%);
-  background: rgba(255, 220, 120, 0.92);
+  --wlc-box-w: min(460px, 50%);
+  width: var(--wlc-box-w);
+  left: calc((100% - var(--wlc-box-w)) / 2);
+  top: 14%;
+  background: rgba(255, 220, 120, 0.94);
   border-radius: 16px;
   padding: 24px 28px;
   box-shadow: 4px 6px 20px rgba(0,0,0,0.12);
-  backdrop-filter: blur(2px);
+  z-index: 2;
 }
 @media (max-width: 759px) {
   .wlc-textbox {
-    left: 4%; width: 56%;
+    --wlc-box-w: 84%;
+    top: 6%;
     padding: 16px 18px;
-    top: 30%; transform: none;
   }
 }
 .wlc-textbox-title {
@@ -266,53 +261,70 @@ html, body { height: 100%; }
 .wlc-textbox-bar:nth-child(3) { width: 55%; }
 
 /* -------------------------------------------------------
-   セクション3: コンテンツ紹介フッター
+   セクション3: 最後の画面（見出し + キャラクター③ + フッター）
+     いちばん下までスクロールすると、キャラクター③がフッターの下から順番にスライドインする。
+     キャラクターの足元はフッターの裏に隠れる（フッターの方を手前に重ねている）。
+     画像は assets/images/welcome/footer/ からランダムに選ぶ（assets/welcome.js）。
+
+   ★拡張予定: 並べる人数を変える場合は assets/welcome.js の WLC_FOOTER_COUNT（PC・スマホ別）
+   ★拡張予定: 大きさ・沈め具合を変える場合は下の変数を書き換える
+     --wlc-foot-h    : キャラクターの高さ
+     --wlc-foot-sink : フッターの裏に隠す量
    ------------------------------------------------------- */
 .wlc-sec3 {
+  --wlc-foot-h: min(42vh, 360px);
+  --wlc-foot-sink: 44px;
   background: var(--color-main-pale);
-  padding: 64px 24px 80px;
   text-align: center;
+  /* 最後の画面 = 見出し + キャラクター（フッターは別。ちょうど画面1枚分になるように） */
+  min-height: calc(100svh - var(--header-height-pc) - 60px);
+  display: flex; flex-direction: column;
+  padding: 56px 24px 0;
+}
+@media (max-width: 759px) {
+  .wlc-sec3 {
+    --wlc-foot-h: min(34vh, 260px);
+    --wlc-foot-sink: 30px;
+    min-height: calc(100svh - var(--header-height-sp) - 60px);
+    padding: 36px 16px 0;
+  }
 }
 .wlc-sec3-title {
   font-size: clamp(16px, 3vw, 22px);
-  font-weight: 700; color: var(--color-text);
-  margin-bottom: 36px;
+  font-weight: 700; color: var(--color-text); line-height: 1.6;
   opacity: 0; transform: translateY(24px); /* ScrollTrigger で表示 */
+  background: rgba(255, 255, 255, 0.6);
   border: 2px solid rgba(0,0,0,0.1);
   border-radius: 12px; padding: 18px 28px;
-  display: inline-block;
+  align-self: center; max-width: 100%;
 }
-.wlc-sec3-grid {
-  /*
-   * ★拡張予定: PC は4枚・SP は2枚並べる画像グリッド
-   *   画像を追加する場合は .wlc-sec3-grid 内に
-   *   <div class="wlc-preview-card"> を追記するだけ
-   */
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px; max-width: 860px; margin: 0 auto;
-}
-@media (max-width: 759px) {
-  .wlc-sec3-grid { grid-template-columns: repeat(2, 1fr); }
-}
-.wlc-preview-card {
-  aspect-ratio: 1 / 1;
-  background: rgba(0,0,0,0.07);
-  border-radius: 12px;
-  border: 2px dashed rgba(0,0,0,0.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; color: rgba(0,0,0,0.3);
-  opacity: 0; transform: translateY(20px); /* ScrollTrigger で順次表示 */
+/* キャラクター③の並ぶ場所（セクションの下端 = フッターの上端） */
+.wlc-foot-chars {
+  margin-top: auto;
+  display: flex; justify-content: space-evenly; align-items: flex-end;
+  height: var(--wlc-foot-h);
+  margin-bottom: calc(var(--wlc-foot-sink) * -1);  /* 足元をフッターの裏まで下げる */
+  position: relative; z-index: 1;
+  /* 隠れているあいだ（フッターの下にいるあいだ）の分までスクロールできてしまわないよう、はみ出しを切る */
   overflow: hidden;
+  pointer-events: none;
 }
-.wlc-preview-card img {
-  width: 100%; height: 100%; object-fit: cover;
-  border-radius: 10px; display: block;
+.wlc-foot-char {
+  /* 人数で横幅を割って、はみ出さないようにする（--wlc-foot-n は assets/welcome.js が人数を入れる）。
+     細い画面では横幅に合わせて縮み、足元（下端）はそろえたまま */
+  height: 100%; width: auto; display: block;
+  max-width: calc(96% / var(--wlc-foot-n, 4));
+  object-fit: contain; object-position: 50% 100%;
+  transform: translateY(110%);   /* 最初はフッターの下に隠れている（welcome.js がスライドインさせる） */
+  filter: drop-shadow(0 4px 8px rgba(42, 10, 16, 0.15));
 }
-/*
- * ★拡張予定: SPで非表示にするカード（PC専用の3・4枚目）
- *   SP表示で不要なカードに .wlc-sp-hidden クラスを付与するだけ
- */
+/* フッターをキャラクター③より手前に重ねる */
+#wlc-footer { position: relative; z-index: 2; }
+/* スマホ：2人を大きめに、少し重ねて並べる（画像のまわりの透明な余白のぶん、くっつけて見せる） */
 @media (max-width: 759px) {
-  .wlc-sp-hidden { display: none; }
+  .wlc-foot-chars { justify-content: center; }
+  .wlc-foot-char { max-width: 58%; margin: 0 -4%; }
 }
+/* 見出しの改行：スマホだけ改行する（<br class="wlc-sp-br">） */
+.wlc-sp-br { display: none; }
+@media (max-width: 759px) { .wlc-sp-br { display: inline; } }

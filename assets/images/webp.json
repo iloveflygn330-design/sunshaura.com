@@ -530,7 +530,17 @@
   "categories/mame_hinata.png",
   "categories/other.png",
   "categories/ruri.png",
-  "categories/sharo.png"
+  "categories/sharo.png",
+  "welcome/footer/1010_akahinata.png",
+  "welcome/footer/1020_momohinata.png",
+  "welcome/footer/1060_hitonokohinata.png",
+  "welcome/footer/1070_VketHinata.png",
+  "welcome/footer/1190_ShipiHinata.png",
+  "welcome/footer/1350_Haishima_hinata.png",
+  "welcome/left/1060_hitonokohinata.png",
+  "welcome/left/1070_VketHinata.png",
+  "welcome/right/1010_akahinata.png",
+  "welcome/right/1020_momohinata.png"
  ],
  "hashes": {
   "1010_akahinata/thumbnail/main.png": "974062ddde74fb77",
@@ -1062,6 +1072,16 @@
   "categories/mame_hinata.png": "fc926606174efbe8",
   "categories/other.png": "7a173e2b1580d1ba",
   "categories/ruri.png": "983c73c79705607d",
-  "categories/sharo.png": "614027827c35538a"
+  "categories/sharo.png": "614027827c35538a",
+  "welcome/footer/1010_akahinata.png": "974062ddde74fb77",
+  "welcome/footer/1020_momohinata.png": "10f545b30c122b3a",
+  "welcome/footer/1060_hitonokohinata.png": "7456ba9d64701a7c",
+  "welcome/footer/1070_VketHinata.png": "e39fd28ece9cda7f",
+  "welcome/footer/1190_ShipiHinata.png": "0270fb25a5f203b0",
+  "welcome/footer/1350_Haishima_hinata.png": "3999c66b8fb4a3d9",
+  "welcome/left/1060_hitonokohinata.png": "7456ba9d64701a7c",
+  "welcome/left/1070_VketHinata.png": "e39fd28ece9cda7f",
+  "welcome/right/1010_akahinata.png": "974062ddde74fb77",
+  "welcome/right/1020_momohinata.png": "10f545b30c122b3a"
  }
 }

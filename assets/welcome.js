@@ -1,40 +1,79 @@
 /* =====================================================
    sunshaura.com トップページ（ようこそ）専用スクリプト
    index.html で読み込む。GSAP + ScrollTrigger（index.html の <head> でCDNから読み込み）を使う。
+
+   キャラクターの画像は、ページを開くたびにランダムに選ぶ。
+     キャラクター①（左から傾いて現れる） … assets/images/welcome/left/
+     キャラクター②（右から傾いて現れる） … assets/images/welcome/right/
+     キャラクター③（フッターに並ぶ）     … assets/images/welcome/footer/
+   フォルダの中身の一覧（assets/images/welcome/list.json）は GitHub 上で自動で作られる
+   （.github/scripts/welcome-list.js。画像を入れて push するだけでよい。手順は assets/images/welcome/README.md）
    ===================================================== */
 (function () {
   'use strict';
 
   /* ----------------------------------------------------------
-     定数・設定値
-     スプライトシートやアニメの尺を変える場合はここを編集する
+     設定値
   ---------------------------------------------------------- */
+  var WLC_LIST = 'assets/images/welcome/list.json';
 
-  /*
-   * ★拡張予定: スプライトシートのコマ数
-   *   スプライトシート画像を用意したら、この値を実際のコマ数に変更する。
-   *   例: 8コマのシートなら WLC_SPRITE_TOTAL = 8;
-   *
-   * コマ割りの目安（8コマの場合）:
-   *   0: 待機・初期表示（スライドイン直後）
-   *   1: テキストボックスに気づく
-   *   2: テキストボックスに手をかける
-   *   3: 左へ押す
-   *   4: 左から飛んできたテキストを受け止める
-   *   5: ポーズ（笑顔）
-   *   6: 上へ退場準備
-   *   7: 退場完了
-   */
-  var WLC_SPRITE_TOTAL = 1; // ← スプライトシート差し替え時に変更
+  /* ★拡張予定: フッターに並べるキャラクター③の人数（PC・スマホ別） */
+  var WLC_FOOTER_COUNT = { pc: 4, sp: 2 };
+
+  /* ★拡張予定: キャラクター②が退場する向き（'right' = 右へ / 'left' = 左へ）
+       キャラクター①は左へ退場する */
+  var WLC_EXIT_R_DIR = 'right';
+
+  /* ----------------------------------------------------------
+     画像の一覧を読んで、ランダムに選ぶ
+  ---------------------------------------------------------- */
+  function loadList() {
+    return fetch(WLC_LIST, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; });
+  }
+
+  // 配列をシャッフルして先頭から n 個（同じ画像が重ならないように）
+  function pick(list, n) {
+    var a = (list || []).slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a.slice(0, n);
+  }
+
+  // 一覧の1件 → <img>（軽量版の WebP があればそちらを使う）
+  function makeImg(item) {
+    var img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.src = item.webp || item.src;
+    return img;
+  }
+
+  // キャラクター①②：入れ物に画像を入れる。読み込めたら表示する（読めなければ出さない）
+  function fillChar(box, item) {
+    if (!box || !item) return;
+    var img = makeImg(item);
+    img.onload = function () { box.classList.add('has-img'); };
+    img.onerror = function () { box.remove(); };
+    box.appendChild(img);
+  }
+
+  /* ----------------------------------------------------------
+     CSS の変数（数字）を読む。例: --wlc-tilt: 16 → 16
+  ---------------------------------------------------------- */
+  function cssNum(el, name, fallback) {
+    var v = parseFloat(getComputedStyle(el).getPropertyValue(name));
+    return isNaN(v) ? fallback : v;
+  }
 
   /* ----------------------------------------------------------
      ページ表示時に一度だけ初期化する
   ---------------------------------------------------------- */
-  function initWelcomeAnim() {
+  function initWelcomeAnim(list) {
     gsap.registerPlugin(ScrollTrigger);
-
-    // 再初期化時に前回のScrollTriggerが残らないようクリーンアップ
-    // （ページ切り替えで戻ってきたとき二重登録を防ぐ）
     ScrollTrigger.getAll().forEach(function (st) { st.kill(); });
 
     /* ======================================================
@@ -44,65 +83,46 @@
     var catchEl = document.getElementById('wlc-catch');
     var noteEl  = document.getElementById('wlc-note');
     var arrows  = document.getElementById('wlc-arrows');
+    if (!title) return; // welcomeページが無ければ何もしない
 
-    if (!title) return; // welcomeページが非表示なら何もしない
-
-    // ① タイトルは初期から表示（CSSでopacity:1）
-    gsap.set(title, { opacity: 1 });
-
-    // ② キャッチコピー: 0.4秒後にフェードイン
-    gsap.to(catchEl, {
-      opacity: 1, y: 0, duration: 0.7,
-      ease: 'power2.out', delay: 0.4
-    });
-
-    // ③ 注意書き + 矢印: 0.7秒後にフェードイン
-    gsap.to([noteEl, arrows], {
-      opacity: 1, duration: 0.7,
-      ease: 'power2.out', delay: 0.7,
-      stagger: 0.1
-    });
+    gsap.set(title, { opacity: 1 });                       // ① タイトルは最初から表示
+    gsap.to(catchEl, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', delay: 0.4 });   // ② 0.4秒後
+    gsap.to([noteEl, arrows], { opacity: 1, duration: 0.7, ease: 'power2.out', delay: 0.7, stagger: 0.1 }); // ③ 0.7秒後
 
     /* ======================================================
-       セクション2: 自己紹介（スクロール連動アニメ・方法B）
+       セクション2: 自己紹介（スクロール連動アニメ）
 
-       #wlc-scroll を scroller に指定することで、
-       window スクロールと GSAPが完全分離し Edge の引っかかりが解消される。
+       画面は CSS（.wlc-sec2-sticky の position: sticky）で止めたまま、
+       見えない余白 .wlc-sec2-runway をスクロールしている間にアニメーションが進む。
+       #wlc-scroll を scroller にして、window のスクロールとは切り離している（Edge の引っかかり対策）。
 
-       【アニメの流れ】
-         progress 0.00-0.10: キャラ右スライドイン
-         progress 0.05-0.12: テキストボックス右スライドイン
-         progress 0.12-0.35: テキスト各行 順次フェードイン
-         progress 0.38-0.43: テキストボックス揺れ（気づき）
-         progress 0.55-0.65: テキストボックスを左へ押し飛ばす
-         progress 0.65-0.72: 2枚目テキストが左から飛んでくる
-         progress 0.72-0.76: 受け止め「ドン」演出
-         progress 0.88-1.00: キャラ・テキスト上へ退場
+       【アニメの流れ】（進み具合 0〜100%）
+         0〜10%  : キャラクター① 左から傾いて現れる / キャラクター② 右から傾いて現れる
+         5〜12%  : テキストボックス① 左から滑り込んでくる
+         12〜35% : ①の文章 1行ずつ上から順にフワッと出る
+         55〜65% : ①のボックス 左へ押し出されて消える
+         65〜72% : テキストボックス② 左から飛んでくる
+         72〜76% : ②のボックス「ドン」と受け止めて少し揺れる
+         88〜100%: キャラクター① 左へ退場 / キャラクター② 右へ退場（向きは WLC_EXIT_R_DIR）
 
-       ★アニメの長さを変えたい場合:
-         assets/welcome.css の --wlc-sec2-run を変更する（大きいほどゆっくり）
+       ★拡張予定: 動きのタイミングを変える場合は、下の tl.to(..., 開始位置) の数字（0〜1）を書き換える
+       ★拡張予定: アニメ全体の長さは assets/welcome.css の --wlc-sec2-run（大きいほどゆっくり）
        ====================================================== */
     var wlcScrollEl = document.getElementById('wlc-scroll');
-    var sec2        = document.getElementById('wlc-sec2');
+    var sticky      = document.getElementById('wlc-sec2-sticky');
     var textbox     = document.getElementById('wlc-textbox');
-    var chara       = document.getElementById('wlc-chara');
-    if (!sec2 || !textbox || !chara || !wlcScrollEl) return;
+    var charL       = document.getElementById('wlc-char-l');
+    var charR       = document.getElementById('wlc-char-r');
+    if (!sticky || !textbox || !wlcScrollEl) return;
 
-    var viewW = window.innerWidth;
+    // キャラクター①②の画像（ランダム）
+    fillChar(charL, pick(list.left, 1)[0]);
+    fillChar(charR, pick(list.right, 1)[0]);
 
-    /*
-     * 全ScrollTriggerのデフォルトscrollerを#wlc-scrollに設定
-     * これにより window スクロールへの干渉がゼロになる
-     *
-     * ★注意: このページを離れる際に ScrollTrigger.defaults({ scroller: window })
-     *   でリセットする必要がある（他ページのScrollTriggerに影響しないよう）
-     *   → initWelcomeAnim() の先頭で getAll().kill() しているため現状は問題なし
-     */
     ScrollTrigger.defaults({ scroller: wlcScrollEl });
 
-    /* --- 2枚目テキストボックスを動的生成 ---
-       ★拡張予定: テキストを変更したい場合は下記 innerHTML を編集する
-         1行 = <span class="wlc-textbox-line"> で囲む */
+    /* --- テキストボックス②を作る ---
+       ★拡張予定: ②の文章を変えたい場合は下の innerHTML を編集する（1行 = <span class="wlc-textbox-line">） */
     var textbox2 = document.getElementById('wlc-textbox2');
     if (!textbox2) {
       textbox2 = document.createElement('div');
@@ -121,29 +141,29 @@
         '  <div class="wlc-textbox-bar"></div>',
         '</div>'
       ].join('');
-      document.getElementById('wlc-sec2-sticky').appendChild(textbox2);
+      sticky.appendChild(textbox2);
     }
 
-    /* --- 初期状態 --- */
-    gsap.set(chara,    { x: viewW * 0.6,  opacity: 0 });
-    gsap.set(textbox,  { x: viewW * 0.6,  opacity: 0 });
-    gsap.set(textbox2, { x: -viewW * 0.7, opacity: 0 });
+    // 傾き（assets/welcome.css の --wlc-tilt / --wlc-tilt-enter。PC とスマホで値が違う）
+    var tilt      = cssNum(sticky, '--wlc-tilt', 16);
+    var tiltEnter = cssNum(sticky, '--wlc-tilt-enter', 40);
+    var viewW     = window.innerWidth;
 
-    /* --- スプライット進捗追跡 --- */
-    var currentFrame = -1;
+    /* --- 初期状態（画面の外） ---
+       キャラクター①：左の画面外で、大きく傾いた姿勢
+       キャラクター②：右の画面外で、大きく傾いた姿勢（左右反対）
+       xPercent は自分の幅に対する割合（-140 = 自分の幅の 1.4 倍ぶん左） */
+    gsap.set(charL,    { xPercent: -140, rotation:  tiltEnter, opacity: 1 });
+    gsap.set(charR,    { xPercent:  140, rotation: -tiltEnter, opacity: 1 });
+    gsap.set(textbox,  { x: -viewW, opacity: 0 });
+    gsap.set(textbox2, { x: -viewW, opacity: 0 });
 
-    /* --- タイムライン本体 ---
-       scroller: wlcScrollEl … #wlc-scroll がスクロール源
-       （画面の固定は CSS の position: sticky。GSAP の pin は使わない）
-       scrub: 0.4            … スクロール量にアニメを連動（少しだけなめらかに追いつく）
-       invalidateOnRefresh   … リサイズ時に位置を再計算
-    */
     var tl = gsap.timeline({
+      defaults: { ease: 'none' },
       scrollTrigger: {
         /*
-         * 画面の固定は CSS（.wlc-sec2-sticky の position: sticky）に任せ、ここでは進み具合だけを読む。
-         *   見えない余白 .wlc-sec2-runway の上端が画面の下端に来たとき = 貼りつき始め（進捗 0）
-         *   余白の下端が画面の下端に来たとき                       = 貼りつき終わり（進捗 1）
+         * 見えない余白 .wlc-sec2-runway の上端が画面の下端に来たとき = 進み具合 0
+         * 余白の下端が画面の下端に来たとき                       = 進み具合 1
          * scrub: 0.4 … スクロールに 0.4 秒かけて追いつく（指の細かい動きでカクつかないように）
          */
         trigger: '#wlc-sec2-runway',
@@ -151,134 +171,93 @@
         start: 'top bottom',
         end: 'bottom bottom',
         scrub: 0.4,
-        invalidateOnRefresh: true,
+        invalidateOnRefresh: true
         // markers: true, // ★ デバッグ時はコメントを外す
-
-        /*
-         * onUpdate でスプライットコマを進捗から直接決定
-         * ★拡張予定: コマ割りを変えたい場合は if/else のしきい値を変更する
-         */
-        onUpdate: function (self) {
-          var p = self.progress;
-          var frame =
-            p < 0.35 ? 0 :
-            p < 0.45 ? 1 :
-            p < 0.55 ? 2 :
-            p < 0.72 ? 3 :
-            p < 0.80 ? 4 :
-            p < 0.88 ? 5 : 6;
-          if (frame !== currentFrame) {
-            currentFrame = frame;
-            setSprite(chara, frame);
-          }
-        }
       }
     });
 
-    // 0.00→0.10: キャラ右スライドイン
-    tl.to(chara,   { x: 0, opacity: 1, duration: 0.10, ease: 'power2.out' }, 0.00);
-    // 0.05→0.12: テキストボックス右スライドイン
+    // 0〜10%: キャラクター①② 傾いて現れる（倒れた姿勢から起き上がりながら、画面の端に入ってくる）
+    tl.to(charL, { xPercent: 0, rotation:  tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
+    tl.to(charR, { xPercent: 0, rotation: -tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
+
+    // 5〜12%: テキストボックス① 左から滑り込んでくる
     tl.to(textbox, { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.05);
 
-    // 0.12→0.35: テキスト各行 順次フェードイン
+    // 12〜35%: ①の文章 1行ずつ上から順にフワッと出る
     var lines    = textbox.querySelectorAll('.wlc-textbox-line');
     var lineStep = (0.35 - 0.12) / Math.max(lines.length, 1);
     lines.forEach(function (line, i) {
-      tl.to(line, { opacity: 1, y: 0, duration: lineStep * 0.7, ease: 'power1.out' },
-        0.12 + i * lineStep);
+      tl.to(line, { opacity: 1, y: 0, duration: lineStep * 0.7, ease: 'power1.out' }, 0.12 + i * lineStep);
     });
 
-    // 0.38→0.43: テキストボックス揺れ（「行き」「戻り」分割でscrub対応）
-    tl.to(textbox, { y: -10, duration: 0.025, ease: 'power1.out' }, 0.38);
-    tl.to(textbox, { y:   0, duration: 0.025, ease: 'power1.in'  }, 0.405);
+    // 55〜65%: ①のボックス 左へ押し出されて消える
+    tl.to(textbox, { x: -viewW * 0.8, opacity: 0, duration: 0.10, ease: 'power2.in' }, 0.55);
 
-    // 0.55→0.65: テキストボックスを左へ押し飛ばす
-    tl.to(textbox, { x: -viewW * 0.7, opacity: 0, duration: 0.10, ease: 'power2.in' }, 0.55);
-
-    // 0.65→0.72: 2枚目テキストボックスが左から飛んでくる
+    // 65〜72%: テキストボックス② 左から飛んでくる
     tl.to(textbox2, { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.65);
 
-    // 0.72→0.76: 受け止め「ドン」演出（「行き」「戻り」分割）
-    tl.to(textbox2, { x: 10, duration: 0.02, ease: 'power1.out' }, 0.72);
+    // 72〜76%: ②「ドン」と受け止めて少し揺れる（行き・戻りに分けてスクロールを戻しても崩れないように）
+    tl.to(textbox2, { x: 12, duration: 0.02, ease: 'power1.out' }, 0.72);
     tl.to(textbox2, { x:  0, duration: 0.02, ease: 'power1.in'  }, 0.74);
 
-    // 0.88→1.00: キャラ・テキスト上へ退場
-    tl.to(chara,    { y: -viewW * 0.5, opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.88);
-    tl.to(textbox2, { y: -viewW * 0.5, opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.90);
+    // 88〜100%: キャラクター① 左へ退場 / キャラクター② 退場（向きは WLC_EXIT_R_DIR）
+    var exitR = WLC_EXIT_R_DIR === 'left' ? -1 : 1;
+    tl.to(charL, { xPercent: -140,        rotation:  tiltEnter,         duration: 0.12, ease: 'power2.in' }, 0.88);
+    tl.to(charR, { xPercent: 140 * exitR, rotation: -tiltEnter * exitR, duration: 0.12, ease: 'power2.in' }, 0.88);
 
     /* ======================================================
-       セクション3: コンテンツ紹介（下からスライドイン）
+       セクション3: 最後の画面
+         見出し       : 画面に入ったら下からスライドイン
+         キャラクター③: いちばん下（フッター）までスクロールしたら、フッターの下から順番にスライドイン
+                         上に戻ると引っこみ、もう一度下まで来るとまた出てくる
        ====================================================== */
     var sec3Title = document.getElementById('wlc-sec3-title');
-    var cards     = document.querySelectorAll('#wlc-sec3-grid .wlc-preview-card');
-
     if (sec3Title) {
       gsap.to(sec3Title, {
-        scrollTrigger: {
-          trigger: sec3Title,
-          scroller: wlcScrollEl,
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
+        scrollTrigger: { trigger: sec3Title, scroller: wlcScrollEl, start: 'top 85%', toggleActions: 'play none none none' },
         opacity: 1, y: 0, duration: 0.7, ease: 'power2.out'
       });
     }
 
-    if (cards.length) {
-      gsap.to(cards, {
-        scrollTrigger: {
-          trigger: '#wlc-sec3-grid',
-          scroller: wlcScrollEl,
-          start: 'top 88%',
-          toggleActions: 'play none none none'
-        },
-        opacity: 1, y: 0, duration: 0.55,
-        ease: 'power2.out',
-        stagger: 0.12 // ← カード間の表示ディレイ（秒）
+    var footBox = document.getElementById('wlc-foot-chars');
+    var footer  = document.getElementById('wlc-footer');
+    if (footBox && footer) {
+      var isSp = window.matchMedia('(max-width: 759px)').matches;
+      var imgs = pick(list.footer, isSp ? WLC_FOOTER_COUNT.sp : WLC_FOOTER_COUNT.pc).map(function (item) {
+        var img = makeImg(item);
+        img.className = 'wlc-foot-char';
+        img.onerror = function () { img.remove(); };
+        footBox.appendChild(img);
+        return img;
       });
+      footBox.style.setProperty('--wlc-foot-n', Math.max(imgs.length, 1));
+      if (imgs.length) {
+        // CSS の translateY(110%) を GSAP の yPercent に置き換える（y: 0 にしないと、ずらしが二重になって出てこない）
+        gsap.set(imgs, { y: 0, yPercent: 110 });
+        gsap.to(imgs, {
+          yPercent: 0, duration: 0.6, ease: 'back.out(1.3)', stagger: 0.12,
+          scrollTrigger: {
+            trigger: footer, scroller: wlcScrollEl,
+            start: 'bottom-=10 bottom',          // フッターがほぼ全部見えたとき（= いちばん下）
+            toggleActions: 'play none none reverse'
+          }
+        });
+      }
     }
   }
 
   /* ----------------------------------------------------------
-     スプライトシート コマ切り替えヘルパー
-     ★拡張予定: スプライトシート差し替え後に動作確認する関数
-
-     引数:
-       el    - キャラ要素（.wlc-chara）
-       frame - 0始まりのコマ番号
-
-     仕組み:
-       スプライトシートは横並びを想定。
-       background-position の x を (-100% * frame) にずらすことで
-       指定コマを表示する。
+     初期化タイミング
+       画像の一覧を読んでから初期化し、ページの画像などが全部読み終わったら位置を測り直す
   ---------------------------------------------------------- */
-  function setSprite(el, frame) {
-    if (WLC_SPRITE_TOTAL <= 1) return; // 1コマ（未設定）なら何もしない
-    var pct = (frame / (WLC_SPRITE_TOTAL - 1)) * 100;
-    el.style.backgroundPositionX = pct + '%';
-  }
-
-  /* ----------------------------------------------------------
-     初期化タイミングの制御
-
-     GitHub Pages では以下の順で処理が完了する:
-       1. DOMContentLoaded … HTML解析完了（フォント・画像はまだ）
-       2. load             … 全リソース読み込み完了（ページ高さが確定）
-
-     ScrollTrigger.refresh() は「ページ高さ確定後」に呼ぶ必要がある。
-     DOMContentLoaded だけでは不十分で、load 後に refresh することで
-     pin の位置ズレ・スクロール量のズレが解消される。
-  ---------------------------------------------------------- */
+  var listPromise = loadList();
   document.addEventListener('DOMContentLoaded', function () {
-    // DOM構築直後に一度初期化（暫定値で）
-    initWelcomeAnim();
+    listPromise.then(function (list) {
+      initWelcomeAnim(list || {});
+      ScrollTrigger.refresh();
+    });
   });
-
   window.addEventListener('load', function () {
-    // フォント・画像込みの高さ確定後に再計算
-    // #wlc-scroll コンテナの高さも確定してから refresh することで
-    // pin 位置・end 値のズレが修正される
-    ScrollTrigger.refresh();
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
   });
-
 }());

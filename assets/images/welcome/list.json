@@ -1,0 +1,49 @@
+{
+ "note": "welcome-list.js が自動で作る一覧。手で編集しない（画像はフォルダに入れるだけでよい）",
+ "left": [
+  {
+   "src": "assets/images/welcome/left/1060_hitonokohinata.png",
+   "webp": "assets/images/welcome/left/1060_hitonokohinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/left/1070_VketHinata.png",
+   "webp": "assets/images/welcome/left/1070_VketHinata.webp"
+  }
+ ],
+ "right": [
+  {
+   "src": "assets/images/welcome/right/1010_akahinata.png",
+   "webp": "assets/images/welcome/right/1010_akahinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/right/1020_momohinata.png",
+   "webp": "assets/images/welcome/right/1020_momohinata.webp"
+  }
+ ],
+ "footer": [
+  {
+   "src": "assets/images/welcome/footer/1010_akahinata.png",
+   "webp": "assets/images/welcome/footer/1010_akahinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/footer/1020_momohinata.png",
+   "webp": "assets/images/welcome/footer/1020_momohinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/footer/1060_hitonokohinata.png",
+   "webp": "assets/images/welcome/footer/1060_hitonokohinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/footer/1070_VketHinata.png",
+   "webp": "assets/images/welcome/footer/1070_VketHinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/footer/1190_ShipiHinata.png",
+   "webp": "assets/images/welcome/footer/1190_ShipiHinata.webp"
+  },
+  {
+   "src": "assets/images/welcome/footer/1350_Haishima_hinata.png",
+   "webp": "assets/images/welcome/footer/1350_Haishima_hinata.webp"
+  }
+ ]
+}

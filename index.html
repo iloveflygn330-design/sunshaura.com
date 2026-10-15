@@ -108,7 +108,7 @@
       <section class="wlc-sec2" id="wlc-sec2">
         <div class="wlc-sec2-sticky" id="wlc-sec2-sticky">
 
-          <!-- テキストボックス（左側） -->
+          <!-- テキストボックス①（左から滑り込む。②は assets/welcome.js が作る） -->
           <div class="wlc-textbox" id="wlc-textbox">
             <p class="wlc-textbox-title">こんにちは！</p>
             <p class="wlc-textbox-body">
@@ -132,19 +132,13 @@
             </div>
           </div>
 
-          <!-- キャラクター画像（右側・透過PNG / スプライトシート） -->
-          <div class="wlc-chara-wrap" id="wlc-chara-wrap">
-            <div class="wlc-chara" id="wlc-chara">
-              <!--
-                ★拡張予定: スプライトシート差し替え後にこの要素を削除する
-                  スプライトシート画像を配置すると自動的に背景として表示される。
-                  この .wlc-chara-placeholder div ごと削除すればOK。
-              -->
-              <div class="wlc-chara-placeholder">
-                キャラクター画像<br>（透過PNG / スプライトシート）<br>をここに配置
-              </div>
-            </div>
-          </div>
+          <!--
+            キャラクター①（左から傾いて現れる）・②（右から傾いて現れる）
+              画像は assets/images/welcome/left/ と right/ からランダムに1枚ずつ（assets/welcome.js が入れる）
+              ★拡張予定: キャラクターを増やす → それぞれのフォルダに透過 PNG を入れるだけ（手順は assets/images/welcome/README.md）
+          -->
+          <div class="wlc-char wlc-char-l" id="wlc-char-l" aria-hidden="true"></div>
+          <div class="wlc-char wlc-char-r" id="wlc-char-r" aria-hidden="true"></div>
 
         </div><!-- /.wlc-sec2-sticky -->
         <!-- 見えない余白：ここをスクロールしている間、上のエリアが画面に貼りついたままアニメーションが進む（長さは welcome.css の --wlc-sec2-run） -->
@@ -152,40 +146,22 @@
       </section><!-- /.wlc-sec2 -->
 
       <!-- =====================================================
-           セクション3: コンテンツ紹介 + フッター
+           セクション3: 最後の画面（見出し + キャラクター③ + フッター）
            ===================================================== -->
       <section class="wlc-sec3" id="wlc-sec3">
 
         <!-- 見出し（下からスライドイン） -->
         <p class="wlc-sec3-title" id="wlc-sec3-title">
-          まずは、アバター改変などを見てみてください
+          <!-- ★拡張予定: スマホだけで改行したい位置には <br class="wlc-sp-br"> を入れる -->
+          まずは、<br class="wlc-sp-br">アバター改変などを<br class="wlc-sp-br">見てみてください
         </p>
 
         <!--
-          ★拡張予定: プレビュー画像グリッド
-            PC: 4枚 / SP: 2枚（.wlc-sp-hidden クラスで制御）
-
-            画像を差し替える場合:
-              <div class="wlc-preview-card"> の中身を
-              <img src="assets/images/xxx.jpg" alt="説明"> に変更するだけ。
-
-            画像を追加する場合（PC4枚を超える場合）:
-              <div class="wlc-preview-card"> を末尾に追加し、
-              SPで不要なら class="wlc-preview-card wlc-sp-hidden" にする。
-
-            SP用に表示枚数を変えたいとき:
-              不要なカードに wlc-sp-hidden クラスを付けると SP では非表示になる。
+          キャラクター③（いちばん下までスクロールすると、フッターの下から順番にスライドインする）
+            画像は assets/images/welcome/footer/ からランダムに選ぶ（PC は4人・スマホは2人。assets/welcome.js が入れる）
+            ★拡張予定: キャラクターを増やす → assets/images/welcome/footer/ に透過 PNG を入れるだけ
         -->
-        <div class="wlc-sec3-grid" id="wlc-sec3-grid">
-          <!-- PC: 表示 / SP: 表示 -->
-          <div class="wlc-preview-card">画像①</div>
-          <!-- PC: 表示 / SP: 表示 -->
-          <div class="wlc-preview-card">画像②</div>
-          <!-- PC: 表示 / SP: 表示 -->
-          <div class="wlc-preview-card">画像③</div>
-          <!-- PC: 表示 / SP: 非表示（.wlc-sp-hidden） -->
-          <div class="wlc-preview-card wlc-sp-hidden">画像④</div>
-        </div>
+        <div class="wlc-foot-chars" id="wlc-foot-chars" aria-hidden="true"></div>
 
       </section>
 

@@ -77,3 +77,9 @@
   avatarform/thumb-focus.json       ← ★拡張予定: サムネイルの切り抜きがずれたとき、顔の位置を手で指定する
   avatarform/thumb-state.json       ← 自動生成。手で触らない
 
+トップページのキャラクター画像（ページを開くたびにランダム。手順は assets/images/welcome/README.md）
+  assets/images/welcome/left/    ← ★拡張予定: キャラクター①（左から傾いて現れる）。透過 PNG を入れて push するだけ
+  assets/images/welcome/right/   ← ★拡張予定: キャラクター②（右から傾いて現れる）
+  assets/images/welcome/footer/  ← ★拡張予定: キャラクター③（フッターに並ぶ。PC 4人・スマホ 2人）
+  assets/images/welcome/list.json ← 自動生成（.github/scripts/welcome-list.js）。手で触らない
+
