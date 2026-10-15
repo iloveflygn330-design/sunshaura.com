@@ -3,12 +3,14 @@
 #
 # 仕組み:
 #   avatar_form.html で保存したとき（avatars.js や画像が更新されたとき）に自動で動いて、
-#   次の3つを作り、main に自動コミットする。数分後にサイトに反映される。
+#   次のものを作り、main に自動コミットする。数分後にサイトに反映される。
 #     1. サムネイル（PC用・スマホ用。顔を中心に切り抜き）… .github/scripts/avatar-thumbs.py
 #          avatarform/profile/ の画像から assets/images/<ID>/thumbnail/mini_pc.png・mini_sp.png
 #     2. 画像の軽量版（WebP）                         … .github/scripts/avatar-webp.js
 #          assets/images/ の PNG・JPG から、同じ場所に .webp と一覧 assets/images/webp.json
-#     3. アバターごとの共有用ページ（SNS のカード表示）  … .github/scripts/avatar-share.mjs
+#     3. トップページのキャラクター画像の一覧           … .github/scripts/welcome-list.js
+#          assets/images/welcome/left・right・footer の画像から assets/images/welcome/list.json
+#     4. アバターごとの共有用ページ（SNS のカード表示）  … .github/scripts/avatar-share.mjs
 #          avatar/p/<ID>/index.html と、カード画像 avatar/p/<ID>/ogp.jpg
 #   どれも、元の画像などが変わったものだけ作り直す（何も変わっていなければコミットしない）。
 #
@@ -32,6 +34,7 @@ on:
       - 'avatarform/avt_data.json'
       - 'avatarform/thumb-focus.json'
       - '.github/scripts/avatar-*'
+      - '.github/scripts/welcome-list.js'
       - '.github/workflows/avatar-build.yml'
   workflow_dispatch:
 
@@ -70,6 +73,9 @@ jobs:
 
       - name: 軽量版（WebP）を作る
         run: node .github/scripts/avatar-webp.js
+
+      - name: トップページのキャラクター画像の一覧を作る
+        run: node .github/scripts/welcome-list.js
 
       - name: 共有用ページを作る
         run: node .github/scripts/avatar-share.mjs
