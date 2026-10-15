@@ -13,7 +13,7 @@
      2. 下の PANELS に「type名: 描画する関数」を1行追加し、関数を作る
      3. news/GUIDE.md「8. 動画の台本」の sections の type 一覧に追記する
    ===================================================== */
-import React from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { AbsoluteFill, Audio, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
 
 export const FPS = 30;
@@ -87,6 +87,20 @@ function NewsPanel({ section, article, theme }) {
   // ポイントは、コーナーの長さに合わせて順番に表示
   const span = section.end - section.start;
   const shown = points.filter((_, i) => sec(frame) >= section.start + 1.2 + (span * 0.75 * i) / Math.max(1, points.length));
+
+  // 「出典」の行とポイントの文章が重なるときだけ、出典を消す（実際の表示位置を測って判定）
+  // ★拡張予定: 消さずに薄く残したい場合は、下の SOURCE_OPACITY_OVERLAP を 0.15 などにする
+  const SOURCE_OPACITY_OVERLAP = 0;
+  const pointsRef = useRef(null);
+  const sourceRef = useRef(null);
+  const [overlap, setOverlap] = useState(false);
+  useLayoutEffect(() => {
+    if (!pointsRef.current || !sourceRef.current) return;
+    const textBottom = pointsRef.current.getBoundingClientRect().bottom;
+    const sourceTop = sourceRef.current.getBoundingClientRect().top;
+    const next = textBottom > sourceTop - 4;
+    if (next !== overlap) setOverlap(next);
+  });
   return (
     <div>
       <div style={{ background: color, color: '#fff', fontSize: 34, fontWeight: 800, padding: '14px 64px', letterSpacing: 3, display: 'flex', justifyContent: 'space-between' }}>
@@ -97,7 +111,7 @@ function NewsPanel({ section, article, theme }) {
         <Enter start={section.start}>
           <div style={{ fontSize: 62, fontWeight: 800, lineHeight: 1.35 }}>{item.headline}</div>
         </Enter>
-        <div style={{ marginTop: 34 }}>
+        <div ref={pointsRef} style={{ marginTop: 34 }}>
           {shown.map((p, i) => (
             <Enter key={i} start={section.start + 1.2 + (span * 0.75 * i) / Math.max(1, points.length)} from={0} style={{ transform: 'none' }}>
               <div style={{ display: 'flex', gap: 18, fontSize: 38, fontWeight: 700, lineHeight: 1.45, marginTop: 14 }}>
@@ -107,7 +121,10 @@ function NewsPanel({ section, article, theme }) {
           ))}
         </div>
         {item.sources && item.sources[0] && (
-          <div style={{ position: 'absolute', left: 64, bottom: 30, fontSize: 26, color: 'rgba(0,0,0,0.45)', fontWeight: 700 }}>
+          <div ref={sourceRef} style={{
+            position: 'absolute', left: 64, bottom: 30, fontSize: 26, color: 'rgba(0,0,0,0.45)', fontWeight: 700,
+            opacity: overlap ? SOURCE_OPACITY_OVERLAP : 1, transition: 'opacity 0.3s'
+          }}>
             出典：{item.sources.map((s) => s.name).join(' / ')}
           </div>
         )}
@@ -181,12 +198,18 @@ const PANELS = { opening: OpeningPanel, news: NewsPanel, fortune: FortunePanel, 
    ずんだもん（立ち絵）
    video.json の chara があれば PNG、なければ仮の図形を表示する。
    ===================================================== */
-function Character({ talking, mouthOpen, face, chara, base }) {
+function Character({ mouthOpen, face, chara, base, sectionStart }) {
   const frame = useCurrentFrame();
   // まばたき：約3.3秒ごとに4フレーム目を閉じる
   const eyeClosed = frame % 100 >= 96;
   // 話しているときは少し上下に揺れる
-  const bob = talking ? Math.sin(frame / 4) * 4 : Math.sin(frame / 30) * 2;
+  // コーナー（ニュース）が切り替わったときだけ、ぴょんと2回はねる。それ以外は静止
+  // ★拡張予定: はねる高さ・回数・長さは HOP_* で調整する
+  const HOP_HEIGHT = 26, HOP_COUNT = 2, HOP_SEC = 0.7;
+  const since = frame / FPS - sectionStart;
+  const bob = since >= 0 && since < HOP_SEC
+    ? -Math.abs(Math.sin((since / HOP_SEC) * Math.PI * HOP_COUNT)) * HOP_HEIGHT * (1 - since / HOP_SEC)
+    : 0;
   // ★拡張予定: 立ち絵の大きさ・位置はここで調整する（bottom をマイナスにすると足元が画面の外に出て、大きく映る）
   const style = chara && chara.faces.length
     ? { position: 'absolute', right: -10, bottom: -240, width: 760, height: 1160, transform: `translateY(${bob}px)` }
@@ -248,7 +271,6 @@ export function NewsVideo({ video, article, base, audioSrc }) {
     const next = video.lines[i + 1];
     if (t >= l.start - 0.05 && (!next || t < next.start - 0.05) && t < l.end + 1.2) { line = l; break; }
   }
-  const talking = !!line && t >= line.start && t <= line.end;
   const mouthOpen = video.mouth.some(([a, b]) => t >= a && t < b);
   const [, m, d] = video.date.split('-').map(Number);
 
@@ -280,7 +302,7 @@ export function NewsVideo({ video, article, base, audioSrc }) {
       </div>
 
       {/* ずんだもん */}
-      <Character talking={talking} mouthOpen={mouthOpen} face={line ? line.face : 'normal'} chara={video.chara} base={base} />
+      <Character mouthOpen={mouthOpen} face={line ? line.face : 'normal'} chara={video.chara} base={base} sectionStart={section.start} />
 
       {/* 字幕 */}
       {line && (
