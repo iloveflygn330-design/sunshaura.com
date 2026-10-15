@@ -14,6 +14,7 @@ function mgShowSelect() {
 
 function mgStartGame(gameId) {
   mgShootingStop();
+  if (typeof dvStop === 'function') dvStop();
   document.querySelectorAll('#minigame-inner .mg-screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('mg-' + gameId);
   if (target) target.classList.add('active');
@@ -23,10 +24,12 @@ function mgStartGame(gameId) {
    *   を追記する
    */
   if (gameId === 'janken') mgJankenReset();
+  if (gameId === 'dinovoice') dvInit();
 }
 
 function mgBackToSelect() {
   mgShootingStop();
+  if (typeof dvStop === 'function') dvStop();   // 恐竜ボイスゲームの音を止める
   mgShowSelect();
 }
 

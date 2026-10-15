@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="../assets/site-common.css">
   <!-- このページ専用の見た目 -->
   <link rel="stylesheet" href="assets/minigame.css">
+  <!-- 恐竜ボイスゲームの見た目 -->
+  <link rel="stylesheet" href="assets/dinovoice.css">
 </head>
 <!--
   ミニゲームページ（minigame/index.html）
@@ -49,6 +51,10 @@
           <button class="mg-game-card" onclick="mgStartGame('janken')">
             <span class="mg-game-icon">✊</span>
             <span class="mg-game-name">じゃんけんゲーム</span>
+          </button>
+          <button class="mg-game-card" onclick="mgStartGame('dinovoice')">
+            <span class="mg-game-icon">🦕</span>
+            <span class="mg-game-name">きょうりゅうボイス</span>
           </button>
         </div>
       </div>
@@ -100,6 +106,87 @@
         </div>
       </div>
 
+      <!--
+        恐竜ボイスゲーム
+          動きは assets/dinovoice.js、恐竜・セリフ・調整値は assets/dinovoice-data.js、見た目は assets/dinovoice.css。
+          音声素材は minigame/dinovoice/sounds/（説明は同じフォルダの README.txt）。
+      -->
+      <div class="mg-screen" id="mg-dinovoice">
+        <div class="mg-game-header">
+          <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+          <div class="mg-hud"><span>のこり: <b id="dv-tries"></b></span></div>
+        </div>
+
+        <div id="dv-field">
+          <!-- スタート画面（ブラウザは操作のあとでないと音を出せないので、ボタンを押してから読み込む） -->
+          <div id="dv-start-overlay">
+            <p>仲間の恐竜が鳴いているよ！<br>同じ声で返事をして、どの恐竜か当ててね。<br>つまみをさわると自分の声が出るよ。</p>
+            <button class="mg-primary-btn" id="dv-start-btn" onclick="dvStart()">スタート</button>
+            <p id="dv-loading" style="display:none">声を準備中...</p>
+          </div>
+
+          <!-- 恐竜とずんだもんの吹き出し -->
+          <div id="dv-stage">
+            <p id="dv-bubble"></p>
+            <div id="dv-dino-wrap">
+              <div id="dv-dino"></div>
+              <!-- 遊んでいる間は恐竜を草むらで隠す（結果が出たら消えて、シルエット → 色付きの順に公開） -->
+              <div id="dv-cover" aria-hidden="true">
+                <svg viewBox="0 0 400 280">
+                  <g fill="#5FAF4A">
+                    <circle cx="70" cy="215" r="60"/><circle cx="150" cy="170" r="80"/><circle cx="250" cy="165" r="85"/>
+                    <circle cx="335" cy="210" r="62"/><rect x="20" y="210" width="360" height="62" rx="20"/>
+                  </g>
+                  <g fill="#4A9638"><circle cx="110" cy="235" r="40"/><circle cx="290" cy="232" r="44"/></g>
+                  <text x="200" y="205" text-anchor="middle" font-size="96" font-weight="800" fill="#FFFFFF" opacity=".9">？</text>
+                </svg>
+              </div>
+            </div>
+            <p id="dv-name">？？？</p>
+          </div>
+
+          <!-- 声を聴くボタン -->
+          <div class="dv-voice-row">
+            <button class="dv-voice-btn" id="dv-model-btn" onclick="dvPlayVoice('model')">🔊 お手本のこえ</button>
+            <button class="dv-voice-btn" id="dv-player-btn" onclick="dvPlayVoice('player')">🗣 自分のこえ</button>
+          </div>
+
+          <!-- 声を調整するつまみ -->
+          <div id="dv-controls">
+            <div class="dv-pad-wrap">
+              <span class="dv-ctl-label">口の形（さわると声が出る）</span>
+              <div id="dv-pad"><span id="dv-pad-knob"></span></div>
+            </div>
+            <div class="dv-sliders">
+              <label class="dv-slider">
+                <span class="dv-ctl-label">喉の長さ</span>
+                <input type="range" id="dv-throat" min="0" max="1" step="0.01">
+                <span class="dv-slider-ends"><span>みじかい（高い）</span><span>ながい（低い）</span></span>
+              </label>
+              <label class="dv-slider">
+                <span class="dv-ctl-label">口のとじ具合</span>
+                <input type="range" id="dv-close" min="0" max="1" step="0.01">
+                <span class="dv-slider-ends"><span>あける</span><span>とじる（ん）</span></span>
+              </label>
+              <label class="dv-slider">
+                <span class="dv-ctl-label">息</span>
+                <input type="range" id="dv-breath" min="0" max="1" step="0.01">
+                <span class="dv-slider-ends"><span>はっきり</span><span>ささやき</span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="dv-answer-row">
+            <button class="mg-primary-btn" id="dv-answer-btn" onclick="dvAnswer()">返事をする（答え合わせ）</button>
+            <button class="mg-primary-btn" id="dv-again-btn" onclick="dvNewRound()" style="display:none">もう一回あそぶ</button>
+          </div>
+          <div id="dv-result" aria-live="polite"></div>
+
+          <p id="dv-fallback-note" style="display:none">※ 声の素材がまだないので、仮の音で鳴っています</p>
+          <!-- 音源規約でクレジット表記が必要（文字は dinovoice-data.js の DV_SETTINGS.credit） -->
+          <p id="dv-credit"></p>
+        </div>
+      </div>
 
     </div><!-- /#minigame-inner -->
   </main>
@@ -113,5 +200,8 @@
 
   <!-- ミニゲーム本体 -->
   <script src="assets/minigame.js"></script>
+  <!-- 恐竜ボイスゲーム（データ → 動きの順で読み込む） -->
+  <script src="assets/dinovoice-data.js"></script>
+  <script src="assets/dinovoice.js"></script>
 </body>
 </html>
