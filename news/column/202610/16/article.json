@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-16",
+  "title": "AltspaceVRがSteamで復活へほか、今日のVRニュース4本",
+  "category": "その他",
+  "thumb": "",
+  "intro": "2023年に終了したソーシャルVR「AltspaceVR」が、SideQuestの運営でSteamに登場する予定です。そのほか、Steam Frame向けの新しいヘッドストラップや有機EL版のうわさ、XREALの新しいARグラスなど、VR機器の話題をまとめました。",
+  "items": [
+    {
+      "headline": "AltspaceVRがSteamで無料の早期アクセスへ",
+      "category": "その他",
+      "overview": "Microsoftが2023年3月に終了したソーシャルVR「AltspaceVR」のストアページがSteamに公開されました。開発・販売はSideQuest Ltd.で、10月中に基本無料の早期アクセスとして配信予定です。現時点ではワールドでのマルチプレイ、空間ボイスチャット、アバター、イベント機能があり、VRとデスクトップの両方で遊べます。フレンドやメッセージ、グループ、モデレーション機能などは早期アクセス中に追加される予定です。",
+      "points": [
+        "早期アクセス期間は6〜12か月ほどを想定、終了後も無料の方針",
+        "Quest・Pico・Android・Windows PCに対応、VR機器なしでも利用可",
+        "推奨環境にSteam Frameが記載されている",
+        "Microsoft版のアカウントやワールドの引き継ぎについての記載はない"
+      ],
+      "sources": [
+        {
+          "name": "MIXED",
+          "url": "https://mixed-news.com/en/altspacevr-steam-early-access-listing-sidequest-steam-frame/"
+        },
+        {
+          "name": "Steam（AltspaceVR ストアページ）",
+          "url": "https://store.steampowered.com/app/5289710/AltspaceVR"
+        }
+      ]
+    },
+    {
+      "headline": "Steam Frameにバッテリー交換式の高音質ストラップ",
+      "category": "VR機器・技術",
+      "overview": "ValveがSteam Frame向けに新しいヘッドストラップを開発していることを、海外メディアPC Gamerに認めました。バッテリーを付けたまま交換できる仕組みと、Valve Indexのオフイヤースピーカーに近いとされるBMRドライバーを搭載します。Steam Frameの弱点とされるバッテリー持ちと低音の弱さを補う狙いです。価格や発売時期はまだ発表されていません。",
+      "points": [
+        "現行のバッテリー持ちは混合利用で約1〜1.5時間とされる",
+        "本体のディスプレイ部を付け替えて使う形になる見込み",
+        "価格・発売日は未発表。本体の出荷待ちはすでに2027年まで"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/valve-steam-frame-audio-battery-strap/"
+        }
+      ]
+    },
+    {
+      "headline": "Steam Frameの有機EL版、ソースコードに痕跡",
+      "category": "VR機器・技術",
+      "overview": "Valveが公開しているSteam Frameのカーネルソースコードに、「Plano」というコード名で有機EL（OLED）パネルを使った構成が見つかったと報じられました。片目3552×3840のOLEDパネルで最大90Hz、試験的に120Hzの記述があるとのことです。現行モデルは片目2160×2160の液晶です。別の製品なのか、試験用の構成なのかは分かっていません。",
+      "points": [
+        "Steam Deckも液晶版の翌年に有機EL版が登場した前例がある",
+        "チップは現行と同じSnapdragon 8 Gen 3との情報",
+        "あくまでコード上の痕跡で、Valveの正式発表ではない"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/valve-steam-frame-oled-version-report/"
+        }
+      ]
+    },
+    {
+      "headline": "XREAL、ARグラス新モデル「1 Pro+」を599ドルで発売",
+      "category": "VR機器・技術",
+      "overview": "XREALが、ARグラス「One Pro」の改良モデル「XREAL 1 Pro+」を発表し、米国の公式サイトで599ドルで販売を始めました。ソニー製の0.55インチ有機ELパネルの最大輝度が700ニトから1200ニトに上がり、AI HDRや映画・読書などの画質モードが加わりました。視野角57度や最大120Hzなどの基本仕様は前モデルと同じです。単体では動かず、USB-Cでパソコンやスマホ、ゲーム機につないで使います。",
+      "points": [
+        "最大輝度が約1.7倍になった",
+        "2D映像を3Dに変換する機能が60fpsに向上",
+        "鼻パッドを刷新し、瞳孔間距離に合わせて2サイズを用意",
+        "世界各地での店頭販売は今後の予定"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/xreal-1-pro-plus-release-date-price/"
+        }
+      ]
+    }
+  ],
+  "outro": "ソーシャルVRの選択肢が増えるのは、VRChatユーザーにとっても気になる話題です。くわしくは各出典をご覧ください。"
+}
