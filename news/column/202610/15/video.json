@@ -191,7 +191,7 @@
   },
   {
    "text": "値段と発売日はまだ発表されていないのだ。",
-   "face": "normal",
+   "face": "look",
    "section": 2,
    "start": 47.309,
    "end": 50.37
@@ -226,7 +226,7 @@
   },
   {
    "text": "Quest版の購入内容は引き継げないから、注意なのだ。",
-   "face": "normal",
+   "face": "amazement",
    "section": 3,
    "start": 69.855,
    "end": 73.973
@@ -254,7 +254,7 @@
   },
   {
    "text": "12位のおとめ座さんは、七割でOKの気持ちでいくのだ。",
-   "face": "normal",
+   "face": "look",
    "section": 4,
    "start": 86.36,
    "end": 90.883
@@ -2726,10 +2726,26 @@
    101.504
   ]
  ],
- "chara": null,
+ "chara": {
+  "path": "assets/video/chara/",
+  "ext": "webp",
+  "faces": [
+   "normal",
+   "smile",
+   "surprise",
+   "amazement",
+   "look"
+  ]
+ },
  "credits": {
   "voice": "VOICEVOX:ずんだもん",
   "chara": "",
-  "bgm": []
+  "bgm": [
+   {
+    "title": "なんだいのいってめ",
+    "artist": "みそか",
+    "site": "PANICPUMPKIN"
+   }
+  ]
  }
 }
