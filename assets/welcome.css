@@ -170,7 +170,7 @@ html, body { height: 100%; }
    ------------------------------------------------------- */
 .wlc-sec2-sticky {
   --wlc-char-h: 58%;
-  --wlc-peek: 30;
+  --wlc-peek: 40;
   --wlc-char-sink: 4%;
   --wlc-tilt: 16;
   --wlc-tilt-enter: 50;
@@ -179,7 +179,7 @@ html, body { height: 100%; }
   .wlc-sec2-sticky {
     --wlc-char-h: 46%;
     --wlc-char-maxw: 58vw;
-    --wlc-peek: 14;
+    --wlc-peek: 30;
     --wlc-char-sink: 3%;
     --wlc-tilt: 10;
     --wlc-tilt-enter: 40;
