@@ -163,10 +163,10 @@ function EndingPanel({ section, credits, theme }) {
         <div style={{ fontSize: 36, fontWeight: 700, marginTop: 18, color: 'rgba(0,0,0,0.55)' }}>sunshaura.com/news で毎日更新</div>
       </Enter>
       <Enter start={section.start} delay={0.6}>
-        <div style={{ marginTop: 56, borderTop: `4px solid ${theme.sub}`, paddingTop: 24 }}>
+        <div style={{ marginTop: 36, borderTop: `4px solid ${theme.sub}`, paddingTop: 20 }}>
           {rows.map(([k, v], i) => (
-            <div key={i} style={{ display: 'flex', gap: 24, fontSize: 32, fontWeight: 700, marginTop: 10 }}>
-              <span style={{ color: theme.accent, width: 120 }}>{k}</span><span>{v}</span>
+            <div key={i} style={{ display: 'flex', gap: 24, fontSize: 30, fontWeight: 700, marginTop: 8 }}>
+              <span style={{ color: theme.accent, width: 190, flexShrink: 0 }}>{k}</span><span>{v}</span>
             </div>
           ))}
         </div>
