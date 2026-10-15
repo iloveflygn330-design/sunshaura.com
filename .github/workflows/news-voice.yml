@@ -1,0 +1,107 @@
+# =====================================================
+# ニュース動画の音声づくり
+#
+# 仕組み:
+#   記事フォルダの script.json（読み上げ台本）が push されたら、
+#   VOICEVOX でずんだもんの声を作り、BGM と混ぜて voice.mp3 と video.json を作ってコミットする。
+#   記事ページは video.json があれば動画プレイヤーを表示する。
+#
+# 必要な Secrets:
+#   ASSETS_TOKEN … 非公開リポジトリ sunshaura-assets を読むための鍵（BGM・立ち絵）
+#
+# 手動で作り直す場合:
+#   Actions タブ → News voice → Run workflow → 日付（例: 2026-10-15）を入力
+#
+# ★拡張予定: 声の速さ・間・BGM音量は tools/news-video/build-voice.mjs の TIMING で調整する
+# =====================================================
+name: News voice
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'news/column/**/script.json'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: '作り直す記事の日付（例: 2026-10-15）'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-voice
+  cancel-in-progress: false
+
+jobs:
+  voice:
+    runs-on: ubuntu-latest
+    services:
+      voicevox:
+        image: voicevox/voicevox_engine:cpu-latest
+        ports:
+          - 50021:50021
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 素材リポジトリを読み込む
+        uses: actions/checkout@v4
+        with:
+          repository: iloveflygn330-design/sunshaura-assets
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: assets-private
+
+      - name: 対象の記事を決める
+        id: target
+        env:
+          INPUT_DATE: ${{ github.event.inputs.date }}
+        run: |
+          if [ -n "$INPUT_DATE" ]; then
+            y=${INPUT_DATE:0:4}; m=${INPUT_DATE:5:2}; d=${INPUT_DATE:8:2}
+            dirs="news/column/${y}${m}/${d}"
+          else
+            # 直近のコミットで変わった台本 + まだ音声がない台本
+            changed=$(git diff --name-only HEAD^ HEAD -- 'news/column/*/*/script.json' | xargs -r -n1 dirname)
+            missing=$(for f in news/column/*/*/script.json; do [ -f "$f" ] && [ ! -f "$(dirname "$f")/video.json" ] && dirname "$f"; done; true)
+            dirs=$(printf '%s\n%s\n' "$changed" "$missing" | grep -v '_template' | sed '/^$/d' | sort -u)
+          fi
+          echo "対象: $dirs"
+          echo "dirs=$(echo $dirs)" >> "$GITHUB_OUTPUT"
+
+      - name: ffmpeg を用意
+        if: steps.target.outputs.dirs != ''
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: VOICEVOX の起動を待つ
+        if: steps.target.outputs.dirs != ''
+        run: |
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:50021/version && exit 0
+            sleep 2
+          done
+          exit 1
+
+      - name: 音声と video.json を作る
+        if: steps.target.outputs.dirs != ''
+        run: |
+          for dir in ${{ steps.target.outputs.dirs }}; do
+            echo "=== $dir ==="
+            node tools/news-video/build-voice.mjs "$dir" assets-private
+          done
+
+      - name: コミットして push
+        if: steps.target.outputs.dirs != ''
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add news/column news/assets/video/chara 2>/dev/null || git add news/column
+          if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
+          git commit -m "news: 読み上げ音声を更新 (${{ steps.target.outputs.dirs }})"
+          for i in 1 2 3; do
+            git pull --rebase -q origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
