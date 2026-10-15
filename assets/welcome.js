@@ -17,8 +17,12 @@
   ---------------------------------------------------------- */
   var WLC_LIST = 'assets/images/welcome/list.json';
 
-  /* ★拡張予定: フッターに並べるキャラクター③の人数（PC・スマホ別） */
+  /* ★拡張予定: フッターに並べるキャラクター③の人数（PC・スマホ別）
+       WLC_FOOTER_COUNT : フッターの上に並んで立つ人数
+       WLC_FOOTER_SIDE  : 左右の端から傾いて覗き込む人数（0 = 出さない / 2 = 左右に1人ずつ）
+       画像は同じ footer/ フォルダから、重ならないように選ぶ */
   var WLC_FOOTER_COUNT = { pc: 4, sp: 2 };
+  var WLC_FOOTER_SIDE  = { pc: 0, sp: 2 };
 
   /* ★拡張予定: キャラクター②が退場する向き（'right' = 右へ / 'left' = 左へ）
        キャラクター①は左へ退場する */
@@ -147,6 +151,8 @@
     // 傾き（assets/welcome.css の --wlc-tilt / --wlc-tilt-enter。PC とスマホで値が違う）
     var tilt      = cssNum(sticky, '--wlc-tilt', 16);
     var tiltEnter = cssNum(sticky, '--wlc-tilt-enter', 40);
+    // 画面の外に隠す量（--wlc-peek。キャラクター自身の幅に対する %）
+    var peek      = cssNum(sticky, '--wlc-peek', 30);
     var viewW     = window.innerWidth;
 
     /* --- 初期状態（画面の外） ---
@@ -176,9 +182,9 @@
       }
     });
 
-    // 0〜10%: キャラクター①② 傾いて現れる（倒れた姿勢から起き上がりながら、画面の端に入ってくる）
-    tl.to(charL, { xPercent: 0, rotation:  tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
-    tl.to(charR, { xPercent: 0, rotation: -tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
+    // 0〜10%: キャラクター①② 傾いて現れる（倒れた姿勢から起き上がりながら、画面の端から覗き込む位置まで入ってくる）
+    tl.to(charL, { xPercent: -peek, rotation:  tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
+    tl.to(charR, { xPercent:  peek, rotation: -tilt, duration: 0.10, ease: 'back.out(1.4)' }, 0.00);
 
     // 5〜12%: テキストボックス① 左から滑り込んでくる
     tl.to(textbox, { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.05);
@@ -221,9 +227,15 @@
 
     var footBox = document.getElementById('wlc-foot-chars');
     var footer  = document.getElementById('wlc-footer');
-    if (footBox && footer) {
-      var isSp = window.matchMedia('(max-width: 759px)').matches;
-      var imgs = pick(list.footer, isSp ? WLC_FOOTER_COUNT.sp : WLC_FOOTER_COUNT.pc).map(function (item) {
+    var sec3    = document.getElementById('wlc-sec3');
+    if (footBox && footer && sec3) {
+      var isSp   = window.matchMedia('(max-width: 759px)').matches;
+      var nStand = isSp ? WLC_FOOTER_COUNT.sp : WLC_FOOTER_COUNT.pc;
+      var nSide  = isSp ? WLC_FOOTER_SIDE.sp  : WLC_FOOTER_SIDE.pc;
+      var chosen = pick(list.footer, nStand + nSide);
+
+      // フッターの上に並んで立つキャラクター
+      var imgs = chosen.slice(0, nStand).map(function (item) {
         var img = makeImg(item);
         img.className = 'wlc-foot-char';
         img.onerror = function () { img.remove(); };
@@ -231,16 +243,40 @@
         return img;
       });
       footBox.style.setProperty('--wlc-foot-n', Math.max(imgs.length, 1));
-      if (imgs.length) {
-        // CSS の translateY(110%) を GSAP の yPercent に置き換える（y: 0 にしないと、ずらしが二重になって出てこない）
-        gsap.set(imgs, { y: 0, yPercent: 110 });
-        gsap.to(imgs, {
-          yPercent: 0, duration: 0.6, ease: 'back.out(1.3)', stagger: 0.12,
+
+      // 左右の端から傾いて覗き込むキャラクター（左 → 右の順）
+      var sides = chosen.slice(nStand).map(function (item, i) {
+        var box = document.createElement('div');
+        box.className = 'wlc-foot-side ' + (i % 2 === 0 ? 'wlc-foot-side-l' : 'wlc-foot-side-r');
+        box.setAttribute('aria-hidden', 'true');
+        fillChar(box, item);
+        sec3.appendChild(box);
+        return box;
+      });
+
+      if (imgs.length || sides.length) {
+        // いちばん下（フッターがほぼ全部見えたとき）で、
+        //   1. 並んで立つキャラクターがフッターの下から順番にスライドイン
+        //   2. 少し遅れて、左右のキャラクターが画面の外から傾いて覗き込む
+        // 上に戻ると逆再生で引っこむ
+        var sideTilt = cssNum(sec3, '--wlc-side-tilt', 14);
+        var sidePeek = cssNum(sec3, '--wlc-side-peek', 30);
+        var footTl = gsap.timeline({
           scrollTrigger: {
             trigger: footer, scroller: wlcScrollEl,
-            start: 'bottom-=10 bottom',          // フッターがほぼ全部見えたとき（= いちばん下）
+            start: 'bottom-=10 bottom',
             toggleActions: 'play none none reverse'
           }
+        });
+        if (imgs.length) {
+          // CSS の translateY(110%) を GSAP の yPercent に置き換える（y: 0 にしないと、ずらしが二重になって出てこない）
+          gsap.set(imgs, { y: 0, yPercent: 110 });
+          footTl.to(imgs, { yPercent: 0, duration: 0.6, ease: 'back.out(1.3)', stagger: 0.12 }, 0);
+        }
+        sides.forEach(function (box, i) {
+          var dir = box.classList.contains('wlc-foot-side-l') ? -1 : 1;
+          gsap.set(box, { xPercent: 140 * dir, rotation: -50 * dir });
+          footTl.to(box, { xPercent: sidePeek * dir, rotation: -sideTilt * dir, duration: 0.6, ease: 'back.out(1.4)' }, 0.25 + i * 0.12);
         });
       }
     }

@@ -157,39 +157,40 @@ html, body { height: 100%; }
 
 /* -------------------------------------------------------
    キャラクター①（左）・②（右）
-     画面の外から傾いて現れ、黄色いテキストボックスの両脇に立つ。
+     画面の外から傾いて現れ、画面の左右の端から覗き込む（体の一部は画面の外に隠れる）。
      画像は assets/images/welcome/left/・right/ からランダムに1枚ずつ（assets/welcome.js）。
-     PC  : 画面の左右の端に、足元を少し画面の下に隠して立つ
-     スマホ: テキストボックスの下に、2人並んで立つ
 
-   ★拡張予定: キャラクターの大きさ・位置・傾きを変える場合は、下の変数を書き換える
+   ★拡張予定: キャラクターの大きさ・位置・傾きを変える場合は、下の変数を書き換える（PC・スマホ別）
      --wlc-char-h      : キャラクターの高さ（画面に貼りつくエリアの高さに対する割合）
-     --wlc-char-side   : 画面の端からの位置（マイナスにすると画面の外にはみ出す）
+     --wlc-peek        : 画面の外に隠す量（数字だけ書く。キャラクター自身の幅に対する % ）
+                         大きいほど体が隠れて「覗き込む」感じになる。0 にすると全身が見える
      --wlc-char-sink   : 足元を画面の下に沈める量（隠れる分）
-     --wlc-tilt        : 傾き（度。数字だけ書く。左のキャラは右に、右のキャラは左に傾く）
+     --wlc-tilt        : 傾き（度。数字だけ書く。左のキャラは右へ、右のキャラは左へ、画面の内側に傾く）
      --wlc-tilt-enter  : 現れ始めのときの傾き（大きいほど、倒れた姿勢から起き上がる感じになる）
    ------------------------------------------------------- */
 .wlc-sec2-sticky {
-  --wlc-char-h: 64%;
-  --wlc-char-side: -2%;
-  --wlc-char-sink: 6%;
-  --wlc-tilt: 22;
+  --wlc-char-h: 58%;
+  --wlc-peek: 30;
+  --wlc-char-sink: 4%;
+  --wlc-tilt: 16;
   --wlc-tilt-enter: 50;
 }
 @media (max-width: 759px) {
   .wlc-sec2-sticky {
-    --wlc-char-h: 44%;
-    --wlc-char-side: 6%;
-    --wlc-char-sink: 4%;
-    --wlc-tilt: 14;
+    --wlc-char-h: 46%;
+    --wlc-char-maxw: 58vw;
+    --wlc-peek: 14;
+    --wlc-char-sink: 3%;
+    --wlc-tilt: 10;
     --wlc-tilt-enter: 40;
   }
 }
 .wlc-char {
   position: absolute;
   bottom: calc(var(--wlc-char-sink) * -1);
-  height: var(--wlc-char-h);
-  /* 足元を軸にして傾ける（傾き自体は assets/welcome.js が --wlc-tilt から付ける） */
+  /* 細い画面では、画面の幅に合わせて小さくする（--wlc-char-maxw：画面の幅に対する上限） */
+  height: min(var(--wlc-char-h), var(--wlc-char-maxw, 100vw));
+  /* 足元を軸にして傾ける。傾きと「画面の外に隠す量」は assets/welcome.js が --wlc-tilt・--wlc-peek から付ける */
   transform-origin: 50% 100%;
   pointer-events: none;
   z-index: 1;
@@ -198,15 +199,8 @@ html, body { height: 100%; }
   height: 100%; width: auto; display: block;
   filter: drop-shadow(0 6px 10px rgba(42, 10, 16, 0.18));
 }
-.wlc-char-l { left: var(--wlc-char-side); }
-.wlc-char-r { right: var(--wlc-char-side); }
-/* スマホ：2人ともテキストボックスの下、まん中寄りに並べる */
-/*   --wlc-char-gap : 2人の間隔（まん中からの距離。マイナスにすると少し重なる） */
-@media (max-width: 759px) {
-  .wlc-sec2-sticky { --wlc-char-gap: -6%; }
-  .wlc-char-l { left: auto; right: calc(50% + var(--wlc-char-gap)); }
-  .wlc-char-r { right: auto; left: calc(50% + var(--wlc-char-gap)); }
-}
+.wlc-char-l { left: 0; }
+.wlc-char-r { right: 0; }
 /* 画像が用意されていないとき・読み込めなかったときは出さない */
 .wlc-char:not(.has-img) { display: none; }
 
@@ -318,6 +312,43 @@ html, body { height: 100%; }
   transform: translateY(110%);   /* 最初はフッターの下に隠れている（welcome.js がスライドインさせる） */
   filter: drop-shadow(0 4px 8px rgba(42, 10, 16, 0.15));
 }
+/*
+ * 左右の端から傾いて覗き込むキャラクター③（スマホのみ。人数は assets/welcome.js の WLC_FOOTER_SIDE）
+ * ★拡張予定: 大きさ・高さ・傾き・隠す量を変える場合は下の変数を書き換える
+ *   --wlc-side-h    : キャラクターの高さ
+ *   --wlc-side-up   : 下端（フッターの上端）からの高さ
+ *   --wlc-side-tilt : 傾き（度。数字だけ。画面の内側に傾く）
+ *   --wlc-side-peek : 画面の外に隠す量（数字だけ。キャラクター自身の幅に対する %）
+ */
+.wlc-sec3 {
+  position: relative;
+  --wlc-side-h: min(30vh, 230px);
+  --wlc-side-up: calc(var(--wlc-foot-h) * 0.5);
+  --wlc-side-tilt: 14;
+  --wlc-side-peek: 30;
+}
+.wlc-foot-side {
+  position: absolute;
+  bottom: var(--wlc-side-up);
+  height: var(--wlc-side-h);
+  transform-origin: 50% 100%;
+  z-index: 0;                 /* 並んで立つキャラクターより奥 */
+  pointer-events: none;
+}
+.wlc-foot-side img {
+  height: 100%; width: auto; display: block;
+  filter: drop-shadow(0 4px 8px rgba(42, 10, 16, 0.15));
+}
+.wlc-foot-side-l { left: 0; }
+.wlc-foot-side-r { right: 0; }
+.wlc-foot-side:not(.has-img) { display: none; }
+@media (max-width: 759px) {
+  .wlc-sec3 {
+    --wlc-side-h: min(24vh, 46vw);
+    --wlc-side-up: calc(var(--wlc-foot-h) * 0.95);
+  }
+}
+
 /* フッターをキャラクター③より手前に重ねる */
 #wlc-footer { position: relative; z-index: 2; }
 /* スマホ：2人を大きめに、少し重ねて並べる（画像のまわりの透明な余白のぶん、くっつけて見せる） */
