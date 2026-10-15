@@ -1,0 +1,63 @@
+# =====================================================
+# 素材リポジトリとVOICEVOXの動作確認（手動実行用）
+#
+# 確認すること:
+#   1. Secrets の ASSETS_TOKEN で、非公開リポジトリ sunshaura-assets を読めるか
+#   2. GitHub Actions 上で VOICEVOX エンジン（Linux版）が動き、ずんだもんの声を作れるか
+#
+# 実行方法:
+#   GitHub の Actions タブ → 「Assets & VOICEVOX test」→ Run workflow
+#   結果の音声は、実行結果ページ下部の Artifacts から zundamon-test をダウンロードして聞ける
+#
+# ★拡張予定: 毎日のニュース音声づくりの仕組みができたら、このファイルは削除してよい
+#   （同じ処理が news-voice 用のワークフローに組み込まれるため）
+# =====================================================
+name: Assets & VOICEVOX test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      # VOICEVOX エンジン（CPU版）。http://localhost:50021 で使える
+      voicevox:
+        image: voicevox/voicevox_engine:cpu-latest
+        ports:
+          - 50021:50021
+    steps:
+      - name: 素材リポジトリを読み込む（ASSETS_TOKEN の確認）
+        uses: actions/checkout@v4
+        with:
+          repository: iloveflygn330-design/sunshaura-assets
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: assets-private
+
+      - name: 素材の一覧を表示
+        run: |
+          echo "--- sunshaura-assets の中身 ---"
+          find assets-private -path assets-private/.git -prune -o -type f -print
+
+      - name: VOICEVOX の起動を待つ
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:50021/version; then echo; echo "起動しました"; exit 0; fi
+            sleep 2
+          done
+          echo "VOICEVOX が起動しませんでした"; exit 1
+
+      - name: ずんだもんの声でテスト音声を作る
+        run: |
+          # ずんだもん（ノーマル）の話者ID = 3
+          TEXT='テストなのだ。今日のニュースを読み上げるのだ！'
+          curl -sf -X POST "http://localhost:50021/audio_query?speaker=3" \
+               --get --data-urlencode "text=${TEXT}" -o query.json
+          curl -sf -X POST "http://localhost:50021/synthesis?speaker=3" \
+               -H "Content-Type: application/json" --data @query.json -o zundamon-test.wav
+          ls -l zundamon-test.wav
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zundamon-test
+          path: zundamon-test.wav
