@@ -3952,18 +3952,58 @@
      "surprise",
      "amazement",
      "look"
-    ]
+    ],
+    "w": 1082,
+    "h": 1650
+   },
+   "display": {
+    "scale": 1,
+    "ground": 1582,
+    "dx": 0
    }
   },
   "zunko": {
    "name": "東北ずん子",
    "color": "#2E7D5B",
-   "chara": null
+   "chara": {
+    "path": "assets/video/chara/zunko/",
+    "ext": "webp",
+    "faces": [
+     "normal",
+     "smile",
+     "surprise",
+     "amazement",
+     "look"
+    ],
+    "w": 1082,
+    "h": 1873
+   },
+   "display": {
+    "scale": 1,
+    "ground": 1818,
+    "dx": 0
+   }
   },
   "itako": {
    "name": "東北イタコ",
    "color": "#6B4FA0",
-   "chara": null
+   "chara": {
+    "path": "assets/video/chara/itako/",
+    "ext": "webp",
+    "faces": [
+     "normal",
+     "smile",
+     "surprise",
+     "look"
+    ],
+    "w": 1082,
+    "h": 2066
+   },
+   "display": {
+    "scale": 0.88,
+    "ground": 1927,
+    "dx": -30
+   }
   }
  },
  "credits": {
