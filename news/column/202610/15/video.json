@@ -2773,7 +2773,14 @@
      "surprise",
      "amazement",
      "look"
-    ]
+    ],
+    "w": 1082,
+    "h": 1650
+   },
+   "display": {
+    "scale": 1,
+    "ground": 1582,
+    "dx": 0
    }
   }
  },
