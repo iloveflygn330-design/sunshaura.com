@@ -250,13 +250,18 @@ function Character({ side, info, mouthOpen, face, base, sectionStart, dim, enter
     const f = [face, ...(FACE_FALLBACK[face] || []), 'normal'].find((x) => chara.faces.includes(x)) || 'normal';
     const states = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'];
     const now = `${eyeClosed ? 'eyeclose' : 'eyeopen'}_${mouthOpen ? 'mouthopen' : 'mouthclose'}`;
+    // 左に立つキャラは左右反転して、右のずんだもんの方を向かせる
+    // ★拡張予定: 反転させたくないキャラは characters.json の display に "flip": false を書く
+    const flip = side === 'left' && disp.flip !== false;
     return (
       <div style={style}>
-        {states.map((s) => (
-          // 4枚とも読み込んでおき、表示だけ切り替える（ちらつき防止）
-          <img key={s} src={`${base}${chara.path}${f}_${s}.${chara.ext || 'png'}`} alt=""
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom', opacity: s === now ? 1 : 0 }} />
-        ))}
+        <div style={{ position: 'absolute', inset: 0, transform: flip ? 'scaleX(-1)' : 'none' }}>
+          {states.map((s) => (
+            // 4枚とも読み込んでおき、表示だけ切り替える（ちらつき防止）
+            <img key={s} src={`${base}${chara.path}${f}_${s}.${chara.ext || 'png'}`} alt=""
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom', opacity: s === now ? 1 : 0 }} />
+          ))}
+        </div>
       </div>
     );
   }
