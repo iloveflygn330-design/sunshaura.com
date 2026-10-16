@@ -45,7 +45,7 @@ const TIMING = {
 
 /* 立ち絵の表情。素材リポジトリの各キャラクターのフォルダにあるファイル名と一致させる
    ★拡張予定: 表情を増やしたら、ここにも名前を追記する（news/GUIDE.md の face の一覧にも） */
-const FACES = ['normal', 'smile', 'surprise', 'amazement', 'look'];
+const FACES = ['normal', 'smile', 'surprise', 'amazement', 'look', 'nihilistic'];
 
 /* 出演キャラクターの設定（声の話者ID・声色・色・立ち絵フォルダ）
    ★拡張予定: キャラクターや声色を増やす場合は tools/news-video/characters.json を編集する */
@@ -233,15 +233,25 @@ async function main() {
     const dstRel = `assets/video/chara/${c.folder}/`;
     const dst = path.join('news', dstRel);
     const faces = [];
+    let size = null;
     if (fs.existsSync(src)) {
       for (const face of FACES) {
         const names = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'].map((x) => `${face}_${x}.png`);
-        if (names.every((n) => fs.existsSync(path.join(src, n)))) {
+        // 「eyecloses」と書かれたファイル名も受け付ける（よくある書き間違い）
+        const srcName = (n) => fs.existsSync(path.join(src, n)) ? n : n.replace('_eyeclose_', '_eyecloses_');
+        if (names.every((n) => fs.existsSync(path.join(src, srcName(n))))) {
           fs.mkdirSync(dst, { recursive: true });
           names.forEach((n) => {
-            execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(src, n),
-              '-vf', 'scale=-1:1000', '-c:v', 'libwebp', '-quality', '85', path.join(dst, n.replace(/\.png$/, '.webp'))]);
+            // 横幅720pxのWebPに（表示サイズは video.json の w/h と characters.json の display で決まる）
+            execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(src, srcName(n)),
+              '-vf', 'scale=720:-1', '-c:v', 'libwebp', '-quality', '85', path.join(dst, n.replace(/\.png$/, '.webp'))]);
           });
+          if (!size) {
+            // 元画像（PNG）の大きさ。キャラごとの表示位置の計算に使う
+            const [w, h] = execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height',
+              '-of', 'csv=p=0', path.join(src, srcName(names[0]))], { encoding: 'utf8' }).trim().split(',').map(Number);
+            size = { w, h };
+          }
           faces.push(face);
         }
       }
@@ -258,7 +268,8 @@ async function main() {
     cast[key] = {
       name: c.name,
       color: c.color,
-      chara: faces.includes('normal') ? { path: dstRel, ext: 'webp', faces } : null
+      chara: faces.includes('normal') ? { path: dstRel, ext: 'webp', faces, ...size } : null,
+      display: c.display || {}
     };
     if (!cast[key].chara) console.log(`  ※ ${c.name} の立ち絵がまだないため、仮の図形で表示します`);
   }

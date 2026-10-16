@@ -218,16 +218,36 @@ function Character({ side, info, mouthOpen, face, base, sectionStart, dim, enter
   const enter = enterAt == null ? 1 : spring({ frame: frame - Math.round(enterAt * FPS), fps: FPS, config: { damping: 200 }, durationInFrames: 16 });
   const slide = (1 - enter) * (side === 'left' ? -560 : 560);
 
-  // ★拡張予定: 立ち絵の大きさ・位置はここで調整する（bottom をマイナスにすると足元が画面の外に出て、大きく映る）
+  const chara = info && info.chara;
+  /*
+   * 立ち絵の位置と大きさ
+   *   元画像の横幅1082pxを画面上640pxで表示するのを基準（scale 1）に、キャラごとの display で調整する。
+   *   ground（元画像で足元にあたる高さ）が、画面の GROUND_Y の位置にそろう（足元は画面の下にはみ出す）。
+   * ★拡張予定: 全員の大きさ・立ち位置をまとめて変える場合は GROUND_Y / BASE_SCALE / CENTER_X を、
+   *   1人だけ変える場合は tools/news-video/characters.json の display を変更する
+   */
+  const GROUND_Y = 1270, BASE_SCALE = 640 / 1082, CENTER_X = { left: 200, right: 1720 };
+  const disp = (info && info.display) || {};
+  let box;
+  if (chara && chara.w && chara.h) {
+    const sc = BASE_SCALE * (disp.scale || 1);
+    const w = chara.w * sc, h = chara.h * sc;
+    const ground = disp.ground != null ? disp.ground : chara.h;
+    box = { left: CENTER_X[side] + (disp.dx || 0) - w / 2, top: GROUND_Y - ground * sc, width: w, height: h };
+  } else {
+    box = { [side]: -110, bottom: -230, width: 640, height: 980 }; // 旧形式・仮の立ち絵
+  }
   const style = {
-    position: 'absolute', bottom: -230, width: 640, height: 980, [side]: -110,
+    position: 'absolute', ...box,
     transform: `translate(${slide}px, ${bob}px)`,
     filter: dim ? 'brightness(0.86)' : 'none', transition: 'filter 0.2s'
   };
-  const chara = info && info.chara;
 
   if (chara && chara.faces.length) {
-    const f = chara.faces.includes(face) ? face : 'normal';
+    // その表情の立ち絵がないキャラは、近い表情 → ふつう の順で代わりを使う
+    // ★拡張予定: 表情を増やしたら FACE_FALLBACK に代わりの表情を追記する
+    const FACE_FALLBACK = { amazement: ['nihilistic', 'look'], nihilistic: ['amazement', 'look'] };
+    const f = [face, ...(FACE_FALLBACK[face] || []), 'normal'].find((x) => chara.faces.includes(x)) || 'normal';
     const states = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'];
     const now = `${eyeClosed ? 'eyeclose' : 'eyeopen'}_${mouthOpen ? 'mouthopen' : 'mouthclose'}`;
     return (
