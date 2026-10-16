@@ -43,9 +43,14 @@ const TIMING = {
   BGM_FADE_OUT:   1.8    // 最後のBGMのフェードアウト（秒）
 };
 
-/* 立ち絵の表情。素材リポジトリの zundamon/ にあるファイル名と一致させる
+/* 立ち絵の表情。素材リポジトリの各キャラクターのフォルダにあるファイル名と一致させる
    ★拡張予定: 表情を増やしたら、ここにも名前を追記する（news/GUIDE.md の face の一覧にも） */
 const FACES = ['normal', 'smile', 'surprise', 'amazement', 'look'];
+
+/* 出演キャラクターの設定（声の話者ID・声色・色・立ち絵フォルダ）
+   ★拡張予定: キャラクターや声色を増やす場合は tools/news-video/characters.json を編集する */
+const CHARS = JSON.parse(fs.readFileSync(new URL('./characters.json', import.meta.url), 'utf8'));
+delete CHARS._説明;
 
 /* =====================================================
    VOICEVOX
@@ -112,8 +117,19 @@ const round = (n) => Math.round(n * 1000) / 1000;
 
 async function main() {
   const script = JSON.parse(fs.readFileSync(path.join(articleDir, 'script.json'), 'utf8'));
-  const speaker = script.speaker ?? 3;   // 3 = ずんだもん（ノーマル）
   const speed = script.speed ?? 1.15;
+  const guest = CHARS[script.guest] ? script.guest : null;
+
+  // セリフごとの話者IDを決める（who = キャラクター、style = 声色）
+  function speakerOf(line) {
+    const who = CHARS[line.who] ? line.who : 'zundamon';
+    if (line.who && !CHARS[line.who]) console.warn(`  ※ 不明なキャラクター "${line.who}" → ずんだもんで読みます`);
+    const styles = CHARS[who].styles;
+    if (!line.who && script.speaker != null) return { who, id: script.speaker }; // 旧形式の台本
+    const style = styles[line.style] != null ? line.style : 'ノーマル';
+    if (line.style && styles[line.style] == null) console.warn(`  ※ ${CHARS[who].name} に声色 "${line.style}" はありません → ノーマル`);
+    return { who, id: styles[style] };
+  }
 
   let fmt = null;
   const pcm = [];
@@ -125,27 +141,32 @@ async function main() {
     cursor += len / bytesPerSec;
   };
 
-  const lines = [], sections = [], mouth = [];
+  const lines = [], sections = [], mouth = {};
   for (let si = 0; si < script.sections.length; si++) {
     const sec = script.sections[si];
     const secStart = cursor;
     for (let li = 0; li < sec.lines.length; li++) {
       const line = sec.lines[li];
-      const { query, wav } = await voicevox(line.read || line.text, speaker, speed);
+      const sp = speakerOf(line);
+      const { query, wav } = await voicevox(line.read || line.text, sp.id, speed);
       const w = parseWav(wav);
       if (!fmt) { fmt = w; pushSilence(TIMING.LEAD_IN); }
       const bytesPerSec = fmt.rate * fmt.channels * fmt.bits / 8;
       const dur = w.data.length / bytesPerSec;
       const start = cursor;
       pcm.push(w.data); cursor += dur;
-      mouthIntervals(query, dur).forEach(([a, b]) => mouth.push([round(start + a), round(start + b)]));
-      lines.push({ text: line.text, face: FACES.includes(line.face) ? line.face : 'normal', section: si, start: round(start), end: round(cursor) });
-      console.log(`  ${round(start)}s  ${line.text}`);
+      (mouth[sp.who] = mouth[sp.who] || []);
+      mouthIntervals(query, dur).forEach(([a, b]) => mouth[sp.who].push([round(start + a), round(start + b)]));
+      lines.push({ who: sp.who, text: line.text, face: FACES.includes(line.face) ? line.face : 'normal', section: si, start: round(start), end: round(cursor) });
+      console.log(`  ${round(start)}s  [${CHARS[sp.who].name}] ${line.text}`);
       if (li < sec.lines.length - 1) pushSilence(TIMING.GAP_LINE);
     }
     const isLast = si === script.sections.length - 1;
     pushSilence(isLast ? TIMING.TAIL : TIMING.GAP_SECTION);
     const entry = { type: sec.type, start: round(secStart), end: round(cursor) };
+    // 画面左に立つキャラクター：そのコーナーで話すずんだもん以外のキャラ（占いならイタコ）、いなければ今日のゲスト
+    const other = sec.lines.map((l) => speakerOf(l).who).find((w) => w !== 'zundamon');
+    entry.left = other || guest;
     if (sec.item != null) entry.item = sec.item;
     if (sec.ranking) entry.ranking = sec.ranking;
     sections.push(entry);
@@ -201,33 +222,47 @@ async function main() {
 
   // ---------- 立ち絵（あれば軽いWebPに変換して公開側に置く） ----------
   // 原本のPNG（1枚600KB程度）はスマホでは重いため、高さ1000pxのWebP（1枚50KB程度）にする
-  const charaSrc = path.join(assetsDir, 'zundamon');
-  const charaDst = path.join('news', 'assets', 'video', 'chara');
-  const faces = [];
-  if (fs.existsSync(charaSrc)) {
-    for (const face of FACES) {
-      const names = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'].map((s) => `${face}_${s}.png`);
-      if (names.every((n) => fs.existsSync(path.join(charaSrc, n)))) {
-        fs.mkdirSync(charaDst, { recursive: true });
-        names.forEach((n) => {
-          const dst = path.join(charaDst, n.replace(/\.png$/, '.webp'));
-          execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(charaSrc, n),
-            '-vf', 'scale=-1:1000', '-c:v', 'libwebp', '-quality', '85', dst]);
-        });
-        faces.push(face);
+  // 素材リポジトリの <キャラのフォルダ>/ → 公開側の news/assets/video/chara/<キャラのフォルダ>/
+  const castKeys = [...new Set(['zundamon', ...(guest ? [guest] : []), ...lines.map((l) => l.who)])];
+  const cast = {};
+  const extraCredits = [];
+  const seenCredit = new Set();
+  for (const key of castKeys) {
+    const c = CHARS[key];
+    const src = path.join(assetsDir, c.folder);
+    const dstRel = `assets/video/chara/${c.folder}/`;
+    const dst = path.join('news', dstRel);
+    const faces = [];
+    if (fs.existsSync(src)) {
+      for (const face of FACES) {
+        const names = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'].map((x) => `${face}_${x}.png`);
+        if (names.every((n) => fs.existsSync(path.join(src, n)))) {
+          fs.mkdirSync(dst, { recursive: true });
+          names.forEach((n) => {
+            execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(src, n),
+              '-vf', 'scale=-1:1000', '-c:v', 'libwebp', '-quality', '85', path.join(dst, n.replace(/\.png$/, '.webp'))]);
+          });
+          faces.push(face);
+        }
       }
+      // credit.txt：1行に1つ「項目：表記」（例: 立ち絵：坂本アヒル様）。同じ表記は1回だけ出す
+      try {
+        fs.readFileSync(path.join(src, 'credit.txt'), 'utf8').split(/\r?\n/).map((l) => l.trim()).filter(Boolean).forEach((l) => {
+          const i = l.search(/[：:]/);
+          const item = i > 0 ? { label: l.slice(0, i).trim(), text: l.slice(i + 1).trim() } : { label: 'クレジット', text: l };
+          const k = item.label + '|' + item.text;
+          if (!seenCredit.has(k)) { seenCredit.add(k); extraCredits.push(item); }
+        });
+      } catch { /* なし */ }
     }
+    cast[key] = {
+      name: c.name,
+      color: c.color,
+      chara: faces.includes('normal') ? { path: dstRel, ext: 'webp', faces } : null
+    };
+    if (!cast[key].chara) console.log(`  ※ ${c.name} の立ち絵がまだないため、仮の図形で表示します`);
   }
-  // credit.txt：1行に1つ「項目：表記」（例: 立ち絵：坂本アヒル様）
-  let extraCredits = [];
-  try {
-    extraCredits = fs.readFileSync(path.join(charaSrc, 'credit.txt'), 'utf8')
-      .split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
-      .map((l) => {
-        const i = l.search(/[：:]/);
-        return i > 0 ? { label: l.slice(0, i).trim(), text: l.slice(i + 1).trim() } : { label: 'クレジット', text: l };
-      });
-  } catch { /* なし */ }
+  const speaking = castKeys.filter((k) => lines.some((l) => l.who === k));
 
   // ---------- video.json ----------
   const video = {
@@ -237,15 +272,16 @@ async function main() {
     sections,
     lines,
     mouth,
-    chara: faces.includes('normal') ? { path: 'assets/video/chara/', ext: 'webp', faces } : null,
+    guest,
+    cast,
     credits: {
-      voice: 'VOICEVOX:ずんだもん',
+      voice: speaking.map((k) => `VOICEVOX:${CHARS[k].name}`).join(' / '),
       extra: extraCredits,
       bgm: usedBgm.map((b) => ({ title: b.title || '', artist: b.artist || '', site: b.site || '' }))
     }
   };
   fs.writeFileSync(path.join(articleDir, 'video.json'), JSON.stringify(video, null, 1));
-  console.log(`完了: ${duration}秒 / BGM: ${usedBgm.map((b) => b.title || b.file).join(', ') || 'なし'} / 立ち絵: ${faces.join(', ') || '仮'}`);
+  console.log(`完了: ${duration}秒 / BGM: ${usedBgm.map((b) => b.title || b.file).join(', ') || 'なし'} / 出演: ${castKeys.map((k) => CHARS[k].name + (cast[k].chara ? '' : '（仮）')).join('・')}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

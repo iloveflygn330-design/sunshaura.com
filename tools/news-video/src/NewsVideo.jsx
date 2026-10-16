@@ -195,14 +195,16 @@ function EndingPanel({ section, credits, theme }) {
 const PANELS = { opening: OpeningPanel, news: NewsPanel, fortune: FortunePanel, ending: EndingPanel };
 
 /* =====================================================
-   ずんだもん（立ち絵）
-   video.json の chara があれば PNG、なければ仮の図形を表示する。
+   キャラクター（立ち絵）
+   video.json の cast[キャラ].chara があれば画像、なければ仮の図形を表示する。
+     side       : 'right'（ずんだもん）/ 'left'（ゲスト・占いのイタコ）
+     dim        : 相手が話しているときは少し暗くする
+     enterAt    : この時刻に画面の外から入ってくる（左のキャラが入れ替わるとき）
    ===================================================== */
-function Character({ mouthOpen, face, chara, base, sectionStart }) {
+function Character({ side, info, mouthOpen, face, base, sectionStart, dim, enterAt, blinkOffset }) {
   const frame = useCurrentFrame();
-  // まばたき：約3.3秒ごとに4フレーム目を閉じる
-  const eyeClosed = frame % 100 >= 96;
-  // 話しているときは少し上下に揺れる
+  // まばたき：約3.3秒ごとに4フレーム目を閉じる（キャラごとにタイミングをずらす）
+  const eyeClosed = (frame + blinkOffset) % 100 >= 96;
   // コーナー（ニュース）が切り替わったときだけ、ぴょんと2回はねる。それ以外は静止
   // ★拡張予定: はねる高さ・回数・長さは HOP_* で調整する
   const HOP_HEIGHT = 26, HOP_COUNT = 2, HOP_SEC = 0.7;
@@ -212,10 +214,17 @@ function Character({ mouthOpen, face, chara, base, sectionStart }) {
   const bob = since >= 0 && since < HOP_SEC
     ? -Math.pow(Math.sin(u * Math.PI * HOP_COUNT), 2) * HOP_HEIGHT * (1 - u * 0.6)
     : 0;
+  // 入れ替わりで登場するときは、画面の外からすっと入る
+  const enter = enterAt == null ? 1 : spring({ frame: frame - Math.round(enterAt * FPS), fps: FPS, config: { damping: 200 }, durationInFrames: 16 });
+  const slide = (1 - enter) * (side === 'left' ? -560 : 560);
+
   // ★拡張予定: 立ち絵の大きさ・位置はここで調整する（bottom をマイナスにすると足元が画面の外に出て、大きく映る）
-  const style = chara && chara.faces.length
-    ? { position: 'absolute', right: -10, bottom: -240, width: 760, height: 1160, transform: `translateY(${bob}px)` }
-    : { position: 'absolute', right: 40, bottom: 0, width: 600, height: 960, transform: `translateY(${bob}px)` };
+  const style = {
+    position: 'absolute', bottom: -230, width: 640, height: 980, [side]: -110,
+    transform: `translate(${slide}px, ${bob}px)`,
+    filter: dim ? 'brightness(0.86)' : 'none', transition: 'filter 0.2s'
+  };
+  const chara = info && info.chara;
 
   if (chara && chara.faces.length) {
     const f = chara.faces.includes(face) ? face : 'normal';
@@ -232,23 +241,20 @@ function Character({ mouthOpen, face, chara, base, sectionStart }) {
     );
   }
 
-  // ---- 仮の立ち絵（素材がそろうまでの代わり） ----
+  // ---- 仮の立ち絵（素材がそろうまでの代わり。キャラの色と名前だけ表示） ----
+  const color = (info && info.color) || '#B88A97';
   const eyeH = eyeClosed ? 4 : face === 'surprise' ? 40 : 30;
-  const mouth = mouthOpen
-    ? <ellipse cx="300" cy="380" rx={face === 'surprise' ? 34 : 40} ry={face === 'surprise' ? 34 : 24} fill="#7A2236" />
-    : face === 'smile'
-      ? <path d="M255 372 Q300 410 345 372" stroke="#7A2236" strokeWidth="10" fill="none" strokeLinecap="round" />
-      : <line x1="268" y1="380" x2="332" y2="380" stroke="#7A2236" strokeWidth="10" strokeLinecap="round" />;
   return (
     <div style={style}>
-      <svg viewBox="0 0 600 960" width="600" height="960">
-        <rect x="110" y="520" width="380" height="460" rx="150" fill="#E9C9D2" />
-        <circle cx="300" cy="320" r="210" fill="#F6E3E8" stroke="#E9C9D2" strokeWidth="10" />
-        {face === 'smile' && !eyeClosed
-          ? <g stroke={TEXT} strokeWidth="10" fill="none" strokeLinecap="round"><path d="M210 300 Q235 270 260 300" /><path d="M340 300 Q365 270 390 300" /></g>
-          : <g fill={TEXT}><rect x="220" y={300 - eyeH / 2} width="30" height={eyeH} rx="12" /><rect x="350" y={300 - eyeH / 2} width="30" height={eyeH} rx="12" /></g>}
-        {mouth}
-        <text x="300" y="760" textAnchor="middle" fontSize="44" fontWeight="800" fill="#B88A97" fontFamily={FONT}>立ち絵（仮）</text>
+      <svg viewBox="0 0 640 980" width="640" height="980">
+        <rect x="140" y="470" width="360" height="520" rx="150" fill={color} opacity="0.35" />
+        <circle cx="320" cy="300" r="190" fill="#fff" stroke={color} strokeWidth="12" />
+        <g fill={TEXT}><rect x="245" y={290 - eyeH / 2} width="28" height={eyeH} rx="12" /><rect x="367" y={290 - eyeH / 2} width="28" height={eyeH} rx="12" /></g>
+        {mouthOpen
+          ? <ellipse cx="320" cy="365" rx="34" ry="22" fill="#7A2236" />
+          : <line x1="292" y1="368" x2="348" y2="368" stroke="#7A2236" strokeWidth="10" strokeLinecap="round" />}
+        <text x="320" y="610" textAnchor="middle" fontSize="44" fontWeight="800" fill={color} fontFamily={FONT}>{info ? info.name : ''}</text>
+        <text x="320" y="665" textAnchor="middle" fontSize="30" fontWeight="700" fill={color} fontFamily={FONT}>立ち絵準備中</text>
       </svg>
     </div>
   );
@@ -257,13 +263,27 @@ function Character({ mouthOpen, face, chara, base, sectionStart }) {
 /* =====================================================
    全体
    ===================================================== */
-export function NewsVideo({ video, article, base, audioSrc }) {
+// 旧形式（1人だけ）の video.json を新形式にそろえる
+function normalize(video) {
+  if (video.cast) return video;
+  return {
+    ...video,
+    cast: { zundamon: { name: 'ずんだもん', color: '#4E9A2E', chara: video.chara || null } },
+    mouth: { zundamon: video.mouth || [] },
+    lines: video.lines.map((l) => ({ ...l, who: 'zundamon' })),
+    sections: video.sections.map((s) => ({ ...s, left: null }))
+  };
+}
+
+export function NewsVideo({ video: rawVideo, article, base, audioSrc }) {
+  const video = normalize(rawVideo);
   const frame = useCurrentFrame();
   const t = sec(frame);
   const month = parseInt(video.date.slice(5, 7), 10);
   const theme = SEASONS[SEASON_BY_MONTH[month - 1]];
 
   const section = video.sections.find((s) => t >= s.start && t < s.end) || video.sections[video.sections.length - 1];
+  const sectionIndex = video.sections.indexOf(section);
   const Panel = PANELS[section.type] || OpeningPanel;
 
   // 字幕：次のセリフが始まるまで、直前のセリフを表示し続ける（間でちらつかないように）
@@ -273,8 +293,17 @@ export function NewsVideo({ video, article, base, audioSrc }) {
     const next = video.lines[i + 1];
     if (t >= l.start - 0.05 && (!next || t < next.start - 0.05) && t < l.end + 1.2) { line = l; break; }
   }
-  const mouthOpen = video.mouth.some(([a, b]) => t >= a && t < b);
+  const speaker = line ? line.who : null;
+  const isOpen = (who) => (video.mouth[who] || []).some(([a, b]) => t >= a && t < b);
   const [, m, d] = video.date.split('-').map(Number);
+
+  // 左に立つキャラ（ゲスト／占いのイタコ）。前のコーナーと違うキャラなら、画面の外から入ってくる
+  const leftKey = section.left;
+  const prevLeft = sectionIndex > 0 ? video.sections[sectionIndex - 1].left : leftKey;
+  const leftEnterAt = sectionIndex > 0 && prevLeft !== leftKey ? section.start : null;
+
+  const speakerInfo = speaker ? video.cast[speaker] : null;
+  const subColor = speakerInfo ? speakerInfo.color : theme.accent;
 
   // コーナーが切り替わるときにパネルがふわっと出る
   const panelIn = spring({ frame: frame - Math.round(section.start * FPS), fps: FPS, config: { damping: 200 }, durationInFrames: 14 });
@@ -287,38 +316,55 @@ export function NewsVideo({ video, article, base, audioSrc }) {
       <Audio src={audioSrc} />
 
       {/* タイトルバー */}
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 110, background: MAIN, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 60px', boxShadow: '0 6px 20px rgba(0,0,0,0.18)' }}>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 110, background: MAIN, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 60px', boxShadow: '0 6px 20px rgba(0,0,0,0.18)', zIndex: 2 }}>
         <div style={{ color: '#fff', fontSize: 46, fontWeight: 800, letterSpacing: 4 }}>sunshaura VRニュース</div>
         <div style={{ background: 'rgba(255,255,255,0.92)', color: MAIN, borderRadius: 40, padding: '8px 34px', fontSize: 38, fontWeight: 800 }}>
           {video.date.slice(0, 4)}.{String(m).padStart(2, '0')}.{String(d).padStart(2, '0')}
         </div>
       </div>
 
-      {/* コーナーのパネル */}
+      {/* コーナーのパネル（中央） */}
       <div style={{
-        position: 'absolute', left: 70, top: 150, width: 1210, height: 650, background: '#fff', borderRadius: 32,
+        position: 'absolute', left: 360, top: 140, width: 1200, height: 650, background: '#fff', borderRadius: 32,
         overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
         opacity: panelIn, transform: `scale(${interpolate(panelIn, [0, 1], [0.97, 1])})`
       }}>
         <Panel section={section} article={article} theme={theme} credits={video.credits} />
       </div>
 
-      {/* ずんだもん */}
-      <Character mouthOpen={mouthOpen} face={line ? line.face : 'normal'} chara={video.chara} base={base} sectionStart={section.start} />
+      {/* 左：ゲスト（占いではイタコ） */}
+      {leftKey && video.cast[leftKey] && (
+        <Character key={leftKey} side="left" info={video.cast[leftKey]} base={base}
+          mouthOpen={isOpen(leftKey)} face={speaker === leftKey ? line.face : 'normal'}
+          sectionStart={section.start} dim={!!speaker && speaker !== leftKey}
+          enterAt={leftEnterAt} blinkOffset={37} />
+      )}
 
-      {/* 字幕 */}
+      {/* 右：ずんだもん */}
+      <Character side="right" info={video.cast.zundamon} base={base}
+        mouthOpen={isOpen('zundamon')} face={speaker === 'zundamon' ? line.face : 'normal'}
+        sectionStart={section.start} dim={!!speaker && speaker !== 'zundamon' && !!leftKey}
+        enterAt={null} blinkOffset={0} />
+
+      {/* 字幕（話しているキャラの名前と色つき） */}
       {line && (
         <div style={{
-          position: 'absolute', left: 70, top: 830, width: 1210, height: 200, borderRadius: 28,
-          background: 'rgba(255,255,255,0.95)', border: `6px solid ${theme.accent}`,
+          position: 'absolute', left: 360, top: 820, width: 1200, height: 200, borderRadius: 28,
+          background: 'rgba(255,255,255,0.96)', border: `6px solid ${subColor}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 48px'
         }}>
+          {speakerInfo && (
+            <div style={{
+              position: 'absolute', top: -30, left: 36, background: subColor, color: '#fff',
+              fontSize: 30, fontWeight: 800, borderRadius: 30, padding: '6px 26px', letterSpacing: 2
+            }}>{speakerInfo.name}</div>
+          )}
           <div style={{ fontSize: 54, fontWeight: 800, lineHeight: 1.4, textAlign: 'center' }}>{line.text}</div>
         </div>
       )}
 
       {/* クレジット（VOICEVOXの利用規約により常時表示） */}
-      <div style={{ position: 'absolute', right: 30, bottom: 14, fontSize: 24, fontWeight: 700, color: 'rgba(0,0,0,0.5)', background: 'rgba(255,255,255,0.7)', borderRadius: 8, padding: '2px 12px' }}>
+      <div style={{ position: 'absolute', right: 30, bottom: 14, fontSize: 22, fontWeight: 700, color: 'rgba(0,0,0,0.5)', background: 'rgba(255,255,255,0.75)', borderRadius: 8, padding: '2px 12px' }}>
         {video.credits.voice}
         {/* キャラクターのクレジット（credit.txt の「キャラクター：」の行）も常時表示 */}
         {(video.credits.extra || []).filter((c) => c.label === 'キャラクター').map((c) => ' ' + c.text).join('')}
