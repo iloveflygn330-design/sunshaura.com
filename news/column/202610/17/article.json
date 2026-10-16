@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-17",
+  "title": "VRChat「Spookality 2026」受賞作24点が発表ほか、今日のVRニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、VRChatのハロウィン恒例企画「Spookality 2026」の受賞作発表を中心にお届けします。日本サーバーのメンテナンス予告や、Steam Frameの不具合修正、VR向けRPGの最終章配信日など、あわせて4本のニュースをまとめました。",
+  "items": [
+    {
+      "headline": "Spookality 2026、アバターとワールドの受賞作を発表",
+      "category": "イベント",
+      "overview": "VRChatは、毎年恒例のアバター・ワールド制作企画「Spookality 2026」の受賞作を発表しました。アバター部門とワールド部門で、それぞれ12作品ずつが選ばれています。受賞作は専用のハブワールドやワールドの一覧（Row）で先頭に紹介され、条件を満たしたほかの応募作もあわせて見ることができます。上位3作品を紹介する配信イベントも予定されています。",
+      "points": [
+        "アバター・ワールド各12作品、計24作品が受賞",
+        "受賞者にはVRC+の1年分や記念バッジなどが贈られる",
+        "上位作品の発表配信は日本時間10月25日午前4時から",
+        "紹介用のアバター・ワールド一覧は11月2日（米国時間）まで"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum「Spookality 2026 Winners!」", "url": "https://ask.vrchat.com/t/spookality-2026-winners/49139" }
+      ]
+    },
+    {
+      "headline": "VRChat、日本リージョンの通信サーバーを10月20日未明に保守",
+      "category": "VRChat公式",
+      "overview": "VRChatの公式ステータスページに、リアルタイム通信サーバーのメンテナンス予定が掲載されました。日本（東京）リージョンは、日本時間10月20日の午前2時から6時までが対象です。作業中は、該当リージョンのインスタンスで1回以上の切断が起きる可能性があると案内されています。同じ内容の作業は、米国西部・米国東部・欧州のリージョンでも順に予定されています。",
+      "points": [
+        "日本リージョンは日本時間10月20日（火）午前2時〜6時",
+        "作業中はインスタンスから切断されることがある",
+        "深夜に遊ぶ予定やイベントがある人は時間に注意"
+      ],
+      "sources": [
+        { "name": "VRChat Status「Realtime Networking Maintenance (JP)」", "url": "https://status.vrchat.com/incidents/9skqn9yj4fvz" }
+      ]
+    },
+    {
+      "headline": "Steam Frame、Wi-Fi省電力が勝手に戻る不具合を修正",
+      "category": "VR機器・技術",
+      "overview": "ValveのVRヘッドセット「Steam Frame」で、オフにしたWi-Fiの省電力設定が起動時にオンへ戻ってしまう不具合が、Steamクライアントの更新で修正されました。今回の更新には、専用ワイヤレスアダプターまわりの改善も含まれています。ペアリングの安定性向上や、初回接続の進み具合の表示、Windowsでアダプターがスリープしないようにする変更などが挙げられています。",
+      "points": [
+        "起動時にWi-Fi省電力がオンに戻る問題を修正",
+        "ワイヤレスアダプターのペアリングが安定しやすくなった",
+        "アダプターのドライバーが初期化時に落ちる問題も修正"
+      ],
+      "sources": [
+        { "name": "MIXED Reality News", "url": "https://mixed-news.com/en/steam-frame-wi-fi-power-saving-startup-adapter-fixes-all-users/" }
+      ]
+    },
+    {
+      "headline": "VR向けRPG『Knights of Fiona』、最終章を10月20日に配信",
+      "category": "その他",
+      "overview": "『RUINSMAGUS』の開発元CharacterBankが手がける協力型VR RPG『Knights of Fiona』で、物語の最終章となる第6章がバージョン1.1として10月20日に配信されます。本編は基本無料で、全章を遊べる「Story Pass」（米国で18.99ドル）を持っていれば、追加料金なしで第6章を遊べます。あわせてレベル上限の引き上げや、読み込み時間の短縮、不具合の修正なども行われます。",
+      "points": [
+        "第6章で、メインストーリーが完結",
+        "Story Pass購入者は追加料金なしで遊べる",
+        "レベル上限が40から45に引き上げ",
+        "読み込み時間は最大80%短くなったと開発元は説明"
+      ],
+      "sources": [
+        { "name": "MIXED Reality News", "url": "https://mixed-news.com/en/knights-of-fiona-chapter-6-ver-1-1-october-20/" },
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/knights-of-fiona-concludes-its-story-on-quest-pc-vr-next-week/" }
+      ]
+    }
+  ],
+  "outro": "VRChatはハロウィンに向けて盛り上がりの時期です。メンテナンスの時間だけ気にしながら、受賞ワールドめぐりを楽しんでみてはいかがでしょうか。"
+}
