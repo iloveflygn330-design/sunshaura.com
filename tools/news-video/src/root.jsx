@@ -4,15 +4,11 @@
    render.mjs から inputProps（video / article / base / audioSrc）を渡して書き出す。
    ===================================================== */
 import React from 'react';
-import { Composition, registerRoot, getInputProps } from 'remotion';
-import { loadFont } from '@remotion/google-fonts/MPLUSRounded1c';
+import { Composition, registerRoot } from 'remotion';
 import { NewsVideo, FPS } from './NewsVideo.jsx';
 
-// サイトと同じフォント（M PLUS Rounded 1c）を読み込む
-// （ネットにつながらない環境で試すときは inputProps に skipFont: true を渡す）
-if (!getInputProps().skipFont) {
-  loadFont('normal', { weights: ['400', '700', '800'], subsets: ['japanese', 'latin'] });
-}
+// フォント（M PLUS Rounded 1c）は、書き出すサーバーにインストールして使う
+// （news-voice.yml の「フォントを用意」の手順。Web フォントの読み込みだと日本語の文字が欠けるため）
 
 function Root() {
   return (

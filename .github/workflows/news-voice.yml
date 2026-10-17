@@ -136,6 +136,18 @@ jobs:
       - name: 書き出しツールを用意
         run: cd tools/news-video && npm ci --no-audit --no-fund
 
+      # サイトと同じ日本語フォント（M PLUS Rounded 1c）をサーバーに入れる
+      # ★拡張予定: 動画のフォントを変える場合は、ここで入れるフォントと NewsVideo.jsx の FONT を合わせて変える
+      - name: フォントを用意
+        run: |
+          mkdir -p ~/.local/share/fonts
+          for w in Regular Medium Bold ExtraBold; do
+            curl -sfL -o ~/.local/share/fonts/MPLUSRounded1c-$w.ttf \
+              "https://github.com/google/fonts/raw/main/ofl/mplusrounded1c/MPLUSRounded1c-$w.ttf"
+          done
+          fc-cache -f
+          fc-list | grep -i "Rounded" | head -4
+
       - name: サイトを手元で配信（立ち絵・音声を読み込むため）
         run: |
           python3 -m http.server 8000 >/dev/null 2>&1 &
