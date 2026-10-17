@@ -45,7 +45,7 @@ const TIMING = {
 
 /* 立ち絵の表情。素材リポジトリの各キャラクターのフォルダにあるファイル名と一致させる
    ★拡張予定: 表情を増やしたら、ここにも名前を追記する（news/GUIDE.md の face の一覧にも） */
-const FACES = ['normal', 'smile', 'surprise', 'amazement', 'look', 'nihilistic'];
+const FACES = ['normal', 'smile', 'surprise', 'amazement', 'look', 'nihilistic', 'anger', 'eat', 'point', 'think'];
 
 /* 出演キャラクターの設定（声の話者ID・声色・色・立ち絵フォルダ）
    ★拡張予定: キャラクターや声色を増やす場合は tools/news-video/characters.json を編集する */

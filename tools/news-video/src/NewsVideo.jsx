@@ -246,7 +246,7 @@ function Character({ side, info, mouthOpen, face, base, sectionStart, dim, enter
   if (chara && chara.faces.length) {
     // その表情の立ち絵がないキャラは、近い表情 → ふつう の順で代わりを使う
     // ★拡張予定: 表情を増やしたら FACE_FALLBACK に代わりの表情を追記する
-    const FACE_FALLBACK = { amazement: ['nihilistic', 'look'], nihilistic: ['amazement', 'look'] };
+    const FACE_FALLBACK = { amazement: ['nihilistic', 'look'], nihilistic: ['amazement', 'look'], anger: ['amazement', 'nihilistic'], think: ['look'], point: ['smile'], eat: ['smile'] };
     const f = [face, ...(FACE_FALLBACK[face] || []), 'normal'].find((x) => chara.faces.includes(x)) || 'normal';
     const states = ['eyeopen_mouthclose', 'eyeopen_mouthopen', 'eyeclose_mouthclose', 'eyeclose_mouthopen'];
     const now = `${eyeClosed ? 'eyeclose' : 'eyeopen'}_${mouthOpen ? 'mouthopen' : 'mouthclose'}`;

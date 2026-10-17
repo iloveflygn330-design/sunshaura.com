@@ -71,6 +71,7 @@
     },
     "display": {
       "scale": 1,
+      "ground": 1793,
       "dx": 0
     }
   },
@@ -86,7 +87,8 @@
       "ささやき": 117
     },
     "display": {
-      "scale": 1,
+      "scale": 0.43,
+      "ground": 3221,
       "dx": 0
     }
   }
