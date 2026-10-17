@@ -37,6 +37,8 @@ concurrency:
 jobs:
   voice:
     runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.target.outputs.dirs }}
     services:
       voicevox:
         image: voicevox/voicevox_engine:cpu-latest
@@ -105,3 +107,90 @@ jobs:
             sleep 5
           done
           exit 1
+
+  # =====================================================
+  # MP4 の書き出し（YouTube に手動でアップロードする用）
+  #   音声づくりのあと、同じ記事の動画を MP4 に書き出して GitHub の Releases に置き、
+  #   Discord にダウンロードリンクを送る。
+  #   Releases には、動画・サムネイル候補・YouTube用のタイトルと説明文が入る。
+  #
+  # ★拡張予定: 書き出しをやめたい場合は、この mp4 ジョブを丸ごと削除する（サイトの動画には影響しない）
+  # ★拡張予定: YouTube への自動アップロードを足す場合は、このジョブの最後にアップロードの手順を追加する
+  # =====================================================
+  mp4:
+    needs: voice
+    if: needs.voice.outputs.dirs != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # 音声づくりでコミットした最新の状態を使う
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/news-video/package-lock.json
+
+      - name: 書き出しツールを用意
+        run: cd tools/news-video && npm ci --no-audit --no-fund
+
+      - name: サイトを手元で配信（立ち絵・音声を読み込むため）
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 2
+          curl -sf -o /dev/null http://localhost:8000/news/
+
+      - name: MP4 を書き出す
+        run: |
+          for dir in ${{ needs.voice.outputs.dirs }}; do
+            echo "=== $dir ==="
+            node tools/news-video/render.mjs "$dir" out http://localhost:8000/
+          done
+
+      - name: Releases に置く
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for f in out/sunshaura-news-*.mp4; do
+            date=$(basename "$f" .mp4 | sed 's/sunshaura-news-//')
+            tag="news-$date"
+            title=$(cat "out/title-$date.txt")
+            if gh release view "$tag" >/dev/null 2>&1; then
+              gh release upload "$tag" "$f" "out/thumbnail-$date.jpg" "out/description-$date.txt" "out/title-$date.txt" --clobber
+              gh release edit "$tag" --notes-file "out/description-$date.txt"
+            else
+              gh release create "$tag" "$f" "out/thumbnail-$date.jpg" "out/description-$date.txt" "out/title-$date.txt" \
+                --title "$title" --notes-file "out/description-$date.txt" --latest=false
+            fi
+          done
+
+      - name: Discord に通知
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+        run: |
+          [ -z "$DISCORD_WEBHOOK_URL" ] && { echo "DISCORD_WEBHOOK_URL が未設定のためスキップ"; exit 0; }
+          node <<'EOF'
+          const fs = require('fs');
+          (async () => {
+            for (const f of fs.readdirSync('out').filter((x) => x.startsWith('sunshaura-news-') && x.endsWith('.mp4'))) {
+              const date = f.replace('sunshaura-news-', '').replace('.mp4', '');
+              const title = fs.readFileSync(`out/title-${date}.txt`, 'utf8').trim();
+              const size = (fs.statSync(`out/${f}`).size / 1048576).toFixed(1);
+              const page = `https://github.com/${process.env.REPO}/releases/tag/news-${date}`;
+              const dl = `https://github.com/${process.env.REPO}/releases/download/news-${date}/${f}`;
+              // ---- メッセージ本文（★拡張予定: 文面を変える場合はここを編集） ----
+              const content = `🎬 **動画を書き出したのだ！**\n${title}\n` +
+                `MP4（${size}MB）: ${dl}\n` +
+                `タイトル・説明文・サムネイル: ${page}`;
+              const res = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content, allowed_mentions: { parse: [] }, flags: 4 })
+              });
+              console.log(date, res.status);
+              if (!res.ok) process.exitCode = 1;
+            }
+          })();
+          EOF

@@ -350,7 +350,7 @@
        tools/news-video で npm run build を実行して news-video.js を作り直す
      ===================================================== */
   // tools/news-video の npm run build が自動で書き換える（手で変えなくてよい）
-  var VIDEO_PLAYER_VERSION = 'f709c7e61b';
+  var VIDEO_PLAYER_VERSION = '133f9b78d7';
 
   function loadVideoPlayer() {
     if (window.SunNewsVideo) return Promise.resolve(window.SunNewsVideo);

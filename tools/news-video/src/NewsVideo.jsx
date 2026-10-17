@@ -122,7 +122,8 @@ function NewsPanel({ section, article, theme }) {
         </div>
         {item.sources && item.sources[0] && (
           <div ref={sourceRef} style={{
-            position: 'absolute', left: 64, bottom: 30, fontSize: 26, color: 'rgba(0,0,0,0.45)', fontWeight: 700,
+            // 左に立つキャラと重ならないよう、右寄せで表示する
+            position: 'absolute', right: 64, bottom: 30, maxWidth: 900, textAlign: 'right', fontSize: 26, color: 'rgba(0,0,0,0.45)', fontWeight: 700,
             opacity: overlap ? SOURCE_OPACITY_OVERLAP : 1, transition: 'opacity 0.3s'
           }}>
             出典：{item.sources.map((s) => s.name).join(' / ')}
