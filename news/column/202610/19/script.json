@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-19",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！週明けのずんだもんなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "ずんだもん、今週もよろしくね。", "face": "smile" },
+      { "who": "zundamon", "text": "10月19日のVRニュースは、4本なのだ。", "read": "じゅうがつじゅうくにちのブイアールニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatの通信サーバーのメンテなのだ。", "read": "いっぽんめ。ブイアールチャットの通信サーバーのメンテなのだ。" },
+      { "who": "zundamon", "text": "アメリカ西部のサーバーが対象なのだ。" },
+      { "who": "zunko", "text": "いつごろ行われるの？" },
+      { "who": "zundamon", "text": "日本時間の今日、17時から21時までなのだ。", "read": "日本時間の今日、じゅうしちじから、にじゅういちじまでなのだ。" },
+      { "who": "zundamon", "text": "その間、インスタンスから切断されるかもしれないのだ。", "face": "surprise" },
+      { "who": "zunko", "text": "海外のフレンドと遊ぶときは、気をつけたいですね。", "face": "look" },
+      { "who": "zundamon", "text": "日本のサーバーは、明日の未明に別のメンテがあるのだ。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Steam Next Festが今日から始まるのだ。", "read": "にほんめ。スチーム・ネクストフェストが今日から始まるのだ。", "face": "smile" },
+      { "who": "zunko", "text": "新作の体験版を、無料で遊べるお祭りですよね。" },
+      { "who": "zundamon", "text": "そうなのだ。26日まで開かれるのだ。", "read": "そうなのだ。にじゅうろくにちまで開かれるのだ。" },
+      { "who": "zundamon", "text": "VRホラー『Rustmourne』の体験版も出ているのだ。", "read": "ブイアールホラー、ラストモーンの体験版も出ているのだ。" },
+      { "who": "zunko", "text": "ホラーかあ……ちょっとドキドキしますね。", "face": "surprise" },
+      { "who": "zundamon", "text": "製品版は、2027年の前半が目安なのだ。", "read": "製品版は、にせんにじゅうななねんの前半が目安なのだ。" },
+      { "who": "zundamon", "text": "ほかにも、PCのVR体験版がいろいろあるのだ。", "read": "ほかにも、ピーシーのブイアール体験版がいろいろあるのだ。" },
+      { "who": "zunko", "text": "週末までに、いくつか試してみたいな。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。協力プレイのVRシューターの話なのだ。", "read": "さんぼんめ。協力プレイのブイアールシューターの話なのだ。" },
+      { "who": "zundamon", "text": "ぬいぐるみのクマになって、女の子を守るのだ。" },
+      { "who": "zunko", "text": "クマさんが主人公なんて、かわいいですね。", "face": "smile" },
+      { "who": "zundamon", "text": "Steamでは、11月3日発売と表示されたのだ。", "read": "スチームでは、じゅういちがつみっか発売と表示されたのだ。" },
+      { "who": "zundamon", "text": "4人まで一緒に遊べて、Questともつながるのだ。", "read": "よにんまで一緒に遊べて、クエストともつながるのだ。" },
+      { "who": "zunko", "text": "お値段はいくらなんですか？" },
+      { "who": "zundamon", "text": "それが、まだ発表されていないのだ。", "face": "amazement" },
+      { "who": "zunko", "text": "体験版で、先に雰囲気をつかむのが良さそうですね。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目はAIのニュースなのだ。", "read": "よんほんめは、エーアイのニュースなのだ。" },
+      { "who": "zundamon", "text": "Anthropicが、公益基金を作ると発表したのだ。", "read": "アンソロピックが、公益基金を作ると発表したのだ。" },
+      { "who": "zunko", "text": "公益基金って、どういうものなの？", "face": "look" },
+      { "who": "zundamon", "text": "社会のための取り組みを、支援するお金なのだ。" },
+      { "who": "zundamon", "text": "会社の株の5%を、この基金に充てるのだ。", "read": "会社の株の、ごパーセントを、この基金に充てるのだ。" },
+      { "who": "zundamon", "text": "誰が支援先を決めるかは、これから発表なのだ。" },
+      { "who": "zunko", "text": "どんな使われ方をするのか、続報を待ちたいですね。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "しし座", "comment": "新しい挑戦がうまく運ぶ日", "lucky": "ゲームの体験版" },
+        { "rank": 2, "sign": "おとめ座", "comment": "丁寧な準備が実を結ぶ", "lucky": "付せん" },
+        { "rank": 3, "sign": "うお座", "comment": "友だちとの会話に発見あり", "lucky": "ヘッドホン" },
+        { "rank": 4, "sign": "てんびん座", "comment": "バランスよく過ごせる日", "lucky": "温かいお茶" },
+        { "rank": 5, "sign": "おうし座", "comment": "好きなものに触れると元気に", "lucky": "クッション" },
+        { "rank": 6, "sign": "かに座", "comment": "身の回りを整えると快調", "lucky": "ケーブルバンド" },
+        { "rank": 7, "sign": "いて座", "comment": "遠くの話題に良いヒント", "lucky": "地図アプリ" },
+        { "rank": 8, "sign": "みずがめ座", "comment": "ひらめきをメモしておこう", "lucky": "ボールペン" },
+        { "rank": 9, "sign": "おひつじ座", "comment": "ひと息入れると調子が戻る", "lucky": "ハンドクリーム" },
+        { "rank": 10, "sign": "さそり座", "comment": "ゆっくり進めるのが吉", "lucky": "ブランケット" },
+        { "rank": 11, "sign": "やぎ座", "comment": "予定を見直すと楽になる", "lucky": "カレンダー" },
+        { "rank": 12, "sign": "ふたご座", "comment": "早めの休憩で明日は上向き", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、しし座ですわ。新しい挑戦がうまく運びます。", "read": "今日のいちいは、ししざですわ。新しい挑戦がうまく運びます。", "face": "smile" },
+        { "who": "itako", "text": "ラッキーアイテムは、ゲームの体験版ですわ。" },
+        { "who": "itako", "text": "2位はおとめ座、3位はうお座です。", "read": "にいは、おとめざ。さんいは、うおざです。" },
+        { "who": "itako", "text": "12位はふたご座。早めに休めば、明日は上向きですわ。", "read": "じゅうにいは、ふたござ。早めに休めば、明日は上向きですわ。" },
+        { "who": "zundamon", "text": "ふたご座のラッキーアイテムは、ずんだ餅なのだ！", "read": "ふたござのラッキーアイテムは、ずんだ餅なのだ！", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zundamon", "text": "今日のニュースはここまでなのだ。" },
+      { "who": "zunko", "text": "くわしくは記事の出典も見てみてね。", "face": "smile" },
+      { "who": "zundamon", "text": "それじゃあ、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

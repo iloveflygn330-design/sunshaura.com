@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-19",
+  "title": "VRChat米国西部サーバーが今夕メンテほか、今日のVR・AIニュース4本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "おはようございます。週明けの今日は、VRChatの通信サーバーで予定されているメンテナンスの情報からお届けします。今日から始まるSteam Next FestのVR体験版や、Anthropicが発表した新しい基金のニュースもあわせて紹介します。",
+  "items": [
+    {
+      "headline": "VRChat、米国西部の通信サーバーを今日の夕方に保守",
+      "category": "VRChat公式",
+      "overview": "VRChatの公式ステータスページで、米国西部（サンノゼ）リージョンのリアルタイム通信サーバーのメンテナンスが告知されています。日時は10月19日の17時〜21時（日本時間）です。この間、対象リージョンのインスタンスにいるユーザーは、1回以上切断される可能性があるとされています。告知は10月16日に掲載されたもので、今日が実施日です。",
+      "points": [
+        "日本時間の今日17時〜21時が保守の時間帯",
+        "米国西部リージョンのインスタンスで切断の可能性",
+        "海外フレンドと遊ぶ予定がある人は時間に注意",
+        "日本リージョンの保守は20日未明に別途予定"
+      ],
+      "sources": [
+        { "name": "VRChat Status（Realtime Networking Maintenance (USW)）", "url": "https://status.vrchat.com/incidents/sm81xx5c6c69" }
+      ]
+    },
+    {
+      "headline": "Steam Next Fest開幕、VRホラー『Rustmourne』の体験版も",
+      "category": "その他",
+      "overview": "Steamで新作ゲームの体験版を無料で遊べる「Steam Next Fest」が、10月19日から26日まで開かれます。これに先がけて、VR専用のSFサバイバルホラー『Rustmourne』の無料体験版が10月15日からSteamで公開されています。製品版の発売日はSteam上で未定ですが、開発元は以前、2027年前半を目安として示しています。UploadVRは、このほかにもホバーボードや協力プレイのシューターなど、Next Fest前に遊べるPC VRの体験版を紹介しています。",
+      "points": [
+        "Steam Next Festは10月19日〜26日の開催",
+        "『Rustmourne』の体験版は無料、VRヘッドセットが必要",
+        "製品版は2027年前半の予定で、価格は未発表",
+        "ほかにも複数のPC VR体験版が先行公開中"
+      ],
+      "sources": [
+        { "name": "MIXED Reality News", "url": "https://mixed-news.com/en/rustmourne-vr-horror-demo-live-steam-next-fest-october-19/" },
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/rustmourne-the-rifted-skies-pc-vr-demos-available-now-next-fest/" }
+      ]
+    },
+    {
+      "headline": "協力VRシューター『Stuffed』、Steamで11月3日発売",
+      "category": "その他",
+      "overview": "ぬいぐるみのクマになって、悪夢から女の子を守るVR専用の協力シューター『Stuffed: Two Foot Hero』の発売日が、Steamで11月3日と表示されました。最大4人のオンライン協力プレイに対応し、Steam版とMeta Quest版のクロスプレイもできます。10ウェーブずつの6マップと、エンドレスモードが収録されます。一方、10月18日時点ではどちらのストアにも価格が載っていません。",
+      "points": [
+        "Steamでの発売日は11月3日。Quest版は「秋」表記",
+        "最大4人の協力プレイとクロスプレイに対応",
+        "Steamの無料体験版は10月5日から配信中",
+        "価格はまだ発表されていない"
+      ],
+      "sources": [
+        { "name": "MIXED Reality News", "url": "https://mixed-news.com/en/stuffed-two-foot-hero-november-3-steam-no-price/" }
+      ]
+    },
+    {
+      "headline": "Anthropic、株式の5%を「公益基金」に拠出へ",
+      "category": "AI",
+      "overview": "AI企業のAnthropicが、社会のための取り組みを支援する「公益基金（public benefit fund）」を作ると発表しました。会社の株式の5%をこの基金に充て、企業価値が50%上がるごとに、さらに2%を追加する可能性があるとしています。使い道としては、非営利団体への寄付や、特定の人々への直接の分配などが挙げられています。基金の仕組みや、支援先を誰が決めるかは、今後数か月で公表される予定です。",
+      "points": [
+        "株式の5%を、社内の新しい基金に充てる",
+        "企業価値が上がると、拠出が増える仕組みも",
+        "AIが雇用に与える影響の研究費とは別の枠",
+        "運営の詳細は今後数か月で公表予定"
+      ],
+      "sources": [
+        { "name": "TechCrunch", "url": "https://techcrunch.com/2026/10/18/anthropic-says-its-committing-5-of-its-shares-to-a-public-benefit-fund/" }
+      ]
+    }
+  ],
+  "outro": "今日の夕方にVRChatで海外のフレンドと遊ぶ予定がある方は、メンテナンスの時間に気をつけてください。今週もよろしくお願いします。"
+}
