@@ -36,7 +36,7 @@
 
 | 情報源 | 確認先 | 主な内容 |
 |---|---|---|
-| VRChat公式（Steamニュース） | https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=438100&count=10 | アップデート告知 |
+| VRChat公式（Steamのお知らせ） | WebSearch で「VRChat Steam announcement」「Steam VRChat お知らせ」等を検索し、見つかった個別のお知らせページ（steamcommunity.com/games/vrchat/announcements/detail/…）を WebFetch で読む | アップデート告知 |
 | VRChat公式ブログ | https://hello.vrchat.com/blog | 公式のお知らせ・特集 |
 | VRChatリリースノート | https://docs.vrchat.com/docs/latest-release | クライアント更新内容 |
 | VRChatステータス | https://status.vrchat.com | 障害・メンテナンス |
@@ -54,6 +54,9 @@
     3. 以下は追加しない
        - X（旧Twitter）、Instagram、BOOTH などの直接取得（スクレイピングは規約違反）
        - ログインが必要なページ、有料記事
+    4. 自動取得できないと分かっているもの（使わないこと）
+       - Steamニュース API（api.steampowered.com）: サイト側が自動取得を禁止している（robots.txt）
+       - Steamのお知らせ一覧ページ: 取得しても中身が空になる。個別のお知らせページは読める
 -->
 
 ### 禁止事項
