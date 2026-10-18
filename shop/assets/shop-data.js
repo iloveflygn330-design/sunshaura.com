@@ -44,6 +44,7 @@ const SHOP_SETTINGS = {
 
      id      : 商品ID。素材フォルダ名と同じにする（例: '0010_matsuge'）。URL の ?id= にも使う
      name    : 商品名
+     genre   : 商品種別（商品名の下に小さく出る。例: 'シェイプキー' / '3D小物'。書かなければ出ない）
      url     : BOOTH の商品ページ（「boothで開く」ボタンで新しいタブに開く）
      price   : 値段（円・数字だけ）。0 にすると「無料」と表示する
      date    : 発売日（'YYYY-MM-DD'）。この日付の新しい順に並ぶ
@@ -54,6 +55,8 @@ const SHOP_SETTINGS = {
                  bottom … キャラクター動画の下端を、表示エリアの下から何％上げるか（0 = 下にぴったり。マイナスで下にはみ出す）
                  height … キャラクター動画の高さを、表示エリアの高さの何％にするか（100 = ぴったり。大きくするとアップになる）
                  bg     … 背景画像のどこを中心に見せるか（CSS の background-position。'50% 50%' = 真ん中、'80% 50%' = 右寄り）
+                 win    … 商品情報ウィンドウの位置 { left: 左から何％, top: 上から何％ }（書かなければ shop.css の位置）
+                           PC の既定は右上（left: 59, top: 16）、スマホの既定は上（left・top は書かない方が収まりがよい）
                ※ 動画（1920×1080 など）はキャラクターの周りの透明な部分も含めた大きさで配置される
                ※ 数字を変えて保存 → ページを再読み込みすると確認できる
    ----------------------------------------------------- */
@@ -61,13 +64,27 @@ const SHOP_ITEMS = [
   {
     id: '0010_matsuge',
     name: 'まめひなたのまつげをのばす',
+    genre: 'シェイプキー',
     url: 'https://sunshaura.booth.pm/items/8780832',
     price: 100,
-    date: '2026-08-18',
+    date: '2026-08-29',
     desc: 'まめひなたのまつげをのばす！\nガーリーな改変にいかが？\n（まつげ用のシェイプキーを追加します。）',
     layout: {
       pc: { x: 46, bottom: 0, height: 100, bg: '50% 50%' },
       sp: { x: 56, bottom: 0, height: 64,  bg: '62% 50%' }
+    }
+  },
+  {
+    id: '0020_switsh2',
+    name: '【MA設定済】すいっさ2',
+    genre: '3D小物',
+    url: 'https://sunshaura.booth.pm/items/7037886',
+    price: 0,
+    date: '2025-06-12',
+    desc: 'ちまたで噂のアレ！\nVRChatでもコレで遊ぼう！\n（アバターギミックです）',
+    layout: {
+      pc: { x: 50, bottom: 0, height: 100, bg: '50% 50%', win: { left: 15, top: 18 } },
+      sp: { x: 20, bottom: 0, height: 76,  bg: '60% 50%' }
     }
   },
 
@@ -75,6 +92,7 @@ const SHOP_ITEMS = [
   {
     id: '0020_xxxx',
     name: '商品名',
+    genre: '商品種別',
     url: 'https://sunshaura.booth.pm/items/0000000',
     price: 0,
     date: '2026-12-01',

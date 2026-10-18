@@ -11,14 +11,15 @@
        link.png / coin.png / cloud.png   ← 商品情報ウィンドウのアイコン（全商品共通）
        0010_matsuge\                     ← 商品ID（番号_名前）。フォルダ1つ = 商品1つ
          bg.png      背景（横長。2560×1440 など）
-         thumb.png   商品サムネイル（正方形）
+         thumb.png   商品サムネイル（正方形がおすすめ。横長でも比率のまま表示する。.jpg / .webp でもよい）
          in.avi      フェードイン動画（透過付き。最後のコマがアイドル状態の静止画になる）
          out.avi     フェードアウト動画（透過付き。先頭の OUT_SECONDS 秒だけ使う）
      ※ 名前が _ や . で始まるフォルダは無視する（作業用フォルダを置いてよい）
+     ※ 上の4つ以外のファイル（layout_PC.png などのレイアウト画像）は置いておいてよい（変換しない）
 
    作られるもの（shop/items/<商品ID>/。手で触らない）:
      bg.webp     背景（長辺 1920px）
-     thumb.webp  サムネイル（400px）
+     thumb.webp  サムネイル（長辺 480px。切り抜かない）
      in.webm     フェードイン（VP9 透過付き。Chrome・Edge・Firefox 用）
      out.webm    フェードアウト（同上）
      idle.webp   in.avi の最後のコマ（アイドル状態。iPhone・iPad では動画の代わりにこれを動かす）
@@ -66,25 +67,25 @@ const FORCE = opt('--force');
      VIDEO_CRF    : 動画の画質（数字が大きいほど軽く・粗くなる。30〜40 くらい）
      OUT_SECONDS  : フェードアウト動画の使う長さ（秒）。画面では 0.4 秒で退場するので少し余裕をもたせている
      BG_LONG      : 背景の長辺（px）。ページ側で CSS でぼかすので大きすぎなくてよい
-     THUMB_SIZE   : サムネイルの一辺（px）
+     THUMB_SIZE   : サムネイルの長辺（px）
      WEBP_QUALITY : 画像の画質（0〜100） */
 const SET = {
   VIDEO_HEIGHT: 1080,
   VIDEO_CRF:    36,
   OUT_SECONDS:  0.7,
   BG_LONG:      1920,
-  THUMB_SIZE:   400,
+  THUMB_SIZE:   480,
   WEBP_QUALITY: 80
 };
 
 /* ★拡張予定: 素材を増やす場合は、ここに「元のファイル名 → 作るファイル」を1行追加し、
-     下の build() に変換方法を書く。元のファイルが無い項目は飛ばす */
+     下の build() に変換方法を書く。src は候補を順に探し、最初に見つかったものを使う。見つからない項目は飛ばす */
 const JOBS = [
-  { src: 'bg.png',    out: 'bg.webp' },
-  { src: 'thumb.png', out: 'thumb.webp' },
-  { src: 'in.avi',    out: 'in.webm' },
-  { src: 'in.avi',    out: 'idle.webp' },
-  { src: 'out.avi',   out: 'out.webm' }
+  { src: ['bg.png', 'bg.jpg', 'bg.jpeg', 'bg.webp'],          out: 'bg.webp' },
+  { src: ['thumb.png', 'thumb.jpg', 'thumb.jpeg', 'thumb.webp'], out: 'thumb.webp' },
+  { src: ['in.avi'],  out: 'in.webm' },
+  { src: ['in.avi'],  out: 'idle.webp' },   // 静止画は動画の最後のコマから作る（透過が必要なため、別に置いた idle.png は使わない）
+  { src: ['out.avi'], out: 'out.webm' }
 ];
 
 function ffmpeg(list) {
@@ -111,8 +112,7 @@ function build(job, srcFile, outFile) {
         '-c:v', 'libwebp', '-quality', String(SET.WEBP_QUALITY), outFile]);
     case 'thumb.webp':
       return ffmpeg(['-i', srcFile, '-vf',
-        'scale=' + SET.THUMB_SIZE + ':' + SET.THUMB_SIZE + ':force_original_aspect_ratio=increase:flags=lanczos,crop=' +
-        SET.THUMB_SIZE + ':' + SET.THUMB_SIZE,
+        'scale=' + SET.THUMB_SIZE + ':' + SET.THUMB_SIZE + ':force_original_aspect_ratio=decrease:flags=lanczos',
         '-c:v', 'libwebp', '-quality', String(SET.WEBP_QUALITY), outFile]);
     case 'in.webm':
       return ffmpeg(['-i', srcFile].concat(webmArgs(), [outFile]));
@@ -150,9 +150,10 @@ function main() {
     const dir = path.join(OUT, id);
     fs.mkdirSync(dir, { recursive: true });
     for (const job of JOBS) {
-      const srcFile = path.join(SRC, id, job.src);
+      const found = job.src.find((f) => fs.existsSync(path.join(SRC, id, f)));
       const outFile = path.join(dir, job.out);
-      if (!fs.existsSync(srcFile)) { console.log(id + ': ' + job.src + ' がないので ' + job.out + ' は作りません'); continue; }
+      if (!found) { console.log(id + ': ' + job.src[0] + ' がないので ' + job.out + ' は作りません'); continue; }
+      const srcFile = path.join(SRC, id, found);
       if (!FORCE && !isNewer(srcFile, outFile)) continue;
       console.log(id + ': ' + job.out + ' を作成中...');
       build(job, srcFile, outFile);

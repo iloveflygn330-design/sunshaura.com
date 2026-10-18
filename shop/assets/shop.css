@@ -16,6 +16,7 @@
   --shop-win-bg1:     rgb(45, 49, 60);    /* 上側（商品名・ボタンの段） */
   --shop-win-bg2:     rgb(28, 34, 43);    /* 下側（詳細文・値段の段） */
   --shop-win-text:    rgb(218, 218, 218);
+  --shop-win-genre:   rgb(43, 171, 194);   /* 商品種別（商品名の下の小さい文字） */
   --shop-btn-bg:      rgb(22, 49, 54);
   --shop-btn-border:  rgb(31, 64, 70);
 
@@ -81,8 +82,9 @@ body.shop-page > #body-content {
 
 /* -----------------------------------------------------
    商品情報ウィンドウ
-   ★拡張予定: ウィンドウの位置・大きさ（全商品共通）を変える場合は、PC・スマホそれぞれの
-     top / left / width を書き換える（表示エリアに対する％）
+   ★拡張予定: ウィンドウの位置は商品ごとに shop-data.js の layout.pc.win / layout.sp.win で指定できる
+     （指定がない商品は、ここの top / left の位置になる）。
+     大きさ（width）・文字の大きさ（font-size）は全商品共通で、ここを書き換える
 ----------------------------------------------------- */
 .shop-window {
   position: absolute; z-index: 3;
@@ -96,10 +98,13 @@ body.shop-page > #body-content {
   .shop-window { top: 10px; left: 12px; right: 12px; width: auto; font-size: clamp(10px, 3.2cqw, 13px); }
 }
 
+.shop-win-head { background: var(--shop-win-bg1); padding: 0.8em 1em 0.45em; }
 .shop-win-title {
-  background: var(--shop-win-bg1);
-  padding: 0.8em 1em 0.55em;
   font-size: 1.75em; font-weight: 800; line-height: 1.3; letter-spacing: 0.02em;
+}
+.shop-win-genre {
+  color: var(--shop-win-genre); font-weight: 800; font-size: 0.95em;
+  letter-spacing: 0.08em; margin-top: 0.15em;
 }
 .shop-win-body {
   display: grid; grid-template-columns: 1fr 34%; gap: 0 0.9em;
@@ -128,9 +133,10 @@ body.shop-page > #body-content {
 .shop-win-meta span { display: inline-flex; align-items: center; gap: 0.35em; }
 .shop-win-meta img { width: 1.25em; height: 1.25em; }
 
+/* サムネイル：正方形・横長どちらも、切り抜かずに元の比率のまま表示する */
 .shop-win-thumb {
-  align-self: center; width: 100%; aspect-ratio: 1 / 1;
-  object-fit: cover; border-radius: 4px; display: block;
+  align-self: center; width: 100%; height: auto; max-height: 9em;
+  object-fit: contain; border-radius: 4px; display: block;
 }
 
 /* -----------------------------------------------------

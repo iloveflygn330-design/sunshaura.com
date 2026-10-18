@@ -127,6 +127,10 @@
     chara.style.bottom = (l.bottom != null ? l.bottom : 0) + '%';
     chara.style.height = (l.height != null ? l.height : 100) + '%';
     bgEl.style.backgroundPosition = l.bg || '50% 50%';
+    // ウィンドウの位置（指定がなければ shop.css の位置のまま）
+    var w = l.win || {};
+    win.style.left  = w.left != null ? w.left + '%' : '';
+    win.style.top   = w.top  != null ? w.top  + '%' : '';
   }
 
   function fill(item) {
@@ -136,7 +140,10 @@
     applyLayout(item);
 
     win.innerHTML =
-      '<div class="shop-win-title">' + esc(item.name) + '</div>' +
+      '<div class="shop-win-head">' +
+        '<div class="shop-win-title">' + esc(item.name) + '</div>' +
+        (item.genre ? '<div class="shop-win-genre">' + esc(item.genre) + '</div>' : '') +
+      '</div>' +
       '<div class="shop-win-body">' +
         '<div class="shop-win-main">' +
           '<a class="shop-win-btn" href="' + esc(item.url) + '" target="_blank" rel="noopener">' +
