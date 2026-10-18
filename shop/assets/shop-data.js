@@ -87,6 +87,45 @@ const SHOP_ITEMS = [
       sp: { x: 20, bottom: 0, height: 76,  bg: '60% 50%' }
     }
   },
+  {
+    id: '0030_balloon',
+    name: 'ずんだもんのあいさつバルーン',
+    genre: '3D小物',
+    url: 'https://sunshaura.booth.pm/items/7500070',
+    price: 300,
+    date: '2025-10-04',
+    desc: 'ふきだしとずんだもんの声で楽しくあいさつ！\nずんだもんのあいさつバルーン！',
+    layout: {
+      pc: { x: 50, bottom: 0,  height: 100, bg: '50% 50%', win: { left: 51, top: 15 } },
+      sp: { x: 62, bottom: 16, height: 61,  bg: '50% 50%' }
+    }
+  },
+  {
+    id: '0040_uniuni',
+    name: 'うにうにチーク',
+    genre: '3D装飾品',
+    url: 'https://sunshaura.booth.pm/items/7342942',
+    price: 0,
+    date: '2025-08-24',
+    desc: 'うにうに動く、アニメチックなチーク！\nかわいさ、わんぱくさを強調しよう。',
+    layout: {
+      pc: { x: 50, bottom: 0, height: 100, bg: '50% 50%', win: { left: 50, top: 6 } },
+      sp: { x: 62, bottom: 3, height: 77,  bg: '50% 50%' }
+    }
+  },
+  {
+    id: '0050_aiueo',
+    name: 'ずんだもんのあいうえおボード',
+    genre: '3D小物',
+    url: 'https://sunshaura.booth.pm/items/6964850',
+    price: 300,
+    date: '2025-05-24',
+    desc: 'ずんだもんの声で楽しくおしゃべり！\nずんだもんのあいうえおボード！',
+    layout: {
+      pc: { x: 53, bottom: -5, height: 106, bg: '50% 50%', win: { left: 48, top: 7 } },
+      sp: { x: 57, bottom: -2, height: 77,  bg: '50% 50%' }
+    }
+  },
 
   /* ---- 書き方の見本（コピーして上に貼り、/* と * / を外して書き換える） ----
   {
