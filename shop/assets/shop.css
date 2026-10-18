@@ -1,0 +1,192 @@
+/* =====================================================
+   ショップ（shop/index.html）専用の見た目
+   動きは shop.js、商品データは shop-data.js。
+
+   画面の構成（重なり順・奥から）:
+     #shop-stage            … ヘッダーとフッターの間いっぱいの表示エリア（スクロールしない）
+       .shop-bg             … 背景（ぼかし）
+       .shop-chara          … キャラクター（静止画 idle の上に動画を重ねる）
+       .shop-window         … 商品情報ウィンドウ
+       .shop-nav            … ‹ › ボタン
+       .shop-pager          … 何番目かの表示（点 または「3 / 12」）
+   ===================================================== */
+
+:root {
+  /* ★拡張予定: 商品情報ウィンドウの色を変える場合はここを書き換える */
+  --shop-win-bg1:     rgb(45, 49, 60);    /* 上側（商品名・ボタンの段） */
+  --shop-win-bg2:     rgb(28, 34, 43);    /* 下側（詳細文・値段の段） */
+  --shop-win-text:    rgb(218, 218, 218);
+  --shop-btn-bg:      rgb(22, 49, 54);
+  --shop-btn-border:  rgb(31, 64, 70);
+
+  /* ★拡張予定: 背景のぼかしの強さ（全商品共通）。0px でぼかしなし */
+  --shop-bg-blur: 6px;
+
+  /* 背景が退場して次が入場するまでの、一瞬見える地の色 */
+  --shop-stage-bg: rgb(28, 34, 43);
+}
+
+/* -----------------------------------------------------
+   スクロールしないページにする
+   ヘッダー（固定）の下からフッターの上までを #shop-stage がちょうど埋める
+----------------------------------------------------- */
+body.shop-page { height: 100svh; min-height: 0; overflow: hidden; }
+body.shop-page > #body-content {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column;
+  background: var(--shop-stage-bg);
+}
+
+#shop-stage {
+  position: relative; flex: 1 1 auto; min-height: 0;
+  overflow: hidden;
+  background: var(--shop-stage-bg);
+  touch-action: pan-y;              /* 横のなぞりは shop.js が商品切り替えに使う */
+  user-select: none; -webkit-user-select: none;
+  container-type: size;             /* 中の文字の大きさを表示エリアの大きさに合わせるため */
+}
+
+/* 動かす部品の共通設定（位置は shop.js が transform で動かす） */
+.shop-move { will-change: transform, opacity; }
+
+/* -----------------------------------------------------
+   背景（ぼかしの端が透けないよう少し拡大している）
+----------------------------------------------------- */
+.shop-bg-wrap { position: absolute; inset: 0; overflow: hidden; }
+.shop-bg {
+  position: absolute; inset: calc(var(--shop-bg-blur) * -3);
+  background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;
+  filter: blur(var(--shop-bg-blur));
+}
+
+/* -----------------------------------------------------
+   キャラクター
+     位置・大きさは商品ごとに shop-data.js の layout で決まる（shop.js が left / bottom / height を入れる）
+     幅は idle 画像の縦横比から自動で決まる。動画は同じ大きさでぴったり重ねる
+----------------------------------------------------- */
+.shop-chara {
+  position: absolute; left: 50%; bottom: 0; height: 100%;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+.shop-chara-box { position: relative; height: 100%; translate: -50% 0; }
+.shop-chara img,
+.shop-chara video { display: block; height: 100%; width: auto; }
+.shop-chara video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; visibility: hidden;
+}
+.shop-chara video.is-playing { visibility: visible; }
+.shop-chara img.is-hidden { visibility: hidden; }
+
+/* -----------------------------------------------------
+   商品情報ウィンドウ
+   ★拡張予定: ウィンドウの位置・大きさ（全商品共通）を変える場合は、PC・スマホそれぞれの
+     top / left / width を書き換える（表示エリアに対する％）
+----------------------------------------------------- */
+.shop-window {
+  position: absolute; z-index: 3;
+  top: 16%; left: 59%; width: min(37%, 520px);
+  color: var(--shop-win-text);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  font-size: clamp(11px, 1.35cqw, 15px);
+}
+@media (max-width: 759px) {
+  .shop-window { top: 10px; left: 12px; right: 12px; width: auto; font-size: clamp(10px, 3.2cqw, 13px); }
+}
+
+.shop-win-title {
+  background: var(--shop-win-bg1);
+  padding: 0.8em 1em 0.55em;
+  font-size: 1.75em; font-weight: 800; line-height: 1.3; letter-spacing: 0.02em;
+}
+.shop-win-body {
+  display: grid; grid-template-columns: 1fr 34%; gap: 0 0.9em;
+  padding: 0.5em 1em 0.9em;
+  /* 上側（ボタンの段）は bg1、下側は bg2 */
+  background: linear-gradient(to bottom, var(--shop-win-bg1) 0, var(--shop-win-bg1) 3.2em, var(--shop-win-bg2) 3.2em);
+}
+.shop-win-main { display: flex; flex-direction: column; min-width: 0; }
+
+.shop-win-btn {
+  align-self: center; width: 78%;
+  display: flex; align-items: center; justify-content: center; gap: 0.4em;
+  height: 2.3em; margin-bottom: 0.9em;
+  background: var(--shop-btn-bg); border: 2px solid var(--shop-btn-border); border-radius: 4px;
+  color: var(--shop-win-text); text-decoration: none; font-weight: 700;
+  transition: filter var(--duration-ui), transform var(--duration-ui);
+}
+.shop-win-btn:hover { filter: brightness(1.35); transform: translateY(-1px); }
+.shop-win-btn img { width: 1.2em; height: 1.2em; }
+
+.shop-win-desc {
+  white-space: pre-line; line-height: 1.55; font-weight: 700;
+  flex: 1; margin-bottom: 0.6em; overflow-wrap: anywhere;
+}
+.shop-win-meta { display: flex; gap: 1.8em; font-weight: 800; }
+.shop-win-meta span { display: inline-flex; align-items: center; gap: 0.35em; }
+.shop-win-meta img { width: 1.25em; height: 1.25em; }
+
+.shop-win-thumb {
+  align-self: center; width: 100%; aspect-ratio: 1 / 1;
+  object-fit: cover; border-radius: 4px; display: block;
+}
+
+/* -----------------------------------------------------
+   ‹ › ボタン
+----------------------------------------------------- */
+.shop-nav {
+  position: absolute; z-index: 4; bottom: 22px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(45, 32, 28, 0.88); color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  transition: background var(--duration-ui), transform var(--duration-ui);
+}
+.shop-nav:hover { background: rgba(70, 50, 44, 0.95); }
+.shop-nav:active { transform: scale(0.92); }
+.shop-nav svg { width: 20px; height: 20px; }
+.shop-nav-prev { left: 18px; }
+.shop-nav-next { right: 18px; }
+@media (max-width: 759px) {
+  .shop-nav { width: 44px; height: 44px; bottom: 18px; }
+  .shop-nav-prev { left: 12px; }
+  .shop-nav-next { right: 12px; }
+}
+
+/* -----------------------------------------------------
+   何番目かの表示
+----------------------------------------------------- */
+.shop-pager {
+  position: absolute; z-index: 4; left: 50%; bottom: 14px; translate: -50% 0;
+  display: flex; align-items: center; gap: 4px;
+}
+.shop-dot {
+  width: 22px; height: 22px; padding: 0; border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.shop-dot::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  transition: background var(--duration-ui), transform var(--duration-ui);
+}
+.shop-dot.is-active::before { background: #fff; transform: scale(1.25); }
+.shop-count {
+  color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.08em;
+  background: rgba(0, 0, 0, 0.4); border-radius: 50px; padding: 3px 14px;
+}
+
+/* 商品が1つもないとき */
+.shop-empty {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--shop-win-text); font-weight: 700;
+}
+
+/* 動きを減らす設定のブラウザでは、スライドを短くする（shop.js 側でも時間を短くしている） */
+@media (prefers-reduced-motion: reduce) {
+  .shop-win-btn, .shop-nav, .shop-dot::before { transition: none; }
+}

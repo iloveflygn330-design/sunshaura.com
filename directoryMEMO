@@ -3,7 +3,11 @@
   ├─ avatar/index.html          ← アバター改変（assets/avatar.css・avatar.js）。avatar/?id=<アバターID> でそのアバターを開く
   │    └─ p/<アバターID>/         ← 共有用ページ（SNS のカード表示）とカード画像 ogp.jpg。自動生成。手で触らない
   ├─ world/index.html           ← 作ったワールド（中身はまだ。新しいページを作るときのコピー元）
-  ├─ shop/index.html            ← ショップ
+  ├─ shop/index.html            ← ショップ（BOOTH の商品を1画面1つずつ紹介。スクロールしない。shop/?id=<商品ID> でその商品を開く）
+  │    ├─ assets/shop-data.js    ← ★拡張予定: 商品の一覧（商品を増やすときはここに1件追加）と動きの時間
+  │    ├─ assets/shop.js / shop.css ← 切り替えの動き・見た目（ウィンドウの色・背景のぼかし）
+  │    ├─ assets/icons/          ← 商品情報ウィンドウのアイコン（元は MyWebSites_shop 直下。shop-build.js がコピー）
+  │    └─ items/<商品ID>/         ← 商品ごとの軽い版の素材（bg / thumb / idle .webp、in / out .webm）。自動生成。手で触らない
   ├─ event/index.html           ← イベント
   ├─ minigame/index.html        ← ミニゲーム（assets/minigame.css・minigame.js）
   │    ├─ assets/dinovoice-data.js ← ★拡張予定: 恐竜ボイスゲームの中身（恐竜・口の形・セリフ・合格ライン）。恐竜は DV_DINOS に1件足すだけ
@@ -86,3 +90,9 @@
   assets/images/welcome/footer/  ← ★拡張予定: キャラクター③（フッターに並ぶ。PC 4人・スマホ 2人）
   assets/images/welcome/list.json ← 自動生成（.github/scripts/welcome-list.js）。手で触らない
 
+
+ショップの素材（リポジトリの外。PCにだけある）
+  C:\Users\sdra_\Documents\MyWebSites_shop\   ← ★拡張予定: 商品フォルダ（例: 0010_matsuge\）を作って素材を置く
+      ├─ link.png / coin.png / cloud.png         ← ウィンドウのアイコン（全商品共通）
+      └─ <商品ID>\  bg.png / thumb.png / in.avi / out.avi
+  .github/scripts/shop-build.js  ← 元の素材 → shop/items/ の軽い版を作る（ffmpeg が必要。手順はファイルの先頭）
