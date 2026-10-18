@@ -23,16 +23,21 @@
 (function () {
   'use strict';
 
+  /* ★拡張予定: ボタンを一時的に隠す・また出す
+       隠したい行の最後に hidden: true を付けると、そのボタンはヘッダーに出なくなる（ページ自体は残る。URLを直接開けば見られる）。
+       また出すときは hidden: true を消すだけ。 */
   var SITE_NAV_ITEMS = [
     { id: 'avatar',   label: 'アバター改変',       href: 'avatar/' },
-    { id: 'world',    label: '作ったワールド',     href: 'world/' },
+    { id: 'world',    label: '作ったワールド',     href: 'world/', hidden: true },  // 準備中のため非表示
     { id: 'shop',     label: 'ショップ',           href: 'shop/' },
     { id: 'gallery',  label: 'フォトギャラリー',   href: 'gallery/' },
-    { id: 'event',    label: 'イベント',           href: 'event/' },
+    { id: 'event',    label: 'イベント',           href: 'event/', hidden: true },  // 準備中のため非表示
     { id: 'minigame', label: 'ミニゲーム',         href: 'minigame/' },
     { id: 'about',    label: 'このサイトについて', href: 'about/' },
     { id: 'news',     label: 'ニュース',           href: 'news/' }
   ];
+  // ヘッダーに実際に並べるボタン（hidden: true のものを除く）
+  var NAV_SHOWN = SITE_NAV_ITEMS.filter(function (item) { return !item.hidden; });
 
   /* ★拡張予定: ロゴを画像に差し替える場合
        ここを画像のHTMLにする。{ROOT} はサイトのトップへの相対パスに自動で置き換わる。
@@ -91,7 +96,7 @@
       SITE_LOGO_HTML.replace(/\{ROOT\}/g, ROOT) + '</a>';
     var extra = SITE_HEADER_EXTRA_HTML
       ? '<div id="header1-extra">' + SITE_HEADER_EXTRA_HTML.replace(/\{ROOT\}/g, ROOT) + '</div>' : '';
-    var buttons = SITE_NAV_ITEMS.map(function (item) {
+    var buttons = NAV_SHOWN.map(function (item) {
       return '<a class="nav-btn' + (item.id === current ? ' active' : '') + '" data-page="' + item.id +
         '" data-transition href="' + ROOT + item.href + '">' + escapeHtml(item.label) + '</a>';
     }).join('');
@@ -133,7 +138,7 @@
       var scrollWrap = document.getElementById('nav-scroll-wrap');
       var prevBtn    = document.getElementById('nav-prev');
       var nextBtn    = document.getElementById('nav-next');
-      if (SITE_NAV_ITEMS.length > NAV_VISIBLE) {
+      if (NAV_SHOWN.length > NAV_VISIBLE) {
         prevBtn.style.display = 'flex'; nextBtn.style.display = 'flex';
         wrapper.style.marginLeft = '0'; wrapper.style.marginRight = '0';
         var m = measure();
@@ -179,7 +184,7 @@
       scrollWrap.style.touchAction = 'pan-y';
 
       scrollWrap.addEventListener('pointerdown', function (e) {
-        if (SITE_NAV_ITEMS.length <= NAV_VISIBLE) return;           // ボタンが全部見えているときは動かさない
+        if (NAV_SHOWN.length <= NAV_VISIBLE) return;           // ボタンが全部見えているときは動かさない
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         var m = measure();
         drag = { id: e.pointerId, x: e.clientX, y: e.clientY, base: m.lefts[navOffset],
