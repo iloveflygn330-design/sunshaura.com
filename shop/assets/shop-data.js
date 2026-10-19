@@ -36,7 +36,7 @@ const SHOP_SETTINGS = {
    商品の一覧
 
    ★拡張予定: 商品を追加する手順
-     1. 元の素材を PC の C:\Users\sdra_\Documents\MyWebSites_shop\<商品ID>\ に置く
+     1. 元の素材を PC の %USERPROFILE%\Documents\MyWebSites_shop\<商品ID>\ に置く
           bg.png（背景） / thumb.png（サムネイル・正方形） / in.avi（フェードイン） / out.avi（フェードアウト）
      2. 変換して push する（Claude に頼むか、自分で node .github/scripts/shop-build.js。説明はそのファイルの先頭）
           → shop/items/<商品ID>/ に軽い版ができる

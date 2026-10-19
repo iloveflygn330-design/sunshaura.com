@@ -2,8 +2,8 @@
    ショップ：商品素材の変換（AVI → WebM など）
 
    元の素材は容量が大きい（AVI は1本で数百MB〜1GB）ので、リポジトリの外のフォルダ（PCにだけある）に置く。
-     リポジトリ  : C:\Users\sdra_\Documents\MyWebSites\sunshaura.com
-     元の素材    : C:\Users\sdra_\Documents\MyWebSites_shop   ← リポジトリの2つ上の階層の隣
+     リポジトリ  : %USERPROFILE%\Documents\MyWebSites\sunshaura.com
+     元の素材    : %USERPROFILE%\Documents\MyWebSites_shop   ← リポジトリの2つ上の階層の隣
    このスクリプトで軽い版を作り、軽い版だけを GitHub に上げる。
 
    元の素材フォルダの置き方:
