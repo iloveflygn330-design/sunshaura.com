@@ -10,6 +10,7 @@
 #          assets/images/ の PNG・JPG から、同じ場所に .webp と一覧 assets/images/webp.json
 #     3. トップページのキャラクター画像の一覧           … .github/scripts/welcome-list.js
 #          assets/images/welcome/left・right・footer の画像から assets/images/welcome/list.json
+#          （このサイトについてのプロフィール写真 assets/images/about/profile/ → assets/images/about/list.json も一緒に作る）
 #     4. アバターごとの共有用ページ（SNS のカード表示）  … .github/scripts/avatar-share.mjs
 #          avatar/p/<ID>/index.html と、カード画像 avatar/p/<ID>/ogp.jpg
 #   どれも、元の画像などが変わったものだけ作り直す（何も変わっていなければコミットしない）。

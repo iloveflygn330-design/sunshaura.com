@@ -1,0 +1,67 @@
+# =====================================================
+# このサイトについて：プロフィールカードの「今のひとこと」を Discord から取り込む
+#
+# 仕組み:
+#   30分ごとに、Discord のひとこと用チャンネルのいちばん新しい投稿を読み、
+#   about/data/status.json に書いて main に自動コミットする（前と同じなら何もしない）。
+#   処理の中身は .github/scripts/discord-status.js（チャンネルの設定もそこ）。
+#
+# 事前設定:
+#   Secrets の DISCORD_BOT_TOKEN（フォトギャラリーと共通。設定済み）
+#   ひとこと用チャンネルのID（設定方法は discord-status.js の先頭）
+#
+# 動いたかどうかの確認:
+#   Actions タブ → 「About status from Discord」。緑のチェックなら成功。
+#   すぐに取り込みたいときは、同じ画面の「Run workflow」で手動実行できる。
+#
+# ★拡張予定: 取り込む間隔を変える場合
+#   下の cron を書き換える（UTC で書く。分の指定は日本時間と同じ）。
+#     例: 30分ごと → '10,40 * * * *'、1時間ごと → '10 * * * *'
+#   ※ GitHub の混雑で、数分〜数十分遅れて動くことがある
+#
+# ※ この自動処理の名前（name:）は .github/workflows/deploy.yml の workflow_run にも書いてある。
+#   名前を変えたら、そちらも同じ名前に直すこと（直さないとサイトに反映されない）。
+# =====================================================
+name: About status from Discord
+
+on:
+  schedule:
+    - cron: '10,40 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: about-status
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Discord の「今のひとこと」を取り込む
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_STATUS_CHANNEL_ID: ${{ vars.DISCORD_STATUS_CHANNEL_ID }}
+        run: node .github/scripts/discord-status.js
+
+      - name: 変更があればコミットする
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A about/data/status.json
+          if git diff --cached --quiet; then
+            echo "変更なし"
+            exit 0
+          fi
+          git commit -m "今のひとことを更新"
+          # 実行中に別の push があっても失敗しないよう、最新を取り込んでから push する
+          git pull --rebase origin main
+          git push origin HEAD:main

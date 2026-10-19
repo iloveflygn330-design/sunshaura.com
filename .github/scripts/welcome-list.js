@@ -8,6 +8,10 @@
    トップページ（assets/welcome.js）はこの一覧から、ページを開くたびにランダムに選んで表示する。
    同じ場所に軽量版（.webp。.github/scripts/avatar-webp.js が作る）があれば、そちらを使うように一覧に書く。
 
+   ついでに、このサイトについて（about/）のプロフィールカードの写真の一覧も作る。
+     assets/images/about/profile/ の画像 → assets/images/about/list.json（{ profile: [...] }）
+     ★拡張予定: プロフィールの写真を増やす → assets/images/about/profile/ に画像を入れて push するだけ
+
    GitHub 上では自動で実行される（.github/workflows/avatar-build.yml。avatar-webp.js のあと）。
    画像を入れて push するだけで、一覧も WebP も自動で更新される。
 
@@ -47,3 +51,24 @@ for (const folder of FOLDERS) {
   console.log(`${folder}: ${list[folder].length} 枚`);
 }
 fs.writeFileSync(path.join(REPO, BASE, 'list.json'), JSON.stringify(list, null, 1) + '\n');
+
+/* -----------------------------------------------------
+   このサイトについて：プロフィールカードの写真の一覧
+     about/assets/about.js がこの一覧から毎回ランダムに1枚選ぶ（1枚もなければトップページの画像を使う）
+   ----------------------------------------------------- */
+function makeList(baseDir, folder) {
+  const dir = path.join(REPO, baseDir, folder);
+  fs.mkdirSync(dir, { recursive: true });
+  const files = fs.readdirSync(dir).filter((f) => IMG_EXT.test(f)).sort();
+  const originals = files.filter((f) => !/\.webp$/i.test(f) || !files.some((g) => g !== f && g.replace(IMG_EXT, '') === f.replace(IMG_EXT, '')));
+  return originals.map((f) => {
+    const src = `${baseDir}/${folder}/${f}`;
+    const item = { src };
+    if (!/\.webp$/i.test(f) && webpOk.has(src.replace('assets/images/', ''))) item.webp = src.replace(IMG_EXT, '.webp');
+    return item;
+  });
+}
+const ABOUT_BASE = 'assets/images/about';
+const aboutList = { note: 'welcome-list.js が自動で作る一覧。手で編集しない（画像は profile/ に入れるだけでよい）', profile: makeList(ABOUT_BASE, 'profile') };
+console.log(`about/profile: ${aboutList.profile.length} 枚`);
+fs.writeFileSync(path.join(REPO, ABOUT_BASE, 'list.json'), JSON.stringify(aboutList, null, 1) + '\n');

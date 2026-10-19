@@ -107,6 +107,8 @@ html, body { height: 100%; }
   color: var(--color-text); opacity: 0; /* JS でフェードイン */
   line-height: 1.85; margin-bottom: 40px;
 }
+/* 注意書きの中の「クレジット」リンク（about/ へ移動） */
+.wlc-note a { color: var(--color-main); font-weight: 700; }
 .wlc-arrows {
   font-size: 20px; letter-spacing: 4px;
   color: var(--color-main); opacity: 0; /* wlc-note と同タイミング */
