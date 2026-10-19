@@ -46,6 +46,7 @@
       ├─ site-common.css        ← サイト共通の色・ヘッダー・フッター・移動演出の見た目
       ├─ site-header.js         ← ★拡張予定: ヘッダー（ナビボタンの並び SITE_NAV_ITEMS・ロゴ）とフッターの中身
       ├─ page-transition.js     ← ページ移動の「ちょっとまってね...」演出
+      ├─ analytics.js           ← ★拡張予定: アクセス解析（Google アナリティクス）。測定IDと「自分のアクセスを数えない」設定
       ├─ welcome.css / welcome.js ← トップページ（index.html）専用
   ★拡張予定: ページを増やすときは world/ をフォルダごとコピー → SITE_NAV_ITEMS に1行追加
 
