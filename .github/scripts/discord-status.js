@@ -39,7 +39,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CHANNEL_ID_IN_FILE = '';   // ← ここにひとこと用チャンネルのIDを貼る
+const CHANNEL_ID_IN_FILE = '1561578487306002513';   // ← ここにひとこと用チャンネルのIDを貼る
 const STATUS_CHANNEL_ID = process.env.DISCORD_STATUS_CHANNEL_ID || CHANNEL_ID_IN_FILE;
 const ALLOWED_AUTHOR_IDS = [];
 const MAX_LENGTH = 40;   // ★拡張予定: カードに出す最大の文字数（増やしすぎるとカードからはみ出す）

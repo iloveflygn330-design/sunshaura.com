@@ -95,9 +95,10 @@ const ABOUT_CREDITS = [
     side: 'left',
     linkText: 'boothに移動する',
     items: [
-      { name: 'まめひなた',   author: '', url: '' },
-      { name: '凪夜 瑠璃',     author: '', url: 'https://booth.pm/ja/items/5351494' },
-      { name: 'フォシュニア', author: '', url: '' },
+      { name: 'まめひなた',   author: 'もち山金魚様',        url: 'https://booth.pm/ja/items/4340548' },
+      { name: 'うささき',     author: 'もち山金魚様',        url: 'https://mukumi.booth.pm/items/3550881' },
+      { name: '凪夜 瑠璃',     author: 'STUDIO MOCA様',       url: 'https://booth.pm/ja/items/5351494' },
+      { name: 'フォシュニア', author: 'Ama ama 15 ㅊ福様',   url: 'https://booth.pm/ja/items/4580093' },
       { name: 'シャロ',       author: '', url: '' },
       { name: 'ずんだもん',   author: '', url: 'https://zunko.jp/' , linkText: 'サイトに移動する' }
     ]
