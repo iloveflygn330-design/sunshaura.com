@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-20",
+  "title": "VRChatハロウィン企画「Hype Train」が達成しやすくほか、今日のVR・AIニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "おはようございます。今日は、VRChatのハロウィン企画「Spookality 2026」で、みんなで報酬を目指す「Hype Train」の条件が大きく緩くなった話題からお届けします。ベースステーションなしでの利用を目指すBigscreen Beyond 2の新モード、協力VR強盗ゲーム『PAYDAY: Aces High』の発売日、OpenAIの旧モデル提供終了のお知らせもあわせて紹介します。",
+  "items": [
+    {
+      "headline": "Spookalityの「Hype Train」、必要な贈り物が5回に",
+      "category": "イベント",
+      "overview": "VRChatのハロウィン企画「Spookality 2026」で、VRC+のギフトを贈り合って特典を目指す「Hype Train」の達成条件が、前回の50回から5回に引き下げられました。ギフトは特集ワールドかSpookalityのハブで贈る必要があります。1回以上贈った人にはリュックのアバターアクセサリー、達成するとゴーストのお供がもらえます。会場の「Camp Whispering Screams」では、10月23日・30日・31日にキャンプ風の帽子も配られます。",
+      "points": [
+        "Hype Trainの達成に必要なギフトは50回→5回",
+        "1回贈るとリュック、達成でゴーストのお供",
+        "友だち紹介で水筒やプロフィール飾りがもらえる",
+        "10月31日（米国時間）にはVRChat内でDJイベントも"
+      ],
+      "sources": [
+        {
+          "name": "MIXED Reality News",
+          "url": "https://mixed-news.com/en/vrchat-spookality-hype-train-five-gift-drops/"
+        }
+      ]
+    },
+    {
+      "headline": "Bigscreen Beyond 2、基地局なしで使えるモードを開発中",
+      "category": "VR機器・技術",
+      "overview": "小型軽量のPC VRヘッドセット「Bigscreen Beyond 2」を作るBigscreenが、頭の向きだけを追跡する「3DoFモード」を開発していると明かしました。実現すれば、SteamVRのベースステーション（基地局）を置かなくても、映画などの平面コンテンツを楽しめるようになります。また、ベースステーションを作るHTCからは「現時点で生産終了の予定はない」と聞いているとのことです。ただし、3DoFモードの公開時期や詳しい仕様はまだ示されていません。",
+      "points": [
+        "頭の回転だけを追跡する3DoFモードを開発中",
+        "動画など平面コンテンツなら基地局なしで使える見込み",
+        "HTCは基地局の生産終了は「当面ない」との見方",
+        "公開時期やベータ版の予定は未発表"
+      ],
+      "sources": [
+        {
+          "name": "MIXED Reality News",
+          "url": "https://mixed-news.com/en/bigscreen-beyond-2-3dof-mode-htc-steamvr-base-stations"
+        }
+      ]
+    },
+    {
+      "headline": "協力VR強盗『PAYDAY: Aces High』、11月5日発売",
+      "category": "その他",
+      "overview": "人気の強盗ゲーム「PAYDAY」シリーズのVR版『PAYDAY: Aces High』が、11月5日に発売されることが決まりました。開発はFast Travel Gamesで、最大4人で銀行や美術館、高級ペントハウスに挑む協力プレイのゲームです。対応機種はMeta QuestとPC VRで、Steam版はSteam Frameの単体動作にも対応します。価格は25ドルで、10月26日までSteam Next Festにあわせたプレイテストも行われています。",
+      "points": [
+        "発売は11月5日、価格は25ドル",
+        "Quest・PC VR・Steam Frame（単体動作）に対応",
+        "最大4人の協力プレイで強盗に挑む",
+        "10月26日までプレイテスト、参加で限定マスク"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/payday-vr-release-date-quest-steamvr-frame/"
+        }
+      ]
+    },
+    {
+      "headline": "OpenAI、API版GPT-4oなどを2027年1月に終了へ",
+      "category": "AI",
+      "overview": "OpenAIが、開発者向けのAPIで提供しているGPT-4o、GPT-4o mini、GPT-4.1、GPT-4.1 miniの4つのモデルを、2027年1月14日に終了すると開発者に通知しました。これらのモデルを元に追加学習したモデルも同じ日に使えなくなります。移行先には、より安く大量の処理に向いた新モデル「gpt-6-luna」が案内されています。なお、今回の終了対象はAPIのモデルで、ChatGPTの「chatgpt-4o-latest」は一覧に含まれていません。",
+      "points": [
+        "API版の4モデルが2027年1月14日に終了",
+        "通知から終了まで92日と、通常より短い期間",
+        "移行先は低価格の新モデル「gpt-6-luna」",
+        "APIを使ったアプリを作っている人は移行の準備を"
+      ],
+      "sources": [
+        {
+          "name": "MIXED Reality News",
+          "url": "https://mixed-news.com/en/openai-gpt-4o-gpt-4-1-shutdown-january-14-2027-92-days-notice/"
+        }
+      ]
+    }
+  ],
+  "outro": "Spookalityも後半戦に入りました。ハロウィン当日に向けて、VRChatの中もますますにぎやかになりそうです。"
+}
