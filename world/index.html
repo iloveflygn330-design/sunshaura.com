@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- アクセス解析（Google アナリティクス。設定・自分のアクセスを数えない方法は assets/analytics.js） -->
+  <script src="../assets/analytics.js"></script>
   <!-- ページ間遷移の到着判定（全ページ共通。説明は assets/page-transition.js） -->
   <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
   <title>作ったワールド | sunshaura.com</title>
@@ -19,6 +21,7 @@
        <head> の site-common.css の下に <link rel="stylesheet" href="assets/world.css"> を追加する
        （動きが必要なら world/assets/world.js を作り、</body> の直前で読み込む）
     3. ヘッダー・フッター・「ちょっとまってね...」の演出は共通パーツなので、このページで書く必要はない
+       （アクセス解析 assets/analytics.js も <head> に入っているので、コピーしたページも自動で数えられる）
 
   ★拡張予定: 新しいページを増やすときは、このファイルをフォルダごとコピーするのが早い
     1. フォルダ名を変えて、<title> と下の SunHeader.render の current をそのフォルダ名にする
