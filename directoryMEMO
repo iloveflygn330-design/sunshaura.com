@@ -13,7 +13,10 @@
   │    ├─ assets/dinovoice-data.js ← ★拡張予定: 恐竜ボイスゲームの中身（恐竜・口の形・セリフ・合格ライン）。恐竜は DV_DINOS に1件足すだけ
   │    ├─ assets/dinovoice.js / dinovoice.css ← 恐竜ボイスゲームの動き・見た目
   │    └─ dinovoice/sounds/       ← ずんだもん音声素材（置き方は README.txt。なくても仮の音で動く）
-  ├─ about/index.html           ← このサイトについて
+  ├─ about/index.html           ← このサイトについて（プロフィールカード＋クレジット。カードを投げて遊べる）
+  │    ├─ assets/about-data.js   ← ★拡張予定: プロフィール・クレジット・動きの数値（クレジットはここに1件足すだけ）
+  │    ├─ assets/about.js / about.css ← カードの物理演算（Matter.js）・見た目
+  │    └─ data/status.json       ← 「今のひとこと」（Discord から自動取り込み。.github/scripts/discord-status.js）。手で触らない
   ├─ gallery/ ・ news/          ← フォトギャラリー・ニュース（下に詳細）
   ├─ avatars.json               ← 全アバターデータ（ここだけ編集）
   └─ assets/
@@ -84,6 +87,14 @@
   .github/scripts/avatar-share.mjs  ← avatar/p/<アバターID>/（共有用ページ・カード画像）
   avatarform/thumb-focus.json       ← ★拡張予定: サムネイルの切り抜きがずれたとき、顔の位置を手で指定する
   avatarform/thumb-state.json       ← 自動生成。手で触らない
+
+プロフィールカードの写真（このサイトについて。ページを開くたびにランダム）
+  assets/images/about/profile/   ← ★拡張予定: 画像を入れて push するだけ（手順は README.md）
+  assets/images/about/list.json  ← 自動生成（welcome-list.js が一緒に作る）。手で触らない
+
+「今のひとこと」（このサイトについて）
+  .github/scripts/discord-status.js     ← ★拡張予定: ひとこと用の Discord チャンネルIDはここ
+  .github/workflows/about-status.yml    ← 30分ごとに取り込んで about/data/status.json を自動コミット
 
 トップページのキャラクター画像（ページを開くたびにランダム。手順は assets/images/welcome/README.md）
   assets/images/welcome/left/    ← ★拡張予定: キャラクター①（左から傾いて現れる）。透過 PNG を入れて push するだけ

@@ -27,7 +27,7 @@ on:
   push:
     branches: [main]
   workflow_run:
-    workflows: ['Avatar images', 'Gallery from Discord', 'News to Discord', 'News voice', 'VOICEVOX speakers']
+    workflows: ['Avatar images', 'Gallery from Discord', 'News to Discord', 'News voice', 'VOICEVOX speakers', 'About status from Discord']
     types: [completed]
     branches: [main]
   workflow_dispatch:

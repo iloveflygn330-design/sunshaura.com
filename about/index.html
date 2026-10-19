@@ -11,22 +11,30 @@
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
   <!-- サイト共通（ヘッダー・フッター・ページ移動の演出） -->
   <link rel="stylesheet" href="../assets/site-common.css">
+  <!-- このページ専用の見た目 -->
+  <link rel="stylesheet" href="assets/about.css">
 </head>
 <!--
   このサイトについてページ（about/index.html）
+    プロフィールカードと、その後ろに並ぶクレジット。
 
-  ★拡張予定: このページの中身を作る手順
-    1. <main id="body-content"> の中の .page-placeholder を消して、中身を書く
-    2. このページ専用の見た目が必要になったら about/assets/about.css を作り、
-       <head> の site-common.css の下に <link rel="stylesheet" href="assets/about.css"> を追加する
-       （動きが必要なら about/assets/about.js を作り、</body> の直前で読み込む）
-    3. ヘッダー・フッター・「ちょっとまってね...」の演出は共通パーツなので、このページで書く必要はない
+  しくみ:
+    ・最初はプロフィールカードが大きく真ん中に出て、その後ろにクレジットの文字が並ぶ
+    ・カードのリンク以外をクリック → カードが小さくなり、ドラッグで動かせる
+        持ったまま振り回すと、つかんだ位置を軸にくるくる回る / 勢いをつけて離すと飛んでいく
+        壁（この領域の端・スマホは今見えている画面の端）で跳ね返りながら減速する
+        ぶつかったクレジットの文字は、1行ずつの塊のまま飛び散る
+    ・カードが止まって10秒たつと、文字はふわっと元の位置へ戻る（「元に戻す」ボタンでもすぐ戻せる）
+    ・小さいカードをダブルクリック（スマホはダブルタップ）→ 真ん中に戻って大きくなる
+    ・スマホは、カード以外のところを左右になぞるとクレジットを横にスクロールできる
+    ・OS の「視差効果を減らす（動きを減らす）」がオンの人には、動きを止めて普通の並びだけ見せる
 
-  ★拡張予定: 新しいページを増やすときは、このファイルをフォルダごとコピーするのが早い
-    1. フォルダ名を変えて、<title> と下の SunHeader.render の current をそのフォルダ名にする
-    2. assets/site-header.js の SITE_NAV_ITEMS に1行追加する（全ページのヘッダーにボタンが出る）
+  中身（プロフィール・クレジット・動きの数値）は about/assets/about-data.js にまとめてある。
+  ★拡張予定: プロフィールやクレジットを変える・増やす → about/assets/about-data.js を書き換える（このHTMLは触らなくてよい）
+  動きは about/assets/about.js、見た目は about/assets/about.css。
+  物理演算は Matter.js（cdnjs から読み込み。about.js が必要なときだけ読み込む）。
 -->
-<body class="site-page">
+<body class="site-page about-page">
 
   <!-- ヘッダー（中身は assets/site-header.js が全ページ共通で組み立てる） -->
   <header id="header"></header>
@@ -39,10 +47,31 @@
   </div>
 
   <main id="body-content" data-transition-body>
-    <div class="page-placeholder">
-      <p class="placeholder-title">このサイトについて</p>
-      <p class="placeholder-desc">コンテンツは後から追加します</p>
-      <div class="placeholder-box"><!-- ★拡張予定: 中身を作ったらこの .page-placeholder ごと消す -->コンテンツを追加してください</div>
+    <h1 class="about-visually-hidden">このサイトについて</h1>
+
+    <!-- カードが動き回る領域（この領域の端が「壁」になる） -->
+    <div class="about-stage" id="about-stage">
+
+      <!-- クレジット（中身は about-data.js の ABOUT_CREDITS から about.js が作る）
+           スマホではこの箱が横にスクロールする -->
+      <div class="about-scroller" id="about-scroller">
+        <div class="about-credits" id="about-credits">
+          <div class="about-col about-col-left" id="about-col-left"></div>
+          <div class="about-col-gap" aria-hidden="true"></div>
+          <div class="about-col about-col-right" id="about-col-right"></div>
+        </div>
+      </div>
+
+      <!-- プロフィールカード（中身は about-data.js の ABOUT_PROFILE から about.js が作る） -->
+      <section class="about-card" id="about-card" aria-label="プロフィール">
+        <div class="about-card-inner" id="about-card-inner"></div>
+      </section>
+
+      <!-- 散らばった文字をすぐ元に戻すボタン（散らばっているときだけ出る） -->
+      <button type="button" class="about-reset" id="about-reset" hidden>元に戻す</button>
+
+      <!-- 操作のヒント（カードを小さくすると消える） -->
+      <p class="about-hint" id="about-hint">カードをクリックすると、つかんで投げられます</p>
     </div>
   </main>
 
@@ -52,5 +81,7 @@
   <script src="../assets/page-transition.js"></script>
   <script src="../assets/site-header.js"></script>
   <script>SunHeader.render({ root: '../', current: 'about' });</script>
+  <script src="assets/about-data.js"></script>
+  <script src="assets/about.js"></script>
 </body>
 </html>
