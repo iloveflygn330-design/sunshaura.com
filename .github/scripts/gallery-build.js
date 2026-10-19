@@ -2,8 +2,8 @@
    フォトギャラリー：写真の圧縮と写真一覧の作成
 
    元の写真は容量が大きいので、リポジトリの外のフォルダ（PCにだけある）に置いておく。
-     リポジトリ  : C:\Users\sdra_\Documents\MyWebSites\sunshaura.com
-     元の写真    : C:\Users\sdra_\Documents\MyWebSites_photo   ← リポジトリの2つ上の階層の隣
+     リポジトリ  : %USERPROFILE%\Documents\MyWebSites\sunshaura.com
+     元の写真    : %USERPROFILE%\Documents\MyWebSites_photo   ← リポジトリの2つ上の階層の隣
    このスクリプトで圧縮版を作り、圧縮版と一覧だけを GitHub に上げる。
 
    やること:

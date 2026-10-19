@@ -3,8 +3,8 @@
 元の写真は、リポジトリの外のフォルダに置いています（GitHub には上げません）。
 
 ```
-C:\Users\sdra_\Documents\MyWebSites\sunshaura.com   ← このリポジトリ
-C:\Users\sdra_\Documents\MyWebSites_photo          ← 元の写真（PCにだけある）
+%USERPROFILE%\Documents\MyWebSites\sunshaura.com   ← このリポジトリ
+%USERPROFILE%\Documents\MyWebSites_photo          ← 元の写真（PCにだけある）
   ├─ event\    ← フォルダ1つ = アルバム1つ（例）
   ├─ world\
   └─ （直下の写真は「その他」アルバム）

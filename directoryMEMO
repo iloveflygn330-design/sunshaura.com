@@ -68,7 +68,7 @@
   gallery/data/discord-state.json   ← Discord をどこまで取り込んだかの記録（自動生成）
 
 元の写真（リポジトリの外。PCにだけある）
-  C:\Users\sdra_\Documents\MyWebSites_photo\   ← ★拡張予定: 写真はここに入れる
+  %USERPROFILE%\Documents\MyWebSites_photo\   ← ★拡張予定: 写真はここに入れる
       └─ event\ など                            ← フォルダ1つ = アルバム1つ
 
 ページ移動アイコン（「ちょっとまってね / おまたせ」の丸い画像）
@@ -93,7 +93,13 @@
 
 
 ショップの素材（リポジトリの外。PCにだけある）
-  C:\Users\sdra_\Documents\MyWebSites_shop\   ← ★拡張予定: 商品フォルダ（例: 0010_matsuge\）を作って素材を置く
+  %USERPROFILE%\Documents\MyWebSites_shop\   ← ★拡張予定: 商品フォルダ（例: 0010_matsuge\）を作って素材を置く
       ├─ link.png / coin.png / cloud.png         ← ウィンドウのアイコン（全商品共通）
       └─ <商品ID>\  bg.png / thumb.png / in.avi / out.avi
   .github/scripts/shop-build.js  ← 元の素材 → shop/items/ の軽い版を作る（ffmpeg が必要。手順はファイルの先頭）
+
+サイトの公開（メモを取り除いてから公開。.github/workflows/deploy.yml）
+  .github/scripts/build-site.mjs ← HTML・CSS・JS のコメントを取り除いたコピー（_site/）を作る。これが公開される
+                                    ★拡張予定: 公開しないファイルは EXCLUDE / EXCLUDE_EXT に追加
+  公開されないもの: .github/ tools/ avatarform/profile/ directoryMEMO *.md *.py *.exo
+

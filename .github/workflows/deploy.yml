@@ -1,0 +1,78 @@
+# =====================================================
+# サイトの公開（メモ＝コメントを取り除いてから公開する）
+#
+# 仕組み:
+#   リポジトリのファイルは、作業用のメモ付きのまま。
+#   公開するときに .github/scripts/build-site.mjs でコメントを取り除いたコピー（_site/）を作り、
+#   それを GitHub Pages に公開する。ブラウザの開発者ツールで見ても、メモは出てこない。
+#
+# いつ動くか:
+#   ・main に push されたとき（自分の push、フォームの保存、毎日のニュースなど）
+#   ・ほかの自動処理（アバター画像・ギャラリー・ニュース音声など）が終わったとき
+#     ※ 自動処理が GitHub 上で行ったコミットでは push のきっかけが動かない決まりがあるため、
+#       「終わったとき」のきっかけ（workflow_run）でも公開する
+#   ・Actions タブ → 「Deploy site」→「Run workflow」で手動でも公開できる
+#
+# 事前設定（最初の1回だけ）:
+#   GitHub のリポジトリ → Settings → Pages → Build and deployment の Source を「GitHub Actions」にする
+#
+# 動いたかどうかの確認:
+#   Actions タブ → 「Deploy site」。緑のチェックなら公開済み（数十秒〜1分ほどでサイトに反映）
+#
+# ★拡張予定: 新しい自動処理（ワークフロー）を作ったら、下の workflow_run の workflows に名前（name:）を追加する
+# =====================================================
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ['Avatar images', 'Gallery from Discord', 'News to Discord', 'News voice', 'VOICEVOX speakers']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 続けて動いたときは順番に（公開中の処理は止めない。待っているものは最新の1つにまとまる）
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # きっかけに関係なく、いちばん新しい main を公開する
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: コメントを取り除くライブラリを入れる
+        working-directory: .github/scripts
+        run: npm install --no-save --no-package-lock --no-audit --no-fund html-minifier-terser@7.2.0 terser@5.31.6 clean-css@5.3.3
+
+      - name: 公開用のサイトを作る（コメントを取り除く）
+        run: node .github/scripts/build-site.mjs
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
