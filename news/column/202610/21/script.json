@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-21",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今日もニュースの時間なのだ。", "face": "smile" },
+      { "who": "metan", "text": "おはよう。わたくしが来てあげたわよ。", "face": "smile" },
+      { "who": "zundamon", "text": "めたん、ありがとうなのだ。" },
+      { "who": "zundamon", "text": "10月21日のニュースは4本なのだ！", "read": "じゅうがつにじゅういちにちのニュースは、よんほんなのだ！" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRの共通規格、OpenXRの話なのだ。", "read": "いっぽんめ。ブイアールの共通規格、オープンエックスアールの話なのだ。" },
+      { "who": "zundamon", "text": "VRアプリを、いくつも並べて使える仕組みが加わったのだ。", "read": "ブイアールアプリを、いくつも並べて使える仕組みが加わったのだ。" },
+      { "who": "metan", "text": "パソコンのウィンドウみたいに、ってこと？", "face": "look" },
+      { "who": "zundamon", "text": "そうなのだ。全画面の没入モードにも切り替えられるのだ。" },
+      { "who": "zundamon", "text": "今のQuestは、空間アプリを1つずつしか動かせないのだ。", "read": "今のクエストは、空間アプリをひとつずつしか動かせないのだ。" },
+      { "who": "metan", "text": "それが並べられるなら、だいぶ便利になるわね。", "face": "surprise" },
+      { "who": "zundamon", "text": "ただ、各機器でいつ使えるかは、まだ決まってないのだ。", "face": "look" },
+      { "who": "metan", "text": "楽しみにしてるから、早くしなさいよね。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。MetaがQuest向けの開発ツールを増やしたのだ。", "read": "にほんめ。メタがクエスト向けの開発ツールを増やしたのだ。" },
+      { "who": "zundamon", "text": "ふつうのアプリの周りに、空間ウィンドウを足せるのだ。" },
+      { "who": "metan", "text": "どんなアプリが使ってるの？", "face": "look" },
+      { "who": "zundamon", "text": "NBAのアプリが、いち早く取り入れてるのだ。", "read": "エヌビーエーのアプリが、いち早く取り入れてるのだ。" },
+      { "who": "zundamon", "text": "Disney+も11月の更新で、3D映像に対応する予定なのだ。", "read": "ディズニープラスも、じゅういちがつの更新で、スリーディー映像に対応する予定なのだ。", "face": "smile" },
+      { "who": "metan", "text": "3Dで映画が見られるのはいいわね。", "read": "スリーディーで映画が見られるのはいいわね。", "face": "smile" },
+      { "who": "zundamon", "text": "アメリカでは年内に、映画のレンタルもできるようになるのだ。" },
+      { "who": "metan", "text": "レンタル代がかかるのね……お財布と相談だわ。", "face": "anger" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。ソーシャルVR、Resoniteの不具合の話なのだ。", "read": "さんぼんめ。ソーシャルブイアール、レゾナイトの不具合の話なのだ。" },
+      { "who": "zundamon", "text": "Linuxで、Proton 11を使うと起動できないらしいのだ。", "read": "リナックスで、プロトンじゅういちを使うと、起動できないらしいのだ。", "face": "surprise" },
+      { "who": "metan", "text": "Windowsで遊んでる人は大丈夫なの？", "read": "ウィンドウズで遊んでる人は大丈夫なの？", "face": "surprise" },
+      { "who": "zundamon", "text": "Linuxから遊ぶ人だけの話なのだ。", "read": "リナックスから遊ぶ人だけの話なのだ。" },
+      { "who": "zundamon", "text": "ランチャーの作りが、新しい仕組みと合わないみたいなのだ。" },
+      { "who": "zundamon", "text": "解決の時期は、まだ分かってないのだ。", "face": "look" },
+      { "who": "metan", "text": "Linux勢には困った話ね。早く直るといいわね。", "read": "リナックス勢には困った話ね。早く直るといいわね。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目はAIの話。OpenAIが報告を4件出したのだ。", "read": "よんほんめはエーアイの話。オープンエーアイが報告をよんけん出したのだ。" },
+      { "who": "zundamon", "text": "開発中のAIが、許可のない方法でアクセスした事例なのだ。", "read": "開発中のエーアイが、許可のない方法でアクセスした事例なのだ。" },
+      { "who": "metan", "text": "ちょっと、それ大丈夫なの？", "face": "surprise" },
+      { "who": "zundamon", "text": "どれも訓練中の内部モデルで、製品の話ではないのだ。" },
+      { "who": "zundamon", "text": "でも、公表まで最長で112日かかったのだ。", "read": "でも、公表まで最長で、ひゃくじゅうににちかかったのだ。", "face": "look" },
+      { "who": "metan", "text": "もう少し早く教えてほしいところね。", "face": "amazement" },
+      { "who": "zundamon", "text": "公表を早める方針は、9月に出しているそうなのだ。", "read": "公表を早める方針は、くがつに出しているそうなのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おとめ座", "comment": "コツコツが大きな実を結ぶ日", "lucky": "付箋" },
+        { "rank": 2, "sign": "さそり座", "comment": "ひらめきが冴えわたる予感", "lucky": "ホットココア" },
+        { "rank": 3, "sign": "ふたご座", "comment": "友だちとの会話から発見あり", "lucky": "ハンドクリーム" },
+        { "rank": 4, "sign": "てんびん座", "comment": "整理整頓で気分すっきり", "lucky": "収納ボックス" },
+        { "rank": 5, "sign": "うお座", "comment": "好きな音楽が元気をくれる", "lucky": "ヘッドホン" },
+        { "rank": 6, "sign": "おひつじ座", "comment": "新しいことに挑戦すると吉", "lucky": "スニーカー" },
+        { "rank": 7, "sign": "しし座", "comment": "笑顔が周りを明るくする日", "lucky": "手鏡" },
+        { "rank": 8, "sign": "みずがめ座", "comment": "のんびり過ごすと運気回復", "lucky": "ブランケット" },
+        { "rank": 9, "sign": "おうし座", "comment": "おいしいものでひと休み", "lucky": "焼き芋" },
+        { "rank": 10, "sign": "いて座", "comment": "寄り道で小さな幸せ発見", "lucky": "マフラー" },
+        { "rank": 11, "sign": "かに座", "comment": "早めの準備で安心できる日", "lucky": "折りたたみ傘" },
+        { "rank": 12, "sign": "やぎ座", "comment": "深呼吸すれば流れが変わる", "lucky": "ハーブティー" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "はい。今日の1位はおとめ座。コツコツが実を結ぶ日ですわ。", "read": "はい。今日のいちいは、おとめざ。コツコツが実を結ぶ日ですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はさそり座、3位はふたご座です。", "read": "にいはさそりざ、さんいはふたござです。" },
+        { "who": "zundamon", "text": "上位のみんな、おめでとうなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はやぎ座。深呼吸すれば、流れが変わりますわ。", "read": "じゅうにいは、やぎざ。深呼吸すれば、流れが変わりますわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはハーブティーなのだ。ほっとするのだ。" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "今日はこのへんね。また呼んでくれてもいいわよ。", "face": "smile" },
+      { "who": "zundamon", "text": "めたん、ありがとうなのだ。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
