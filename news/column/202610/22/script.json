@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-22",
+  "speed": 1.15,
+  "guest": "ankomon",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのニュースの時間なのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "今日はあんこもんが来てやったもん。", "face": "point" },
+      { "who": "zundamon", "text": "よろしくなのだ、あんこもん。", "face": "smile" },
+      { "who": "zundamon", "text": "10月22日のVRニュースは、4本なのだ。", "read": "じゅうがつにじゅうににちのブイアールニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatの公式Wikiがメンテナンスしていたのだ。", "read": "いっぽんめ。ブイアールチャットの公式ウィキが、メンテナンスしていたのだ。" },
+      { "who": "ankomon", "text": "えっ、VRChatに入れなくなってたの？", "read": "えっ、ブイアールチャットに入れなくなってたの？", "face": "surprise" },
+      { "who": "zundamon", "text": "違うのだ。止まったのはWikiだけなのだ。", "read": "ちがうのだ。止まったのはウィキだけなのだ。" },
+      { "who": "zundamon", "text": "昨日の14時ごろから、今朝の4時半すぎまでだったのだ。", "read": "きのうのじゅうよじごろから、けさのよじはんすぎまでだったのだ。" },
+      { "who": "ankomon", "text": "なんでメンテしてたの？", "face": "think" },
+      { "who": "zundamon", "text": "理由は、公式からは発表されていないのだ。", "face": "look" },
+      { "who": "zundamon", "text": "もう終わっているから、今は普通に見られるのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "それなら安心だもん。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Questの新しいシステム更新、v2.9なのだ。", "read": "にほんめ。クエストの新しいシステム更新、バージョンにてんきゅうなのだ。" },
+      { "who": "zundamon", "text": "日本でもMeta AIが使えるようになるのだ！", "read": "日本でも、メタエーアイが使えるようになるのだ！", "face": "surprise" },
+      { "who": "ankomon", "text": "日本語でしゃべりかけてもいいの？", "read": "にほんごで、しゃべりかけてもいいの？", "face": "think" },
+      { "who": "zundamon", "text": "そうなのだ。日本語にも対応したのだ。", "read": "そうなのだ。にほんごにも対応したのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "ウィンドウは、壁に近づけると吸い付くようになったのだ。" },
+      { "who": "zundamon", "text": "Quest 3と3Sは、QRコードも読めるのだ。", "read": "クエストスリーとスリーエスは、キューアールコードも読めるのだ。" },
+      { "who": "ankomon", "text": "あんこもんのQuestにも、もう来てる？", "read": "あんこもんのクエストにも、もう来てる？" },
+      { "who": "zundamon", "text": "少しずつ配信だから、届く日は人それぞれなのだ。", "face": "look" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。VRフィットネスのSupernaturalが再スタートなのだ。", "read": "さんぼんめ。ブイアールフィットネスの、スーパーナチュラルが再スタートなのだ。" },
+      { "who": "zundamon", "text": "Metaから独立した会社が、早期アクセスで出したのだ。", "read": "メタから独立した会社が、早期アクセスで出したのだ。" },
+      { "who": "ankomon", "text": "どんな運動をするの？", "face": "think" },
+      { "who": "zundamon", "text": "音楽に合わせて、的を打ったり、よけたりするのだ。" },
+      { "who": "zundamon", "text": "月約20ドルか、年約200ドルの会員制なのだ。", "read": "つき、やくにじゅうドルか、ねん、やくにひゃくドルの会員制なのだ。" },
+      { "who": "zundamon", "text": "でも今は、アメリカとカナダだけなのだ…", "face": "amazement", "style": "なみだめ" },
+      { "who": "ankomon", "text": "日本に来たら、あんこもんの方がたくさん動くもん！", "read": "にほんに来たら、あんこもんのほうが、たくさん動くもん！", "face": "point", "style": "つよつよ" },
+      { "who": "zundamon", "text": "そのときは勝負なのだ！", "face": "smile" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。SnapのARグラス「Specs」の話なのだ。", "read": "よんほんめ。スナップの、エーアールグラス、スペックスの話なのだ。" },
+      { "who": "zundamon", "text": "俳優のロバート・ダウニー・Jr.さんが参加するのだ！", "read": "俳優の、ロバート・ダウニー・ジュニアさんが参加するのだ！", "face": "surprise" },
+      { "who": "ankomon", "text": "え、映画の人がメガネを作るの？", "face": "surprise" },
+      { "who": "zundamon", "text": "名誉職として、体験やコンテンツ作りに関わるのだ。" },
+      { "who": "zundamon", "text": "発売はこの秋、値段は2,195ドルからなのだ。", "read": "発売はこの秋、値段は、にせんひゃくきゅうじゅうごドルからなのだ。" },
+      { "who": "ankomon", "text": "た、高いもん…。日本では買えるの？", "face": "think", "style": "よわよわ" },
+      { "who": "zundamon", "text": "発売国はアメリカ、イギリス、フランスなのだ。", "face": "look" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "いて座", "comment": "新しい場所で良い出会い", "lucky": "スニーカー" },
+        { "rank": 2, "sign": "かに座", "comment": "身の回りを整えると吉", "lucky": "ハンドクリーム" },
+        { "rank": 3, "sign": "おうし座", "comment": "好きなことに集中できる日", "lucky": "温かいお茶" },
+        { "rank": 4, "sign": "みずがめ座", "comment": "ひらめきを書き留めて", "lucky": "付せん" },
+        { "rank": 5, "sign": "しし座", "comment": "友達との会話が楽しい日", "lucky": "グミ" },
+        { "rank": 6, "sign": "おとめ座", "comment": "計画どおりに進めやすい", "lucky": "カレンダー" },
+        { "rank": 7, "sign": "やぎ座", "comment": "早めの休憩が元気のもと", "lucky": "クッション" },
+        { "rank": 8, "sign": "ふたご座", "comment": "久しぶりの連絡に縁あり", "lucky": "スマホスタンド" },
+        { "rank": 9, "sign": "おひつじ座", "comment": "ひと呼吸おくと順調に", "lucky": "ミント" },
+        { "rank": 10, "sign": "さそり座", "comment": "小さな片づけで気分一新", "lucky": "ウェットティッシュ" },
+        { "rank": 11, "sign": "てんびん座", "comment": "迷ったら直感を信じて", "lucky": "ペン" },
+        { "rank": 12, "sign": "うお座", "comment": "のんびり過ごすと運気回復", "lucky": "あったか靴下" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "お任せくださいな。今日の1位は、いて座ですわ。", "read": "おまかせくださいな。今日のいちいは、いてざですわ。", "face": "smile" },
+        { "who": "itako", "text": "新しい場所で良い出会いがありそう。ラッキーアイテムはスニーカーです。" },
+        { "who": "itako", "text": "2位はかに座、3位はおうし座ですわ。", "read": "にいは、かにざ。さんいは、おうしざですわ。" },
+        { "who": "itako", "text": "12位はうお座。のんびり過ごせば運気は戻りますわ。", "read": "じゅうにいは、うおざ。のんびり過ごせば運気は戻りますわ。" },
+        { "who": "zundamon", "text": "うお座さん、ずんだ餅でひと休みするのだ～", "read": "うおざさん、ずんだもちでひと休みするのだー", "face": "smile", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zundamon", "text": "今日のニュースはここまでなのだ。くわしくは記事の出典を見てほしいのだ。" },
+      { "who": "ankomon", "text": "明日も負けないもん。またね！", "face": "point" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

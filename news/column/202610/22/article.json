@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-22",
+  "title": "VRChat公式Wikiが約15時間のメンテナンスほか、今日のVRニュース4本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "今日はVRChat公式Wikiのメンテナンス情報から始めます。ほかに、日本でもMeta AIが使えるようになるQuestの新しいシステム更新、VRフィットネス「Supernatural」の再スタート、SnapのARグラスにロバート・ダウニー・Jr.さんが参加する話題をお届けします。",
+  "items": [
+    {
+      "headline": "VRChat公式Wikiが約15時間のメンテナンス",
+      "category": "VRChat公式",
+      "overview": "VRChatの公式Wikiが、10月21日14時（日本時間）から計画メンテナンスに入りました。ステータスページでは「24時間未満」の予定と案内され、22日4時40分ごろ（日本時間）に完了と表示されています。メンテナンスの理由について、公式からの説明は出ていません。VRChat本体やサーバーの障害ではなく、Wikiだけの作業です。",
+      "points": [
+        "対象は公式Wikiだけで、VRChat本体は通常どおり",
+        "作業はすでに完了し、Wikiは再び見られる状態",
+        "メンテナンスの理由は公式から発表されていない",
+        "11月にも米国東部・欧州の通信サーバーの保守予定あり"
+      ],
+      "sources": [
+        { "name": "VRChat Status（Wiki Maintenence）", "url": "https://status.vrchat.com/incidents/xg3n4y6875w6" },
+        { "name": "VRChat Status", "url": "https://status.vrchat.com/" }
+      ]
+    },
+    {
+      "headline": "Quest向けHorizon OS v2.9配信、日本でもMeta AIが利用可能に",
+      "category": "VR機器・技術",
+      "overview": "MetaはQuest向けのシステム更新「Horizon OS v2.9」の段階的な配信を始めました。音声アシスタント「Meta AI」の対象国に日本・イギリス・オーストラリアなど6か国が加わり、日本語にも対応します。ウィンドウの固定ボタンがなくなり、壁に近づけると吸い付く仕組みに変わったほか、3つのウィンドウを並べられる「ウィンドウマネージャー」も入りました。Quest 3／3SではQRコードの読み取り機能も使えるようになります。",
+      "points": [
+        "Meta AIは設定のシステムからオンにできる（v2.9が届いてから）",
+        "対象はQuest 2・3・3S・Pro。届く時期は本体ごとに違う",
+        "ウィンドウは壁に寄せると吸い付き、3枚並べも可能に",
+        "昔のVRホーム環境の一部が作り直されて復活"
+      ],
+      "sources": [
+        { "name": "MIXED（Meta AIの対象国拡大）", "url": "https://mixed-news.com/en/meta-ai-quest-uk-australia-japan-mexico-korea-singapore/" },
+        { "name": "MIXED（Horizon OS v2.9）", "url": "https://mixed-news.com/en/horizon-os-2-9-quest-window-anchor-removed-wall-snapping-rollout/" }
+      ]
+    },
+    {
+      "headline": "VRフィットネス「Supernatural」が独立して再スタート",
+      "category": "その他",
+      "overview": "Metaから独立した会社が運営するVRフィットネスアプリ「Supernatural」が、Quest向けに早期アクセスとして配信を始めました。音楽に合わせて的を打ったり、よけたりするワークアウトが数千種類あり、新しいホーム環境も追加されています。アプリは無料でダウンロードでき、利用には月額約20ドルか年額約200ドルのサブスクリプションが必要です。今のところ提供地域はアメリカとカナダに限られています。",
+      "points": [
+        "Quest 2以降に対応、1台の本体で最大4人まで使える",
+        "旧アプリの記録は12月3日まで新アプリに引き継げる",
+        "旧アプリは12月3日でサービス終了",
+        "日本はまだ対象外"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/supernatural-re-launch-early-access-quest/" },
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/the-new-supernatural-launches-in-early-access-on-quest/" }
+      ]
+    },
+    {
+      "headline": "SnapのARグラス「Specs」にロバート・ダウニー・Jr.さん参加",
+      "category": "VR機器・技術",
+      "overview": "Snapは、俳優のロバート・ダウニー・Jr.さんが、ARグラス「Specs」の名誉職「チーフ・カスタマー・エクスペリエンス・オフィサー」に就いたと発表しました。新しいレンズ体験やオリジナルコンテンツ作り、ハードウェアや体験イベントの企画に関わるとしています。Specsはこの秋、アメリカ・イギリス・フランスで発売予定で、価格は2,195ドルからです。",
+      "points": [
+        "役割は「Specsで何ができるかを伝える」名誉職",
+        "コンテンツやハードウェアの企画にも関わる予定",
+        "発売国はアメリカ・イギリス・フランスで、日本は含まれない",
+        "価格は2,195ドルから、通信機能付きケースのセットは2,395ドル"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/robert-downey-jr-snap-specs-iron-man/" }
+      ]
+    }
+  ],
+  "outro": "Meta AIの日本語対応は、v2.9が届いた人から順に試せるようになります。気になる人は設定画面をのぞいてみてください。"
+}
