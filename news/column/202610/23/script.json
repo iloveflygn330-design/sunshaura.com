@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-23",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今日もニュースの時間なのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはようございます。今日もよろしくね、ずんだもん。", "face": "smile" },
+      { "who": "zundamon", "text": "10月23日のVRとAIのニュースは、4本なのだ。", "read": "じゅうがつにじゅうさんにちの、ブイアールとエーアイのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRMMOのZenithが、サーバーを終了するのだ。", "read": "いっぽんめ。ブイアールエムエムオーの、ゼニスが、サーバーを終了するのだ。", "face": "surprise" },
+      { "who": "zunko", "text": "えっ、いつまで遊べるんですか？", "face": "surprise" },
+      { "who": "zundamon", "text": "日本時間で、12月19日の朝3時ごろまでなのだ。", "read": "にほんじかんで、じゅうにがつじゅうくにちの、あささんじごろまでなのだ。" },
+      { "who": "zundamon", "text": "販売はもう終わっていて、11月18日からは新しく入れないのだ。", "read": "はんばいはもう終わっていて、じゅういちがつじゅうはちにちからは、新しく入れないのだ。" },
+      { "who": "zunko", "text": "今遊んでいる人は、最後まで続けられるんですね。" },
+      { "who": "zundamon", "text": "そうなのだ。QuestとSteamの両方が対象なのだ。", "read": "そうなのだ。クエストとスチームの、両方が対象なのだ。" },
+      { "who": "zundamon", "text": "遊んでいた人には、さみしいお知らせなのだ…", "face": "amazement", "style": "なみだめ" },
+      { "who": "zunko", "text": "残りの時間、思いっきり楽しんでほしいですね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Steamのベータ版で、表示の修正があったのだ。", "read": "にほんめ。スチームのベータ版で、表示の修正があったのだ。" },
+      { "who": "zundamon", "text": "Steam Frameでしか動かないゲームが、", "read": "スチームフレームでしか動かないゲームが、" },
+      { "who": "zundamon", "text": "WindowsのSteamにも、入れられそうに出ていたのだ。", "read": "ウィンドウズのスチームにも、入れられそうに出ていたのだ。", "face": "look" },
+      { "who": "zunko", "text": "入れても、パソコンでは遊べないんですよね？", "face": "surprise" },
+      { "who": "zundamon", "text": "そうなのだ。だから、出さないように直したのだ。" },
+      { "who": "zundamon", "text": "今はベータ版だけで、普通の版に来る日は未定なのだ。", "face": "look" },
+      { "who": "zunko", "text": "間違えて入れる人が減りそうで、よかったです。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Job Simulatorの開発元が、新作を発表したのだ。", "read": "さんぼんめ。ジョブシミュレーターの開発元が、新作を発表したのだ。" },
+      { "who": "zundamon", "text": "ARグラスのXREAL Aura向けの、Hyper Visorなのだ。", "read": "エーアールグラスの、エックスリアルオーラ向けの、ハイパーバイザーなのだ。" },
+      { "who": "zunko", "text": "どんなゲームなんですか？" },
+      { "who": "zundamon", "text": "自分の部屋がゲームセンターみたいになるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "手から光の弾を撃って、的やボスを倒すのだ！", "face": "surprise" },
+      { "who": "zundamon", "text": "全8ステージで、値段は1.99ドルなのだ。", "read": "ぜんはちステージで、値段は、いってんきゅうきゅうドルなのだ。" },
+      { "who": "zunko", "text": "お部屋で遊べるのは、楽しそうですね。", "face": "smile" },
+      { "who": "zundamon", "text": "でもグラス本体は、1,279ドルからなのだ…", "read": "でもグラス本体は、せんにひゃくななじゅうきゅうドルからなのだ…", "face": "amazement" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。ChatGPTのGPT-6 Proの新しい機能なのだ。", "read": "よんほんめ。チャットジーピーティーの、ジーピーティーシックスプロの新しい機能なのだ。" },
+      { "who": "zundamon", "text": "ひとつの作業を、何人ものAIで同時に進めるのだ。", "read": "ひとつの作業を、何人ものエーアイで、同時に進めるのだ。" },
+      { "who": "zunko", "text": "みんなで手分けするんですね。進み具合も見えるんですか？", "face": "surprise" },
+      { "who": "zundamon", "text": "見えるのだ。終わった部分ごとに、中身も開けるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "対象はProの人で、少しずつ配られているのだ。", "read": "対象はプロの人で、少しずつ配られているのだ。" },
+      { "who": "zundamon", "text": "どれくらい速くなるかは、まだ発表されていないのだ。", "face": "look" },
+      { "who": "zunko", "text": "ずんだ餅作りも、手分けできたらいいのに。", "read": "ずんだもちづくりも、手分けできたらいいのに。", "face": "smile" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おひつじ座", "comment": "思い切った一歩が実を結ぶ日", "lucky": "赤いペン" },
+        { "rank": 2, "sign": "てんびん座", "comment": "人とのやり取りが楽しくなる", "lucky": "マグカップ" },
+        { "rank": 3, "sign": "みずがめ座", "comment": "新しいアイデアがひらめく", "lucky": "メモ帳" },
+        { "rank": 4, "sign": "しし座", "comment": "得意なことで頼りにされる", "lucky": "腕時計" },
+        { "rank": 5, "sign": "ふたご座", "comment": "調べものがはかどる一日", "lucky": "しおり" },
+        { "rank": 6, "sign": "うお座", "comment": "好きな音楽で気分が上がる", "lucky": "ヘッドホン" },
+        { "rank": 7, "sign": "おうし座", "comment": "おいしいものに出会えそう", "lucky": "おはし" },
+        { "rank": 8, "sign": "さそり座", "comment": "片付けで気持ちがすっきり", "lucky": "収納ボックス" },
+        { "rank": 9, "sign": "いて座", "comment": "遠くの友だちから良い知らせ", "lucky": "ポストカード" },
+        { "rank": 10, "sign": "かに座", "comment": "早めの準備がうまくいく", "lucky": "カレンダー" },
+        { "rank": 11, "sign": "やぎ座", "comment": "ひと息つくと良い流れに", "lucky": "ハーブティー" },
+        { "rank": 12, "sign": "おとめ座", "comment": "ゆっくり休めば明日は好調", "lucky": "やわらかい毛布" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "はい。今日の1位は、おひつじ座ですわ。", "read": "はい。今日のいちいは、おひつじざですわ。", "face": "smile" },
+        { "who": "itako", "text": "思い切った一歩が実を結びます。ラッキーアイテムは赤いペン。" },
+        { "who": "itako", "text": "2位はてんびん座、3位はみずがめ座です。", "read": "にいは、てんびんざ。さんいは、みずがめざです。" },
+        { "who": "itako", "text": "12位はおとめ座。ゆっくり休めば、明日は好調ですわ。", "read": "じゅうにいは、おとめざ。ゆっくり休めば、あしたは好調ですわ。" },
+        { "who": "zundamon", "text": "おとめ座さん、毛布にくるまって休むのだ～", "read": "おとめざさん、もうふにくるまって休むのだー", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zundamon", "text": "今日のニュースはここまでなのだ。くわしくは記事を見てほしいのだ。" },
+      { "who": "zunko", "text": "週末も楽しく過ごしてくださいね。", "face": "smile" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

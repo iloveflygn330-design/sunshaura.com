@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-23",
+  "title": "VRMMO『Zenith』が12月にサーバー終了へほか、今日のVR・AIニュース4本",
+  "category": "その他",
+  "thumb": "",
+  "intro": "今日はVRChatの新しい発表がなかったため、VRゲームと機器の話題を中心にお届けします。VRMMO『Zenith』のサーバー終了、Steamの表示の修正、Google傘下のスタジオによるARグラス向けゲーム、そしてChatGPTの新しい機能の4本です。",
+  "items": [
+    {
+      "headline": "VRMMO『Zenith』、12月18日にサーバー終了へ",
+      "category": "その他",
+      "overview": "VR向けMMORPG『Zenith: The Last City』を開発するRamen VRが、ゲームのサーバーを12月18日（米国太平洋時間）に終了すると発表しました。10月21日でゲーム本体と課金通貨の販売はすでに終わっています。11月18日には無料版『Zenith: Infinite Realms』が配信され、有料版はその追加コンテンツという扱いになります。Ramen VRは2024年7月に、プレイヤーが定着しないことを理由に開発を止めていました。",
+      "points": [
+        "サーバー終了は日本時間で12月19日（土）の午前3時ごろ",
+        "11月18日以降は、新しくダウンロードできなくなる",
+        "今遊んでいる人は、サーバー終了まで続けられる",
+        "対象はMeta Quest版とSteam（PC VR）版"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/zenith-vrmmo-closing-servers-dec-2026-quest-pc-vr/" }
+      ]
+    },
+    {
+      "headline": "Steamベータ、Steam Frame専用ゲームをWindowsに出さない修正",
+      "category": "VR機器・技術",
+      "overview": "Valveのヘッドセット「Steam Frame」でしか動かないゲームが、WindowsのSteamでもインストールできるように表示される問題がありました。10月16日のSteamベータ版で、こうしたゲームがWindowsでインストール候補に出ないよう修正されました。Steam Frame専用のゲームには、Quest向けに作られたAndroid版をもとに、ヘッドセット本体で動かすものが増えています。通常版のSteamにいつ入るかは発表されていません。",
+      "points": [
+        "直ったのは表示だけで、どの機器で動くかは変わらない",
+        "今はSteamの設定から入れるベータ版だけの修正",
+        "どのゲームで起きていたかは公表されていない",
+        "同じベータで、Steamの起動も速くなった"
+      ],
+      "sources": [
+        { "name": "MIXED", "url": "https://mixed-news.com/en/steam-beta-stops-offering-steam-frame-only-games-install-windows/" }
+      ]
+    },
+    {
+      "headline": "『Job Simulator』の開発元、ARグラス向け新作を発表",
+      "category": "VR機器・技術",
+      "overview": "Google傘下のOwlchemy Labsが、ARグラス「XREAL Aura」向けのシューティングゲーム『Hyper Visor』を発表しました。自分の部屋がゲームセンターのようになり、手から光の弾を撃って的やボスを倒していきます。全8ステージで、価格は1.99ドルです。XREAL AuraはAndroid XRで動くシースルー型のARグラスで、現在は予約受付中です。",
+      "points": [
+        "開発は『Job Simulator』『Vacation Simulator』のスタジオ",
+        "XREAL Auraの発売に合わせたタイトルのひとつ",
+        "Owlchemyのゲームは、Samsung Galaxy XRでも動く",
+        "XREAL Auraの本体は1,279ドルから"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/google-vr-studio-arcade-blaster-xreal-aura/" }
+      ]
+    },
+    {
+      "headline": "ChatGPTのGPT-6 Pro、複数のエージェントで同時作業",
+      "category": "AI",
+      "overview": "OpenAIは、ChatGPTの「GPT-6 Pro」で、ひとつの作業を複数のAIエージェントに分けて同時に進められるようにしました。会話の中で各エージェントの進み具合を確認でき、終わった部分ごとに中身を開いて見られます。対象は条件を満たすChatGPT Proの利用者で、配信は順次進められています。OpenAIは応答が速くなるとしていますが、具体的な数字は示していません。",
+      "points": [
+        "使えるのはChatGPT Proの利用者（順次配信中）",
+        "会社などの管理された環境では、管理者の設定しだい",
+        "エージェントの数や、向いている作業は未発表",
+        "プラグインやツールの使い方もよくなるとしている"
+      ],
+      "sources": [
+        { "name": "MIXED", "url": "https://mixed-news.com/en/chatgpt-gpt-6-pro-parallel-agents-faster-responses/" }
+      ]
+    }
+  ],
+  "outro": "『Zenith』を遊んできた方は、12月までの残りの時間を楽しんでください。今日もお読みいただき、ありがとうございました。"
+}
