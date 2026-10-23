@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-24",
+  "title": "VRChatで顔の表情トラッキングが標準対応へほか、今日のVR・AIニュース4本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "今日は、VRChatのオープンベータ版で始まったフェイストラッキングの標準対応と、利用規約の改定という、VRChat公式の話題が2本あります。あわせて、協力型の宇宙VRゲームのPC VR版発売日と、開発支援AI「Claude Code」の不具合修正の、4本をお届けします。",
+  "items": [
+    {
+      "headline": "VRChatオープンベータで、フェイストラッキングに標準対応",
+      "category": "VRChat公式",
+      "overview": "VRChatのオープンベータ版で、アバターがフェイストラッキング（顔の表情の読み取り）に標準で対応しました。これまで目線とまぶた以外の表情を動かすには、外部ツール「VRCFaceTracking」とOSCを使う必要がありました。新しいアバターSDK（3.10.6-beta.1以降）では、Avatar Descriptorに表情を設定する専用の項目が加わります。表情のデータは、アバターの同期パラメーターの枠を使わずに、ほかの人へ同期されます。",
+      "points": [
+        "試すには、Steam版のオープンベータとSDKのベータ版が必要",
+        "VRCFaceTrackingの表情の規格「Unified Expressions」に対応",
+        "これまでのOSCを使ったフェイストラッキングも引き続き使える",
+        "Blended ShapesとSimplified Parametersは今のところ非対応"
+      ],
+      "sources": [
+        {
+          "name": "UploadVR",
+          "url": "https://www.uploadvr.com/vrchat-gets-native-face-tracking-support-in-open-beta/"
+        },
+        {
+          "name": "VRChat Ask Forum（Developer Update - 24 September 2026）",
+          "url": "https://ask.vrchat.com/t/developer-update-24-september-2026/48972"
+        }
+      ]
+    },
+    {
+      "headline": "VRChatが利用規約を改定、スクショ・動画の共有を明記",
+      "category": "VRChat公式",
+      "overview": "VRChatが、10月23日付で利用規約を改定しました。EU（欧州連合）の利用者向けに、デジタルサービス法（DSA）にもとづく第31条が新しく加わり、違法なコンテンツの通報方法や、処分への異議申し立ての手順などが定められています。また第12条には、VRChatで過ごした時間のスクリーンショットや動画を撮って共有してよいことが書き加えられました。",
+      "points": [
+        "他の人のアバターやワールドが写るときの許可は、共有する人の責任",
+        "EUの利用者は処分の理由説明を受け、6か月以内に無料で異議申し立てできる",
+        "EUの利用者に商品を売る事業者は、事業者情報の提供が必要に",
+        "規約の全文は、VRChat公式の法務ページで確認できる"
+      ],
+      "sources": [
+        {
+          "name": "VRChat 利用規約（公式）",
+          "url": "https://hello.vrchat.com/legal"
+        },
+        {
+          "name": "VRChat Ask Forum",
+          "url": "https://ask.vrchat.com/t/terms-of-service-changes-october-23-2026/49164"
+        }
+      ]
+    },
+    {
+      "headline": "協力型宇宙VR『Sol Protocol』、PC VR版が11月11日発売",
+      "category": "その他",
+      "overview": "Singular Perceptionが開発する協力型の宇宙アドベンチャー『Sol Protocol』が、11月11日にSteamでPC VR版を発売します。仲間と1隻の宇宙船を動かし、ランダムに生成される星系を探索しながら、戦闘や修理、資源集めを行うローグライクです。Meta Questでは9月から早期アクセスで配信されています。",
+      "points": [
+        "Steam Next Festの無料体験版を10月26日まで配信中",
+        "体験版では、チュートリアルと3つのエリアを遊べる",
+        "Quest版とのクロスプレイに対応",
+        "Quest版で追加された要素も、Steam版に最初から入る"
+      ],
+      "sources": [
+        {
+          "name": "MIXED",
+          "url": "https://mixed-news.com/en/sol-protocol-pc-vr-november-11-free-demo/"
+        },
+        {
+          "name": "UploadVR",
+          "url": "https://www.uploadvr.com/co-op-space-adventure-sol-protocol-launches-for-pc-vr-in-november-demo-available-now/"
+        }
+      ]
+    },
+    {
+      "headline": "Claude Code、同じ操作が2回送られる不具合を修正",
+      "category": "AI",
+      "overview": "Anthropicの開発支援AI「Claude Code」のバージョン2.1.307で、外部ツールとつなぐ仕組み（MCP）の不具合が修正されました。HTTPでつながるMCPツールを呼び出している途中で接続が切れると、同じ操作が2回送られることがありました。今後、自動の再試行は、読み取り専用か、くり返しても安全と示されたツールだけに限られます。",
+      "points": [
+        "すでに終わった操作が、もう一度実行される心配が減る",
+        "Macのキーチェーンがロック中のときは、原因を案内するように",
+        "パソコンのスリープ後にMCPの接続が戻らない問題も修正"
+      ],
+      "sources": [
+        {
+          "name": "MIXED",
+          "url": "https://mixed-news.com/en/claude-code-duplicate-mcp-tool-calls-fixed/"
+        }
+      ]
+    }
+  ],
+  "outro": "フェイストラッキングに対応した機器を持っている方は、オープンベータで表情の動きを試してみてはいかがでしょうか。今日もお読みいただき、ありがとうございました。"
+}
