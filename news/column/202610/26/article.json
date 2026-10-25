@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-26",
+  "title": "VRゲームジャムから無料ホラー17本ほか、今日のVR・AIニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "おはようございます。今日はVRChat本体の大きな発表がなかったため、ハロウィン向けのVRゲームジャムの結果と、Steamで遊べる無料体験版2本、そしてClaudeの企業向けプランの変更をお届けします。Steam Next Festの体験版は期間限定のものもあるので、気になる作品は早めにチェックしてみてください。",
+  "items": [
+    {
+      "headline": "VRゲームジャム「VR IS DEAD」、無料のハロウィン作品17本",
+      "category": "イベント",
+      "overview": "VRゲームを紹介するYouTubeチャンネルが主催するゲームジャム「VR IS DEAD Halloween Jam 2026」の応募が締め切られ、itch.ioに17本のVR作品が集まりました。テーマは「Graveyard Shift（夜勤・墓場の勤務）」で、墓地の夜勤や蝋人形館の警備など、仕事を題材にした作品が多く並んでいます。17本とも無料でダウンロードでき、一部は投げ銭方式ですが支払わずに入手できます。Quest向けのAndroid版とPC向けのWindows版があり、1本はブラウザだけで遊べます。",
+      "points": [
+        "17本すべて無料で遊べる",
+        "Quest版はSideQuestなどでの導入が必要",
+        "PC版はSteamVRで動かす",
+        "参加者による評価は太平洋時間10月29日正午まで"
+      ],
+      "sources": [
+        { "name": "VR.org", "url": "https://vr.org/articles/vr-is-dead-halloween-jam-2026-17-free-vr-games-graveyard-shift" }
+      ]
+    },
+    {
+      "headline": "宇宙船の検問VRシューター『RAID VR』、無料体験版",
+      "category": "その他",
+      "overview": "FusionPlayが開発するPC VR向けの協力型シューター『RAID VR』の無料体験版が、Steamで配信されています。宇宙船の積み荷をスキャンして密輸業者を見つけ出し、怪しい船に乗り込んで戦うローグライト型のゲームです。船の内部は毎回自動で作られ、武器のカスタマイズや階級の上昇といった成長要素もあります。製品版の発売日と価格はまだ発表されていません。",
+      "points": [
+        "1人でも、最大4人の協力プレイでも遊べる",
+        "体験版は製品版を買わなくても無料で入手できる",
+        "対応はPC VR（Steam）",
+        "製品版の発売日は未定"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/raid-vr-free-demo-cargo-inspections-co-op/" }
+      ]
+    },
+    {
+      "headline": "アステカ神殿の謎解きVR『Sunstone of Time』体験版",
+      "category": "その他",
+      "overview": "VRKiwiとJetdogsが開発する謎解きアドベンチャー『Sunstone of Time』の無料体験版が、Steam Next Festにあわせて公開されています。実験の失敗でアステカの都テノチティトランの神殿に飛ばされ、文字の解読や仕掛けを解いて部屋からの脱出を目指す内容です。手で物を触って解くルームスケールの謎解きが中心で、体験版は1人用です。製品版は6つのステージで、遊べる時間はおよそ6〜10時間と案内されています。",
+      "points": [
+        "製品版はPC VR・Meta Quest・PS VR2で予定",
+        "体験版はSteam Next Fest期間中に配信",
+        "製品版は「今年中」の発売予定で、日付は未定",
+        "価格はまだ発表されていない"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/sunstone-of-time-free-vr-demo-aztec-temple/" }
+      ]
+    },
+    {
+      "headline": "Claude Enterprise、チャットとCoworkが11月16日に一体化",
+      "category": "AI",
+      "overview": "Anthropicの企業向けプラン「Claude Enterprise」で、ふだんのチャットと作業代行機能「Cowork」を1つの会話で使える仕組みが、11月16日から標準で有効になります。会話はふつうのチャットとして始まり、コードの実行や文書の作業が必要になると、Anthropicが管理するクラウド上のコンピューターに移って処理を続けます。パソコンを閉じても作業は続き、これまでのチャットやプロジェクトもそのまま引き継がれます。同じ仕組みは、個人向けのProとMaxプランでは9月から使えるようになっていました。",
+      "points": [
+        "管理者は11月16日より前に有効化、または無効のままにできる",
+        "すでにオン・オフを選んだ組織は、その設定が続く",
+        "データ保持なしなど一部の設定の組織は、まだ使えない",
+        "SonnetとHaikuだけを使う「Efficient」モードも追加"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/claude-enterprise-chat-cowork-unified-november-16/" }
+      ]
+    }
+  ],
+  "outro": "今週はハロウィン本番。VRの中でも、ちょっと怖くて楽しい時間を過ごしてみてください。"
+}
