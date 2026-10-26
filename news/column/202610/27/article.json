@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-27",
+  "title": "VRパズル『Puzzling Places』に無料の新パズルほか、今日のVR・AIニュース4本",
+  "category": "その他",
+  "thumb": "",
+  "intro": "おはようございます。今日はVRChat本体の大きな発表がなかったため、VRパズルゲームの無料配信と協力プレイ対応、VRシューターのハロウィンイベント、そしてGoogleのAI関連の新機能2本をお届けします。期間限定の配布やイベントもあるので、気になるものは早めにチェックしてみてください。",
+  "items": [
+    {
+      "headline": "VRパズル『Puzzling Places』、無料の新パズルと協力プレイ",
+      "category": "その他",
+      "overview": "Realities.ioが開発する立体ジグソーパズル『Puzzling Places』のSteam版に、海の底の聖堂を組み立てる追加パズル「The Lost Relic」が登場しました。10月22日に配信され、最初の2か月間は無料で入手できます。あわせてアップデートで、ユーザーが作ったワークショップのパズルを、VRで2人一緒に組み立てられるようになりました。",
+      "points": [
+        "「The Lost Relic」は最大400ピースの1パズル",
+        "無料期間のあとは1.99ドルになる",
+        "協力プレイはVR同士のみ。デスクトップは1人用",
+        "2人とも同じワークショップのパズルを入れておく必要がある"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/puzzling-places-free-lost-relic-workshop-multiplayer/" }
+      ]
+    },
+    {
+      "headline": "VRシューター『CONVRGENCE』、ハロウィンのカボチャ集め",
+      "category": "イベント",
+      "overview": "Monkey-With-a-Bombが開発するVR向けの脱出型シューター『CONVRGENCE』で、ハロウィンイベントのカボチャ集めが行われています。10月23日のアップデート（パッチ1.1）で、ゲーム内の各地にカボチャが置かれるようになりました。集めたカボチャをお店に売ると、数に応じて見た目を変えるアイテムがもらえ、最後のごほうびは連れている犬の光る骸骨スキンです。",
+      "points": [
+        "ごほうびがもらえるのは11月9日まで",
+        "3・8・15・25・40個で段階的にアイテムが解放",
+        "昨年の進み具合は引き継がれるが、古いカボチャは使えない",
+        "取り逃したごほうびは来年も入手できる予定"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/convrgence-halloween-pumpkin-hunt-glowing-dog-skin/" }
+      ]
+    },
+    {
+      "headline": "Google Meet、63言語の音声翻訳に対応",
+      "category": "AI",
+      "overview": "Googleのビデオ会議サービス「Google Meet」で、話した声をAIで翻訳して聞ける機能が63言語に広がります。参加者はそれぞれ自分が聞きたい言語を選べて、話している言語は会議の途中で切り替わっても自動で判別されます。翻訳にはGeminiの技術が使われ、翻訳された声は元の発言から数秒遅れて届きます。",
+      "points": [
+        "Web・Android・iOSで利用できる",
+        "使えるのは主催者が対象の有料プランを使っている会議",
+        "録画・ライブ配信・電話での参加は対象外",
+        "11月2日から順次、多くの組織に提供が広がる"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/google-meet-63-languages-speech-translation-listener-choice/" }
+      ]
+    },
+    {
+      "headline": "Gemini、チャットからノートブックを作成できるように",
+      "category": "AI",
+      "overview": "GoogleのAI「Gemini」のアプリで、資料をまとめておく「Gemini Notebook」をチャットの中から操作できるようになりました。会話をしながらノートブックを作ったり、資料（ソース）を追加したり、中身について質問したりできます。「@Gemini Notebook」と呼び出すほか、Geminiが必要に応じて自動で使うこともあります。",
+      "points": [
+        "個人のGoogleアカウントでも使える",
+        "ノートブックの作成・編集・削除や、メモの保存ができる",
+        "ヨーロッパ経済領域では、設定で自分でオンにする必要がある",
+        "仕事や学校のアカウントは、組織側の有効化が必要"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/gemini-notebook-connected-app-create-add-sources-chat/" }
+      ]
+    }
+  ],
+  "outro": "今日はゲームの話題とAIの便利な機能が中心でした。ハロウィンまであと少し、VRでもイベントを楽しんでみてください。"
+}

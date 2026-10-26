@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-27",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！火曜日のニュースの時間なのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "おはようございます。朝は眠いので手短にどうぞ。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "10月27日のニュースは4本。ゲームとAIの話なのだ。", "read": "じゅうがつにじゅうななにちのニュースはよんほん。ゲームとエーアイの話なのだ。" },
+      { "who": "kiritan", "text": "ゲームの話なら、ちゃんと聞きます。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRパズル『Puzzling Places』の話なのだ。", "read": "いっぽんめ。ブイアールパズル、パズリングプレイシズの話なのだ。" },
+      { "who": "zundamon", "text": "Steam版に、海の底の聖堂を組み立てるパズルが出たのだ。", "read": "スチーム版に、海の底の聖堂を組み立てるパズルが出たのだ。" },
+      { "who": "zundamon", "text": "最初の2か月は無料。そのあとは1.99ドルなのだ。", "read": "最初のにかげつは無料。そのあとは、いってんきゅうきゅうドルなのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "無料のうちにもらっておくのが正解ですね。", "face": "look" },
+      { "who": "zundamon", "text": "さらに、みんなが作ったパズルを2人で組めるようになったのだ。", "read": "さらに、みんなが作ったパズルを、ふたりで組めるようになったのだ。" },
+      { "who": "kiritan", "text": "それって、パソコンの画面からでも一緒に遊べますか？" },
+      { "who": "zundamon", "text": "協力プレイはVR同士だけなのだ。画面だと1人用なのだ。", "read": "協力プレイはブイアール同士だけなのだ。画面だとひとり用なのだ。" },
+      { "who": "kiritan", "text": "ピースの取り合いにならないといいですけど。", "face": "nihilistic" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。VRシューター『CONVRGENCE』のハロウィンなのだ。", "read": "にほんめ。ブイアールシューター、コンバージェンスのハロウィンなのだ。" },
+      { "who": "zundamon", "text": "ゲームの中にカボチャが置かれて、集めるイベントなのだ。" },
+      { "who": "kiritan", "text": "集めたカボチャはどうするんですか？" },
+      { "who": "zundamon", "text": "お店に売ると、数に応じて見た目のアイテムがもらえるのだ。" },
+      { "who": "zundamon", "text": "最後のごほうびは、犬の光る骸骨スキンなのだ！", "face": "surprise" },
+      { "who": "kiritan", "text": "犬まで仮装するんですね。ちょっと欲しいです。", "face": "smile" },
+      { "who": "zundamon", "text": "ごほうびは11月9日までなのだ。忘れずにね。", "read": "ごほうびは、じゅういちがつここのかまでなのだ。忘れずにね。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Google Meetの音声翻訳が63言語に広がるのだ。", "read": "さんぼんめ。グーグルミートの音声翻訳が、ろくじゅうさん言語に広がるのだ。" },
+      { "who": "zundamon", "text": "話した声を、AIが翻訳して聞かせてくれる機能なのだ。", "read": "話した声を、エーアイが翻訳して聞かせてくれる機能なのだ。" },
+      { "who": "kiritan", "text": "みんな同じ言語で聞くんですか？" },
+      { "who": "zundamon", "text": "一人ひとり、聞きたい言語を選べるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "ただ、翻訳の声は数秒遅れて届くそうなのだ。" },
+      { "who": "kiritan", "text": "数秒なら、ゲームの通信よりはましですね。", "face": "look" },
+      { "who": "zundamon", "text": "使えるのは、主催者が対象の有料プランの会議なのだ。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。Geminiのアプリが、ノートブックを操作できるのだ。", "read": "よんほんめ。ジェミニのアプリが、ノートブックを操作できるのだ。" },
+      { "who": "zundamon", "text": "チャットしながら、資料をまとめるノートを作れるのだ。" },
+      { "who": "kiritan", "text": "資料を足したり、質問したりもできるんですか？" },
+      { "who": "zundamon", "text": "できるのだ。個人のアカウントでも使えるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "仕事や学校の人は、組織の設定が必要なのだ。" },
+      { "who": "kiritan", "text": "宿題の調べものに、便利そうですね。", "face": "look" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "てんびん座", "comment": "うれしい知らせが届く日", "lucky": "スマートフォン" },
+        { "rank": 2, "sign": "ふたご座", "comment": "会話から良いアイデアが", "lucky": "メモ帳" },
+        { "rank": 3, "sign": "おひつじ座", "comment": "行動力が実を結ぶ", "lucky": "スニーカー" },
+        { "rank": 4, "sign": "しし座", "comment": "得意なことで輝ける", "lucky": "ヘッドホン" },
+        { "rank": 5, "sign": "うお座", "comment": "やさしさが伝わる日", "lucky": "ハンカチ" },
+        { "rank": 6, "sign": "かに座", "comment": "片付けで気分すっきり", "lucky": "収納ボックス" },
+        { "rank": 7, "sign": "みずがめ座", "comment": "新しい趣味に出会えそう", "lucky": "パズル" },
+        { "rank": 8, "sign": "おうし座", "comment": "おいしいものでひと休み", "lucky": "焼き芋" },
+        { "rank": 9, "sign": "やぎ座", "comment": "少しずつ進めば大丈夫", "lucky": "カレンダー" },
+        { "rank": 10, "sign": "おとめ座", "comment": "深呼吸で落ち着こう", "lucky": "温かいお茶" },
+        { "rank": 11, "sign": "さそり座", "comment": "人に頼ると楽になる", "lucky": "付箋" },
+        { "rank": 12, "sign": "いて座", "comment": "ゆっくり休めば元気に", "lucky": "ブランケット" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、てんびん座ですわ。うれしい知らせが届きそうです。", "read": "今日のいちいは、てんびんざですわ。うれしい知らせが届きそうです。", "face": "smile" },
+        { "who": "itako", "text": "2位はふたご座、3位はおひつじ座です。", "read": "にいはふたござ、さんいはおひつじざです。" },
+        { "who": "zundamon", "text": "上位のみんな、いい一日になるのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はいて座。ゆっくり休めば、すぐ元気になりますわ。", "read": "じゅうにいは、いてざ。ゆっくり休めば、すぐ元気になりますわ。" },
+        { "who": "zundamon", "text": "ブランケットにくるまって、休むのだ…。", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "kiritan", "text": "今日もお疲れさまでした。わたしは二度寝します。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "また明日もニュースを届けるのだ！", "face": "smile" }
+    ]}
+  ]
+}
