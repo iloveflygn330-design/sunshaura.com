@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-28",
+  "title": "VRChat音楽フェス「ESPERA」最終日の出演者発表ほか、今日のVRニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、VRChatで11月に開かれる音楽フェスの続報と、新しいVRChat向けアバターの発売情報をお届けします。あわせて、写真から3DCGを作るソニーのツールの更新と、Apple Vision Proのスポーツ中継に使われるグラフィック技術の話題も紹介します。",
+  "items": [
+    {
+      "headline": "VRChat音楽フェス「ESPERA」、最終日の出演者を発表",
+      "category": "イベント",
+      "overview": "VRChatで11月20日から22日まで開かれる音楽フェス「ESPERA -AdHoc Live Festival 2026-」で、最終日11月22日の出演者が公開されました。Kizuna AIさん、春猿火さん、月白 累さんなど9組が出演します。20日と21日は無料公演、22日は有料公演で、チケットはZAIKOで販売されています。20日と21日の出演者は後日発表の予定です。",
+      "points": [
+        "最終日11月22日は有料公演、20日・21日は無料公演",
+        "チケットは配信3,000円、VRChat内の会場4,000円など",
+        "VRChatで参加する人は購入時に表示名の登録が必要",
+        "配信のアーカイブは11月29日23時59分まで視聴できる"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/161273" },
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/espera-adhoc-live-festival-2026-lineup-ticket/" }
+      ]
+    },
+    {
+      "headline": "VRChat対応の新アバター「うる」、10月29日に発売",
+      "category": "アバター・制作",
+      "overview": "アバター服飾サークル「YOYOGI MORI」から、VRChat対応の3Dアバター「うる」が10月29日にBOOTHで発売されます。ふわっと浮いた耳と、やわらかい雰囲気が特徴のアバターです。Avatars 3.0やPhysBone、フルボディトラッキングに対応しています。11月19日までに購入すると、特典のアイテムと設定画が付きます。",
+      "points": [
+        "発売は10月29日、販売はBOOTH",
+        "Avatars 3.0・PhysBone・フルトラッキングに対応",
+        "改変用のテクスチャやUnityパッケージが多数入っている",
+        "11月19日までの購入で「Coffee」アイテムと設定画3枚が付く"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/161301" }
+      ]
+    },
+    {
+      "headline": "ソニー「XYN」、写真からリアルな3DCGを作る機能を強化",
+      "category": "VR機器・技術",
+      "overview": "ソニーは、現実の物や空間を3DCGにする制作ツール群「XYN（ジン）」のアップデートを、日本とアメリカで提供開始しました。カメラやiPhoneで撮った最大500枚の写真から、クラウド上でリアルな3DCGを生成できます。従来の手法が苦手だったガラスの透明感や、細い柵のような形も表現できるとしています。オンライン決済が始まり、個人のクリエイターも契約できるようになりました。",
+      "points": [
+        "写真から作る3DCGの質を4段階から選べる",
+        "処理はクラウドで行うので、手元のPCの性能に左右されない",
+        "撮影を手伝うアプリに、物を一周撮るためのガイドが追加",
+        "無料プランのほか、月3,300円からの有料プランがある"
+      ],
+      "sources": [
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/sony-xyn-object-3dcg-update/" }
+      ]
+    },
+    {
+      "headline": "Apple Vision Proのスポーツ中継、試合データを立体表示",
+      "category": "VR機器・技術",
+      "overview": "放送用グラフィックの会社wTVisionは、Apple Vision Pro向けの一部のイマーシブなスポーツ中継で、自社の技術がリアルタイムのグラフィックに使われていると発表しました。バスケットボールでは得点や時計、選手一覧などを立体的に表示します。野球では打順や成績を、試合の横の空間に並べて見せます。どの試合やリーグで使われたかは明らかにされていません。",
+      "points": [
+        "試合中のデータを、その場で更新して空間に表示できる",
+        "対象はバスケットボールと野球の一部の中継",
+        "新しいヘッドセットや放送権の発表ではない"
+      ],
+      "sources": [
+        { "name": "MIXED", "url": "https://mixed-news.com/en/apple-vision-pro-immersive-sports-wtvision-live-graphics/" }
+      ]
+    }
+  ],
+  "outro": "11月はVRChatで音楽イベントが続きます。気になる公演があれば、チケットの販売期間もあわせて確認してみてください。"
+}
