@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-29",
+  "title": "VRChat対応のVRグローブ「EOZ VR Gloves」公開ほか、今日のVR・AIニュース4本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "今日は、VRChatで指の動きを細かく使えるVRグローブと、ソニーの小さな裸眼立体ディスプレイの発表をお届けします。あわせて、Steam FrameのCDドライブ対応に向けた動きと、AIを使って作られた『スーパーマリオ64』の複合現実（MR）版の話題も紹介します。",
+  "items": [
+    {
+      "headline": "VRグローブ「EOZ VR Gloves」公開、VRChatに対応",
+      "category": "VR機器・技術",
+      "overview": "EOZ VRが、指ごとの曲がり具合を読み取るVRグローブ「EOZ VR Gloves」を公開しました。VRChatの指の入力方式「VRChat Input 2.0」と、SteamVRの指の入力に対応したアプリで使えます。手の位置はTundra Trackerとベースステーションで取得し、専用のドングルは必要ありません。価格は300ドルで、発売は「近日」とされています。",
+      "points": [
+        "指や関節ごとの動きを読み取り、ジェスチャー操作もできる",
+        "手の位置はTundra Tracker、SteamVR経由の無線でつながる",
+        "バッテリーは連続約8時間、充電はUSB Type-Cで約2時間",
+        "サイズはS・M・Lの3種類。日本での発売は未定"
+      ],
+      "sources": [
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/eoz-vr-gloves/" }
+      ]
+    },
+    {
+      "headline": "ソニー、6インチの裸眼立体ディスプレイ「ELF-MN1」",
+      "category": "VR機器・技術",
+      "overview": "ソニーが、メガネやヘッドセットなしで立体的に見られる空間再現ディスプレイ「ELF-MN1」を発表しました。画面は6インチで、目の位置を読み取って、見る角度に合わせた立体映像を表示します。アバターやキャラクター、ソニーの「XYN」で作った3Dデータを表示できます。発売は12月11日で、市場推定価格は税込5万4,000円前後です。",
+      "points": [
+        "赤外線センサーで、暗い場所でも目の位置を追いかける",
+        "USB-Cケーブル1本で、PCやスマートフォンにつなげる",
+        "デジタルフィギュアサービス「ホロモデル」に対応",
+        "ソニーストア銀座・名古屋で順次展示される予定"
+      ],
+      "sources": [
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/sony-elf-mn1/" }
+      ]
+    },
+    {
+      "headline": "Steam Frame、外付けCDドライブ対応へ向けた変更",
+      "category": "VR機器・技術",
+      "overview": "ValveのVRヘッドセット「Steam Frame」のフォーラムで、外付けのディスクドライブが使えないという質問に、Valveの開発者が「確認する」と答えました。その直後、Steam Frameのシステムの中心部分（カーネル）に、CDドライブを認識するための設定が追加されました。変更の説明には、Steam Deckとそろえるためと書かれています。まだSteamOSの配信には入っておらず、提供時期は発表されていません。",
+      "points": [
+        "データ用のディスクを読み込めるようにするための変更",
+        "DVDやBlu-rayの映像再生に対応するものではない",
+        "電源をUSBからとるドライブが動くかどうかは不明",
+        "SteamOSへの反映時期は、まだ決まっていない"
+      ],
+      "sources": [
+        { "name": "VR.org", "url": "https://vr.org/articles/steam-frame-cdrom-kernel-config-gabe-defconfig-2026" }
+      ]
+    },
+    {
+      "headline": "AIで作った『マリオ64』のMR版、PICOで動く",
+      "category": "AI",
+      "overview": "開発者のLucas Martinicさんが、『スーパーマリオ64』を現実の部屋の中に浮かぶ窓のように表示する複合現実（MR）版を、PICOのヘッドセットで動かす様子を公開しました。マリオをつまんで、机の上に置くこともできます。制作には、AIのClaudeと、AIの開発アシスタントをPICOの開発ツールにつなぐ「PICO CLI」が使われました。公開の予定日は発表されていません。",
+      "points": [
+        "左右の目それぞれに描く本格的な立体表示とみられる",
+        "開発者によると、ヘッドセット上で90fpsで動いている",
+        "PICO CLIは、AIの開発アシスタントで使えるPICOの道具",
+        "今のところ一般向けのダウンロードは公開されていない"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/mario-64-mixed-reality-mod-pico-quest/" },
+        { "name": "VR.org", "url": "https://vr.org/articles/pico-cli-agentic-plugins-unity-mcp-ten-coding-assistants-2026" }
+      ]
+    }
+  ],
+  "outro": "VRグローブもソニーのディスプレイも、アバターを身近に感じられる道具が増えてきました。くわしくは各出典をご覧ください。"
+}

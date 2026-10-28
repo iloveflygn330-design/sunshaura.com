@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-29",
+  "speed": 1.15,
+  "guest": "ankomon",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今日もVRニュースの時間なのだ。", "read": "おはようなのだ！今日もブイアールニュースの時間なのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "あんこもんも来たもん。今日はしっかり聞いてやるもん。", "face": "point" },
+      { "who": "zundamon", "text": "ありがとうなのだ、あんこもん。", "face": "smile" },
+      { "who": "zundamon", "text": "10月29日のニュースは、4本なのだ。", "read": "じゅうがつにじゅうくにちのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。指の動きを読み取るVRグローブが公開されたのだ。", "read": "いっぽんめ。指の動きを読み取る、ブイアールグローブが公開されたのだ。" },
+      { "who": "zundamon", "text": "名前は「EOZ VR Gloves」なのだ。", "read": "なまえは、イーオーゼット・ブイアール・グローブスなのだ。" },
+      { "who": "ankomon", "text": "指一本ずつ動くってこと？", "face": "think" },
+      { "who": "zundamon", "text": "そうなのだ。関節ごとの曲がり具合までわかるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "VRChatの指の入力にも対応しているのだ。", "read": "ブイアールチャットの、指の入力にも対応しているのだ。" },
+      { "who": "zundamon", "text": "手の位置はTundra Trackerで取るのだ。", "read": "手の位置は、タンドラトラッカーで取るのだ。" },
+      { "who": "ankomon", "text": "お値段はいくらなの？", "face": "look" },
+      { "who": "zundamon", "text": "300ドルで、発売は近日なのだ。日本は未定なのだ。", "read": "さんびゃくドルで、発売は近日なのだ。日本は未定なのだ。" },
+      { "who": "ankomon", "text": "指先まで動いたら、あんこもんのピースも決まるもん。", "face": "point" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。ソニーが小さな立体ディスプレイを出すのだ。", "read": "にほんめ。ソニーが、小さな立体ディスプレイを出すのだ。" },
+      { "who": "zundamon", "text": "「ELF-MN1」という名前で、画面は6インチなのだ。", "read": "イーエルエフ・エムエヌワンという名前で、画面はろくインチなのだ。" },
+      { "who": "ankomon", "text": "立体って、メガネがいるんでしょ？", "face": "think" },
+      { "who": "zundamon", "text": "いらないのだ！目の位置を読み取って立体に見せるのだ。", "face": "surprise" },
+      { "who": "zundamon", "text": "アバターやキャラクターも表示できるのだ。" },
+      { "who": "ankomon", "text": "机にあんこもんを飾れるってことだもん。", "face": "smile" },
+      { "who": "zundamon", "text": "発売は12月11日。5万4千円前後の見込みなのだ。", "read": "発売は、じゅうにがつじゅういちにち。ごまんよんせんえんぜんごの見込みなのだ。" },
+      { "who": "zundamon", "text": "ずんだ餅を立体で飾るのも、ありなのだ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Steam Frameの話なのだ。", "read": "さんぼんめ。スチームフレームの話なのだ。" },
+      { "who": "zundamon", "text": "外付けのCDドライブが使えないって質問があったのだ。", "read": "外付けの、シーディードライブが使えないって質問があったのだ。" },
+      { "who": "zundamon", "text": "Valveの人が「確認する」と答えたのだ。", "read": "バルブの人が、確認すると答えたのだ。" },
+      { "who": "zundamon", "text": "そのすぐあと、CDを認識する設定が追加されたのだ。", "read": "そのすぐあと、シーディーを認識する設定が追加されたのだ。", "face": "surprise" },
+      { "who": "ankomon", "text": "はやっ！じゃあもう使えるの？", "face": "surprise" },
+      { "who": "zundamon", "text": "まだ配信前なのだ。時期も決まっていないのだ。", "face": "look" },
+      { "who": "zundamon", "text": "それに、DVDの映像再生ができるわけではないのだ。", "read": "それに、ディーブイディーの映像再生ができるわけではないのだ。" },
+      { "who": "ankomon", "text": "でも、すぐ動いてくれるのはうれしいもん。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。『マリオ64』のMR版が話題なのだ。", "read": "よんほんめ。マリオろくじゅうよんの、エムアール版が話題なのだ。" },
+      { "who": "zundamon", "text": "部屋の中に、ゲームの窓が浮かぶ感じなのだ。" },
+      { "who": "zundamon", "text": "マリオをつまんで、机に置くこともできるのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "それ、だれが作ったの？", "face": "think" },
+      { "who": "zundamon", "text": "開発者さんが、AIのClaudeを使って作ったのだ。", "read": "開発者さんが、エーアイのクロードを使って作ったのだ。" },
+      { "who": "zundamon", "text": "PICOのヘッドセットで、90fpsで動くそうなのだ。", "read": "ピコのヘッドセットで、きゅうじゅうエフピーエスで動くそうなのだ。" },
+      { "who": "ankomon", "text": "遊べるのはいつなの？", "face": "look" },
+      { "who": "zundamon", "text": "公開の予定は、まだ発表されていないのだ。" },
+      { "who": "ankomon", "text": "AIで作れるなら、あんこもんのゲームも作るもん！", "read": "エーアイで作れるなら、あんこもんのゲームも作るもん！", "face": "point", "style": "つよつよ" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "しし座", "comment": "思い切った一歩が実を結ぶ日", "lucky": "赤いマグカップ" },
+        { "rank": 2, "sign": "うお座", "comment": "友だちとの会話にヒントあり", "lucky": "ハーブティー" },
+        { "rank": 3, "sign": "ふたご座", "comment": "新しい道具がしっくりなじむ", "lucky": "手ぶくろ" },
+        { "rank": 4, "sign": "おひつじ座", "comment": "朝のうちに用事が片づく", "lucky": "目覚まし時計" },
+        { "rank": 5, "sign": "おとめ座", "comment": "整理整頓で気分すっきり", "lucky": "ファイルケース" },
+        { "rank": 6, "sign": "かに座", "comment": "おうち時間がいつもより充実", "lucky": "クッション" },
+        { "rank": 7, "sign": "みずがめ座", "comment": "ふとした思いつきが役立つ", "lucky": "メモ帳" },
+        { "rank": 8, "sign": "いて座", "comment": "少し遠回りが楽しい発見に", "lucky": "スニーカー" },
+        { "rank": 9, "sign": "てんびん座", "comment": "丁寧なあいさつで好印象", "lucky": "ハンカチ" },
+        { "rank": 10, "sign": "さそり座", "comment": "ひと休みで集中力が戻る", "lucky": "チョコレート" },
+        { "rank": 11, "sign": "やぎ座", "comment": "早めの準備でゆとりが出る", "lucky": "腕時計" },
+        { "rank": 12, "sign": "おうし座", "comment": "甘いもので気分を上げよう", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "はい。今日の1位は、しし座ですわ。", "read": "はい。今日のいちいは、ししざですわ。", "face": "smile" },
+        { "who": "itako", "text": "思い切った一歩が実を結ぶ日。ラッキーアイテムは赤いマグカップです。" },
+        { "who": "itako", "text": "2位はうお座、3位はふたご座ですわ。", "read": "にいは、うおざ。さんいは、ふたござですわ。" },
+        { "who": "itako", "text": "12位はおうし座。甘いもので気分を上げてくださいね。", "read": "じゅうにいは、おうしざ。甘いもので気分を上げてくださいね。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅なのだ！ぜひ食べてほしいのだ。", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zundamon", "text": "今日はここまでなのだ。くわしくは記事の出典を見てほしいのだ。" },
+      { "who": "ankomon", "text": "明日はもっと早く来てやるもん。またね！", "face": "point" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
