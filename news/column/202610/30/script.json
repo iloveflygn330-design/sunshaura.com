@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-30",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのVRニュースなのだ。", "read": "おはようなのだ！ずんだもんのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはようございます。今日もよろしくね、ずんだもん。", "face": "smile" },
+      { "who": "zundamon", "text": "よろしくなのだ、ずん子！" },
+      { "who": "zundamon", "text": "10月30日のニュースは、4本なのだ。", "read": "じゅうがつさんじゅうにちのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatの新しいバージョンが出たのだ。", "read": "いっぽんめ。ブイアールチャットの新しいバージョンが出たのだ。" },
+      { "who": "zundamon", "text": "ベータだった表情の読み取りが、正式に入ったのだ！", "face": "smile" },
+      { "who": "zunko", "text": "わあ、顔の動きがアバターに出るんですね。", "face": "surprise" },
+      { "who": "zundamon", "text": "専用の機械がなくても、Webカメラで試せるのだ。", "read": "専用の機械がなくても、ウェブカメラで試せるのだ。" },
+      { "who": "zundamon", "text": "ただ、アバター側の対応も必要なのだ。", "face": "look" },
+      { "who": "zundamon", "text": "スマホのQRコードで、PCにログインもできるのだ。", "read": "スマホのキューアールコードで、ピーシーにログインもできるのだ。" },
+      { "who": "zunko", "text": "それは便利！ほかに注意することはありますか？", "face": "smile" },
+      { "who": "zundamon", "text": "古いバージョンの人とは会えないのだ。更新するのだ！", "face": "surprise" },
+      { "who": "zunko", "text": "友だちと遊ぶ前に、アップデートですね。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。ワールドに評価ボタンが付くことになったのだ。", "read": "にほんめ。ワールドに評価ボタンが付くことになったのだ。" },
+      { "who": "zundamon", "text": "高評価と低評価で、目標は2026年中なのだ。", "read": "高評価と低評価で、目標は、にせんにじゅうろくねんちゅうなのだ。" },
+      { "who": "zunko", "text": "評価は、どんなふうに使われるんですか？", "face": "look" },
+      { "who": "zundamon", "text": "おすすめのワールドを選ぶのに使う予定なのだ。" },
+      { "who": "zundamon", "text": "AIで作ったことを示すラベルは、付けないそうなのだ。", "read": "エーアイで作ったことを示すラベルは、付けないそうなのだ。" },
+      { "who": "zunko", "text": "たくさんのアンケートを見て決めたんですね。" },
+      { "who": "zundamon", "text": "2万件以上の回答があったのだ。すごいのだ。", "read": "にまんけん以上の回答があったのだ。すごいのだ。", "face": "surprise" },
+      { "who": "zunko", "text": "すてきなワールドが見つけやすくなるといいな。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。VRChatでライブの再演があるのだ。", "read": "さんぼんめ。ブイアールチャットで、ライブの再演があるのだ。" },
+      { "who": "zundamon", "text": "FZMZの「DEEP:DAWN」なのだ。", "read": "エフゼットエムゼットの、ディープドーンなのだ。" },
+      { "who": "zunko", "text": "いつ見られるんですか？", "face": "look" },
+      { "who": "zundamon", "text": "11月5日と7日、どちらも夜6時からなのだ。", "read": "じゅういちがついつかと、なのか。どちらも夜ろくじからなのだ。" },
+      { "who": "zundamon", "text": "チケットはいらなくて、無料なのだ！", "face": "smile" },
+      { "who": "zunko", "text": "無料なんて、うれしいですね！", "face": "smile" },
+      { "who": "zundamon", "text": "でも、PCだけで、Questでは入れないのだ。", "read": "でも、ピーシーだけで、クエストでは入れないのだ。", "face": "look" },
+      { "who": "zundamon", "text": "アカウント作りとチュートリアルは、先に済ませるのだ。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。ARグラスのXreal Auraが値下げなのだ。", "read": "よんほんめ。エーアールグラスの、エックスリアル・オーラが値下げなのだ。" },
+      { "who": "zundamon", "text": "アメリカで、最大200ドル安くなったのだ。", "read": "アメリカで、さいだいにひゃくドル安くなったのだ。" },
+      { "who": "zunko", "text": "前に買った人は、ちょっと残念ですね。", "face": "surprise" },
+      { "who": "zundamon", "text": "大丈夫なのだ。差額を返してくれるそうなのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "10月28日より前に払った人が対象なのだ。", "read": "じゅうがつにじゅうはちにちより前に払った人が対象なのだ。" },
+      { "who": "zunko", "text": "それなら安心ですね。届くのはいつごろですか？" },
+      { "who": "zundamon", "text": "11月の中ごろから、順番に出荷なのだ。", "read": "じゅういちがつの中ごろから、順番に出荷なのだ。" },
+      { "who": "zundamon", "text": "僕のずんだ餅も、値下げしてほしいのだ。", "face": "look" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "やぎ座", "comment": "コツコツが実を結ぶ日", "lucky": "手帳" },
+        { "rank": 2, "sign": "かに座", "comment": "身近な人と話すと元気に", "lucky": "あたたかいお茶" },
+        { "rank": 3, "sign": "おとめ座", "comment": "整理整頓で気分すっきり", "lucky": "収納ボックス" },
+        { "rank": 4, "sign": "さそり座", "comment": "集中力が高まる一日", "lucky": "ヘッドホン" },
+        { "rank": 5, "sign": "みずがめ座", "comment": "新しいワールド探しが吉", "lucky": "ブックマーク" },
+        { "rank": 6, "sign": "てんびん座", "comment": "迷ったら直感を信じて", "lucky": "コイン" },
+        { "rank": 7, "sign": "おうし座", "comment": "おいしいものでひと休み", "lucky": "おまんじゅう" },
+        { "rank": 8, "sign": "しし座", "comment": "笑顔が人を集める日", "lucky": "手鏡" },
+        { "rank": 9, "sign": "いて座", "comment": "少し遠回りが発見に", "lucky": "スニーカー" },
+        { "rank": 10, "sign": "ふたご座", "comment": "メモをとると助かる日", "lucky": "付せん" },
+        { "rank": 11, "sign": "おひつじ座", "comment": "深呼吸で落ち着いて", "lucky": "ハンカチ" },
+        { "rank": 12, "sign": "うお座", "comment": "早寝で明日は絶好調", "lucky": "まくら" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "お任せくださいな。今日の1位は、やぎ座ですわ。", "read": "おまかせくださいな。今日のいちいは、やぎざですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はかに座、3位はおとめ座です。", "read": "にいはかにざ、さんいはおとめざです。" },
+        { "who": "zundamon", "text": "やぎ座の人、おめでとうなのだ！", "read": "やぎざの人、おめでとうなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はうお座。早寝をすれば、明日は絶好調ですわ。", "read": "じゅうにいはうおざ。早寝をすれば、明日は絶好調ですわ。" },
+        { "who": "zundamon", "text": "僕も今日は早く寝るのだ……。", "face": "look", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zunko", "text": "今日も聞いてくれて、ありがとうございました。", "face": "smile" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
