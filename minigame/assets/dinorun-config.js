@@ -52,21 +52,32 @@ const DR_CONFIG = {
   invincibleTime: 3.0,     // ぶつかったあとの無敵時間（秒）。アイテムで延びる
   invincibleWarnTime: 1.0, // 無敵が切れる何秒前から、点滅を速くして知らせるか
 
-  /* --- ショップ（距離ごとに、ジャンプで届く高さにショップアイコンが流れてくる） --- */
+  /* --- ショップ（距離ごとに、地面にショップが流れてくる。そのまま触ると入る／ジャンプで飛び越すとスキップ） --- */
   shopFirstMeter: 250,     // 最初のショップが出る距離（m）
   shopInterval: 500,       // 2回目以降の間隔（m）
   shopIntervalGrow: 1.12,  // 1回ごとに間隔を何倍にのばすか（後半はショップが少しずつ遠くなる）
   shopOffers: 3,           // ショップに並ぶアイテムの数
   skipBonusBase: 5,        // ショップに寄らなかったときにもらえるコイン
   skipBonusPerShop: 2,     // ショップが出るたびに、スキップボーナスが増える量
+  shopClearBefore: 1.2,    // ショップの手前、障害物を出さない長さ（秒。そのときの速さで走る距離に直して使う）
+  shopClearAfter: 2.0,     // ショップのうしろ、障害物を出さない長さ（秒）。ショップから戻ってすぐぶつからないように
 
   /* --- ワールド移動（距離ごとに背景と地面が次のワールドに切り替わる。中身は dinorun-worlds.js） --- */
   worldLength: 1000,       // 1つのワールドの長さ（m）
   worldCalmTime: 1.6,      // ワールド移動の演出中、障害物を出さない時間（秒）
 
-  /* --- スコア = 距離(m) + 拾ったコインの数 × scoreCoin + 倒した障害物の数 × scoreKill --- */
+  /* --- スコア = 距離(m) + 拾ったコインの数 × scoreCoin + 倒した障害物の数 × scoreKill + かすりの回数 × scoreGraze
+       ※ 変えたら、サーバー側（tools/dinorun-ranking/Code.gs）の SCORE_COIN / SCORE_KILL / SCORE_GRAZE も同じ値にする --- */
   scoreCoin: 10,
   scoreKill: 25,
+  scoreGraze: 15,
+
+  /* --- かすりボーナス（障害物にぶつからず、ぎりぎりでよけるともらえる） ---
+       自機と障害物の当たり判定のすき間が grazeDistance ドット以内ですれ違ったら「かすり」。
+       スピンアタック中にすれ違った障害物・壊した障害物・ぶつかった障害物は数えない。
+       2〜3個つながって出た障害物は、まとめて1回だけ数える。 */
+  grazeDistance: 6,
+  grazeCoin: 1,            // かすりでもらえるコイン（コイン倍率はかからない。スコアのコイン数にも入らない）
 
   /* --- ランキング ---
        rankingUrl: Google Apps Script を「ウェブアプリ」として公開したときの URL（…/exec で終わるもの）
@@ -80,7 +91,8 @@ const DR_CONFIG = {
   nameChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',  // 名前に使える文字（サーバー側の NAME_PATTERN と合わせる）
 
   /* --- そのほか --- */
-  readyCountSec: 3,        // ショップから戻るときなどのカウントダウン（秒）
+  readyCountSec: 3,        // ゲーム開始のときのカウントダウン（秒）
+  resumeCountSec: 1.2,     // 一時停止から戻るときのカウントダウン（秒。3・2・1・GO! をこの時間で出す）
   titleRankingSec: 6,      // タイトル画面で、ランキングと「PRESS START」を切り替える間隔（秒）
 };
 
@@ -94,7 +106,7 @@ const DR_CONFIG = {
      3. src が空（''）の音は鳴らさない（エラーにもならない）
 
    音の id とタイミング（dinorun.js が drSound('id') で呼ぶ）:
-     jump … ジャンプ / coin … コインを拾った / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
+     jump … ジャンプ / coin … コインを拾った / graze … かすりボーナス / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
      kill … 障害物を壊した / shop … ショップに入った / buy … アイテムを買った / skip … ショップをスキップした
      world … ワールド移動 / gameover … ゲームオーバー / select … 名前入力などのボタン / start … ゲーム開始
 
@@ -106,6 +118,7 @@ const DR_CONFIG = {
 const DR_SOUNDS = {
   jump:     { src: '', volume: 0.6 },
   coin:     { src: '', volume: 0.5 },
+  graze:    { src: '', volume: 0.6 },
   hit:      { src: '', volume: 0.8 },
   slash:    { src: '', volume: 0.7 },
   spin:     { src: '', volume: 0.7 },

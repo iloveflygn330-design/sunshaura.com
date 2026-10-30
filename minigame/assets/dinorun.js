@@ -4,7 +4,8 @@
 
    遊び方:
      恐竜が右へ走り続ける。障害物をジャンプ・しゃがみ・スキルでよける。
-     コインを集めて、途中に出てくるショップアイコン（ジャンプで届く高さ）に触ると、ショップで強化を買える。
+     コインを集めて、途中で地面に出てくるショップに触ると、ショップで強化を買える（ジャンプで飛び越すとスキップ）。
+     障害物にぶつからず、ぎりぎりでよけると「かすりボーナス」。
      走った距離でワールドが切り替わる。ライフが 0 になったらゲームオーバー → 名前（英字3文字）を入れてランキングへ。
 
    操作:
@@ -80,6 +81,7 @@ function dinorunInit() {
   if (!dr.ready) drSetup();
   dr.active = true;
   document.body.classList.add('dr-active');
+  drAutoHeader();
   drShowTitle();
   drLoadRanking();
   if (!dr.raf) { dr.lastT = performance.now(); dr.raf = requestAnimationFrame(drLoop); }
@@ -92,7 +94,7 @@ function dinorunStop() {
   cancelAnimationFrame(dr.raf); dr.raf = 0;
   dr.duckKeys.clear();
   drBgm(null);
-  document.body.classList.remove('dr-active', 'dr-header-hidden');
+  document.body.classList.remove('dr-active', 'dr-header-hidden', 'dr-modal');
   drUpdateHeaderToggle();
   dr.run = null;
   drSetMode('title');
@@ -210,6 +212,15 @@ function drBindInput() {
   window.addEventListener('pagehide', () => { if (dr.active && dr.mode === 'play') drPause(); });
 }
 
+/* スマホ横持ちは高さが足りないので、ヘッダーを自動で隠す（縦持ちに戻したら出す）。
+   「▲ ヘッダーを隠す」ボタンで、いつでも手で切り替えられる */
+const drLandscapeMq = window.matchMedia('(orientation: landscape) and (max-height: 520px)');
+function drAutoHeader() {
+  document.body.classList.toggle('dr-header-hidden', drLandscapeMq.matches);
+  drUpdateHeaderToggle();
+}
+if (drLandscapeMq.addEventListener) drLandscapeMq.addEventListener('change', () => { if (dr.active) drAutoHeader(); });
+
 function drUpdateHeaderToggle() {
   const b = document.getElementById('dr-header-toggle');
   if (b) b.textContent = document.body.classList.contains('dr-header-hidden') ? '▼ ヘッダーを出す' : '▲ ヘッダーを隠す';
@@ -312,6 +323,8 @@ function drSetMode(mode) {
     el.hidden = !el.dataset.show.split(' ').includes(mode);
   });
   root.classList.toggle('dr-menu-open', !['play', 'ready', 'dying'].includes(mode));
+  // タイトル以外のメニューを出している間（スマホではヘッダーの上に重ねる。dinorun.css の body.dr-modal）
+  document.body.classList.toggle('dr-modal', dr.active && !['play', 'ready', 'dying', 'title'].includes(mode));
 }
 
 function drShowTitle() {
@@ -353,6 +366,7 @@ function drNewRun() {
     wallet: 0,             // 持っているコイン（倍率がかかるので小数もある。表示は切り捨て）
     coinsPicked: 0,        // 拾ったコインの個数（スコア用。倍率はかからない）
     kills: 0,              // 壊した障害物の数
+    grazes: 0,             // かすりボーナスの回数
     skills: {},            // 覚えたスキル（id → 数値のコピー）
     cooldowns: {},         // スキルの残りクールタイム（id → 秒）
     slots: [null, null, null],   // スキルボタン①②③に入っているスキルの id
@@ -363,6 +377,7 @@ function drNewRun() {
     nextObstacleIn: DR_CONFIG.speedStart * 1.4,
     nextCoinIn: DR_CONFIG.speedStart * 0.8,
     nextShopAt: DR_CONFIG.shopFirstMeter,
+    groupSeq: 0,           // つながって出た障害物をまとめる番号
     shopCount: 0,
     worldIndex: 0,
     nextWorldAt: DR_CONFIG.worldLength,
@@ -384,8 +399,10 @@ function drStartGame() {
   drStartReady('play');
 }
 
-function drStartReady(next) {
-  dr.readyT = DR_CONFIG.readyCountSec;
+/* カウントダウン（3・2・1・GO!）を sec 秒で出してから next のモードにする */
+function drStartReady(next, sec) {
+  dr.readyTotal = sec || DR_CONFIG.readyCountSec;
+  dr.readyT = dr.readyTotal;
   dr.readyNext = next;
   drSetMode('ready');
 }
@@ -397,7 +414,7 @@ function drPause() {
 }
 function drResume() {
   if (dr.mode !== 'pause') return;
-  drStartReady('play');
+  drStartReady('play', DR_CONFIG.resumeCountSec);
 }
 
 /* ---------- ループ ---------- */
@@ -437,7 +454,10 @@ function drLoop(now) {
 /* ---------- ゲームの計算 ---------- */
 function drWorld(run) { return DR_WORLDS[run.worldIndex % DR_WORLDS.length]; }
 function drMeters(run) { return run.dist / DR_CONFIG.pxPerMeter; }
-function drScore(run) { return Math.floor(drMeters(run)) + run.coinsPicked * DR_CONFIG.scoreCoin + run.kills * DR_CONFIG.scoreKill; }
+function drScore(run) {
+  const C = DR_CONFIG;
+  return Math.floor(drMeters(run)) + run.coinsPicked * C.scoreCoin + run.kills * C.scoreKill + run.grazes * C.scoreGraze;
+}
 function drDifficulty(run) { return Math.min(1, (run.speed - DR_CONFIG.speedStart) / (DR_CONFIG.speedMax - DR_CONFIG.speedStart)); }
 function drLerp(a, b, t) { return a + (b - a) * t; }
 function drRand(a, b) { return a + Math.random() * (b - a); }
@@ -494,8 +514,10 @@ function drUpdate(run, dt) {
 
   // --- 出現 ---
   run.nextObstacleIn -= move;
+  // ショップの手前（shopClearBefore 秒ぶん）は障害物を出さない
+  const shopSoon = !run.shopIcon && drMeters(run) >= run.nextShopAt - C.shopClearBefore * run.speed / C.pxPerMeter;
   if (run.nextObstacleIn <= 0) {
-    if (run.calmT <= 0) drSpawnObstacle(run);
+    if (run.calmT <= 0 && !shopSoon) drSpawnObstacle(run);
     const d = drDifficulty(run);
     const gap = drRand(drLerp(C.gapStartMin, C.gapEndMin, d), drLerp(C.gapStartMax, C.gapEndMax, d));
     run.nextObstacleIn = gap * run.speed;
@@ -535,7 +557,9 @@ function drUpdate(run, dt) {
   const pb = drPlayerBox(run);
   for (const o of run.obstacles) {
     if (o.dead || o.hitDone) continue;
+    drTrackGraze(run, pb, o);
     if (!drOverlap(pb, drObstacleBox(o))) continue;
+    o.noGraze = true;
     if (run.spinT > 0) {
       if (o.def.breakable !== false) drKillObstacle(run, o);
       else o.hitDone = true;
@@ -546,6 +570,7 @@ function drUpdate(run, dt) {
     drDamage(run);
     if (dr.mode !== 'play') return;
   }
+  drJudgeGrazes(run, pb);
   for (const c of run.coins) {
     if (!c.taken && drOverlap(pb, { x: c.x, y: c.y, w: DR_PICKUPS.coin.w, h: DR_PICKUPS.coin.h })) {
       c.taken = true;
@@ -558,6 +583,40 @@ function drUpdate(run, dt) {
   if (run.shopIcon) {
     const s = run.shopIcon;
     if (drOverlap(pb, { x: s.x + 2, y: s.y + 2, w: DR_PICKUPS.shop.w - 4, h: DR_PICKUPS.shop.h - 4 })) drOpenShop(run);
+  }
+}
+
+/* ---------- かすりボーナス ----------
+   障害物ごとに「自機といちばん近づいたすき間」を覚えておき、自機の後ろへ通り過ぎたときに判定する。
+   すき間が DR_CONFIG.grazeDistance 以内で、ぶつかっていなければ「かすり」。
+   スピンアタック中に近くを通った障害物は数えない（スピンで壊すのと二重にならないように）。 */
+function drBoxGap(a, b) {
+  const dx = Math.max(b.x - (a.x + a.w), a.x - (b.x + b.w), 0);
+  const dy = Math.max(b.y - (a.y + a.h), a.y - (b.y + b.h), 0);
+  return Math.max(dx, dy);
+}
+function drTrackGraze(run, pb, o) {
+  const gap = drBoxGap(pb, drObstacleBox(o));
+  if (gap < o.minGap) o.minGap = gap;
+  if (run.spinT > 0 && gap <= DR_CONFIG.grazeDistance * 2) o.noGraze = true;
+}
+function drJudgeGrazes(run, pb) {
+  const C = DR_CONFIG;
+  const done = new Set();   // このフレームでかすりにしたグループ
+  for (const o of run.obstacles) {
+    if (o.judged) continue;
+    const ob = drObstacleBox(o);
+    if (ob.x + ob.w >= pb.x) continue;       // まだ自機の後ろまで来ていない
+    o.judged = true;
+    if (o.dead || o.hitDone || o.noGraze || o.minGap > C.grazeDistance) continue;
+    if (o.group && (done.has(o.group) || run.obstacles.some(x => x !== o && x.group === o.group && x.grazed))) continue;
+    o.grazed = true;
+    if (o.group) done.add(o.group);
+    run.grazes++;
+    run.wallet += C.grazeCoin;
+    drFloatText(run, 'GRAZE +' + C.scoreGraze, C.playerX + 4, C.groundY - run.y - 34, '#FFD84A');
+    drSparkle(run, ob.x + ob.w, ob.y + ob.h / 2, '#FFD84A', 5);
+    drSound('graze');
   }
 }
 
@@ -585,20 +644,27 @@ function drSpawnObstacle(run) {
   if (!cands.length) return;
   const def = drPickWeighted(cands);
   const x0 = DR_CONFIG.width + 6;
+  const group = ++run.groupSeq;
   if (def.fly) {
     const lift = def.fly[Math.floor(Math.random() * def.fly.length)];
-    run.obstacles.push(drMakeObstacle(def, x0, DR_CONFIG.groundY - lift - def.h));
+    run.obstacles.push(drMakeObstacle(def, x0, DR_CONFIG.groundY - lift - def.h, group));
     return;
   }
   // 地面のもの：小さいものは、ときどき2〜3個つながって出る
   let count = 1;
   if (def.h <= 24 && Math.random() < DR_CONFIG.clusterChanceMax * drDifficulty(run) + 0.08) count = Math.random() < 0.4 ? 3 : 2;
   for (let i = 0; i < count; i++) {
-    run.obstacles.push(drMakeObstacle(def, x0 + i * (def.w + 2), DR_CONFIG.groundY - def.h));
+    run.obstacles.push(drMakeObstacle(def, x0 + i * (def.w + 2), DR_CONFIG.groundY - def.h, group));
   }
 }
-function drMakeObstacle(def, x, y) {
-  return { def, x, y, t0: Math.random() * 10, dead: false, deadT: 0, hitDone: false };
+function drMakeObstacle(def, x, y, group) {
+  return {
+    def, x, y, t0: Math.random() * 10, dead: false, deadT: 0, hitDone: false,
+    group: group || 0,     // つながって出た障害物は同じ番号（かすりはまとめて1回）
+    minGap: Infinity,      // 自機とのいちばん近づいたすき間（かすりの判定用）
+    noGraze: false,        // かすりにしない（ぶつかった・スピン中にすれ違った・壊した）
+    judged: false,         // かすりの判定をしたか
+  };
 }
 
 function drSpawnCoins(run) {
@@ -614,10 +680,11 @@ function drSpawnCoins(run) {
 }
 
 function drSpawnShop(run) {
-  // ジャンプで届く高さに出す（ショップアイコンの下の端が地面から 40 ドット上）
-  run.shopIcon = { x: DR_CONFIG.width + 8, y: DR_CONFIG.groundY - 40 - DR_PICKUPS.shop.h, baseY: DR_CONFIG.groundY - 40 - DR_PICKUPS.shop.h };
-  // ショップの真下に障害物が来ないよう、少しあける
-  run.nextObstacleIn = Math.max(run.nextObstacleIn, run.speed * 0.9);
+  // 地面に置く（そのまま走って触ると入る。ジャンプで飛び越すとスキップ）
+  const y = DR_CONFIG.groundY - DR_PICKUPS.shop.h;
+  run.shopIcon = { x: DR_CONFIG.width + 8, y, baseY: y };
+  // ショップのうしろ（shopClearAfter 秒ぶん）は障害物を出さない（戻ってすぐぶつからないように）
+  run.nextObstacleIn = Math.max(run.nextObstacleIn, DR_CONFIG.shopClearAfter * run.speed + DR_PICKUPS.shop.w);
 }
 
 function drAfterShop(run) {
@@ -651,7 +718,7 @@ function drUseSkill(run, slot) {
 }
 
 function drKillObstacle(run, o) {
-  o.dead = true; o.deadT = 0;
+  o.dead = true; o.deadT = 0; o.noGraze = true;
   run.kills++;
   drSparkle(run, o.x + o.def.w / 2, o.y + o.def.h / 2, '#FFFFFF', 8);
   drFloatText(run, '+' + DR_CONFIG.scoreKill, o.x, o.y - 4, '#7FFFD4');
@@ -719,7 +786,8 @@ function drOpenShop(run) {
 function drCloseShop() {
   if (dr.mode !== 'shop' || (dr.shop && dr.shop.picking)) return;
   dr.shop = null;
-  drStartReady('play');
+  dr.duckKeys.clear();
+  drSetMode('play');   // ショップの前後は障害物がないので、カウントダウンなしですぐ再開
 }
 
 function drBuy(index) {
@@ -821,6 +889,7 @@ function drRenderShop() {
   // 覚えたスキルをどのボタンに入れるか
   const pick = document.getElementById('dr-shop-pick');
   pick.hidden = !shop.picking;
+  document.getElementById('dr-shop').classList.toggle('is-picking', !!shop.picking);
   if (shop.picking) {
     document.getElementById('dr-shop-pick-name').textContent = DR_SKILLS[shop.picking].name;
     document.getElementById('dr-shop-pick-btns').innerHTML = run.slots.map((id, i) =>
@@ -853,10 +922,10 @@ function drUpdateDying(run, dt) {
 function drShowResult(run) {
   const meters = Math.floor(drMeters(run));
   const score = drScore(run);
-  run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, durationMs: Math.round(run.t * 1000) };
+  run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, grazes: run.grazes, durationMs: Math.round(run.t * 1000) };
   document.getElementById('dr-res-score').textContent = score.toLocaleString();
   document.getElementById('dr-res-detail').innerHTML =
-    `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${DR_CONFIG.scoreCoin}<br>こわした ${run.kills}こ × ${DR_CONFIG.scoreKill}`;
+    `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${DR_CONFIG.scoreCoin}<br>こわした ${run.kills}こ × ${DR_CONFIG.scoreKill}<br>かすり ${run.grazes}かい × ${DR_CONFIG.scoreGraze}`;
   const qual = drQualifies(score);
   run.qualifies = qual;
   document.getElementById('dr-res-next').textContent = qual ? 'ランキングに名前を入れる' : 'タイトルにもどる';
@@ -964,7 +1033,7 @@ async function drEntrySubmit() {
   msg.textContent = 'おくっています...';
   const f = run.final;
   const res = await DRRanking.submit({
-    token: run.token, name, score: f.score, distance: f.meters, coins: f.coins, kills: f.kills, durationMs: f.durationMs,
+    token: run.token, name, score: f.score, distance: f.meters, coins: f.coins, kills: f.kills, grazes: f.grazes, durationMs: f.durationMs,
   });
   if (!res.ok) {
     e.sending = false;
@@ -1088,7 +1157,12 @@ function drUpdateCount() {
   const el = document.getElementById('dr-count');
   if (!el) return;
   let text = '';
-  if (dr.mode === 'ready') text = dr.readyT > 0.4 ? String(Math.ceil(dr.readyT - 0.4)) : 'GO!';
+  if (dr.mode === 'ready') {
+    // 最後の 1/4（最大0.4秒）が GO!、残りを 3・2・1 で3等分する
+    const go = Math.min(0.4, dr.readyTotal * 0.25);
+    const step = (dr.readyTotal - go) / 3;
+    text = dr.readyT > go ? String(Math.min(3, Math.ceil((dr.readyT - go) / step))) : 'GO!';
+  }
   if (dr.uiCache.count !== text) { dr.uiCache.count = text; el.textContent = text; el.hidden = !text; }
 }
 
@@ -1175,6 +1249,8 @@ function drRender() {
   if (dr.shake > 0) ctx.translate(Math.round(drRand(-2, 2)), Math.round(drRand(-2, 2)));
   const world = drWorld(run);
   drDrawBackground(ctx, world, run.dist);
+  // ワールド移動の光（背景だけを白くする。自機・地面・障害物はこのあとに描くので隠れない）
+  if (run.worldFx) drDrawWorldFlash(ctx, run.worldFx);
   drDrawGround(ctx, world, run.dist);
 
   // コイン
@@ -1182,9 +1258,8 @@ function drRender() {
   // ショップアイコン（ふわふわ上下＋「SHOP」の文字）
   if (run.shopIcon) {
     const s = run.shopIcon;
-    s.y = s.baseY + Math.round(Math.sin(dr.clock * 4) * 2);
     drDrawSprite(ctx, DR_PICKUPS.shop.sprite, DR_PICKUPS.shop.w, DR_PICKUPS.shop.h, s.x, s.y, dr.clock);
-    drPixelText(ctx, 'SHOP', s.x + 3, s.y - 8, '#FFFFFF', '#1B1B2F');
+    drPixelText(ctx, 'SHOP', s.x + 3, s.y - 8 - (Math.floor(dr.clock * 3) % 2), '#FFFFFF', '#1B1B2F');
   }
   // 障害物
   run.obstacles.forEach(o => {
@@ -1204,18 +1279,19 @@ function drRender() {
     else if (fx.type === 'text') { ctx.globalAlpha = a; drPixelText(ctx, fx.text, fx.x, fx.y, fx.color, '#1B1B2F'); }
     ctx.globalAlpha = 1;
   });
-  // ワールド移動の光
-  if (run.worldFx) {
-    const p = run.worldFx.t / run.worldFx.dur;
-    const a = p < 0.5 ? p * 2 : (1 - p) * 2;
-    const r = (p < 0.5 ? p * 2 : 1) * C.width * 0.75;
-    ctx.globalAlpha = Math.min(1, a * 1.1);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath(); ctx.arc(C.width / 2, C.height / 2, r, 0, Math.PI * 2); ctx.fill();
-    ctx.globalAlpha = 1;
-  }
   if (dr.debug) drDrawDebug(ctx, run);
   ctx.restore();
+}
+
+function drDrawWorldFlash(ctx, fx) {
+  const C = DR_CONFIG;
+  const p = fx.t / fx.dur;
+  const a = p < 0.5 ? p * 2 : (1 - p) * 2;
+  const r = (p < 0.5 ? p * 2 : 1) * C.width * 0.75;
+  ctx.globalAlpha = Math.min(1, a * 1.1);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.arc(C.width / 2, C.height / 2, r, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
 }
 
 function drDrawPlayer(ctx, run, isDemo) {
