@@ -79,6 +79,9 @@ const DR_SKILLS = {
        skill: 'iai',                // type: 'skill' のとき、覚えるスキル（DR_SKILLS の名前）
        requires: 'iai',             // （任意）このスキルを覚えているときだけ並ぶ
        maxLevel: 2,                 // 何回まで買えるか
+       consumable: true,            // （任意）使いきりのアイテム（何回でも買える。maxLevel は使わない。カードに「1回きり」と出る）
+       minWorld: 3,                 // （任意）このワールド（1 から数える）以降のショップにだけ並ぶ
+       available(run) { ... },      // （任意）並べてよいときだけ true を返す（例: すでに使う予定があるときは並べない）
        price: 20,                   // 最初の値段（コイン）
        priceUp: 1.8,                // 買うたびに値段を何倍にするか
        weight: 1,                   // （任意）並びやすさ。大きいほど出やすい（ふつうは 1）
@@ -87,7 +90,8 @@ const DR_SKILLS = {
 
    apply の中で書き換えられる数値（run.xxx）:
      run.maxJumps       … ジャンプできる回数（空中ジャンプ込み）
-     run.jumpPower      … ジャンプの強さの倍率（1 = ふつう）
+     run.flutterTime    … バタ足ジャンプで浮いていられる秒数（0 = 覚えていない）
+     run.bonusNext      … true にすると、次のワールドの前にボーナスステージが入る
      run.lives          … いまのライフ
      run.invincibleTime … ぶつかったあとの無敵時間（秒）
      run.coinMult       … コインを拾ったときの倍率（1 = ふつう）
@@ -116,9 +120,10 @@ const DR_ITEMS = [
     apply(run) { run.maxJumps += 1; },
   },
   {
-    id: 'jump_high', name: 'ジャンプ高さUP', desc: 'ジャンプが少し高くなる', icon: '🦘',
-    type: 'passive', maxLevel: 3, price: 30, priceUp: 1.6,
-    apply(run) { run.jumpPower += 0.1; },
+    // 浮いていられる秒数は Lv1 から順に 0.6 / 0.9 / 1.2。動きの説明は dinorun-config.js の「バタ足ジャンプ」
+    id: 'flutter', name: 'バタ足ジャンプ', desc: 'ジャンプボタンを長押しすると、空中でバタ足してしばらく浮いていられる', icon: '🦶',
+    type: 'passive', maxLevel: 3, price: 40, priceUp: 1.6,
+    apply(run) { run.flutterTime = [0, 0.6, 0.9, 1.2][run.levels.flutter] || 1.2; run.flutterLeft = run.flutterTime; },
   },
 
   /* --- ライフ・無敵 --- */
@@ -170,9 +175,10 @@ const DR_ITEMS = [
     type: 'skill', skill: 'dive', maxLevel: 1, price: 45, priceUp: 1, weight: 2,
   },
   {
-    id: 'dive_ct', name: '急降下 クールタイム短縮', desc: 'もう一度使えるまでの時間が0.5秒短くなる', icon: '⏱',
-    type: 'passive', requires: 'dive', maxLevel: 3, price: 30, priceUp: 1.6,
-    apply(run, skill) { skill.cooldown = Math.max(skill.minCooldown, skill.cooldown - 0.5); },
+    // 急降下 Lv2（覚えたときが Lv1）。クールタイムがなくなり、空中ならいつでも急降下できる
+    id: 'dive_lv2', name: '急降下 Lv2', desc: 'クールタイムがなくなる（空中ならいつでも急降下できる）', icon: '⏱',
+    type: 'passive', requires: 'dive', maxLevel: 1, price: 40, priceUp: 1,
+    apply(run, skill) { skill.cooldown = 0; skill.minCooldown = 0; },
   },
 
   /* --- コイン吸引・磁石 --- */
@@ -208,6 +214,16 @@ const DR_ITEMS = [
     id: 'fire_power', name: '火の玉 強化', desc: '火の玉が大きくなり、壊せる数が1つ増える', icon: '☄',
     type: 'passive', requires: 'fire', maxLevel: 4, price: 40, priceUp: 1.6,
     apply(run, skill) { skill.radius += 1.5; skill.pierce += 1; },
+  },
+
+  /* --- ボーナスチケット（3ワールド目からのショップに並ぶ。使いきり） ---
+       買うと、次のワールドの前にボーナスステージが入る（中身は dinorun-config.js の「ボーナスステージ」）。
+       使う前（ボーナスステージに入る前）は、もう1枚は並ばない */
+  {
+    id: 'bonus_ticket', name: 'ボーナスチケット', desc: '次のワールドがボーナスステージになる（障害物なし・コインざくざく）', icon: '🎫',
+    type: 'passive', consumable: true, minWorld: 3, price: 60, priceUp: 1.3, weight: 1.5,
+    available(run) { return !run.bonusNext && !run.bonus; },
+    apply(run) { run.bonusNext = true; },
   },
 
   /* ↑ ここに追加 ↑ */

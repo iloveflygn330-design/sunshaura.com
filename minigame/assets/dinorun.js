@@ -5,11 +5,12 @@
    遊び方:
      恐竜が右へ走り続ける。障害物をジャンプ・しゃがみ・スキルでよける。
      コインを集めて、途中で地面に出てくるショップに触ると、ショップで強化を買える（ジャンプで飛び越すとスキップ）。
-     障害物にぶつからず、ぎりぎりでよけると「かすりボーナス」。
-     走った距離でワールドが切り替わる。ライフが 0 になったらゲームオーバー → 名前（英字3文字）を入れてランキングへ。
+     障害物にぶつからず、ぎりぎりでよけると「かすりボーナス」（コイン）。地面の穴（落下穴）はジャンプで飛び越す。
+     走った距離でワールドが切り替わる。ボーナスチケットを買うと、次のワールドの前にボーナスステージ（障害物なし・下り坂）。
+     5ワールド目からは、ときどきスキルを使わないと通れない区画（シャッター＋かべ）が出る。ライフが 0 になったらゲームオーバー → 名前（英字3文字）を入れてランキングへ。
 
    操作:
-     PC     … Space / ↑ ジャンプ、↓ スライディング（急降下を覚えたら、空中では急降下）、A / S / D スキル①②③、P / Esc 一時停止
+     PC     … Space / ↑ ジャンプ（バタ足ジャンプを覚えたら、長押しで空中に浮く）、↓ スライディング（急降下を覚えたら、空中では急降下）、A / S / D スキル①②③、P / Esc 一時停止
               ボタンをクリックしても操作できる
      スマホ … 画面下のボタンをタップ（横持ちのときは左右どちらにも同じボタンが出る）
 
@@ -58,13 +59,14 @@ const DR_SKILL_ACTIONS = {
     run.spinTotal = skill.duration;
     drSound('spin');
   },
-  /* 急降下：空中から一気に着地する（地面にいるときは使えない）。
+  /* 急降下：空中から一気に着地する（地面にいるときは使えない）。ショップの「急降下 Lv2」でクールタイムが 0 になる。
      スライディングボタンに付くスキル（空中でスライディングボタンを押すと出る。drSlide() から呼ばれる）。
      このあと DR_CONFIG.diveComboTime 秒以内に、居合切り・スピンアタック・火の玉・スライディングを使うと強くなる */
   dive(run, skill) {
     if (run.onGround) return false;
     run.vy = -skill.speed;
     run.diving = true;
+    run.fluttering = false;
     run.slideT = 0;
     run.comboT = DR_CONFIG.diveComboTime;
     drSound('dive');
@@ -94,7 +96,7 @@ const DR_SKILL_ACTIONS = {
 };
 
 /* 居合切りで切れるか（ふつうは breakable のものだけ。ダッシュ切りなら dashCut のものも） */
-function drCanCut(run, o) { return o.def.breakable !== false || (run.dashCut && o.def.dashCut); }
+function drCanCut(run, o) { return !o.def.pit && (o.def.breakable !== false || (run.dashCut && o.def.dashCut)); }
 
 /* 急降下のすぐあとなら、前へダッシュする（進む距離を返す。ダッシュしなければ 0）。居合切りで使う */
 function drTryDash(run) {
@@ -125,6 +127,7 @@ const dr = {
   run: null,          // いまのプレイ（drNewRun() で作る）
   demo: null,         // タイトル画面の後ろで流れている見本
   slideBufT: 0,            // 空中でスライディングを押したとき、着地したらすぐ出せるように覚えておく時間
+  jumpHeld: new Set(),     // いま押しっぱなしのジャンプボタン・キー（バタ足ジャンプ用。'k'+キー名 / 'p'+指の番号）
   ranking: { all: [], month: [], local: true, ok: true, loaded: false },
   rankTab: 'month',
   entry: null,        // 名前入力中の状態
@@ -238,15 +241,21 @@ function drBindInput() {
     drPress(btn.dataset.act, 'p' + e.pointerId);
   });
   pads.addEventListener('contextmenu', e => e.preventDefault());
+  // 指・マウスを離したら、ジャンプの押しっぱなしをやめる（バタ足ジャンプ）
+  const release = e => dr.jumpHeld.delete('p' + e.pointerId);
+  window.addEventListener('pointerup', release);
+  window.addEventListener('pointercancel', release);
 
   // ゲーム画面をタップ／クリック：プレイ中はジャンプ
   document.getElementById('dr-stage').addEventListener('pointerdown', e => {
     if (e.target.closest('button')) return;
-    if (dr.mode === 'play') { e.preventDefault(); drPress('jump', 'stage'); }
+    if (dr.mode === 'play') { e.preventDefault(); drPress('jump', 'p' + e.pointerId); }
   });
 
   // キーボード
   window.addEventListener('keydown', drOnKeyDown);
+  window.addEventListener('keyup', e => dr.jumpHeld.delete('k' + e.code));
+  window.addEventListener('blur', () => dr.jumpHeld.clear());
 
   // 画面上のボタン（data-dr="..."）
   document.getElementById('dr-root').addEventListener('click', e => {
@@ -296,7 +305,9 @@ function drOnKeyDown(e) {
       else if (c === 'KeyR') drShowRanking();
       break;
     case 'play':
-      if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW' || c === 'KeyK') drPress('jump', 'k');
+      if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW' || c === 'KeyK') {
+        if (!dr.jumpHeld.has('k' + c)) drPress('jump', 'k' + c);   // 押しっぱなしのキーリピートでは跳ばない
+      }
       else if (c === 'ArrowDown' || c === 'KeyJ') drPress('slide');
       else if (c === 'KeyA') drPress('skill0');
       else if (c === 'KeyS') drPress('skill1');
@@ -337,7 +348,7 @@ function drPress(act, src) {
   if (dr.mode === 'title' && act === 'jump') { drStartGame(); return; }
   if (dr.mode !== 'play' || !dr.run) return;
   const run = dr.run;
-  if (act === 'jump') drJump(run);
+  if (act === 'jump') { if (src) dr.jumpHeld.add(src); drJump(run); }
   else if (act === 'slide') drSlide(run);
   else if (act.startsWith('skill')) drUseSkill(run, +act.slice(5));
 }
@@ -428,7 +439,15 @@ function drNewRun() {
     slides: 0,             // スライディングでくぐったボーナスの回数
     vacuumFx: 0,
     maxJumps: 1,           // ジャンプできる回数
-    jumpPower: 1,          // ジャンプの強さの倍率
+    flutterTime: 0,        // バタ足ジャンプで浮いていられる秒数（0 = 覚えていない）
+    flutterLeft: 0,        // いまの空中で、あと何秒浮いていられるか（着地で flutterTime に戻る）
+    fluttering: false,     // バタ足で浮いている途中
+    bonusNext: false,      // ボーナスチケットを使った（次のワールドの前にボーナスステージ）
+    bonus: false,          // ボーナスステージの途中
+    tilt: 0,               // 画面の傾き（度。ボーナスステージの下り坂）
+    scroll: DR_CONFIG.speedStart,   // いま画面が流れている速さ（ボーナスステージでは速い）
+    marks: [],             // ボーナスステージの、ジャンプの目印
+    nextHardAt: 0,         // 次の「スキルを使わないと通れない区画」を出す距離（m。0 = まだ決めていない）
     lives: DR_CONFIG.startLives,
     invincibleTime: DR_CONFIG.invincibleTime,
     invT: 0,               // 無敵の残り時間
@@ -461,6 +480,7 @@ function drNewRun() {
 function drStartGame() {
   drSound('start');
   dr.run = drNewRun();
+  dr.jumpHeld.clear();
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
   drBgm(drWorld(dr.run).bgm);
   drShowBanner(drWorld(dr.run).name, 'WORLD 1');
@@ -520,7 +540,7 @@ function drLoop(now) {
 }
 
 /* ---------- ゲームの計算 ---------- */
-function drWorld(run) { return DR_WORLDS[run.worldIndex % DR_WORLDS.length]; }
+function drWorld(run) { return run.bonus ? DR_BONUS_WORLD : DR_WORLDS[run.worldIndex % DR_WORLDS.length]; }
 function drMeters(run) { return run.dist / DR_CONFIG.pxPerMeter; }
 function drScore(run) {
   const C = DR_CONFIG;
@@ -541,7 +561,10 @@ function drUpdate(run, dt) {
   const C = DR_CONFIG;
   run.t += dt;
   run.speed = Math.min(C.speedMax, C.speedStart + C.speedAccel * run.t);
-  let move = run.speed * dt;
+  // ボーナスステージは下り坂なので速く流れる（最高速は超えない）。画面もだんだん傾ける
+  run.scroll = run.bonus ? Math.min(C.speedMax, run.speed * C.bonusSpeedMult) : run.speed;
+  run.tilt += ((run.bonus ? C.bonusTilt : 0) - run.tilt) * Math.min(1, dt * 4);
+  let move = run.scroll * dt;
   // 急降下コンボで前へ進んでいる間は、画面が速く流れる（そのぶん距離も進む）
   if (run.rushT > 0) {
     move += run.rushSpeed * Math.min(dt, run.rushT);
@@ -551,20 +574,43 @@ function drUpdate(run, dt) {
   run.dist += move;
 
   // --- 自機 ---
+  const held = dr.jumpHeld.size > 0;
+  // 落下穴の上に来たら落ちる（ジャンプ回数は使っていない扱いなので、すぐジャンプすれば出られる）
+  if (run.onGround && drPitOpen(run)) { run.onGround = false; run.y = -0.01; run.vy = 0; }
   if (!run.onGround) {
-    if (!run.diving) run.vy -= C.gravity * dt;   // 急降下中は一定の速さで落ちる
+    // バタ足：ボタンを離すか、時間が切れたら落ちる
+    if (run.fluttering) {
+      if (!held || run.flutterLeft <= 0) run.fluttering = false;
+      else {
+        run.flutterLeft = Math.max(0, run.flutterLeft - dt);
+        run.vy = 0;
+        if (Math.random() < 0.5) run.effects.push({ type: 'dot', x: drPX(run) + drRand(7, 17), y: C.groundY - run.y, vx: drRand(-60, -30), vy: drRand(10, 40), t: 0, life: 0.25, color: '#FFFFFF' });
+      }
+    }
+    if (!run.fluttering && !run.diving) {   // 急降下中は一定の速さで落ちる
+      const before = run.vy;
+      run.vy -= C.gravity * dt;
+      // ジャンプボタンを押しっぱなしなら、いちばん高いところでバタ足（バタ足ジャンプを覚えているとき）
+      if (before > 0 && run.vy <= 0 && held && run.flutterLeft > 0 && run.y > 0) drStartFlutter(run);
+    }
+    const prevY = run.y;
     run.y += run.vy * dt;
     if (run.y <= 0) {
-      run.y = 0; run.vy = 0; run.onGround = true; run.jumpsUsed = 0;
-      drPuff(run, run.diving ? 10 : 3);
-      if (run.diving) { run.diving = false; dr.shake = Math.max(dr.shake, 0.12); }
-      // 空中でスライディングを押していたら、着地と同時に出す
-      if (dr.slideBufT > 0) { dr.slideBufT = 0; drSlide(run); }
+      const open = drPitOpen(run);
+      if (prevY >= 0 && run.vy <= 0 && !open) drLand(run);                // ふつうの着地
+      else if (open) { if (run.y < -C.pitDepth) drPitHit(run); }           // 穴の中を落ちている → 底まで落ちたらダメージ
+      else if (run.y > -C.pitStepUp) { if (run.vy <= 0) drLand(run); else run.y = 0.01; }   // ほとんど落ちていない → 上がれる
+      else drPitHit(run);                                                  // 穴の向こう側の壁にぶつかった
+      if (dr.mode !== 'play') return;
     }
   }
   if (dr.slideBufT > 0) dr.slideBufT = Math.max(0, dr.slideBufT - dt);
   if (run.slideT > 0) run.slideT = Math.max(0, run.slideT - dt);
-  run.ducking = run.onGround && run.slideT > 0;
+  // ボーナスステージでは、地面にいる間はずっとすべっている（下り坂）
+  run.ducking = run.onGround && (run.slideT > 0 || run.bonus);
+  if (run.bonus && run.onGround && Math.random() < 0.6) {
+    run.effects.push({ type: 'dot', x: drPX(run) + drRand(3, 8), y: C.groundY - 2, vx: drRand(-110, -50), vy: drRand(-40, -10), g: 200, t: 0, life: 0.3, color: Math.random() < 0.5 ? '#FFFFFF' : '#FFD84A' });
+  }
 
   // --- ダッシュ（急降下のあとの居合切り・スピン）：前に出て、だんだん元の位置に戻る ---
   if (run.dashT > 0) {
@@ -590,19 +636,32 @@ function drUpdate(run, dt) {
   for (const id in run.cooldowns) run.cooldowns[id] = Math.max(0, run.cooldowns[id] - dt);
 
   // --- ワールド移動 ---
+  // ボーナスチケットを使っていたら、次のワールドの前にボーナスステージ（bonusLength m）が入る。
+  // ボーナスステージはワールドの数に入らない（終わったら、本来の次のワールドへ）
   if (!run.worldFx && drMeters(run) >= run.nextWorldAt) {
-    run.worldFx = { t: 0, dur: 1.2, switched: false };
+    const toBonus = !run.bonus && run.bonusNext;
+    run.worldFx = { t: 0, dur: 1.2, switched: false, toBonus };
     run.calmT = C.worldCalmTime;
-    run.nextWorldAt += C.worldLength;
-    drSound('world');
+    run.nextWorldAt += toBonus ? C.bonusLength : C.worldLength;
+    drSound(toBonus ? 'bonus' : 'world');
   }
   if (run.worldFx) {
     run.worldFx.t += dt;
     if (!run.worldFx.switched && run.worldFx.t >= run.worldFx.dur / 2) {
       run.worldFx.switched = true;
-      run.worldIndex++;
+      if (run.worldFx.toBonus) {
+        run.bonusNext = false;
+        run.bonus = true;
+        // 残っている障害物は消す（ボーナスステージは障害物なし）
+        run.obstacles = run.obstacles.filter(o => !o.def.pit);
+        run.obstacles.forEach(o => { if (!o.dead) { o.dead = true; o.deadT = 0; o.noGraze = true; drSparkle(run, o.x + o.def.w / 2, o.y + o.def.h / 2, '#FFD84A', 6); } });
+        run.nextCoinIn = Math.min(run.nextCoinIn, run.scroll * 0.4);
+      } else {
+        if (run.bonus) { run.bonus = false; run.marks = []; }
+        run.worldIndex++;
+      }
       const w = drWorld(run);
-      drShowBanner(w.name, 'WORLD ' + (run.worldIndex + 1));
+      drShowBanner(w.name, run.bonus ? 'BONUS STAGE' : 'WORLD ' + (run.worldIndex + 1));
       drBgm(w.bgm);
     }
     if (run.worldFx.t >= run.worldFx.dur) run.worldFx = null;
@@ -613,24 +672,30 @@ function drUpdate(run, dt) {
   // ショップの手前（shopClearBefore 秒ぶん）は障害物を出さない
   const shopSoon = !run.shopIcon && drMeters(run) >= run.nextShopAt - C.shopClearBefore * run.speed / C.pxPerMeter;
   if (run.nextObstacleIn <= 0) {
-    if (run.calmT <= 0 && !shopSoon) drSpawnObstacle(run);
+    let extra = 0;   // 長い障害物（スキルの区画）を出したら、その長さのぶん次をあける
+    if (run.calmT <= 0 && !shopSoon && !run.bonus) extra = drSpawnObstacle(run) || 0;
     const d = drDifficulty(run);
     const gap = drRand(drLerp(C.gapStartMin, C.gapEndMin, d), drLerp(C.gapStartMax, C.gapEndMax, d));
-    run.nextObstacleIn = gap * run.speed;
+    run.nextObstacleIn = gap * run.speed + extra;
   }
   run.nextCoinIn -= move;
   if (run.nextCoinIn <= 0) {
-    drSpawnCoins(run);
-    run.nextCoinIn = drRand(C.coinGapMin, C.coinGapMax) * run.speed;
+    if (run.bonus) run.nextCoinIn = drSpawnBonusCoins(run);
+    else {
+      drSpawnCoins(run);
+      run.nextCoinIn = drRand(C.coinGapMin, C.coinGapMax) * run.speed;
+    }
   }
-  if (!run.shopIcon && drMeters(run) >= run.nextShopAt) drSpawnShop(run);
+  if (!run.shopIcon && !run.bonus && drMeters(run) >= run.nextShopAt) drSpawnShop(run);
 
   // --- 動かす ---
   run.obstacles.forEach(o => {
     o.x -= move;
     if (o.dead) { o.deadT += dt; o.y -= 40 * dt; }
   });
-  run.obstacles = run.obstacles.filter(o => o.x + o.def.w > -10 && (!o.dead || o.deadT < 0.4));
+  run.obstacles = run.obstacles.filter(o => o.x + o.w > -10 && (!o.dead || o.deadT < 0.4));
+  run.marks.forEach(m => { m.x -= move; });
+  run.marks = run.marks.filter(m => m.x > -20);
   run.coins.forEach(c => {
     c.x -= move;
     // 切った障害物から飛び出したコイン：はねて、地面の少し上で止まる
@@ -663,7 +728,7 @@ function drUpdate(run, dt) {
   const pb = drPlayerBox(run);
   const standBox = drPlayerBoxAs(run, 'stand');
   for (const o of run.obstacles) {
-    if (o.dead || o.hitDone) continue;
+    if (o.dead || o.hitDone || o.def.pit) continue;   // 落下穴は「自機」のところで判定している
     drTrackGraze(run, pb, o);
     // 立っていたらぶつかっていた障害物の下を、スライディングでくぐっている
     if (run.ducking && drOverlap(standBox, drObstacleBox(o))) o.slidUnder = true;
@@ -698,6 +763,7 @@ function drUpdate(run, dt) {
 
 /* ---------- かすりボーナス ----------
    障害物ごとに「自機といちばん近づいたすき間」を覚えておき、自機の後ろへ通り過ぎたときに判定する。
+   もらえるのはコイン（DR_CONFIG.grazeCoin。スライディングボーナスは slideCoin）。
    すき間が DR_CONFIG.grazeDistance 以内で、ぶつかっていなければ「かすり」。
    スピンアタック中に近くを通った障害物は数えない（スピンで壊すのと二重にならないように）。 */
 function drBoxGap(a, b) {
@@ -724,7 +790,7 @@ function drJudgeGrazes(run, pb) {
     if (o.group) done.add(o.group);
     run.grazes++;
     run.wallet += C.grazeCoin;
-    drFloatText(run, 'GRAZE +' + C.scoreGraze, drPX(run) + 4, C.groundY - run.y - 34, '#FFD84A');
+    drFloatText(run, 'GRAZE +' + C.grazeCoin, drPX(run) + 4, C.groundY - run.y - 34, '#FFD84A');
     drSparkle(run, ob.x + ob.w, ob.y + ob.h / 2, '#FFD84A', 5);
     drSound('graze');
   }
@@ -785,7 +851,7 @@ function drJudgeSlides(run, pb) {
     o.slideAwarded = true;
     run.slides++;
     run.wallet += C.slideCoin;
-    drFloatText(run, 'SLIDE +' + C.scoreSlide, drPX(run) + 2, C.groundY - 40, '#7FFFD4');
+    drFloatText(run, 'SLIDE +' + C.slideCoin, drPX(run) + 2, C.groundY - 40, '#FFD84A');
     drSound('slidebonus');
   }
 }
@@ -807,7 +873,7 @@ function drUpdateShots(run, dt) {
     s.x += step; s.dist += step; s.t += dt;
     const box = { x: s.x - s.r, y: s.y - s.r, w: s.r * 2, h: s.r * 2 };
     for (const o of run.obstacles) {
-      if (o.dead || s.hit.has(o) || !drOverlap(box, drObstacleBox(o))) continue;
+      if (o.dead || o.def.pit || s.hit.has(o) || !drOverlap(box, drObstacleBox(o))) continue;
       s.hit.add(o);
       if (s.blue) { drKillObstacle(run, o); continue; }                // 青：なんでも消す
       if (o.def.breakable === false) { s.done = true; break; }          // 赤：壊せないものに当たったら消える
@@ -829,8 +895,9 @@ function drPullCoins(run, dt) {
     if (c.taken) continue;
     const dx = cx - (c.x + 4), dy = cy - (c.y + 4);
     const d = Math.hypot(dx, dy);
-    if (!c.vac && !(run.magnet > 0 && d < run.magnet)) continue;
-    const sp = (c.vac ? 520 : 260) * dt + (c.vac ? 0 : run.speed * dt * 0.5);
+    const mag = run.bonus ? Math.max(run.magnet, 16) : run.magnet;   // ボーナスステージでは少しだけ磁石が効く（ジャンプの空中コインを取りやすく）
+    if (!c.vac && !(mag > 0 && d < mag)) continue;
+    const sp = (c.vac ? 520 : 260) * dt + (c.vac ? 0 : run.scroll * dt * 0.5);
     if (d <= sp) { c.x = cx - 4; c.y = cy - 4; continue; }
     c.x += dx / d * sp;
     c.y += dy / d * sp;
@@ -845,16 +912,33 @@ function drOverlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
+/* 障害物を1つ出す（長いものを出したときは、その長さを返す） */
 function drSpawnObstacle(run) {
+  const C = DR_CONFIG;
   const meters = drMeters(run);
+  // スキルを使わないと通れない区画（hardFromWorld ワールド目から、hardGapMin〜Max m ごと）
+  if (run.worldIndex + 1 >= C.hardFromWorld) {
+    if (!run.nextHardAt) run.nextHardAt = meters + drRand(60, 160);
+    else if (meters >= run.nextHardAt) {
+      const len = drSpawnGate(run);
+      if (len) { run.nextHardAt = meters + drRand(C.hardGapMin, C.hardGapMax); return len; }
+    }
+  }
   const ids = drWorld(run).obstacles || [];
   const cands = DR_OBSTACLES.filter(o => ids.includes(o.id)
     && (o.minMeter || 0) <= meters
-    && (!o.fly || meters >= DR_CONFIG.flyingFromMeter));
+    && (!o.fly || meters >= C.flyingFromMeter));
   if (!cands.length) return;
   const def = drPickWeighted(cands);
   const x0 = DR_CONFIG.width + 6;
   const group = ++run.groupSeq;
+  if (def.pit) {
+    // 落下穴：幅はそのときの速さで決める（速いほど広い）
+    const o = drMakeObstacle(def, x0, C.groundY, group);
+    o.w = Math.round(Math.max(C.pitWidthMin, Math.min(C.pitWidthMax, run.speed * drRand(C.pitTimeMin, C.pitTimeMax))));
+    run.obstacles.push(o);
+    return o.w;
+  }
   if (def.fly) {
     const lift = def.fly[Math.floor(Math.random() * def.fly.length)];
     run.obstacles.push(drMakeObstacle(def, x0, DR_CONFIG.groundY - lift - def.h, group));
@@ -867,9 +951,28 @@ function drSpawnObstacle(run) {
     run.obstacles.push(drMakeObstacle(def, x0 + i * (def.w + 2), DR_CONFIG.groundY - def.h, group));
   }
 }
+/* スキルを使わないと通れない区画：下りているシャッター（gate_roof）の下に、壊せるかべ（gate_wall）。
+   居合切り・スピンアタック・火の玉のどれかがスキルボタンに入っていて、かべに着くまでに使えるようになるときだけ出す。
+   出したら長さを返す（出さなかったら 0） */
+function drSpawnGate(run) {
+  const C = DR_CONFIG;
+  const roof = DR_OBSTACLES.find(o => o.id === 'gate_roof'), wall = DR_OBSTACLES.find(o => o.id === 'gate_wall');
+  if (!roof || !wall) return 0;
+  const x0 = C.width + 6;
+  const wallX = x0 + roof.w - wall.w - 18;
+  const arrive = (wallX - (drPX(run) + 19)) / run.speed;     // かべに着くまでの秒数
+  const ready = run.slots.some(id => id && ['slash', 'spin', 'fire'].includes(run.skills[id].action)
+    && (run.cooldowns[id] || 0) <= arrive - 0.5);
+  if (!ready) return 0;
+  const group = ++run.groupSeq;
+  run.obstacles.push(drMakeObstacle(roof, x0, C.groundY - roof.fly[0] - roof.h, group));
+  run.obstacles.push(drMakeObstacle(wall, wallX, C.groundY - wall.h, group));
+  return roof.w;
+}
+
 function drMakeObstacle(def, x, y, group) {
   return {
-    def, x, y, t0: Math.random() * 10, dead: false, deadT: 0, hitDone: false,
+    def, x, y, w: def.w, t0: Math.random() * 10, dead: false, deadT: 0, hitDone: false,
     group: group || 0,     // つながって出た障害物は同じ番号（かすりはまとめて1回）
     minGap: Infinity,      // 自機とのいちばん近づいたすき間（かすりの判定用）
     noGraze: false,        // かすりにしない（ぶつかった・スピン中にすれ違った・壊した）
@@ -889,6 +992,26 @@ function drSpawnCoins(run) {
   }
 }
 
+/* ボーナスステージのコイン：地面に1列（すべっているだけで取れる）＋ジャンプの目印＋空中のコインの山。
+   空中のコインは、目印が自機の前の端に来たときにジャンプすると、ちょうど通る道すじに並べてある。
+   次のコインを出すまでの長さ（px）を返す */
+function drSpawnBonusCoins(run) {
+  const C = DR_CONFIG, ch = DR_PICKUPS.coin.h, s = run.scroll;
+  let x = C.width + 6;
+  const n = Math.floor(drRand(C.bonusTrailMin, C.bonusTrailMax + 1));
+  for (let i = 0; i < n; i++) run.coins.push({ x: x + i * 12, y: C.groundY - 4 - ch, taken: false });
+  x += n * 12 + 30;
+  const v = C.jumpVelocity, g = C.gravity, air = 2 * v / g;   // ジャンプしてから着地するまでの秒数
+  run.marks.push({ x });
+  const k = C.bonusArcCoins;
+  for (let i = 0; i < k; i++) {
+    const tt = air * (i + 0.6) / (k + 0.2);
+    const lift = v * tt - g * tt * tt / 2 + 10;           // 自機の体のまん中の高さ
+    run.coins.push({ x: x + s * tt - 10, y: C.groundY - lift - ch / 2, taken: false });
+  }
+  return (x - (C.width + 6)) + s * air + drRand(30, 70);
+}
+
 function drSpawnShop(run) {
   // 地面に置く（そのまま走って触ると入る。ジャンプで飛び越すとスキップ）
   const y = DR_CONFIG.groundY - DR_PICKUPS.shop.h;
@@ -904,17 +1027,62 @@ function drAfterShop(run) {
 }
 
 /* ---------- 自機の動き ---------- */
+/* ジャンプ（空中ではジャンプ回数が残っていれば空中ジャンプ。使い切っていたら、バタ足ジャンプを覚えていればバタ足） */
 function drJump(run) {
-  const v = DR_CONFIG.jumpVelocity * run.jumpPower;
-  run.slideT = 0; run.ducking = false; run.diving = false;
+  const v = DR_CONFIG.jumpVelocity;
   if (run.onGround) {
+    run.slideT = 0; run.ducking = false; run.diving = false;
     run.onGround = false; run.vy = v; run.jumpsUsed = 1; run.y = Math.max(run.y, 0.01);
     drSound('jump');
   } else if (run.jumpsUsed < run.maxJumps) {
-    run.vy = v * 0.92; run.jumpsUsed++;
+    run.slideT = 0; run.ducking = false; run.diving = false; run.fluttering = false;
+    // 穴に落ちかけたとき（まだ1回も跳んでいない）は、地面と同じふつうのジャンプ
+    run.vy = run.jumpsUsed === 0 ? v : v * 0.92;
+    run.jumpsUsed++;
     drPuff(run, 5);
     drSound('jump');
+  } else if (run.flutterLeft > 0 && !run.fluttering) {
+    drStartFlutter(run);
   }
+}
+
+/* バタ足を始める（その高さのまま浮く。浮いていられるのは、いまの空中で残っている run.flutterLeft 秒） */
+function drStartFlutter(run) {
+  run.fluttering = true;
+  run.diving = false;
+  run.vy = 0;
+  drSound('flutter');
+}
+
+/* 着地 */
+function drLand(run) {
+  const wasDiving = run.diving;
+  run.y = 0; run.vy = 0; run.onGround = true; run.jumpsUsed = 0;
+  run.fluttering = false; run.flutterLeft = run.flutterTime;
+  drPuff(run, wasDiving ? 10 : 3);
+  if (wasDiving) { run.diving = false; dr.shake = Math.max(dr.shake, 0.12); }
+  // 空中でスライディングを押していたら、着地と同時に出す
+  if (dr.slideBufT > 0) { dr.slideBufT = 0; drSlide(run); }
+}
+
+/* 足元に、落ちる穴があいているか（無敵の間は落ちない） */
+function drPitOpen(run) {
+  if (run.invT > 0) return false;
+  const fx = drPX(run) + 13;    // 足のまん中
+  return run.obstacles.some(o => o.def.pit && fx > o.x + 2 && fx < o.x + o.w - 2);
+}
+
+/* 穴に落ちた：ダメージ（無敵中はなし）を受けて、ぴょんと穴から出る */
+function drPitHit(run) {
+  drSound('fall');
+  if (!(run.invT > 0)) {
+    drDamage(run);
+    if (dr.mode !== 'play') return;
+  }
+  run.y = 0.01; run.vy = DR_CONFIG.pitBounce; run.onGround = false;
+  run.jumpsUsed = Math.max(run.jumpsUsed, 1);
+  run.diving = false; run.fluttering = false;
+  drPuff(run, 6);
 }
 
 function drUseSkill(run, slot) {
@@ -972,9 +1140,11 @@ function drItemPrice(run, it) {
 }
 function drItemAvailable(run, it) {
   const lv = run.levels[it.id] || 0;
-  if (lv >= (it.maxLevel || 1)) return false;
+  if (!it.consumable && lv >= (it.maxLevel || 1)) return false;
   if (it.type === 'skill' && run.skills[it.skill]) return false;
   if (it.requires && !run.skills[it.requires]) return false;
+  if (it.minWorld && run.worldIndex + 1 < it.minWorld) return false;
+  if (typeof it.available === 'function' && !it.available(run)) return false;
   return true;
 }
 
@@ -1090,7 +1260,7 @@ function drRenderShop() {
       const sold = shop.sold.includes(i);
       const price = sold ? 0 : drItemPrice(run, it);
       const max = it.maxLevel || 1;
-      const lvText = it.type === 'skill' ? 'NEW スキル' : (sold ? `Lv.${lv} / ${max}` : `Lv.${lv} → ${lv + 1} / ${max}`);
+      const lvText = it.type === 'skill' ? 'NEW スキル' : it.consumable ? '1回きり' : (sold ? `Lv.${lv} / ${max}` : `Lv.${lv} → ${lv + 1} / ${max}`);
       const icon = it.image ? `<img src="${it.image}" alt="">` : (it.icon || '★');
       const can = !sold && wallet >= price;
       return `<div class="dr-card${sold ? ' is-sold' : ''}">
@@ -1156,8 +1326,13 @@ function drShowResult(run) {
   const score = drScore(run);
   run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, grazes: run.grazes, slides: run.slides, durationMs: Math.round(run.t * 1000) };
   document.getElementById('dr-res-score').textContent = score.toLocaleString();
+  const C = DR_CONFIG;
+  // かすり・スライディングは、スコアに入るとき（scoreGraze・scoreSlide が 0 より大きい）だけ計算の行を出す
   document.getElementById('dr-res-detail').innerHTML =
-    `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${DR_CONFIG.scoreCoin}<br>こわした ${run.kills}こ × ${DR_CONFIG.scoreKill}<br>かすり ${run.grazes}かい × ${DR_CONFIG.scoreGraze}<br>スライディング ${run.slides}かい × ${DR_CONFIG.scoreSlide}`;
+    `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${C.scoreCoin}<br>こわした ${run.kills}こ × ${C.scoreKill}`
+    + (C.scoreGraze ? `<br>かすり ${run.grazes}かい × ${C.scoreGraze}` : '')
+    + (C.scoreSlide ? `<br>スライディング ${run.slides}かい × ${C.scoreSlide}` : '')
+    + (!C.scoreGraze || !C.scoreSlide ? `<br><small>かすり ${run.grazes}かい・スライディング ${run.slides}かい</small>` : '');
   const qual = drQualifies(score);
   run.qualifies = qual;
   document.getElementById('dr-res-next').textContent = qual ? 'ランキングに名前を入れる' : 'タイトルにもどる';
@@ -1353,7 +1528,7 @@ function drUpdatePads() {
     const id = run ? run.slots[i] : null;
     const skill = id ? run.skills[id] : null;
     const cd = skill ? (run.cooldowns[id] || 0) : 0;
-    const ratio = skill ? 1 - cd / skill.cooldown : 0;
+    const ratio = skill ? (skill.cooldown > 0 ? 1 - cd / skill.cooldown : 1) : 0;
     const ready = !!skill && cd <= 0;
     const key = `${id}|${Math.round(ratio * 40)}|${ready}|${playing}`;
     if (dr.uiCache['slot' + i] === key) continue;
@@ -1383,7 +1558,7 @@ function drUpdatePads() {
   const slideRatio = sliding ? 1 - run.slideT / (run.slideTotal || DR_CONFIG.slideTime) : 1;
   const dive = run && run.skills.dive;
   const diveCd = dive ? (run.cooldowns.dive || 0) : 0;
-  const diveRatio = dive ? 1 - diveCd / dive.cooldown : 0;
+  const diveRatio = dive ? (dive.cooldown > 0 ? 1 - diveCd / dive.cooldown : 1) : 0;
   const air = !!(run && !run.onGround && dr.mode === 'play');
   const skey = `${sliding}|${Math.round(slideRatio * 40)}|${!!dive}|${Math.round(diveRatio * 40)}|${air}`;
   if (dr.uiCache.slide !== skey) {
@@ -1411,6 +1586,8 @@ function drEffectBars(run) {
   return [
     { id: 'spin', label: 'SPIN', left: run.spinT, total: run.spinTotal || 1, color: '#7FFFD4' },
     { id: 'combo', label: 'COMBO', left: run.comboT, total: DR_CONFIG.diveComboTime, color: '#FFD84A' },   // 急降下のあと、技が強くなる残り時間
+    { id: 'bonus', label: 'BONUS', left: run.bonus ? Math.max(0, run.nextWorldAt - drMeters(run)) : 0, total: DR_CONFIG.bonusLength, color: '#FF9E5E' },   // ボーナスステージの残り（m）
+    { id: 'flutter', label: 'バタ足', left: run.fluttering ? run.flutterLeft : 0, total: run.flutterTime || 1, color: '#9FE8FF' },   // バタ足で浮いていられる残り時間
   ];
 }
 function drUpdateEffectBars(run) {
@@ -1519,10 +1696,24 @@ function drRender() {
   ctx.save();
   if (dr.shake > 0) ctx.translate(Math.round(drRand(-2, 2)), Math.round(drRand(-2, 2)));
   const world = drWorld(run);
-  drDrawBackground(ctx, world, run.dist);
+  drDrawSky(ctx, world);
+  // ボーナスステージ（下り坂）では、空以外を自機の足元を中心に傾けて描く
+  const tilt = (run.tilt || 0) * Math.PI / 180;
+  const tilted = Math.abs(tilt) > 0.001;
+  if (tilted) {
+    ctx.save();
+    ctx.translate(C.playerX + 12, C.groundY);
+    ctx.rotate(tilt);
+    ctx.translate(-(C.playerX + 12), -C.groundY);
+  }
+  drDrawFar(ctx, world, run.dist, tilted ? 90 : 0);
   // ワールド移動の光（背景だけを白くする。自機・地面・障害物はこのあとに描くので隠れない）
   if (run.worldFx) drDrawWorldFlash(ctx, run.worldFx);
-  drDrawGround(ctx, world, run.dist);
+  drDrawGround(ctx, world, run.dist, tilted ? 90 : 0);
+  // 落下穴（地面の上に穴を描く）
+  run.obstacles.forEach(o => { if (o.def.pit) drDrawPit(ctx, o, world); });
+  // ボーナスステージのジャンプの目印
+  if (run.marks) run.marks.forEach(m => drDrawMark(ctx, m));
 
   // コイン
   run.coins.forEach(c => drDrawSprite(ctx, DR_PICKUPS.coin.sprite, 8, 8, c.x, c.y, dr.clock + c.x * 0.01));
@@ -1534,8 +1725,14 @@ function drRender() {
   }
   // 障害物
   run.obstacles.forEach(o => {
+    if (o.def.pit) return;
     if (o.dead) ctx.globalAlpha = Math.max(0, 1 - o.deadT / 0.4);
     drDrawSprite(ctx, o.def.sprite, o.def.w, o.def.h, o.x, o.y, dr.clock + o.t0);
+    const lb = o.def.label;   // 絵の上の文字（スキルの区画の「SKILL!」など）。点滅させる
+    if (lb && Math.floor(dr.clock * 4) % 2) {
+      const lx = lb.x === undefined ? (o.def.w - (lb.text.length * 4 - 1)) / 2 : lb.x;
+      drPixelText(ctx, lb.text, o.x + lx, o.y + lb.y, lb.color || '#FFFFFF', '#1B1B2F');
+    }
     ctx.globalAlpha = 1;
   });
   // 前へ進んでいる間（急降下コンボ）は、横に流れる線を出す
@@ -1585,7 +1782,39 @@ function drRender() {
     ctx.fillRect(drPX(run) + 2, C.groundY - 1, 20, 2);
   }
   if (dr.debug) drDrawDebug(ctx, run);
+  if (tilted) ctx.restore();
   ctx.restore();
+}
+
+/* 落下穴：地面に黒い穴。奥の壁を少し明るくして、深さを出す */
+function drDrawPit(ctx, o, world) {
+  const C = DR_CONFIG;
+  const x = Math.round(o.x), w = Math.round(o.w), top = C.groundY;
+  const gr = world.ground || {};
+  ctx.fillStyle = '#14142A';
+  ctx.fillRect(x, top, w, C.height - top + 90);
+  ctx.fillStyle = gr.line || '#555';
+  ctx.fillRect(x + w - 3, top, 3, 9);       // 向こう側の壁（見えている面）
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.fillRect(x + w - 3, top + 9, 3, 6);
+  ctx.fillStyle = '#1B1B2F';
+  ctx.fillRect(x - 1, top, 1, 6);            // 手前のふち
+  ctx.fillRect(x + w, top, 1, 6);
+}
+
+/* ボーナスステージのジャンプの目印（地面の光る矢印。ここが自機の前に来たときにジャンプ） */
+function drDrawMark(ctx, m) {
+  const C = DR_CONFIG;
+  const x = Math.round(m.x), on = Math.floor(dr.clock * 8) % 2;
+  ctx.fillStyle = on ? '#FFFFFF' : '#FFD84A';
+  // 地面の上の「▲」
+  for (let i = 0; i < 4; i++) ctx.fillRect(x - i, C.groundY - 1 - (3 - i) * 2, 1 + i * 2, 2);
+  // 上向きの矢印
+  const y0 = C.groundY - 22 - (on ? 1 : 0);
+  ctx.fillRect(x, y0 + 3, 1, 9);
+  ctx.fillRect(x - 1, y0 + 1, 3, 2);
+  ctx.fillRect(x - 2, y0 + 3, 5, 1);
+  ctx.fillRect(x, y0, 1, 1);
 }
 
 function drDrawWorldFlash(ctx, fx) {
@@ -1601,7 +1830,9 @@ function drDrawWorldFlash(ctx, fx) {
 
 function drDrawPlayer(ctx, run, isDemo) {
   const C = DR_CONFIG, P = DR_PLAYER;
-  const x = drPX(run), y = C.groundY - run.y - P.frameH;
+  const x = drPX(run);
+  let y = C.groundY - run.y - P.frameH;
+  if (run.fluttering) y += Math.sin(run.t * 40) > 0 ? 1 : 0;   // バタ足中は少しゆれる
   // 無敵中は点滅（切れる直前は速く点滅して知らせる）
   if (run.invT > 0 && dr.mode === 'play') {
     const period = run.invT > C.invincibleWarnTime ? 0.24 : 0.08;
@@ -1611,9 +1842,10 @@ function drDrawPlayer(ctx, run, isDemo) {
   if (dr.mode === 'dying' || (run.deadT > 0 && !isDemo)) anim = 'hurt';
   else if (run.spinT > 0) anim = 'spin';
   else if (run.slashT > 0) anim = 'slash';
+  else if (run.fluttering) anim = 'flutter';
   else if (!run.onGround) anim = 'jump';
   else if (run.ducking) anim = 'duck';
-  const a = P.anims[anim];
+  const a = P.anims[anim] || P.anims.run;
   const t = isDemo ? dr.clock : run.t;
   let f = 0;
   if (anim === 'jump') f = run.vy > 0 ? 0 : 1;
@@ -1687,35 +1919,44 @@ function drDrawDebug(ctx, run) {
   ctx.strokeStyle = 'red'; ctx.lineWidth = 1;
   const b = drPlayerBox(run);
   ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
-  run.obstacles.forEach(o => { const ob = drObstacleBox(o); ctx.strokeRect(ob.x + 0.5, ob.y + 0.5, ob.w - 1, ob.h - 1); });
+  run.obstacles.forEach(o => {
+    if (o.def.pit) { ctx.strokeRect(o.x + 0.5, DR_CONFIG.groundY + 0.5, o.w - 1, 8); return; }
+    const ob = drObstacleBox(o); ctx.strokeRect(ob.x + 0.5, ob.y + 0.5, ob.w - 1, ob.h - 1);
+  });
 }
 
 /* --- 背景（遠くの景色） --- */
 function drHash(n) { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); }
 
-function drDrawBackground(ctx, w, dist) {
+/* 空（画面の全体を塗る。傾けて描くときに、すき間が出ないように） */
+function drDrawSky(ctx, w) {
   const C = DR_CONFIG;
   const g = ctx.createLinearGradient(0, 0, 0, C.groundY);
   g.addColorStop(0, w.sky[0]); g.addColorStop(1, w.sky[1]);
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, C.width, C.groundY);
+  ctx.fillRect(0, 0, C.width, C.height);
+}
 
+/* 遠くの景色。extra … 傾けて描くとき、左右にはみ出して描く幅（ドット） */
+function drDrawFar(ctx, w, dist, extra) {
+  const C = DR_CONFIG;
+  extra = extra || 0;
   const img = drImage(w.bgImage);
   if (img) {
     const off = (dist * 0.2) % img.naturalWidth;
-    for (let x = -off; x < C.width; x += img.naturalWidth) ctx.drawImage(img, Math.round(x), 0);
+    for (let x = -off - (extra ? img.naturalWidth : 0); x < C.width + extra; x += img.naturalWidth) ctx.drawImage(img, Math.round(x), 0);
     return;
   }
   const f = w.far || { style: 'none' };
   const off = dist * 0.2;
   if (f.style === 'hills') {
     ctx.fillStyle = f.color2;
-    for (let x = 0; x < C.width; x += 2) {
+    for (let x = -extra; x < C.width + extra; x += 2) {
       const h = 26 + Math.sin((x + off * 0.5) / 47) * 10 + Math.sin((x + off * 0.5) / 19) * 4;
       ctx.fillRect(x, C.groundY - h - 14, 2, h + 14);
     }
     ctx.fillStyle = f.color;
-    for (let x = 0; x < C.width; x += 2) {
+    for (let x = -extra; x < C.width + extra; x += 2) {
       const h = 16 + Math.sin((x + off) / 31) * 8 + Math.sin((x + off) / 13) * 3;
       ctx.fillRect(x, C.groundY - h, 2, h);
     }
@@ -1762,33 +2003,38 @@ function drDrawBackground(ctx, w, dist) {
 }
 
 /* --- 地面 --- */
-function drDrawGround(ctx, w, dist) {
+/* extra … 傾けて描くとき、左右と下にはみ出して描く幅（ドット） */
+function drDrawGround(ctx, w, dist, extra) {
   const C = DR_CONFIG;
-  const top = C.groundY, h = C.height - C.groundY;
+  extra = extra || 0;
+  const top = C.groundY, h = C.height - C.groundY + extra;
+  const x0 = -extra, x1 = C.width + extra;
   const img = drImage(w.groundImage);
   if (img) {
     const off = dist % img.naturalWidth;
-    for (let x = -off; x < C.width; x += img.naturalWidth) ctx.drawImage(img, Math.round(x), top);
+    if (extra) { ctx.fillStyle = (w.ground && w.ground.color) || '#888'; ctx.fillRect(x0, top, x1 - x0, h); }
+    for (let x = -off - (extra ? img.naturalWidth : 0); x < x1; x += img.naturalWidth) ctx.drawImage(img, Math.round(x), top);
     return;
   }
   const gr = w.ground || { style: 'plain', color: '#888' };
   ctx.fillStyle = gr.color;
-  ctx.fillRect(0, top, C.width, h);
+  ctx.fillRect(x0, top, x1 - x0, h);
   ctx.fillStyle = gr.line;
-  ctx.fillRect(0, top, C.width, 2);
+  ctx.fillRect(x0, top, x1 - x0, 2);
   const off = dist % 16;
+  const bottom = top + h;
   if (gr.style === 'grid') {
-    for (let y = top + 8; y < C.height; y += 8) ctx.fillRect(0, y, C.width, 1);
-    for (let x = -off; x < C.width; x += 16) ctx.fillRect(Math.round(x), top, 1, h);
+    for (let y = top + 8; y < bottom; y += 8) ctx.fillRect(x0, y, x1 - x0, 1);
+    for (let x = -off - (extra ? Math.ceil(extra / 16) * 16 : 0); x < x1; x += 16) ctx.fillRect(Math.round(x), top, 1, h);
   } else if (gr.style === 'tile') {
     for (let row = 0; row * 8 < h; row++) {
-      for (let x = -(dist % 32) - 16; x < C.width; x += 16) {
+      for (let x = -(dist % 32) - 16 - (extra ? Math.ceil(extra / 32) * 32 : 0); x < x1; x += 16) {
         if (((Math.floor((x + dist) / 16) + row) & 1) === 0) ctx.fillRect(Math.round(x), top + 2 + row * 8, 16, 8);
       }
     }
   } else if (gr.style === 'stripe') {
-    for (let x = -(dist % 24); x < C.width; x += 24) ctx.fillRect(Math.round(x), top + 10, 12, 3);
-    ctx.fillRect(0, top + 22, C.width, 1);
+    for (let x = -(dist % 24) - (extra ? Math.ceil(extra / 24) * 24 : 0); x < x1; x += 24) ctx.fillRect(Math.round(x), top + 10, 12, 3);
+    ctx.fillRect(x0, top + 22, x1 - x0, 1);
   }
 }
 
@@ -1833,7 +2079,7 @@ function drUpdateDemo(dt) {
   d.nextObstacleIn -= move;
   if (d.nextObstacleIn <= 0) {
     const ids = drWorld(d).obstacles || [];
-    const cands = DR_OBSTACLES.filter(o => ids.includes(o.id) && !o.fly);
+    const cands = DR_OBSTACLES.filter(o => ids.includes(o.id) && !o.fly && !o.pit);
     if (cands.length) { const def = drPickWeighted(cands); d.obstacles.push(drMakeObstacle(def, C.width + 6, C.groundY - def.h)); }
     d.nextObstacleIn = drRand(1.2, 2.2) * d.speed;
   }
