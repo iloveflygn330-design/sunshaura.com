@@ -48,7 +48,7 @@ const DR_SKILLS = {
   },
   dive: {
     name: '急降下', label: '急降下', action: 'dive', button: 'slide',
-    cooldown: 3.0, minCooldown: 1.0,
+    cooldown: 0, minCooldown: 0,         // クールタイムなし（空中ならいつでも急降下できる）
     speed: 900,
   },
   vacuum: {
@@ -93,6 +93,7 @@ const DR_SKILLS = {
      run.flutterTime    … バタ足ジャンプで浮いていられる秒数（0 = 覚えていない）
      run.bonusNext      … true にすると、次のワールドの前にボーナスステージが入る
      run.lives          … いまのライフ
+     run.maxLives       … 最大ライフ（回復薬はここまで回復する。ハートの空きの数にもなる）
      run.invincibleTime … ぶつかったあとの無敵時間（秒）
      run.coinMult       … コインを拾ったときの倍率（1 = ふつう）
      run.magnet         … 磁石の範囲（ドット。0 = 磁石なし）
@@ -130,7 +131,14 @@ const DR_ITEMS = [
   {
     id: 'life_plus', name: 'ライフ+1', desc: 'ハートが1つ増える', icon: '❤',
     type: 'passive', maxLevel: 5, price: 60, priceUp: 1.7,
-    apply(run) { run.lives += 1; },
+    apply(run) { run.maxLives += 1; run.lives += 1; },
+  },
+  {
+    // 使いきり。ライフが減っているときだけ並ぶ
+    id: 'potion', name: '回復薬', desc: 'ライフが最大まで回復する', icon: '🧪',
+    type: 'passive', consumable: true, price: 40, priceUp: 1.25, weight: 1.5,
+    available(run) { return run.lives < run.maxLives; },
+    apply(run) { run.lives = run.maxLives; },
   },
   {
     id: 'inv_up', name: '被弾後無敵時間UP', desc: 'ぶつかったあとの無敵が0.75秒のびる', icon: '✨',
@@ -171,14 +179,8 @@ const DR_ITEMS = [
 
   /* --- 急降下（空中から一気に着地。すぐあとに居合切り・スピンでダッシュ） --- */
   {
-    id: 'learn_dive', name: '急降下', desc: 'スライディングボタンに付く。空中で押すと一気に着地。直後の技が強くなる', icon: '⏬',
+    id: 'learn_dive', name: '急降下', desc: 'スライディングボタンに付く。空中で押すと一気に着地（クールタイムなし）。直後の技が強くなる', icon: '⏬',
     type: 'skill', skill: 'dive', maxLevel: 1, price: 45, priceUp: 1, weight: 2,
-  },
-  {
-    // 急降下 Lv2（覚えたときが Lv1）。クールタイムがなくなり、空中ならいつでも急降下できる
-    id: 'dive_lv2', name: '急降下 Lv2', desc: 'クールタイムがなくなる（空中ならいつでも急降下できる）', icon: '⏱',
-    type: 'passive', requires: 'dive', maxLevel: 1, price: 40, priceUp: 1,
-    apply(run, skill) { skill.cooldown = 0; skill.minCooldown = 0; },
   },
 
   /* --- コイン吸引・磁石 --- */
