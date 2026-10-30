@@ -1,0 +1,389 @@
+/* =====================================================
+   きょうりゅうラン（dinorun）の見た目
+   minigame/index.html で読み込む。動きは assets/dinorun.js。
+
+   画面の組み立て（#dr-root の中）:
+     #dr-stage   … ゲーム画面（16:9。中の絵は canvas に 384×216 ドットで描いて拡大している）
+     #dr-pads    … 操作ボタン。PC・スマホ縦は1セット、スマホ横持ちは左右に同じものを2セット
+     .dr-overlay … タイトル・ショップ・名前入力などのメニュー（#dr-root 全体に重ねて出す）
+
+   ゲーム画面の大きさは「画面の高さ − ヘッダー − ボタンなどの高さ（--dr-reserve）」に収まるように自動で縮む。
+   ボタンの高さを変えたら --dr-reserve も合わせて調整すると、スクロールせずに遊べる。
+   ===================================================== */
+
+/* このゲームを開いている間だけ、ページの余白を詰める（body.dr-active は dinorun.js が付け外しする） */
+body.dr-active #minigame-inner { padding: 10px 10px 24px; }
+#mg-dinorun .mg-game-header { max-width: 900px; margin-bottom: 6px; }
+
+/* ヘッダーを隠す（スマホの「▲ ヘッダーを隠す」ボタン） */
+body.dr-header-hidden #header { display: none; }
+body.dr-header-hidden #body-content { padding-top: 0; }
+
+/* =====================================================
+   全体
+   ===================================================== */
+#dr-root {
+  --dr-header-h: var(--header-height-pc);
+  --dr-reserve: 290px;          /* ゲーム画面以外に使う高さ（戻るボタン・操作ボタン・余白） */
+  --dr-cyan: #2FE6F5;
+  --dr-cyan-dark: #1E5FD6;
+  --dr-navy: #12163A;
+  --dr-panel: #1C2152;
+  --dr-mint: #7FFFD4;
+  --dr-yellow: #FFD84A;
+  --dr-pink: #FF5A7A;
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'DotGothic16', 'M PLUS Rounded 1c', sans-serif;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (max-width: 759px) { #dr-root { --dr-header-h: var(--header-height-sp); --dr-reserve: 280px; } }
+body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
+/* メニューを開いている間は、メニューが収まる高さを確保する */
+#dr-root.dr-menu-open { min-height: 430px; }
+
+#dr-root button { font-family: inherit; }
+#dr-root [hidden] { display: none !important; }
+
+/* =====================================================
+   ゲーム画面
+   ===================================================== */
+#dr-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100%, max(260px, calc((100vh - var(--dr-header-h) - var(--dr-reserve)) * 16 / 9)));
+  width: min(100%, max(260px, calc((100svh - var(--dr-header-h) - var(--dr-reserve)) * 16 / 9)));
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 0 3px var(--dr-navy), 0 6px 18px rgba(0, 0, 0, 0.25);
+  container-type: inline-size;   /* 中の文字を画面の幅に合わせて大きくする（cqw） */
+  touch-action: manipulation;
+}
+#dr-canvas {
+  display: block; width: 100%; height: 100%;
+  image-rendering: pixelated;      /* ドット絵をぼかさずに拡大 */
+  image-rendering: crisp-edges;
+}
+
+/* --- 画面の上の表示 --- */
+#dr-hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.6cqw 2cqw;
+  font-size: max(11px, 2.6cqw);
+  color: #fff;
+  text-shadow: 1px 1px 0 var(--dr-navy), -1px 1px 0 var(--dr-navy), 1px -1px 0 var(--dr-navy), -1px -1px 0 var(--dr-navy);
+  pointer-events: none;
+}
+.dr-hud-right { display: flex; align-items: center; gap: 2.4cqw; }
+.dr-hud-item b { font-weight: 400; }
+.dr-pause-btn {
+  pointer-events: auto;
+  width: max(26px, 5.4cqw); height: max(22px, 4.4cqw);
+  border: 2px solid #fff; border-radius: 6px; background: rgba(18, 22, 58, 0.6); color: #fff;
+  font-size: max(10px, 2.2cqw); cursor: pointer; line-height: 1;
+}
+
+/* ハート（ドット絵のハートを SVG で描いている） */
+#dr-hearts { display: flex; gap: 0.6cqw; min-height: 1em; }
+.dr-heart {
+  display: inline-block; width: max(14px, 3.4cqw); aspect-ratio: 7 / 6;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 6' shape-rendering='crispEdges'%3E%3Cpath fill='%231B1B2F' d='M1 0h2v1H1zM4 0h2v1H4zM0 1h1v2H0zM6 1h1v2H6zM1 3h1v1H1zM5 3h1v1H5zM2 4h1v1H2zM4 4h1v1H4zM3 5h1v1H3zM3 1h1v1H3z'/%3E%3Cpath fill='%23FF5A7A' d='M1 1h2v2H1zM4 1h2v2H4zM2 2h3v2H2zM3 4h1v1H3z'/%3E%3Cpath fill='%23fff' d='M1 1h1v1H1z'/%3E%3C/svg%3E") center / contain no-repeat;
+  image-rendering: pixelated;
+}
+.dr-coin-icon {
+  display: inline-block; width: 0.9em; height: 0.9em; margin-right: 0.25em; vertical-align: -0.1em;
+  border-radius: 50%; background: var(--dr-yellow); box-shadow: inset -0.12em -0.12em 0 #D9A21B, 0 0 0 1px var(--dr-navy);
+}
+
+/* --- ワールド名の帯・カウントダウン --- */
+#dr-banner {
+  position: absolute; left: 0; right: 0; top: 22%;
+  text-align: center; color: #fff; font-size: max(14px, 4.4cqw);
+  text-shadow: 2px 2px 0 var(--dr-navy);
+  opacity: 0; pointer-events: none;
+}
+#dr-banner small { display: block; font-size: 0.55em; color: var(--dr-mint); letter-spacing: 0.2em; }
+#dr-banner.is-show { animation: drBanner 2.4s ease forwards; }
+@keyframes drBanner {
+  0% { opacity: 0; transform: translateX(-30px); }
+  15%, 80% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(30px); }
+}
+#dr-count {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--dr-yellow); font-size: max(30px, 11cqw);
+  text-shadow: 3px 3px 0 var(--dr-navy);
+  pointer-events: none;
+}
+
+/* ヘッダーを隠すボタン（スマホだけ出す） */
+#dr-header-toggle {
+  display: none;
+  margin: 6px 0 0 auto;
+  padding: 4px 10px;
+  border: 1px solid #E07A8A; border-radius: 4px;
+  background: #FAD1D7; color: var(--color-text);
+  font-size: 12px; cursor: pointer;
+}
+@media (max-width: 759px), (max-height: 520px) { #dr-header-toggle { display: block; } }
+
+/* =====================================================
+   操作ボタン
+   ===================================================== */
+#dr-pads { max-width: 560px; margin: 12px auto 0; }
+.dr-pad { display: grid; gap: 8px; }
+.dr-pad[data-side="sub"] { display: none; }   /* スマホ横持ちのときだけ出す（下の @media） */
+.dr-skill-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+.dr-btn {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--dr-cyan-dark); border-bottom-width: 5px; border-radius: 12px;
+  background: var(--dr-cyan); color: var(--dr-navy);
+  font-size: 16px; cursor: pointer;
+  touch-action: none;                       /* 長押し・ダブルタップで拡大しないように */
+  transition: transform 0.06s, border-bottom-width 0.06s, background 0.2s;
+}
+.dr-btn:active, .dr-btn.is-held { transform: translateY(3px); border-bottom-width: 2px; }
+.dr-key { position: absolute; top: 3px; left: 7px; font-size: 11px; opacity: 0.75; }
+
+/* スキルボタン（使えるときは水色、クールタイム中・空きは灰色） */
+.dr-skill-btn { height: 64px; flex-direction: column; gap: 2px; }
+.dr-skill-btn.is-empty, .dr-skill-btn.is-cooling {
+  background: #A2A8B4; border-color: #6E7484; color: #fff;
+}
+.dr-skill-btn.is-empty { opacity: 0.7; cursor: default; }
+.dr-skill-num { display: none; }
+.dr-skill-name { font-size: 15px; line-height: 1.2; text-align: center; padding: 0 4px; }
+.dr-ct {
+  position: absolute; left: 14%; right: 14%; bottom: 7px; height: 6px;
+  border-radius: 3px; background: rgba(0, 0, 0, 0.25); overflow: hidden;
+}
+.dr-ct-fill { display: block; height: 100%; width: 0; background: var(--dr-cyan); }
+.dr-skill-btn.is-ready .dr-ct-fill { background: var(--dr-cyan-dark); }
+
+.dr-jump-btn { height: 64px; font-size: 20px; }
+.dr-jump-count { position: absolute; top: 6px; right: 10px; display: flex; gap: 4px; }
+.dr-jump-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dr-navy); }
+.dr-jump-dot.is-used { opacity: 0.25; }
+.dr-duck-btn { height: 46px; background: #A9F4FA; }
+
+.dr-keys-help { text-align: center; font-size: 12px; color: var(--color-placeholder); margin-top: 8px; }
+
+/* スマホなど（マウスがない端末）はキーの表示を出さない */
+@media (hover: none) {
+  .dr-key, .dr-keys-help { display: none; }
+}
+
+/* --- スマホ縦持ち：下に余白があるので、ボタンを大きめにして押しやすく --- */
+@media (max-width: 759px) and (orientation: portrait) {
+  .dr-jump-btn { height: 78px; }
+  .dr-duck-btn { height: 56px; }
+}
+
+/* --- スマホ横持ち：ゲーム画面の下、左右に同じボタンを出す --- */
+@media (orientation: landscape) and (max-height: 520px) {
+  body.dr-active #minigame-inner { padding: 4px 10px 10px; }
+  #mg-dinorun .mg-game-header { margin-bottom: 2px; }
+  #mg-dinorun .mg-back-btn { padding: 2px 4px; }
+  #dr-root { --dr-reserve: 165px; max-width: none; }
+  #dr-root.dr-menu-open { min-height: 300px; }
+  #dr-header-toggle { margin-top: 2px; padding: 2px 8px; font-size: 11px; }
+  #dr-pads { display: flex; justify-content: space-between; max-width: none; margin-top: 2px; }
+  .dr-pad, .dr-pad[data-side="sub"] { display: grid; width: min(42%, 280px); gap: 5px; }
+  .dr-skill-row { gap: 5px; }
+  .dr-skill-btn { height: 36px; }
+  /* 小さいボタンには短い名前（DR_SKILLS の label）を出す */
+  .dr-skill-name { font-size: 0; }
+  .dr-skill-name::after { content: attr(data-short); font-size: 12px; }
+  .dr-skill-btn.is-empty .dr-skill-name::after { content: none; }
+  .dr-skill-btn.is-empty .dr-skill-num { display: block; font-size: 14px; }
+  .dr-ct { bottom: 4px; height: 4px; }
+  .dr-jump-btn { height: 40px; font-size: 15px; }
+  .dr-duck-btn { height: 30px; font-size: 13px; }
+  .dr-keys-help { display: none; }
+  /* ヘッダーを隠すボタンは「ゲーム選択に戻る」の行の右に置いて、高さを節約する */
+  #dr-header-toggle { position: absolute; top: -24px; right: 0; margin: 0; }
+  .dr-panel { padding: 10px; }
+  .dr-panel-title { font-size: 18px; margin-bottom: 6px; }
+  .dr-card { padding: 6px; }
+  .dr-card-icon { font-size: 20px; }
+}
+
+/* スマホでは、メニュー（タイトル以外）をヘッダーの下の画面いっぱいに出す（狭い画面で切れないように） */
+@media (max-width: 759px), (max-height: 520px) {
+  .dr-overlay:not(.dr-overlay-title) {
+    position: fixed; top: var(--dr-header-h); left: 0; right: 0; bottom: 0;
+    border-radius: 0; z-index: 50;
+    justify-content: flex-start;
+  }
+  .dr-overlay:not(.dr-overlay-title) .dr-panel { max-height: none; margin: auto 0; }
+}
+
+/* =====================================================
+   メニュー（タイトル・ショップ・名前入力・ランキングなど）
+   ===================================================== */
+.dr-overlay {
+  position: absolute; inset: 0; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px;
+  background: rgba(12, 16, 44, 0.8);
+  color: #fff;
+  border-radius: 12px;
+  overflow: auto;
+}
+.dr-panel {
+  width: min(100%, 560px); max-height: 100%; overflow: auto;
+  padding: 16px;
+  background: var(--dr-panel);
+  border: 3px solid var(--dr-mint); border-radius: 6px;
+  box-shadow: 0 0 0 3px var(--dr-navy), 6px 6px 0 rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+.dr-panel-small { width: min(100%, 380px); }
+.dr-panel-wide { width: min(100%, 760px); }
+.dr-panel-title { font-size: 22px; color: var(--dr-yellow); letter-spacing: 0.1em; margin-bottom: 10px; }
+
+.dr-menu-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+.dr-menu-btn {
+  min-width: 120px; padding: 10px 18px;
+  border: 2px solid #fff; border-bottom-width: 4px; border-radius: 8px;
+  background: transparent; color: #fff; font-size: 16px; cursor: pointer;
+}
+.dr-menu-btn.is-main { background: var(--dr-pink); border-color: #FFC2CF; }
+.dr-menu-btn:hover { filter: brightness(1.1); }
+.dr-menu-btn:disabled { opacity: 0.4; cursor: default; }
+.dr-menu-btn .dr-key { position: static; margin-left: 6px; font-size: 11px; }
+
+.dr-blink { animation: drBlink 1s steps(1) infinite; }
+@keyframes drBlink { 50% { opacity: 0; } }
+
+/* --- タイトル（後ろで恐竜が走っているのが見えるよう、上を透かす） --- */
+.dr-overlay-title {
+  background: linear-gradient(rgba(12, 16, 44, 0.1), rgba(12, 16, 44, 0.45) 35%, rgba(12, 16, 44, 0.92) 60%);
+  justify-content: center;
+  gap: 8px;
+}
+.dr-logo {
+  font-size: clamp(30px, min(8vw, 12vh), 64px); line-height: 1; color: var(--dr-yellow);
+  text-shadow: 3px 3px 0 var(--dr-navy), 6px 6px 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+.dr-logo span { color: var(--dr-pink); }
+.dr-title-main p.dr-blink { text-align: center; margin-top: 10px; font-size: 14px; text-shadow: 2px 2px 0 var(--dr-navy); }
+.dr-title-rank { display: none; width: min(100%, 360px); }
+/* 数秒ごとにロゴとランキングが入れ替わる（is-ranking は dinorun.js が付け外し） */
+#dr-title.is-ranking .dr-title-main { display: none; }
+#dr-title.is-ranking .dr-title-rank { display: block; }
+
+/* --- ランキング --- */
+.dr-rank-list { list-style: none; margin: 0 auto; padding: 0; width: min(100%, 360px); }
+.dr-rank-list li {
+  display: grid; grid-template-columns: 2.4em 1fr auto; align-items: center;
+  padding: 3px 8px; font-size: 16px; border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+.dr-rank-list li:nth-child(1) .dr-rk-no { color: var(--dr-yellow); }
+.dr-rank-list li:nth-child(2) .dr-rk-no { color: #D7E0EA; }
+.dr-rank-list li:nth-child(3) .dr-rk-no { color: #F0A46B; }
+.dr-rk-name { letter-spacing: 0.2em; text-align: left; }
+.dr-rk-score { text-align: right; }
+.dr-rank-list li.is-you { color: var(--dr-yellow); animation: drBlink 0.8s steps(1) infinite; }
+.dr-rank-mini li { font-size: 13px; padding: 1px 8px; }
+.dr-ranking-note { font-size: 11px; color: #C8CCE8; margin-top: 8px; min-height: 1em; }
+.dr-tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; }
+.dr-tab {
+  padding: 4px 14px; border: 2px solid #fff; border-radius: 6px;
+  background: transparent; color: #fff; cursor: pointer; font-size: 14px;
+}
+.dr-tab.is-on { background: #fff; color: var(--dr-navy); }
+
+/* --- あそびかた --- */
+.dr-howto-list { text-align: left; font-size: 14px; line-height: 1.7; padding-left: 1.2em; }
+.dr-howto-list li { margin-bottom: 6px; }
+.dr-howto-list b { color: var(--dr-yellow); font-weight: 400; }
+.dr-howto-keys { font-size: 12px; color: #C8CCE8; margin-top: 6px; }
+
+/* --- ショップ --- */
+.dr-shop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.dr-shop-head .dr-panel-title { margin: 0; }
+.dr-shop-wallet { font-size: 20px; color: var(--dr-yellow); }
+.dr-shop-wallet b { font-weight: 400; }
+.dr-shop-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.dr-shop-empty { grid-column: 1 / -1; padding: 16px; }
+.dr-card {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 8px;
+  background: var(--dr-navy); border: 2px solid #4B5596; border-radius: 6px;
+}
+.dr-card.is-sold { opacity: 0.5; }
+.dr-card-icon { font-size: 28px; line-height: 1.1; }
+.dr-card-icon img { width: 32px; height: 32px; image-rendering: pixelated; }
+.dr-card-name { font-size: 15px; color: var(--dr-mint); }
+.dr-card-lv { font-size: 12px; color: var(--dr-yellow); }
+.dr-card-desc { font-size: 12px; line-height: 1.5; color: #D8DBF2; flex: 1; }
+.dr-card-buy {
+  position: relative;
+  width: 100%; margin-top: 4px; padding: 6px;
+  border: 2px solid #fff; border-bottom-width: 4px; border-radius: 6px;
+  background: var(--dr-pink); color: #fff; font-size: 15px; cursor: pointer;
+}
+.dr-card-buy .dr-key { top: 50%; transform: translateY(-50%); left: 8px; }
+.dr-card-buy:disabled { background: #50557A; border-color: #8A8FB5; cursor: default; }
+
+.dr-shop-pick {
+  margin-top: 12px; padding: 10px;
+  border: 2px dashed var(--dr-yellow); border-radius: 6px;
+  animation: drPickGlow 1s ease-in-out infinite alternate;
+}
+@keyframes drPickGlow { to { border-color: var(--dr-mint); } }
+.dr-shop-pick b { color: var(--dr-yellow); font-weight: 400; }
+.dr-shop-pick-btns { display: flex; justify-content: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.dr-pick-btn {
+  position: relative; min-width: 96px; padding: 8px 10px 6px;
+  border: 2px solid var(--dr-cyan-dark); border-bottom-width: 4px; border-radius: 8px;
+  background: var(--dr-cyan); color: var(--dr-navy); font-size: 18px; cursor: pointer;
+}
+.dr-pick-btn.is-suggest { box-shadow: 0 0 0 3px var(--dr-yellow); }
+.dr-pick-btn small { display: block; font-size: 11px; }
+
+.dr-shop-slots-wrap { margin-top: 12px; }
+.dr-shop-sub { font-size: 14px; margin-bottom: 6px; }
+.dr-shop-sub small { font-size: 11px; color: #C8CCE8; margin-left: 6px; }
+.dr-shop-slots { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+.dr-slot-chip {
+  padding: 4px 10px; border: 2px solid #8A8FB5; border-radius: 6px;
+  background: var(--dr-navy); color: #fff; font-size: 13px; cursor: pointer;
+}
+.dr-slot-chip.is-empty { color: #8A8FB5; }
+.dr-slot-chip.is-selected { border-color: var(--dr-yellow); color: var(--dr-yellow); }
+.dr-slot-pos { margin-right: 6px; color: var(--dr-mint); }
+#dr-shop-close { margin-top: 14px; }
+
+/* --- 結果・名前入力 --- */
+.dr-gameover { font-size: 30px; color: var(--dr-pink); letter-spacing: 0.1em; text-shadow: 3px 3px 0 var(--dr-navy); }
+.dr-res-score, .dr-entry-score { font-size: 18px; margin-top: 8px; }
+.dr-res-score b, .dr-entry-score b { font-size: 26px; color: var(--dr-yellow); font-weight: 400; }
+.dr-res-detail { font-size: 13px; line-height: 1.7; color: #C8CCE8; margin-top: 6px; }
+.dr-res-rankin { color: var(--dr-yellow); font-size: 18px; margin-top: 6px; }
+
+.dr-entry-letters { display: flex; justify-content: center; gap: 12px; margin: 12px 0 6px; }
+.dr-letter { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+.dr-letter-char {
+  width: 54px; height: 60px; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; border: 3px solid #4B5596; border-radius: 6px; background: var(--dr-navy);
+}
+.dr-letter.is-current .dr-letter-char { border-color: var(--dr-yellow); color: var(--dr-yellow); }
+.dr-letter-arrow {
+  width: 54px; height: 32px; border: 2px solid #fff; border-radius: 6px;
+  background: transparent; color: #fff; font-size: 14px; cursor: pointer; touch-action: manipulation;
+}
+.dr-letter-arrow:active { background: rgba(255, 255, 255, 0.2); }
+.dr-entry-help { font-size: 11px; color: #C8CCE8; }
+.dr-entry-msg { font-size: 12px; color: var(--dr-yellow); min-height: 1.4em; margin-top: 4px; }
+.dr-heart-num { font-size: max(11px, 2.6cqw); color: #fff; margin-left: 2px; }
