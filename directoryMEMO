@@ -12,7 +12,15 @@
   ├─ minigame/index.html        ← ミニゲーム（assets/minigame.css・minigame.js）
   │    ├─ assets/dinovoice-data.js ← ★拡張予定: 恐竜ボイスゲームの中身（恐竜・口の形・セリフ・合格ライン）。恐竜は DV_DINOS に1件足すだけ
   │    ├─ assets/dinovoice.js / dinovoice.css ← 恐竜ボイスゲームの動き・見た目
-  │    └─ dinovoice/sounds/       ← ずんだもん音声素材（置き方は README.txt。なくても仮の音で動く）
+  │    ├─ dinovoice/sounds/       ← ずんだもん音声素材（置き方は README.txt。なくても仮の音で動く）
+  │    ├─ assets/dinorun-config.js  ← ★拡張予定: きょうりゅうランの調整値（スピード・ショップの間隔・スコア）・ランキングの接続先・音
+  │    ├─ assets/dinorun-items.js   ← ★拡張予定: ショップのアイテムとスキル（DR_ITEMS に1件足せばショップに並ぶ）
+  │    ├─ assets/dinorun-worlds.js  ← ★拡張予定: ワールド（背景・地面）と障害物・コイン・ショップアイコンの絵
+  │    ├─ assets/dinorun-sprites.js ← ★拡張予定: 自機（恐竜）の絵。いまは仮のドット絵。PNG のスプライトシートに差し替えられる
+  │    ├─ assets/dinorun-ranking.js ← ランキングの読み書き（Google Apps Script とのやりとり）
+  │    ├─ assets/dinorun.js / dinorun.css ← きょうりゅうランの動き・見た目（minigame/?game=dinorun で直接開ける）
+  │    └─ dinorun/                ← （まだない）本番の絵・音を置く場所。sprites/・worlds/・sounds/ を作って入れる
+  ├─ tools/dinorun-ranking/     ← きょうりゅうランのランキング用 Google Apps Script（Code.gs）と設定手順（README.md）。サイトには公開しない
   ├─ about/index.html           ← このサイトについて（プロフィールカード＋クレジット。カードを投げて遊べる）
   │    ├─ assets/about-data.js   ← ★拡張予定: プロフィール・クレジット・動きの数値（クレジットはここに1件足すだけ）
   │    ├─ assets/about.js / about.css ← カードの物理演算（Matter.js）・見た目

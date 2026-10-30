@@ -15,6 +15,7 @@ function mgShowSelect() {
 function mgStartGame(gameId) {
   mgShootingStop();
   if (typeof dvStop === 'function') dvStop();
+  if (typeof dinorunStop === 'function') dinorunStop();
   document.querySelectorAll('#minigame-inner .mg-screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('mg-' + gameId);
   if (target) target.classList.add('active');
@@ -25,13 +26,23 @@ function mgStartGame(gameId) {
    */
   if (gameId === 'janken') mgJankenReset();
   if (gameId === 'dinovoice') dvInit();
+  if (gameId === 'dinorun') dinorunInit();
+  window.scrollTo(0, 0);
 }
 
 function mgBackToSelect() {
   mgShootingStop();
   if (typeof dvStop === 'function') dvStop();   // 恐竜ボイスゲームの音を止める
+  if (typeof dinorunStop === 'function') dinorunStop();   // きょうりゅうランのループ・BGMを止める
   mgShowSelect();
 }
+
+/* URL の ?game=ゲームID で、そのゲームを最初から開く（例: minigame/?game=dinorun）
+   ランキング1位の Discord 通知のリンクなどで使う。ゲームID は mgStartGame() と同じ */
+document.addEventListener('DOMContentLoaded', () => {
+  const id = new URLSearchParams(location.search).get('game');
+  if (id && /^[a-z0-9_-]+$/i.test(id) && document.getElementById('mg-' + id)) mgStartGame(id);
+});
 
 /* --- まとあてシューティング --- */
 const MG_SH_DURATION_SEC = 30;

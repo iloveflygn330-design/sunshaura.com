@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="assets/minigame.css">
   <!-- 恐竜ボイスゲームの見た目 -->
   <link rel="stylesheet" href="assets/dinovoice.css">
+  <!-- きょうりゅうランの見た目と、ゲーム内のドット文字（DotGothic16） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/dinorun.css">
 </head>
 <!--
   ミニゲームページ（minigame/index.html）
@@ -44,6 +47,11 @@
             1. 下に <button class="mg-game-card" onclick="mgStartGame('ゲームID')"> を追記
             2. 対応する <div class="mg-screen" id="mg-ゲームID"> をこのページ内に追記
             3. mgStartGame() の switch にゲームIDを追記（初期化処理が必要な場合）
+
+          ★拡張予定: ゲームを一覧に出さずに公開する（テスト中など）
+            ボタンに hidden を付けると一覧に出なくなる。ゲーム自体は
+            minigame/?game=ゲームID の直リンクでだけ開ける。
+            一覧に出すときは hidden を消すだけ。
         -->
         <div id="mg-game-list">
           <button class="mg-game-card" onclick="mgStartGame('shooting')">
@@ -57,6 +65,11 @@
           <button class="mg-game-card" onclick="mgStartGame('dinovoice')">
             <span class="mg-game-icon">🦕</span>
             <span class="mg-game-name">きょうりゅうボイス</span>
+          </button>
+          <!-- きょうりゅうラン：テスト中のため一覧には出さない（直リンク minigame/?game=dinorun でだけ開ける） -->
+          <button class="mg-game-card" onclick="mgStartGame('dinorun')" hidden>
+            <span class="mg-game-icon">🦖</span>
+            <span class="mg-game-name">きょうりゅうラン</span>
           </button>
         </div>
       </div>
@@ -190,6 +203,162 @@
         </div>
       </div>
 
+      <!--
+        きょうりゅうラン（Chrome の恐竜ゲーム風＋ショップで強化＋ランキング）
+          動きは assets/dinorun.js、見た目は assets/dinorun.css。
+          中身を足すファイル（★拡張予定）:
+            アイテム・スキル … assets/dinorun-items.js
+            ワールド・障害物 … assets/dinorun-worlds.js
+            恐竜の絵         … assets/dinorun-sprites.js
+            スピード・音・ランキングの接続先 … assets/dinorun-config.js
+          ランキングのサーバー（Google Apps Script）: tools/dinorun-ranking/
+          ※ 画面の表示・非表示は、data-show に書いたモード（dinorun.js の dr.mode）のときだけ出る仕組み
+      -->
+      <div class="mg-screen" id="mg-dinorun">
+        <div class="mg-game-header">
+          <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+        </div>
+
+        <div id="dr-root" data-mode="title">
+          <!-- ゲーム画面 -->
+          <div id="dr-stage">
+            <canvas id="dr-canvas" width="384" height="216"></canvas>
+
+            <!-- 画面の上の表示（ライフ・スコア・コイン・距離） -->
+            <div id="dr-hud" data-show="play ready dying pause shop">
+              <div id="dr-hearts" aria-label="ライフ"></div>
+              <div class="dr-hud-right">
+                <span class="dr-hud-item">SCORE <b id="dr-score">0</b></span>
+                <span class="dr-hud-item"><i class="dr-coin-icon"></i><b id="dr-coins">0</b></span>
+                <span class="dr-hud-item"><b id="dr-dist">0m</b></span>
+                <button type="button" class="dr-pause-btn" data-dr="pause" aria-label="一時停止">II</button>
+              </div>
+            </div>
+            <div id="dr-banner" aria-live="polite"></div>
+            <div id="dr-count" hidden></div>
+          </div>
+
+          <!-- スマホ用：ヘッダーを隠して画面を広く使う -->
+          <button type="button" id="dr-header-toggle">▲ ヘッダーを隠す</button>
+
+          <!-- 操作ボタン（中身は dinorun.js の drBuildPads() が作る。スマホ横持ちのときは sub も出る） -->
+          <div id="dr-pads">
+            <div class="dr-pad" data-side="main"></div>
+            <div class="dr-pad" data-side="sub"></div>
+          </div>
+          <p class="dr-keys-help">キーボード：Space / ↑ ジャンプ　↓ しゃがむ　A・S・D スキル　P 一時停止</p>
+
+          <!-- ===== ここから下は、画面に重ねて出すメニュー ===== -->
+
+          <!-- タイトル（数秒ごとに「今月のランキング」と切り替わる） -->
+          <div class="dr-overlay dr-overlay-title" id="dr-title" data-show="title">
+            <div class="dr-title-main">
+              <p class="dr-logo">きょうりゅう<span>ラン</span></p>
+              <p class="dr-blink">PRESS SPACE / スタートを押してね</p>
+            </div>
+            <div class="dr-title-rank">
+              <p class="dr-panel-title">今月のランキング</p>
+              <ol class="dr-rank-list dr-rank-mini" id="dr-title-ranking"></ol>
+            </div>
+            <div class="dr-menu-btns">
+              <button type="button" class="dr-menu-btn is-main" data-dr="start">スタート</button>
+              <button type="button" class="dr-menu-btn" data-dr="ranking">ランキング</button>
+              <button type="button" class="dr-menu-btn" data-dr="howto">あそびかた</button>
+            </div>
+          </div>
+
+          <!-- あそびかた -->
+          <div class="dr-overlay" id="dr-howto" data-show="howto">
+            <div class="dr-panel">
+              <p class="dr-panel-title">あそびかた</p>
+              <ul class="dr-howto-list">
+                <li>恐竜は自動で走るよ。障害物を<b>ジャンプ</b>・<b>しゃがみ</b>でよけよう。</li>
+                <li>コインを集めて、空に浮かぶ<b>SHOP</b>にジャンプで触ると、お店で強化を買えるよ。寄らずに通り過ぎると、スキップボーナスでコインがもらえる。</li>
+                <li>お店で<b>居合切り</b>や<b>スピンアタック</b>を覚えたら、スキルボタン①②③で使えるよ。ボタンのバーがたまると、また使える。</li>
+                <li>ハートが0になったらゲームオーバー。ぶつかったあとは少しのあいだ無敵（点滅が速くなったら、もうすぐ終わり）。</li>
+                <li>スコア ＝ 距離 ＋ コイン ＋ こわした障害物。上位に入ったら名前（英字3文字）を入れてね！</li>
+              </ul>
+              <p class="dr-howto-keys">PC：Space / ↑ ジャンプ　↓ しゃがむ（空中で押すと急降下）　A・S・D スキル　P / Esc 一時停止</p>
+              <button type="button" class="dr-menu-btn is-main" data-dr="title">もどる</button>
+            </div>
+          </div>
+
+          <!-- 一時停止 -->
+          <div class="dr-overlay" id="dr-pause" data-show="pause">
+            <div class="dr-panel dr-panel-small">
+              <p class="dr-panel-title">PAUSE</p>
+              <div class="dr-menu-btns">
+                <button type="button" class="dr-menu-btn is-main" data-dr="resume">つづける</button>
+                <button type="button" class="dr-menu-btn" data-dr="quit">やめる</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ショップ（中身は dinorun.js の drRenderShop() が作る） -->
+          <div class="dr-overlay" id="dr-shop" data-show="shop">
+            <div class="dr-panel dr-panel-wide">
+              <div class="dr-shop-head">
+                <p class="dr-panel-title">SHOP</p>
+                <p class="dr-shop-wallet"><i class="dr-coin-icon"></i><b id="dr-shop-wallet">0</b></p>
+              </div>
+              <div class="dr-shop-cards" id="dr-shop-cards"></div>
+
+              <!-- 覚えたスキルをどのボタンに入れるか（スキルを買ったときだけ出る） -->
+              <div class="dr-shop-pick" id="dr-shop-pick" hidden>
+                <p><b id="dr-shop-pick-name"></b> をどのボタンに入れる？</p>
+                <div class="dr-shop-pick-btns" id="dr-shop-pick-btns"></div>
+              </div>
+
+              <div class="dr-shop-slots-wrap">
+                <p class="dr-shop-sub">スキルボタン <small id="dr-shop-slots-help"></small></p>
+                <div class="dr-shop-slots" id="dr-shop-slots"></div>
+              </div>
+              <button type="button" class="dr-menu-btn is-main" id="dr-shop-close" data-dr="shop-close">ゲームにもどる <span class="dr-key">Enter</span></button>
+            </div>
+          </div>
+
+          <!-- 結果 -->
+          <div class="dr-overlay" id="dr-over" data-show="over">
+            <div class="dr-panel dr-panel-small">
+              <p class="dr-gameover">GAME OVER</p>
+              <p class="dr-res-score">SCORE <b id="dr-res-score">0</b></p>
+              <p class="dr-res-detail" id="dr-res-detail"></p>
+              <p class="dr-res-rankin dr-blink" id="dr-res-rankin" hidden>ランクイン！</p>
+              <button type="button" class="dr-menu-btn is-main" data-dr="over-next" id="dr-res-next">つぎへ</button>
+            </div>
+          </div>
+
+          <!-- 名前入力（中身の文字は dinorun.js の drBuildEntry() が作る） -->
+          <div class="dr-overlay" id="dr-entry" data-show="entry">
+            <div class="dr-panel dr-panel-small">
+              <p class="dr-panel-title">NAME ENTRY</p>
+              <p class="dr-entry-score">SCORE <b id="dr-entry-score">0</b></p>
+              <div class="dr-entry-letters" id="dr-entry-letters"></div>
+              <p class="dr-entry-help">▲▼で文字をえらんでね（キーボードは ↑↓←→ と Enter、文字キーでも入力できるよ）</p>
+              <p class="dr-entry-msg" id="dr-entry-msg" aria-live="polite"></p>
+              <div class="dr-menu-btns">
+                <button type="button" class="dr-menu-btn is-main" data-dr="entry-ok">けってい</button>
+                <button type="button" class="dr-menu-btn" data-dr="entry-skip">登録しない</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ランキング -->
+          <div class="dr-overlay" id="dr-ranking" data-show="ranking">
+            <div class="dr-panel">
+              <p class="dr-panel-title">RANKING</p>
+              <div class="dr-tabs">
+                <button type="button" class="dr-tab" data-dr="tab-month">今月</button>
+                <button type="button" class="dr-tab" data-dr="tab-all">全期間</button>
+              </div>
+              <ol class="dr-rank-list" id="dr-ranking-list"></ol>
+              <p class="dr-ranking-note"></p>
+              <button type="button" class="dr-menu-btn is-main" data-dr="title">タイトルへ</button>
+            </div>
+          </div>
+        </div><!-- /#dr-root -->
+      </div>
+
     </div><!-- /#minigame-inner -->
   </main>
 
@@ -205,5 +374,12 @@
   <!-- 恐竜ボイスゲーム（データ → 動きの順で読み込む） -->
   <script src="assets/dinovoice-data.js"></script>
   <script src="assets/dinovoice.js"></script>
+  <!-- きょうりゅうラン（設定 → アイテム → ワールド → 恐竜の絵 → ランキング → 本体の順で読み込む） -->
+  <script src="assets/dinorun-config.js"></script>
+  <script src="assets/dinorun-items.js"></script>
+  <script src="assets/dinorun-worlds.js"></script>
+  <script src="assets/dinorun-sprites.js"></script>
+  <script src="assets/dinorun-ranking.js"></script>
+  <script src="assets/dinorun.js"></script>
 </body>
 </html>
