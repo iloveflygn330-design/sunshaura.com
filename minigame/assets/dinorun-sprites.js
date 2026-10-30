@@ -8,7 +8,7 @@
      2. 1枚の PNG に、動きごとに「行」、コマを「横」に並べる（スプライトシート）
           1行目: 走る（4コマ）
           2行目: 跳ぶ（2コマ。上がる → 落ちる）
-          3行目: しゃがむ（2コマ）
+          3行目: スライディング（2コマ）
           4行目: 切る（3コマ）
           5行目: スピン（4コマ）
           6行目: やられる（2コマ）
@@ -30,7 +30,7 @@ const DR_PLAYER = {
   anims: {
     run:   { row: 0, frames: 4, fps: 12 },
     jump:  { row: 1, frames: 2, fps: 0 },    // fps: 0 … 上がっているとき1コマ目、落ちているとき2コマ目
-    duck:  { row: 2, frames: 2, fps: 10 },
+    duck:  { row: 2, frames: 2, fps: 10 },   // スライディング
     slash: { row: 3, frames: 3, fps: 15 },
     spin:  { row: 4, frames: 4, fps: 20 },
     hurt:  { row: 5, frames: 2, fps: 6 },

@@ -81,6 +81,29 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   pointer-events: none;
 }
 .dr-hud-right { display: flex; align-items: center; gap: 2.4cqw; }
+.dr-hud-left { display: flex; flex-direction: column; gap: 0.8cqw; }
+
+/* 効果時間のバー（スピンアタックなど） */
+#dr-effects { display: flex; flex-direction: column; gap: 0.6cqw; }
+.dr-effect { display: flex; align-items: center; gap: 1cqw; font-size: max(9px, 2cqw); }
+.dr-effect i {
+  display: block; width: max(50px, 14cqw); height: max(5px, 1.3cqw);
+  border: 1px solid #fff; border-radius: 2px; background: rgba(18, 22, 58, 0.6); overflow: hidden;
+}
+.dr-effect b { display: block; height: 100%; }
+.dr-sound-btn { font-size: max(10px, 2cqw); }
+.dr-title-sound { position: absolute; top: 8px; right: 8px; z-index: 2; width: 36px; height: 30px; font-size: 16px; }
+
+/* ショップの「リロール」ボタン */
+.dr-reroll-btn {
+  margin-left: auto; margin-right: 12px; padding: 4px 10px;
+  border: 2px solid var(--dr-mint); border-radius: 6px;
+  background: transparent; color: var(--dr-mint); font-size: 14px; cursor: pointer;
+}
+.dr-reroll-btn small { font-size: 11px; margin-left: 4px; }
+.dr-reroll-btn b { font-weight: 400; }
+.dr-reroll-btn:disabled { opacity: 0.4; cursor: default; }
+#dr-over .dr-menu-btns { margin-top: 10px; }
 .dr-hud-item b { font-weight: 400; }
 .dr-pause-btn {
   pointer-events: auto;
@@ -173,6 +196,8 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-jump-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dr-navy); }
 .dr-jump-dot.is-used { opacity: 0.25; }
 .dr-duck-btn { height: 46px; background: #A9F4FA; }
+/* スライディング中は、終わるまで押せないことがわかるように灰色にする */
+.dr-duck-btn.is-held { background: #A2A8B4; border-color: #6E7484; color: #fff; }
 
 .dr-keys-help { text-align: center; font-size: 12px; color: var(--color-placeholder); margin-top: 8px; }
 
@@ -432,6 +457,13 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   .dr-slot-chip { padding: 2px 8px; font-size: 12px; }
   #dr-shop-close { margin-top: 6px; padding: 5px 16px; font-size: 14px; }
   .dr-panel-title { font-size: 16px; }
+  /* 結果画面：内訳を2列にして、ボタンを小さく */
+  .dr-gameover { font-size: 22px; }
+  .dr-res-score { margin-top: 2px; }
+  .dr-res-detail { columns: 2; font-size: 11px; line-height: 1.5; margin-top: 2px; }
+  .dr-res-rankin { font-size: 14px; margin-top: 2px; }
+  #dr-over .dr-menu-btns { margin-top: 6px; }
+  #dr-over .dr-menu-btn { padding: 6px 14px; font-size: 14px; }
 }
 
 /* スキルをどのボタンに入れるか選んでいる間は、ボタンの入れ替え欄と「ゲームにもどる」を隠す（場所をあけるため） */

@@ -59,6 +59,8 @@ const DR_PALETTE = {
                                 //   6 前後 … ジャンプでよける高さ
                                 //   18 前後 … しゃがみでくぐる高さ（しゃがんだ自機の高さは 13）
                                 //   38 前後 … 立っていれば下を通れる（ジャンプするとぶつかる）
+                                // 天井から下がっていて、スライディングでしかくぐれないものは、
+                                //   h を DR_CONFIG.groundY - 15（= 169）にして fly: [15] にする（下の screen・banner を参照）
        hit: [2, 2, 10, 28],     // （任意）当たり判定 [左, 上, 幅, 高さ]。書かなければ、絵の外側1ドットを除いた範囲
        breakable: true,         // 居合切り・スピンアタックで壊せるか（false にすると壊せない）
        minMeter: 0,             // （任意）この距離（m）より後でだけ出る
@@ -67,6 +69,17 @@ const DR_PALETTE = {
      }
    追加したら、出したいワールドの obstacles に id を書く。
    ----------------------------------------------------- */
+/* 天井から下がっている障害物の絵を作る（ひも＋下の板）。
+     w … 幅、panel … 下の板の絵（行の配列。幅は w に合わせる）、rope … ひもの色の文字
+   ひもの部分は自動でのばすので、板の絵だけ描けばよい */
+function drHangingPixels(w, panel, rope) {
+  const h = 169;                         // DR_CONFIG.groundY(184) - 15。地面から15ドット上まで下がる
+  const ropeRow = '.'.repeat(Math.floor(w / 2) - 1) + rope + rope + '.'.repeat(w - Math.floor(w / 2) - 1);
+  const rows = [];
+  for (let i = 0; i < h - panel.length; i++) rows.push(ropeRow);
+  return rows.concat(panel);
+}
+
 const DR_OBSTACLES = [
   /* --- 地面に置くもの --- */
   {
@@ -291,6 +304,46 @@ const DR_OBSTACLES = [
       '..........pp..........',
     ] },
   },
+  /* --- 天井から下がっているもの（スライディングでしかくぐれない。壊せない） --- */
+  {
+    id: 'screen', name: 'ビデオプレイヤーの画面', w: 34, h: 169, fly: [15], breakable: false, minMeter: 120, weight: 0.9,
+    hit: [3, 0, 28, 169],
+    sprite: { pixels: drHangingPixels(34, [
+      'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK',
+      'KbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbK',
+      'KbBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbK',
+      'KbBLLBBBBBBBBBBBBBBBBBBBBBBBBBBBbK',
+      'KbBLBBBBBBBBBBBWWBBBBBBBBBBBBBBBbK',
+      'KbBBBBBBBBBBBBBWWWWBBBBBBBBBBBBBbK',
+      'KbBBBBBBBBBBBBBWWWWWWBBBBBBBBBBBbK',
+      'KbBBBBBBBBBBBBBWWWWBBBBBBBBBBBBBbK',
+      'KbBBBBBBBBBBBBBWWBBBBBBBBBBBBBBBbK',
+      'KbBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbK',
+      'KbBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbK',
+      'KbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbK',
+      'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK',
+      'KSSRRRRRRRRRRRRRRSSSSSSSSSSSSSSSSK',
+      'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK',
+    ], 'S') },
+  },
+  {
+    id: 'banner', name: 'ワールドの垂れ幕', w: 22, h: 169, fly: [15], breakable: false, minMeter: 300, weight: 0.8,
+    hit: [2, 0, 18, 169],
+    sprite: { pixels: drHangingPixels(22, [
+      'ssssssssssssssssssssss',
+      '.PPPPPPPPPPPPPPPPPPPP.',
+      '.PppppppppppppppppppP.',
+      '.PpWWWWpWWWWpWWWWWppP.',
+      '.PpWppppWppWppppWpppP.',
+      '.PpWWWppWWWWpppWppppP.',
+      '.PppppppppppppppppppP.',
+      '.PpCCCCCCCCCCCCCCCCpP.',
+      '.PppppppppppppppppppP.',
+      '..PppppppppppppppppP..',
+      '...PpppppppppppppPP...',
+      '....PPPPPPPPPPPPPP....',
+    ], 'S') },
+  },
   {
     id: 'nameplate', name: 'ネームプレート', w: 24, h: 8, fly: [8, 20, 40], breakable: true, minMeter: 300,
     sprite: { pixels: [
@@ -334,7 +387,7 @@ const DR_WORLDS = [
     far: { style: 'hills', color: '#8FCBEF', color2: '#B9E1F7' },
     ground: { style: 'grid', color: '#7BC96F', line: '#5DAE53' },
     bgImage: '', groundImage: '',
-    obstacles: ['pedestal', 'collider', 'penlight', 'drone', 'menu'],
+    obstacles: ['pedestal', 'collider', 'penlight', 'drone', 'menu', 'screen'],
     bgm: '',
   },
   {
@@ -343,7 +396,7 @@ const DR_WORLDS = [
     far: { style: 'pillars', color: '#BFB4E8', color2: '#E3DCFA' },
     ground: { style: 'tile', color: '#C9C2E6', line: '#A79ED2' },
     bgImage: '', groundImage: '',
-    obstacles: ['mirror', 'collider', 'pedestal', 'drone', 'menu'],
+    obstacles: ['mirror', 'collider', 'pedestal', 'drone', 'menu', 'screen', 'banner'],
     bgm: '',
   },
   {
@@ -352,7 +405,7 @@ const DR_WORLDS = [
     far: { style: 'city', color: '#1E2453', color2: '#FFD84A' },
     ground: { style: 'stripe', color: '#2C3166', line: '#3B4280' },
     bgImage: '', groundImage: '',
-    obstacles: ['penlight', 'portal', 'pedestal', 'drone', 'nameplate'],
+    obstacles: ['penlight', 'portal', 'pedestal', 'drone', 'nameplate', 'banner', 'screen'],
     bgm: '',
   },
   {
@@ -361,7 +414,7 @@ const DR_WORLDS = [
     far: { style: 'stars', color: '#FFFFFF', color2: '#FFE9A8' },
     ground: { style: 'grid', color: '#4B2380', line: '#7FFFD4' },
     bgImage: '', groundImage: '',
-    obstacles: ['portal', 'mirror', 'collider', 'menu', 'nameplate', 'drone'],
+    obstacles: ['portal', 'mirror', 'collider', 'menu', 'nameplate', 'drone', 'screen', 'banner'],
     bgm: '',
   },
 ];
