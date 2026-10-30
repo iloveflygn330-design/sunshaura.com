@@ -33,7 +33,9 @@ const DR_CONFIG = {
   /* --- ジャンプ・スライディング --- */
   gravity: 1500,           // 重力（大きいほど早く落ちる）
   jumpVelocity: 460,       // ジャンプの強さ
-  slideTime: 0.55,         // スライディングの長さ（秒）。すべり終わるまで次は出せない（ジャンプで途中でやめられる）
+  slideTime: 0.55,         // スライディングの長さ（秒）。ジャンプで途中でやめられる
+  slideLock: false,        // true … すべり終わるまで次のスライディングを出せない（もとの動き）
+                           // false … すべっている途中でも押せる（押すと、そこからまた slideTime 秒すべる）
   slideBuffer: 0.15,       // 空中で押したとき、この秒数以内に着地したら着地と同時にすべる
   // バタ足ジャンプ（パッシブ。浮いていられる秒数は dinorun-items.js の flutter アイテムで決める）
   //   ジャンプボタンを押しっぱなしにすると、ジャンプのいちばん高いところでバタ足して、その高さのまま浮く
@@ -47,8 +49,8 @@ const DR_CONFIG = {
   pitDepth: 26,            // この深さまで落ちたらダメージ（ドット）
   pitStepUp: 6,            // 向こう側の壁に着いたとき、この深さまでなら（ほとんど落ちていないので）ダメージなしで上がれる
   pitBounce: 520,          // ダメージのあと、穴から飛び出す強さ
-  pitTimeMin: 0.13, pitTimeMax: 0.2,   // 穴の幅（そのときの速さで何秒ぶんか。速くなるほど広い穴になる）
-  pitWidthMin: 24, pitWidthMax: 90,    // 穴の幅の下限・上限（ドット）
+  pitTimeMin: 0.2, pitTimeMax: 0.3,    // 穴の幅（そのときの速さで何秒ぶんか。速くなるほど広い穴になる）
+  pitWidthMin: 36, pitWidthMax: 130,   // 穴の幅の下限・上限（ドット）
 
   /* --- 急降下コンボ（急降下のすぐあと＝足元が光っている間に技を出すと強くなる） ---
        居合切り   … 前へ「ぎゅんっ」と出ながら切る（ダッシュ切り。天井から下がっているものも切れる）
@@ -85,10 +87,11 @@ const DR_CONFIG = {
   /* --- コイン --- */
   coinGapMin: 1.1, coinGapMax: 2.4,   // コインの列が出る間隔（秒）
   coinRowMin: 3,   coinRowMax: 6,     // 1列のコインの数
+  // ※ 山なりのコインは、ジャンプしたときに通る道すじに並べている（速くなるほど横に広がる）
   slashCoinDrop: 2,                   // 居合切りで切った障害物から出るコインの数
 
   /* --- ライフ・無敵 --- */
-  startLives: 1,           // 最初のライフ
+  startLives: 2,           // 最初のライフ（＝最初の最大ライフ。ライフ+1 で最大ライフも増える）
   invincibleTime: 3.0,     // ぶつかったあとの無敵時間（秒）。アイテムで延びる
   invincibleWarnTime: 1.0, // 無敵が切れる何秒前から、点滅を速くして知らせるか
 
@@ -147,6 +150,9 @@ const DR_CONFIG = {
   rankingSize: 10,         // 何位まで表示するか（サーバー側の RANK_SIZE と合わせる）
   nameLetters: 3,          // 名前の文字数
   nameChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',  // 名前に使える文字（サーバー側の NAME_PATTERN と合わせる）
+
+  /* --- チュートリアル（走り始めの DR_TUTORIAL.endMeter m。中身は dinorun-worlds.js の DR_TUTORIAL） --- */
+  tutorial: true,          // false にすると、チュートリアルなしで最初からふつうに障害物が出る
 
   /* --- そのほか --- */
   readyCountSec: 3,        // ゲーム開始のときのカウントダウン（秒）
