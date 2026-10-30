@@ -362,6 +362,13 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-shop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .dr-shop-head .dr-panel-title { margin: 0; }
 .dr-shop-wallet { font-size: 20px; color: var(--dr-yellow); }
+/* 「初回だけ割引！」（最初のショップだけ） */
+.dr-shop-sale {
+  margin: 0 auto 0 10px; padding: 2px 10px; border-radius: 999px;
+  background: #FF5A7A; color: #fff; font-size: 14px; white-space: nowrap;
+}
+.dr-shop-sale[hidden] { display: none; }
+.dr-card-buy s { opacity: 0.6; font-size: 0.8em; margin-right: 2px; }
 .dr-shop-wallet b { font-weight: 400; }
 .dr-shop-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
 .dr-shop-empty { grid-column: 1 / -1; padding: 16px; }

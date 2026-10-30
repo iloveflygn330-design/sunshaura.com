@@ -510,10 +510,12 @@ const DR_BONUS_WORLD = {
      {
        at: 8,                     // 何 m で出すか（画面の右から流れてくるので、自機に届くのは約 30m 先）
        obstacle: 'pedestal',      // （任意）出す障害物（DR_OBSTACLES の id）。天井から下がるもの・穴も使える
+       lift: 23,                  // （任意）空を飛ぶ障害物の、地面からの高さ（書かなければ fly の最初の値）
        coins: 'arc',              // （任意）コインの並べ方
                                   //   'arc'    … 障害物の上に山なり（ちょうどいいジャンプで全部取れる）
                                   //   'ground' … 障害物の下の地面に1列（スライディングで取れる）
                                   //   'row'    … 地面に3枚（ショップの手前など）
+                                  //   'under'  … 障害物の下を通る、走っている高さの1列（立ったまま走れば取れる）
        shop: true,                // （任意）ショップを出す
        title: 'ゲームの説明',      // （任意）説明のまどの見出し（書かなければ「ゲームの説明」）
        text: '...',               // 説明の文。\n で改行。{grazeCoin} {slideCoin} は、もらえるコインの数に置きかわる
@@ -524,8 +526,10 @@ const DR_TUTORIAL = {
   steps: [
     { at: 8, obstacle: 'pedestal', coins: 'arc',
       text: 'ジャンプで障害物をよけよう！\n\nPC: ジャンプボタン or SPACEキー\nSP: ジャンプボタン' },
-    { at: 58, obstacle: 'collider', coins: 'arc',
-      text: '障害物をスレスレでよけると、\nボーナスコインがもらえるよ！\n\n+{grazeCoin}コイン' },
+    // スレスレ：ドローンを、立っている自機の頭のすぐ上（すき間 3 ドット）に浮かべる。
+    // コインの通りに（ジャンプせずに）走ると、ちょうどスレスレでくぐれてボーナスがもらえる
+    { at: 58, obstacle: 'drone', lift: 23, coins: 'under',
+      text: '障害物をスレスレでよけると、\nボーナスコインがもらえるよ！\nコインの通りに進んでみよう！\n\n+{grazeCoin}コイン' },
     { at: 108, obstacle: 'screen', coins: 'ground',
       text: '中には、スライディングでよける必要があるオブジェクトがあるよ！\n\nスライディングもぎりぎりでよけると、ボーナスコインがもらえるよ！\n+{slideCoin}コイン\n\nPC: スライディングボタン or ↓キー\nSP: スライディングボタン' },
     { at: 163, obstacle: 'pit', coins: 'arc',

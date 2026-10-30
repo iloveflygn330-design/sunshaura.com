@@ -315,6 +315,8 @@
             <div class="dr-panel dr-panel-wide">
               <div class="dr-shop-head">
                 <p class="dr-panel-title">SHOP</p>
+                <!-- 最初のショップだけ出る（割引の倍率は dinorun-config.js の firstShopDiscount） -->
+                <p class="dr-shop-sale dr-blink" id="dr-shop-sale" hidden>初回だけ割引！</p>
                 <!-- 品ぞろえの入れ替え（パッシブ「リロール」を持っているときだけ出る） -->
                 <button type="button" class="dr-reroll-btn" id="dr-shop-reroll" data-dr="reroll" hidden>🔄 リロール <small>のこり <b>0</b></small></button>
                 <p class="dr-shop-wallet"><i class="dr-coin-icon"></i><b id="dr-shop-wallet">0</b></p>
