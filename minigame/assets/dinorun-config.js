@@ -36,11 +36,21 @@ const DR_CONFIG = {
   slideTime: 0.55,         // スライディングの長さ（秒）。すべり終わるまで次は出せない（ジャンプで途中でやめられる）
   slideBuffer: 0.15,       // 空中で押したとき、この秒数以内に着地したら着地と同時にすべる
 
-  /* --- 急降下 → ダッシュ（急降下のすぐあとに居合切り・スピンを使うと、前へ「ぎゅんっ」と出る） --- */
-  diveComboTime: 0.8,      // 急降下を使ってから、ダッシュにできる時間（秒）
-  dashDistance: 56,        // 前に出る距離（ドット）
+  /* --- 急降下コンボ（急降下のすぐあと＝足元が光っている間に技を出すと強くなる） ---
+       居合切り   … 前へ「ぎゅんっ」と出ながら切る（ダッシュ切り。天井から下がっているものも切れる）
+       スピン     … 回転しながら本当に前へ spinRushMeters m 進む（画面が一気に流れる。距離にも入る）
+       スライディング … 勢いで本当に前へ slideRushMeters m 進む。そのぶん、すべる時間ものびる
+       火の玉     … 青い火の玉になる（dinorun-items.js の DR_SKILLS.fire） */
+  diveComboTime: 0.8,      // 急降下を使ってから、コンボにできる時間（秒）
+  dashDistance: 56,        // ダッシュ切りで前に出る距離（ドット）
   dashTime: 0.16,          // 前に出るのにかかる時間（秒）
   dashReturnSpeed: 36,     // 元の位置に戻る速さ（ドット/秒）
+  spinRushMeters: 50,      // スピンで前へ進む距離（m）
+  spinRushTime: 0.4,       // それにかける時間（秒）。スピンの長さ（最初 0.8 秒）より短くすること（進んだ先でぶつからないように）
+  slideRushMeters: 8,      // スライディングで前へ進む距離（m）
+  slideRushTime: 0.3,      // それにかける時間（秒）。すべる時間もこのぶんのびる
+  // ※ ランキングのサーバー（tools/dinorun-ranking/Code.gs）の MAX_METERS_PER_SEC は、この「前へ進む」ぶんの余裕を入れてある。
+  //    進む距離を大きく増やしたら、Code.gs のほうも増やす
 
   /* --- 障害物の出方 ---
        次の障害物までの間隔は「秒」で決めている（速くなっても飛べる間隔を保つため）。
@@ -53,6 +63,7 @@ const DR_CONFIG = {
   /* --- コイン --- */
   coinGapMin: 1.1, coinGapMax: 2.4,   // コインの列が出る間隔（秒）
   coinRowMin: 3,   coinRowMax: 6,     // 1列のコインの数
+  slashCoinDrop: 2,                   // 居合切りで切った障害物から出るコインの数
 
   /* --- ライフ・無敵 --- */
   startLives: 1,           // 最初のライフ
@@ -133,7 +144,8 @@ const DR_CONFIG = {
    音の id とタイミング（dinorun.js が drSound('id') で呼ぶ）:
      jump … ジャンプ / slide … スライディング / coin … コインを拾った / graze … かすりボーナス
      slidebonus … スライディングボーナス / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
-     dive … 急降下 / dash … ダッシュ / vacuum … コイン吸引 / kill … 障害物を壊した
+     dive … 急降下 / dash … ダッシュ・前へ進む / vacuum … コイン吸引 / kill … 障害物を壊した
+     fire … 赤い火の玉 / bluefire … 青い火の玉
      shop … ショップに入った / buy … アイテムを買った / reroll … 品ぞろえの入れ替え / skip … ショップをスキップした
      world … ワールド移動 / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
 
@@ -153,6 +165,8 @@ const DR_SOUNDS = {
   spin:       { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 300, to: 900, dur: 0.2 } },
   dive:       { src: '', volume: 0.5, tone: { wave: 'square', freq: 900, to: 150, dur: 0.12 } },
   dash:       { src: '', volume: 0.6, tone: { wave: 'sawtooth', freq: 200, to: 1200, dur: 0.12 } },
+  fire:       { src: '', volume: 0.5, tone: { wave: 'sawtooth', freq: 500, to: 180, dur: 0.14 } },
+  bluefire:   { src: '', volume: 0.6, tone: { wave: 'square', notes: [[700, 0.05], [1400, 0.12, 300]] } },
   vacuum:     { src: '', volume: 0.5, tone: { wave: 'sine', freq: 300, to: 1500, dur: 0.3 } },
   kill:       { src: '', volume: 0.5, tone: { wave: 'square', freq: 600, to: 100, dur: 0.1 } },
   shop:       { src: '', volume: 0.5, tone: { wave: 'square', notes: [[523, 0.07], [659, 0.07], [784, 0.12]] } },

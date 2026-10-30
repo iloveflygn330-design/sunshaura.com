@@ -3,7 +3,7 @@
    minigame/index.html で dinorun.js より先に読み込む。
 
    ここにあるもの:
-     DR_SKILLS … ボタンに割り当てて使うスキル（居合切り・スピンアタック）の基本の数値
+     DR_SKILLS … ボタンに割り当てて使うスキル（居合切り・スピンアタック・火の玉など）の基本の数値
      DR_ITEMS  … ★拡張予定: ショップに並ぶアイテムの一覧
 
    強化はそのプレイの中だけ（ゲームオーバーでリセット）。
@@ -16,13 +16,17 @@
      action   … 動きの種類。dinorun.js の DR_SKILL_ACTIONS に同じ名前の処理がある
                   'slash' … 目の前の一定範囲の障害物を切る
                   'spin'  … 一定時間、自機が回転して、ぶつかった障害物を壊す（その間はダメージなし）
-                  'dive'  … 空中から一気に着地する（地面では使えない）。すぐあとに slash / spin でダッシュ
+                  'dive'  … 空中から一気に着地する（地面では使えない）。すぐあとの技が強くなる（急降下コンボ）
                   'vacuum' … 画面に出ているコインを全部吸い寄せる
+                  'fire'  … 前へ火の玉を飛ばす。急降下コンボだと青い火の玉
+     button      … （任意）'slide' と書くと、①②③ではなくスライディングボタンに付く（空中で押すと出る）。いまは急降下だけ
      cooldown    … クールタイム（秒）。ショップのアイテムで短くなる
      minCooldown … クールタイムがこれ以上は短くならない値
      range / height … （slash）切れる範囲の横幅・高さ（ドット）
      duration    … （spin）回転している時間（秒）
-     speed       … （dive）落ちる速さ（ドット/秒）
+     speed       … （dive）落ちる速さ（ドット/秒）／（fire）赤い火の玉の速さ（ドット/秒）
+     radius / pierce / range … （fire）火の玉の大きさ（半径ドット）・壊せる数・飛ぶ距離（ドット）
+     blueSpeed   … （fire）青い火の玉の速さ。青い火の玉は画面の端まで飛び、触れたものを全部消す
 
    ★拡張予定: 新しいスキルを増やす場合
      1. 下に1件追加する（例: slow: { name: 'スロー', label: 'スロー', action: 'slow', cooldown: 15, minCooldown: 6, duration: 3 }）
@@ -43,13 +47,19 @@ const DR_SKILLS = {
     duration: 0.8,
   },
   dive: {
-    name: '急降下', label: '急降下', action: 'dive',
+    name: '急降下', label: '急降下', action: 'dive', button: 'slide',
     cooldown: 3.0, minCooldown: 1.0,
     speed: 900,
   },
   vacuum: {
     name: 'コイン吸引', label: '吸引', action: 'vacuum',
     cooldown: 20.0, minCooldown: 8.0,
+  },
+  fire: {
+    name: '火の玉', label: '火の玉', action: 'fire',
+    cooldown: 4.0, minCooldown: 4.0,
+    radius: 3, pierce: 1, range: 170, speed: 300,
+    blueSpeed: 560,
   },
 };
 
@@ -156,7 +166,7 @@ const DR_ITEMS = [
 
   /* --- 急降下（空中から一気に着地。すぐあとに居合切り・スピンでダッシュ） --- */
   {
-    id: 'learn_dive', name: '急降下', desc: '空中から一気に着地する。直後に居合切りかスピンで前へダッシュ', icon: '⏬',
+    id: 'learn_dive', name: '急降下', desc: 'スライディングボタンに付く。空中で押すと一気に着地。直後の技が強くなる', icon: '⏬',
     type: 'skill', skill: 'dive', maxLevel: 1, price: 45, priceUp: 1, weight: 2,
   },
   {
@@ -176,9 +186,10 @@ const DR_ITEMS = [
     apply(run, skill) { skill.cooldown = Math.max(skill.minCooldown, skill.cooldown - 3); },
   },
   {
+    // 範囲（ドット）は Lv1 から順に 20 / 26 / 32 / 40。apply の時点で run.levels.magnet は買ったあとの Lv になっている
     id: 'magnet', name: '磁石', desc: '近くのコインを自動で吸い寄せる（買うたびに範囲が広がる）', icon: '🧲',
     type: 'passive', maxLevel: 4, price: 35, priceUp: 1.6,
-    apply(run) { run.magnet = run.magnet ? run.magnet + 16 : 32; },
+    apply(run) { run.magnet = [0, 20, 26, 32, 40][run.levels.magnet] || 40; },
   },
 
   /* --- ショップ --- */
@@ -186,6 +197,17 @@ const DR_ITEMS = [
     id: 'reroll', name: 'リロール', desc: 'ショップの品ぞろえを1回入れ替えられる（毎回のショップで使える）', icon: '🔄',
     type: 'passive', maxLevel: 2, price: 40, priceUp: 2.0,
     apply(run) { run.rerolls += 1; },
+  },
+
+  /* --- 火の玉（前へ飛ばして障害物を壊す。急降下のすぐあとなら青い火の玉） --- */
+  {
+    id: 'learn_fire', name: '火の玉', desc: '前へ火の玉を飛ばして障害物を壊す。急降下の直後なら青い火の玉', icon: '🔥',
+    type: 'skill', skill: 'fire', maxLevel: 1, price: 55, priceUp: 1, weight: 2,
+  },
+  {
+    id: 'fire_power', name: '火の玉 強化', desc: '火の玉が大きくなり、壊せる数が1つ増える', icon: '☄',
+    type: 'passive', requires: 'fire', maxLevel: 4, price: 40, priceUp: 1.6,
+    apply(run, skill) { skill.radius += 1.5; skill.pierce += 1; },
   },
 
   /* ↑ ここに追加 ↑ */
