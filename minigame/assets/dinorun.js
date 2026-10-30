@@ -1064,7 +1064,8 @@ function drTutorialSpawn(run, st) {
       const group = ++run.groupSeq;
       if (def.pit) { const o = drAddPit(run, def, x0, group); cx = x0 + o.w / 2; }
       else {
-        const y = def.fly ? C.groundY - def.fly[0] - def.h : C.groundY - def.h;
+        const lift = st.lift !== undefined ? st.lift : (def.fly ? def.fly[0] : 0);
+        const y = C.groundY - lift - def.h;
         run.obstacles.push(drMakeObstacle(def, x0, y, group));
         cx = x0 + def.w / 2;
       }
@@ -1073,6 +1074,7 @@ function drTutorialSpawn(run, st) {
   const ch = DR_PICKUPS.coin.h;
   if (st.coins === 'arc') drArcCoins(run, cx, 5);
   else if (st.coins === 'ground') for (let i = 0; i < 5; i++) run.coins.push({ x: cx - 40 + i * 18, y: C.groundY - 4 - ch, taken: false });
+  else if (st.coins === 'under') for (let i = 0; i < 7; i++) run.coins.push({ x: cx - 49 + i * 14, y: C.groundY - 6 - ch, taken: false });
   else if (st.coins === 'row') for (let i = 0; i < 3; i++) run.coins.push({ x: x0 + i * 26, y: C.groundY - 6 - ch, taken: false });
   if (st.shop) {
     drSpawnShop(run);
@@ -1226,6 +1228,11 @@ function drItemPrice(run, it) {
   const lv = run.levels[it.id] || 0;
   return Math.round(it.price * Math.pow(it.priceUp || 1, lv));
 }
+/* ショップでの値段（最初のショップだけ DR_CONFIG.firstShopDiscount の割引がかかる） */
+function drShopPrice(run, it) {
+  const d = (dr.shop && dr.shop.discount) || 1;
+  return Math.max(1, Math.round(drItemPrice(run, it) * d));
+}
 function drItemAvailable(run, it) {
   const lv = run.levels[it.id] || 0;
   if (!it.consumable && lv >= (it.maxLevel || 1)) return false;
@@ -1250,7 +1257,8 @@ function drMakeOffers(run) {
 
 function drOpenShop(run) {
   drSound('shop');
-  dr.shop = { offers: drMakeOffers(run), sold: [], picking: null, swapSel: null, rerollsLeft: run.rerolls };
+  const discount = run.shopCount === 0 ? (DR_CONFIG.firstShopDiscount || 1) : 1;   // 最初のショップだけ割引
+  dr.shop = { offers: drMakeOffers(run), sold: [], picking: null, swapSel: null, rerollsLeft: run.rerolls, discount };
   drAfterShop(run);
   drSetMode('shop');
   drRenderShop();
@@ -1278,7 +1286,7 @@ function drBuy(index) {
   if (!run || !shop || shop.picking) return;
   const it = shop.offers[index];
   if (!it || shop.sold.includes(index)) return;
-  const price = drItemPrice(run, it);
+  const price = drShopPrice(run, it);
   if (Math.floor(run.wallet) < price) return;
   run.wallet -= price;
   run.levels[it.id] = (run.levels[it.id] || 0) + 1;
@@ -1338,6 +1346,11 @@ function drRenderShop() {
   rr.hidden = !(shop.rerollsLeft > 0);
   rr.disabled = !!shop.picking;
   rr.querySelector('b').textContent = shop.rerollsLeft;
+  // 「初回だけ割引！」の表示
+  const sale = document.getElementById('dr-shop-sale');
+  const off = shop.discount < 1;
+  sale.hidden = !off;
+  if (off) sale.textContent = '初回だけ割引！' + (shop.discount === 0.5 ? '（半額）' : `（${Math.round((1 - shop.discount) * 100)}%オフ）`);
 
   const cards = document.getElementById('dr-shop-cards');
   if (!shop.offers.length) {
@@ -1346,7 +1359,8 @@ function drRenderShop() {
     cards.innerHTML = shop.offers.map((it, i) => {
       const lv = run.levels[it.id] || 0;
       const sold = shop.sold.includes(i);
-      const price = sold ? 0 : drItemPrice(run, it);
+      const price = sold ? 0 : drShopPrice(run, it);
+      const normal = sold ? 0 : drItemPrice(run, it);   // 割引前の値段（割引中は消し線で出す）
       const max = it.maxLevel || 1;
       const lvText = it.type === 'skill' ? 'NEW スキル' : it.consumable ? '1回きり' : (sold ? `Lv.${lv} / ${max}` : `Lv.${lv} → ${lv + 1} / ${max}`);
       const icon = it.image ? `<img src="${it.image}" alt="">` : (it.icon || '★');
@@ -1357,7 +1371,7 @@ function drRenderShop() {
           <div class="dr-card-lv">${lvText}</div>
           <div class="dr-card-desc">${it.desc || ''}</div>
           <button type="button" class="dr-card-buy" data-dr="buy" data-index="${i}" ${can ? '' : 'disabled'}>
-            ${sold ? 'SOLD' : `<span class="dr-key">${i + 1}</span>🪙 ${price}`}
+            ${sold ? 'SOLD' : `<span class="dr-key">${i + 1}</span>🪙 ${normal !== price ? `<s>${normal}</s> ` : ''}${price}`}
           </button>
         </div>`;
     }).join('');
