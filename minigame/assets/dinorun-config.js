@@ -45,8 +45,8 @@ const DR_CONFIG = {
   dashDistance: 56,        // ダッシュ切りで前に出る距離（ドット）
   dashTime: 0.16,          // 前に出るのにかかる時間（秒）
   dashReturnSpeed: 36,     // 元の位置に戻る速さ（ドット/秒）
-  spinRushMeters: 50,      // スピンで前へ進む距離（m）
-  spinRushTime: 0.4,       // それにかける時間（秒）。スピンの長さ（最初 0.8 秒）より短くすること（進んだ先でぶつからないように）
+  spinRushMeters: 15,      // スピンで前へ進む距離（m）
+  spinRushTime: 0.3,       // それにかける時間（秒）。スピンの長さ（最初 0.8 秒）より短くすること（進んだ先でぶつからないように）
   slideRushMeters: 8,      // スライディングで前へ進む距離（m）
   slideRushTime: 0.3,      // それにかける時間（秒）。すべる時間もこのぶんのびる
   // ※ ランキングのサーバー（tools/dinorun-ranking/Code.gs）の MAX_METERS_PER_SEC は、この「前へ進む」ぶんの余裕を入れてある。
