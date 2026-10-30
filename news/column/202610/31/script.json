@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-31",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    {
+      "type": "opening",
+      "lines": [
+        { "who": "zundamon", "text": "こんにちは、ずんだもんなのだ！今日はハロウィンなのだ。", "face": "smile" },
+        { "who": "kiritan", "text": "きりたんです。仮装はしません。家から出ないので。", "face": "nihilistic" },
+        { "who": "zundamon", "text": "10月31日のVRニュースは4本なのだ。", "read": "じゅうがつさんじゅういちにちのブイアールニュースは、よんほんなのだ。" }
+      ]
+    },
+    {
+      "type": "news",
+      "item": 0,
+      "lines": [
+        { "who": "zundamon", "text": "1本目。VRChatの即売会、メタフェス2026が今日から開幕なのだ！", "read": "いっぽんめ。ブイアールチャットの即売会、メタフェスにせんにじゅうろくが、今日から開幕なのだ！", "face": "smile" },
+        { "who": "kiritan", "text": "家から出ずに買い物できるイベント。最高ですね。", "face": "smile" },
+        { "who": "zundamon", "text": "800名以上のクリエイターが出展するのだ。", "read": "はっぴゃくめい以上のクリエイターが出展するのだ。" },
+        { "who": "zundamon", "text": "アバターや衣装、ワールド、音楽まで並ぶのだ。" },
+        { "who": "zundamon", "text": "会場は5つ。スマホから入れる会場もあるのだ。", "read": "会場はいつつ。スマホから入れる会場もあるのだ。" },
+        { "who": "kiritan", "text": "入場料はいくらなんですか？", "face": "look" },
+        { "who": "zundamon", "text": "無料なのだ！来場者には限定アイテムも配られるのだ。" },
+        { "who": "zundamon", "text": "期間は11月8日まで。終わっても会場は残るのだ。", "read": "期間はじゅういちがつようかまで。終わっても会場は残るのだ。" },
+        { "who": "kiritan", "text": "財布の中身が先に終わらないよう、気をつけます。", "face": "nihilistic" }
+      ]
+    },
+    {
+      "type": "news",
+      "item": 1,
+      "lines": [
+        { "who": "zundamon", "text": "2本目。タイタンフォール2のVR化MODが、対戦に対応なのだ。", "read": "にほんめ。タイタンフォールツーのブイアール化モッドが、対戦に対応なのだ。" },
+        { "who": "kiritan", "text": "ロボットに乗るあのゲームですか。VRで対戦は熱いですね。", "read": "ロボットに乗るあのゲームですか。ブイアールで対戦は熱いですね。", "face": "surprise" },
+        { "who": "zundamon", "text": "有志が作ったMODで、今はオープンベータなのだ。", "read": "有志が作ったモッドで、今はオープンベータなのだ。" },
+        { "who": "zundamon", "text": "北米と欧州のサーバーで遊べるのだ。" },
+        { "who": "kiritan", "text": "必要なものは何でしょう。", "face": "look" },
+        { "who": "zundamon", "text": "ゲーム本体と、VR対応のPCが必要なのだ。", "read": "ゲーム本体と、ブイアール対応のピーシーが必要なのだ。" },
+        { "who": "zundamon", "text": "MOD自体は無料なのだ。", "read": "モッド自体は無料なのだ。" },
+        { "who": "kiritan", "text": "非公式なので、導入は自己責任ですね。" }
+      ]
+    },
+    {
+      "type": "news",
+      "item": 2,
+      "lines": [
+        { "who": "zundamon", "text": "3本目。SFシューターのEXOSHOCKが、早期アクセスで発売なのだ。", "read": "さんぼんめ。エスエフシューターのエグゾショックが、早期アクセスで発売なのだ。" },
+        { "who": "zundamon", "text": "最大4人で協力して戦うゲームなのだ。", "read": "最大よにんで協力して戦うゲームなのだ。" },
+        { "who": "kiritan", "text": "対応する機種はどれですか？", "face": "look" },
+        { "who": "zundamon", "text": "Quest 3とPC VR、それにVRなしのPCでも遊べるのだ。", "read": "クエストスリーとピーシーブイアール、それにブイアールなしのピーシーでも遊べるのだ。" },
+        { "who": "zundamon", "text": "全部の機種で、一緒に遊べるのだ。" },
+        { "who": "kiritan", "text": "VRを持っていない友達も誘えますね。", "read": "ブイアールを持っていない友達も誘えますね。", "face": "smile" },
+        { "who": "zundamon", "text": "値段は19.99ドルなのだ。", "read": "値段は、じゅうきゅうてんきゅうきゅうドルなのだ。" }
+      ]
+    },
+    {
+      "type": "news",
+      "item": 3,
+      "lines": [
+        { "who": "zundamon", "text": "4本目。VRシューターのForefrontに、大型アップデートなのだ。", "read": "よんほんめ。ブイアールシューターのフォアフロントに、大型アップデートなのだ。" },
+        { "who": "zundamon", "text": "拠点を奪い合う、新しいモードが加わったのだ。" },
+        { "who": "zundamon", "text": "初めての近接武器、ナイフも登場なのだ。" },
+        { "who": "kiritan", "text": "銃のゲームでナイフ。上級者向けの気配がします。", "face": "look" },
+        { "who": "zundamon", "text": "チャレンジで報酬がもらえる仕組みも始まったのだ。" },
+        { "who": "kiritan", "text": "無料分と有料分があるやつですね。", "face": "nihilistic" },
+        { "who": "zundamon", "text": "PS VR2版は11月5日に出る予定なのだ。", "read": "ピーエスブイアールツー版は、じゅういちがついつかに出る予定なのだ。" }
+      ]
+    },
+    {
+      "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "しし座", "comment": "思い切った挑戦が実を結ぶ", "lucky": "カボチャのお菓子" },
+        { "rank": 2, "sign": "うお座", "comment": "新しい出会いが楽しい日", "lucky": "ネームタグ" },
+        { "rank": 3, "sign": "ふたご座", "comment": "買い物で良い発見がありそう", "lucky": "お気に入りリスト" },
+        { "rank": 4, "sign": "おひつじ座", "comment": "仲間と協力すると吉", "lucky": "ヘッドセット" },
+        { "rank": 5, "sign": "おうし座", "comment": "ゆっくり休むと運気アップ", "lucky": "ブランケット" },
+        { "rank": 6, "sign": "いて座", "comment": "遠くの景色に癒される日", "lucky": "展望台のワールド" },
+        { "rank": 7, "sign": "みずがめ座", "comment": "ひらめきをメモしておこう", "lucky": "ペン" },
+        { "rank": 8, "sign": "やぎ座", "comment": "コツコツ進めた作業が進む", "lucky": "タイマー" },
+        { "rank": 9, "sign": "てんびん座", "comment": "身だしなみを整えると吉", "lucky": "新しい衣装" },
+        { "rank": 10, "sign": "おとめ座", "comment": "片付けで気分すっきり", "lucky": "収納ボックス" },
+        { "rank": 11, "sign": "かに座", "comment": "温かい飲み物でひと息", "lucky": "ココア" },
+        { "rank": 12, "sign": "さそり座", "comment": "焦らず一歩ずつで大丈夫", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ。イタコ、よろしくなのだ！", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はしし座。思い切った挑戦が実を結びますわ。", "read": "今日のいちいは、ししざ。思い切った挑戦が実を結びますわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はうお座、3位はふたご座です。", "read": "にいは、うおざ。さんいは、ふたござです。" },
+        { "who": "zundamon", "text": "ふたご座は、買い物で良い発見があるのだ。メタフェス日和なのだ。" },
+        { "who": "itako", "text": "そして12位はさそり座。焦らず一歩ずつで大丈夫ですわ。", "read": "そして、じゅうにいは、さそりざ。焦らず一歩ずつで大丈夫ですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅。それなら僕に任せるのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    {
+      "type": "ending",
+      "lines": [
+        { "who": "zundamon", "text": "今日も聞いてくれてありがとうなのだ！", "face": "smile" },
+        { "who": "kiritan", "text": "わたしはメタフェスの会場を、こっそり回ってきます。", "face": "smile" },
+        { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+      ]
+    }
+  ]
+}

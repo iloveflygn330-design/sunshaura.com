@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-31",
+  "title": "VRChatで即売会「メタフェス2026」が開幕ほか、今日のVRニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、800名以上のクリエイターが出展するVRChatの即売会「メタフェス2026」の開幕からお届けします。あわせて、『タイタンフォール2』のVR化MODのマルチプレイ対応、協力型シューター『EXOSHOCK』の早期アクセス開始、VRシューター『Forefront』の大型アップデートを紹介します。",
+  "items": [
+    {
+      "headline": "VRChatの即売会「メタフェス2026」、10月31日開幕",
+      "category": "イベント",
+      "overview": "VRChatで開かれるVRメタバース即売会「メタフェス2026」が、10月31日から11月8日まで開催されます。アバターや衣装、アイテム、ワールド、イラスト、音楽などを手がける800名以上のクリエイターが出展します。会場は四季をテーマにしたPC版の4会場と、Quest・Android・iOS版から入れる「MOBILE」会場の全5会場で、入場は無料です。",
+      "points": [
+        "来場者全員に、期間限定アイテム「メタフェスじゃんけん棒」を配布",
+        "出展者と来場者が集まる「コアタイム」や交流会「MeetUp」も実施",
+        "スケブ、VRChat Inc.、本田技研工業などの企業も出展",
+        "閉会後も会場は常設され、展示の閲覧や購入ができる"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/161669" }
+      ]
+    },
+    {
+      "headline": "『タイタンフォール2』VR化MOD、マルチプレイのベータ公開",
+      "category": "その他",
+      "overview": "PCゲーム『タイタンフォール2』をVRで遊べるようにする有志のMODに、オンライン対戦のオープンベータが追加されました。作者はCircuitLord氏で、9月に公開したシングルプレイ版に続く更新です。北米と欧州のサーバーが用意されています。MOD自体は無料で、作者のGitHubで配布されているインストーラーから導入できます。",
+      "points": [
+        "遊ぶには『タイタンフォール2』本体とVR対応PCが必要",
+        "OpenXR対応のPC VRヘッドセットなら、ほぼどれでも使える",
+        "公式ではなく有志によるMODなので、導入は自己責任で"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/titanfall-2-vr-multiplayer-mod-pc-vr" },
+        { "name": "vr.org", "url": "https://vr.org/articles/this-week-in-vr-2026-10-30" }
+      ]
+    },
+    {
+      "headline": "協力型SFシューター『EXOSHOCK』、早期アクセス開始",
+      "category": "その他",
+      "overview": "PolarityOneが開発する協力型のSFシューター『EXOSHOCK』が、10月29日に早期アクセス版として発売されました。対応はMeta Quest 3・3S、SteamのPC VR、VRなしのPCで、すべての機種で一緒に遊べるクロスプレイに対応しています。最大4人で部隊を組み、装備をカスタマイズして戦場の戦闘に挑むゲームです。価格は19.99ドルです。",
+      "points": [
+        "VRの人とVRなしのPCの人が、同じゲームで協力できる",
+        "早期アクセスなので、今後のアップデートで内容が増える見込み",
+        "発売前は「Founder's Edition」として先行販売されていた"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/exoshock-out-now-in-early-access-on-quest-3-pc-vr/" },
+        { "name": "Road to VR", "url": "https://roadtovr.com/halo-inspired-hyrbid-vr-shooter-exoshock-release/" }
+      ]
+    },
+    {
+      "headline": "VRシューター『Forefront』、新モードと近接武器を追加",
+      "category": "その他",
+      "overview": "大人数で戦うVRシューター『Forefront』に、大型アップデート「Operation: Sandstorm」が配信されました。攻撃側が拠点を順に奪い、防衛側が守る新モード「Breakthrough」が4つのマップに追加されています。初の近接武器となるコンバットナイフと、新しいライフルも登場しました。あわせて、チャレンジで報酬がもらえる成長システム「Operations」も始まっています。",
+      "points": [
+        "「Operations」は無料の報酬と、有料のプレミアム版がある",
+        "bHapticsの振動ベストなどに対応",
+        "Quest・Steam・PICOで配信中、PS VR2版は11月5日"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/forefront-update-adds-new-game-mode-melee-weapon-battle-pass-more/" }
+      ]
+    }
+  ],
+  "outro": "今日はハロウィン。メタフェスの会場めぐりや、新しいVRゲームで週末を楽しんでみてはいかがでしょうか。"
+}
