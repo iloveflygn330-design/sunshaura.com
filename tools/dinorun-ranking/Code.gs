@@ -20,8 +20,8 @@ const RANK_SIZE    = 10;              // 何位まで返すか（DR_CONFIG.ranki
 const NAME_PATTERN = /^[A-Z]{3}$/;    // 名前のルール（DR_CONFIG.nameLetters / nameChars）
 const SCORE_COIN   = 10;              // DR_CONFIG.scoreCoin
 const SCORE_KILL   = 25;              // DR_CONFIG.scoreKill
-const SCORE_GRAZE  = 15;              // DR_CONFIG.scoreGraze
-const SCORE_SLIDE  = 20;              // DR_CONFIG.scoreSlide
+const SCORE_GRAZE  = 0;               // DR_CONFIG.scoreGraze（いまは、かすりはスコアではなくコインがもらえる）
+const SCORE_SLIDE  = 0;               // DR_CONFIG.scoreSlide（スライディングボーナスも同じ）
 const MAX_METERS_PER_SEC = 44 * 1.6;  // 最高速（DR_CONFIG.speedMax ÷ pxPerMeter）に余裕を足したもの
                                       // （急降下コンボのスピン＋15m・スライディング＋8m で、最高速より速く進むことがあるので大きめ）
 const TOKEN_TTL_SEC = 21600;          // 受付番号の有効期限（秒。6時間が上限）

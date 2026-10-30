@@ -32,9 +32,23 @@ const DR_CONFIG = {
 
   /* --- ジャンプ・スライディング --- */
   gravity: 1500,           // 重力（大きいほど早く落ちる）
-  jumpVelocity: 460,       // ジャンプの強さ（ジャンプ高さUPで倍率がかかる）
+  jumpVelocity: 460,       // ジャンプの強さ
   slideTime: 0.55,         // スライディングの長さ（秒）。すべり終わるまで次は出せない（ジャンプで途中でやめられる）
   slideBuffer: 0.15,       // 空中で押したとき、この秒数以内に着地したら着地と同時にすべる
+  // バタ足ジャンプ（パッシブ。浮いていられる秒数は dinorun-items.js の flutter アイテムで決める）
+  //   ジャンプボタンを押しっぱなしにすると、ジャンプのいちばん高いところでバタ足して、その高さのまま浮く
+  //   空中でジャンプ回数を使い切ってから押しなおしても、その高さで浮く（ボタンを離すか、時間が切れると落ちる）
+  //   1回の空中で使えるのは、合わせて flutter の秒数まで（着地すると元に戻る）
+
+  /* --- 落下穴（障害物の pit。dinorun-worlds.js） ---
+       穴の上を走ると落ちる。落ちかけたときはジャンプ回数を使っていない扱いなので、すぐジャンプすれば出られる。
+       穴の底（pitDepth ドット）まで落ちるか、穴の向こう側の壁にぶつかるとダメージ（そのあと、ぴょんと穴から出る）。
+       無敵の間は穴に落ちない。 */
+  pitDepth: 26,            // この深さまで落ちたらダメージ（ドット）
+  pitStepUp: 6,            // 向こう側の壁に着いたとき、この深さまでなら（ほとんど落ちていないので）ダメージなしで上がれる
+  pitBounce: 520,          // ダメージのあと、穴から飛び出す強さ
+  pitTimeMin: 0.13, pitTimeMax: 0.2,   // 穴の幅（そのときの速さで何秒ぶんか。速くなるほど広い穴になる）
+  pitWidthMin: 24, pitWidthMax: 90,    // 穴の幅の下限・上限（ドット）
 
   /* --- 急降下コンボ（急降下のすぐあと＝足元が光っている間に技を出すと強くなる） ---
        居合切り   … 前へ「ぎゅんっ」と出ながら切る（ダッシュ切り。天井から下がっているものも切れる）
@@ -60,6 +74,14 @@ const DR_CONFIG = {
   clusterChanceMax: 0.35,  // 障害物が2〜3個つながって出る確率（最高速のとき）
   flyingFromMeter: 250,    // 空を飛ぶ障害物が出始める距離（m）
 
+  /* --- スキルを使わないと通れない区画（ワールド hardFromWorld から、ときどき出る） ---
+       シャッターが下りているところに、壊せるかべがある（ジャンプもスライディングもできない）。
+       居合切り・スピンアタック・火の玉のどれかで壊して通る。
+       そのどれかをスキルボタンに入れていて、着くまでにクールタイムが終わるときだけ出る（持っていなければ出ない）。
+       見た目は dinorun-worlds.js の gate_roof / gate_wall */
+  hardFromWorld: 5,        // 何ワールド目から出すか
+  hardGapMin: 220, hardGapMax: 420,    // 次の区画までの間隔（m）
+
   /* --- コイン --- */
   coinGapMin: 1.1, coinGapMax: 2.4,   // コインの列が出る間隔（秒）
   coinRowMin: 3,   coinRowMax: 6,     // 1列のコインの数
@@ -75,8 +97,8 @@ const DR_CONFIG = {
   shopInterval: 500,       // 2回目以降の間隔（m）
   shopIntervalGrow: 1.12,  // 1回ごとに間隔を何倍にのばすか（後半はショップが少しずつ遠くなる）
   shopOffers: 3,           // ショップに並ぶアイテムの数
-  skipBonusBase: 5,        // ショップに寄らなかったときにもらえるコイン
-  skipBonusPerShop: 2,     // ショップが出るたびに、スキップボーナスが増える量
+  skipBonusBase: 10,       // ショップに寄らなかったときにもらえるコイン
+  skipBonusPerShop: 0,     // ショップが出るたびに、スキップボーナスが増える量（0 = いつも同じ）
   shopClearBefore: 1.2,    // ショップの手前、障害物を出さない長さ（秒。そのときの速さで走る距離に直して使う）
   shopClearAfter: 2.0,     // ショップのうしろ、障害物を出さない長さ（秒）。ショップから戻ってすぐぶつからないように
 
@@ -84,24 +106,36 @@ const DR_CONFIG = {
   worldLength: 1000,       // 1つのワールドの長さ（m）
   worldCalmTime: 1.6,      // ワールド移動の演出中、障害物を出さない時間（秒）
 
+  /* --- ボーナスステージ（ショップのボーナスチケットを買うと、次のワールドの前に入る。見た目は dinorun-worlds.js の DR_BONUS_WORLD） ---
+       障害物なし・コインたくさん。下り坂をすべっていく（ずっとスライディングの姿勢）。
+       地面のコインはすべっているだけで取れる。地面の光る矢印のところでジャンプすると、空中のコインの山をまるごと取れる。
+       ボーナスステージはワールドの数に入らない（終わると、本来の次のワールドに進む） */
+  bonusLength: 400,        // ボーナスステージの長さ（m）
+  bonusSpeedMult: 1.25,    // 流れる速さの倍率（下り坂なので速い。speedMax は超えない）
+  bonusTilt: 7,            // 画面の傾き（度）
+  bonusTrailMin: 4, bonusTrailMax: 7,  // 地面に並ぶコインの数
+  bonusArcCoins: 9,        // ジャンプで取る空中のコインの数
+
   /* --- スコア = 距離(m) + 拾ったコインの数 × scoreCoin + 倒した障害物の数 × scoreKill
                 + かすりの回数 × scoreGraze + スライディングでくぐった回数 × scoreSlide
+       いまは、かすり・スライディングはスコアではなくコインがもらえる（scoreGraze・scoreSlide は 0）。
+       0 より大きくすると、またスコアにも入る（結果画面にも行が出る）
        ※ 変えたら、サーバー側（tools/dinorun-ranking/Code.gs）の SCORE_COIN / SCORE_KILL / SCORE_GRAZE / SCORE_SLIDE も同じ値にする --- */
   scoreCoin: 10,
   scoreKill: 25,
-  scoreGraze: 15,
-  scoreSlide: 20,
+  scoreGraze: 0,
+  scoreSlide: 0,
 
   /* --- スライディングボーナス（立っていたらぶつかる障害物を、スライディングでくぐり抜けるともらえる）---
        ※ かすりボーナスとは重ならない（くぐった障害物は、かすりにしない） */
-  slideCoin: 1,            // スライディングボーナスでもらえるコイン
+  slideCoin: 5,            // スライディングボーナスでもらえるコイン（コイン倍率はかからない。スコアのコイン数にも入らない）
 
   /* --- かすりボーナス（障害物にぶつからず、ぎりぎりでよけるともらえる） ---
        自機と障害物の当たり判定のすき間が grazeDistance ドット以内ですれ違ったら「かすり」。
        スピンアタック中にすれ違った障害物・壊した障害物・ぶつかった障害物は数えない。
        2〜3個つながって出た障害物は、まとめて1回だけ数える。 */
   grazeDistance: 6,
-  grazeCoin: 1,            // かすりでもらえるコイン（コイン倍率はかからない。スコアのコイン数にも入らない）
+  grazeCoin: 5,            // かすりでもらえるコイン（コイン倍率はかからない。スコアのコイン数にも入らない）
 
   /* --- ランキング ---
        rankingUrl: Google Apps Script を「ウェブアプリ」として公開したときの URL（…/exec で終わるもの）
@@ -143,11 +177,11 @@ const DR_CONFIG = {
 
    音の id とタイミング（dinorun.js が drSound('id') で呼ぶ）:
      jump … ジャンプ / slide … スライディング / coin … コインを拾った / graze … かすりボーナス
-     slidebonus … スライディングボーナス / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
+     slidebonus … スライディングボーナス / flutter … バタ足 / fall … 穴に落ちた / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
      dive … 急降下 / dash … ダッシュ・前へ進む / vacuum … コイン吸引 / kill … 障害物を壊した
      fire … 赤い火の玉 / bluefire … 青い火の玉
      shop … ショップに入った / buy … アイテムを買った / reroll … 品ぞろえの入れ替え / skip … ショップをスキップした
-     world … ワールド移動 / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
+     world … ワールド移動 / bonus … ボーナスステージに入った / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
 
    BGM（ワールドごとに変えたいとき）:
      dinorun-worlds.js の各ワールドの bgm に、下の id を書く（例: bgm: 'bgm_home'）。
@@ -160,6 +194,8 @@ const DR_SOUNDS = {
   coin:       { src: '', volume: 0.4, tone: { wave: 'square', notes: [[988, 0.04], [1319, 0.08]] } },
   graze:      { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[1047, 0.05], [1568, 0.09]] } },
   slidebonus: { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[784, 0.05], [1175, 0.09]] } },
+  flutter:    { src: '', volume: 0.4, tone: { wave: 'triangle', notes: [[880, 0.04], [988, 0.04], [880, 0.04], [988, 0.06]] } },
+  fall:       { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 600, to: 120, dur: 0.3 } },
   hit:        { src: '', volume: 0.7, tone: { wave: 'sawtooth', freq: 220, to: 60, dur: 0.25 } },
   slash:      { src: '', volume: 0.5, tone: { wave: 'sawtooth', freq: 1800, to: 300, dur: 0.12 } },
   spin:       { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 300, to: 900, dur: 0.2 } },
@@ -174,6 +210,7 @@ const DR_SOUNDS = {
   reroll:     { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[440, 0.05], [554, 0.05], [659, 0.08]] } },
   skip:       { src: '', volume: 0.5, tone: { wave: 'square', notes: [[659, 0.06], [523, 0.1]] } },
   world:      { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.2]] } },
+  bonus:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[784, 0.08], [988, 0.08], [1175, 0.08], [1568, 0.25]] } },
   gameover:   { src: '', volume: 0.6, tone: { wave: 'square', notes: [[392, 0.15], [330, 0.15], [262, 0.35]] } },
   select:     { src: '', volume: 0.3, tone: { wave: 'square', freq: 880, dur: 0.04 } },
   start:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[523, 0.08], [784, 0.08], [1047, 0.14]] } },

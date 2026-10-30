@@ -6,6 +6,7 @@
      DR_PALETTE   … 仮のドット絵で使う色（1文字 = 1色）
      DR_OBSTACLES … ★拡張予定: 障害物の一覧（地面に置くもの・空を飛ぶもの）
      DR_WORLDS    … ★拡張予定: ワールドの一覧（走った距離で順番に切り替わる。最後まで行ったら最初に戻る）
+     DR_BONUS_WORLD … ボーナスステージの見た目
      DR_PICKUPS   … コインとショップアイコンの見た目
 
    ■ 絵（sprite）の書き方 — いまは全部「仮のドット絵」。あとから PNG に差し替えられる
@@ -65,6 +66,10 @@ const DR_PALETTE = {
        breakable: true,         // 居合切り・スピンアタック・赤い火の玉で壊せるか（false にすると壊せない。青い火の玉だけは消せる）
        dashCut: true,           // （任意）breakable: false でも、急降下のあとのダッシュ切りなら切れる（天井から下がっているもの）
        minMeter: 0,             // （任意）この距離（m）より後でだけ出る
+       label: { text: 'SKILL!', x: 24, y: 146, color: '#FFD84A' },
+                                // （任意）絵の上に小さいドット文字を重ねる（x・y は絵の左上からの位置。x を書かなければ真ん中）
+       pit: true,               // （任意）落下穴にする。絵（sprite）はいらない（地面に黒い穴を描く）。幅は出るたびに速さで決まる
+                                //   （dinorun-config.js の pitTimeMin など）。w・h は使わない
        weight: 1,               // （任意）出やすさ。大きいほど出やすい
        sprite: { pixels: [...] },  // 絵（上の「絵の書き方」を参照）
      }
@@ -79,6 +84,48 @@ function drHangingPixels(w, panel, rope) {
   const rows = [];
   for (let i = 0; i < h - panel.length; i++) rows.push(ropeRow);
   return rows.concat(panel);
+}
+
+/* スキルを使わないと通れない区画の、上から下りているシャッターの絵を作る（たての格子＋下の注意の板）。
+     格子のすき間も当たり判定があるので、通れないように見える絵にしている。
+     w … 幅、h … 高さ（地面からどれだけ上まで下がるかで決まる） */
+function drGateRoofPixels(w, h) {
+  const rows = [];
+  const panelH = 15;
+  for (let y = 0; y < h - panelH; y++) {
+    let r = '';
+    for (let x = 0; x < w; x++) {
+      if (x === 0 || x === w - 1) r += 'K';
+      else if (y % 16 < 2) r += y % 16 === 0 ? 'S' : 's';     // よこの棒
+      else if (x % 6 === 2) r += 'S';                          // たての棒
+      else if (x % 6 === 3) r += 's';
+      else r += '.';
+    }
+    rows.push(r);
+  }
+  const stripe = y => { let r = 'K'; for (let x = 1; x < w - 1; x++) r += ((x + y) % 8 < 4 ? 'Y' : 'K'); return r + 'K'; };
+  rows.push('K'.repeat(w));
+  for (let y = 0; y < 3; y++) rows.push(stripe(y));
+  rows.push('K'.repeat(w));
+  for (let y = 0; y < 6; y++) rows.push('K' + 's'.repeat(w - 2) + 'K');
+  rows.push('K'.repeat(w));
+  for (let y = 0; y < 2; y++) rows.push(stripe(y + 3));
+  rows.push('K'.repeat(w));
+  return rows;
+}
+/* スキルを使わないと通れない区画の、壊せるかべ（レンガ）の絵を作る */
+function drBrickPixels(w, h) {
+  const rows = ['K'.repeat(w)];
+  for (let y = 1; y < h - 1; y++) {
+    let r = 'K';
+    for (let x = 1; x < w - 1; x++) {
+      const row = Math.floor((y - 1) / 4), off = row % 2 ? 3 : 0;
+      r += ((y - 1) % 4 === 3 || (x + off) % 6 === 0) ? 'r' : (x + y) % 9 === 0 ? 'R' : 'O';
+    }
+    rows.push(r + 'K');
+  }
+  rows.push('K'.repeat(w));
+  return rows;
 }
 
 const DR_OBSTACLES = [
@@ -358,6 +405,23 @@ const DR_OBSTACLES = [
       '..........K..K..........',
     ] },
   },
+
+  /* --- 落下穴（地面にあいた穴。ジャンプで飛び越す。動きは dinorun-config.js の「落下穴」）--- */
+  { id: 'pit', name: '落下穴', w: 40, h: 32, fly: null, pit: true, breakable: false, minMeter: 200, weight: 0.7 },
+
+  /* --- スキルを使わないと通れない区画の部品（ワールドの obstacles には書かない。dinorun.js の drSpawnGate() が出す）---
+       上から下りているシャッター（gate_roof）の下に、壊せるかべ（gate_wall）がある。シャッターがあるのでジャンプで越えられない */
+  {
+    id: 'gate_roof', name: '下りているシャッター', w: 76, h: 154, fly: [30], breakable: false,
+    hit: [0, 0, 76, 154],
+    label: { text: 'SKILL!', y: 144, color: '#FFD84A' },
+    sprite: { pixels: drGateRoofPixels(76, 154) },
+  },
+  {
+    id: 'gate_wall', name: 'レンガのかべ', w: 12, h: 26, fly: null, breakable: true,
+    hit: [0, 0, 12, 26],
+    sprite: { pixels: drBrickPixels(12, 26) },
+  },
 ];
 
 /* -----------------------------------------------------
@@ -388,7 +452,7 @@ const DR_WORLDS = [
     far: { style: 'hills', color: '#8FCBEF', color2: '#B9E1F7' },
     ground: { style: 'grid', color: '#7BC96F', line: '#5DAE53' },
     bgImage: '', groundImage: '',
-    obstacles: ['pedestal', 'collider', 'penlight', 'drone', 'menu', 'screen'],
+    obstacles: ['pedestal', 'collider', 'penlight', 'drone', 'menu', 'screen', 'pit'],
     bgm: '',
   },
   {
@@ -397,7 +461,7 @@ const DR_WORLDS = [
     far: { style: 'pillars', color: '#BFB4E8', color2: '#E3DCFA' },
     ground: { style: 'tile', color: '#C9C2E6', line: '#A79ED2' },
     bgImage: '', groundImage: '',
-    obstacles: ['mirror', 'collider', 'pedestal', 'drone', 'menu', 'screen', 'banner'],
+    obstacles: ['mirror', 'collider', 'pedestal', 'drone', 'menu', 'screen', 'banner', 'pit'],
     bgm: '',
   },
   {
@@ -406,7 +470,7 @@ const DR_WORLDS = [
     far: { style: 'city', color: '#1E2453', color2: '#FFD84A' },
     ground: { style: 'stripe', color: '#2C3166', line: '#3B4280' },
     bgImage: '', groundImage: '',
-    obstacles: ['penlight', 'portal', 'pedestal', 'drone', 'nameplate', 'banner', 'screen'],
+    obstacles: ['penlight', 'portal', 'pedestal', 'drone', 'nameplate', 'banner', 'screen', 'pit'],
     bgm: '',
   },
   {
@@ -415,10 +479,24 @@ const DR_WORLDS = [
     far: { style: 'stars', color: '#FFFFFF', color2: '#FFE9A8' },
     ground: { style: 'grid', color: '#4B2380', line: '#7FFFD4' },
     bgImage: '', groundImage: '',
-    obstacles: ['portal', 'mirror', 'collider', 'menu', 'nameplate', 'drone', 'screen', 'banner'],
+    obstacles: ['portal', 'mirror', 'collider', 'menu', 'nameplate', 'drone', 'screen', 'banner', 'pit'],
     bgm: '',
   },
 ];
+
+/* -----------------------------------------------------
+   ★拡張予定: ボーナスステージの見た目（書き方は DR_WORLDS と同じ。obstacles はいらない）
+     ボーナスチケットを買うと、次のワールドの前に入る。長さ・速さ・傾き・コインの数は dinorun-config.js の「ボーナスステージ」
+     bgm に DR_SOUNDS の id を書けば、ボーナスステージだけの BGM にできる
+   ----------------------------------------------------- */
+const DR_BONUS_WORLD = {
+  id: 'bonus', name: 'ボーナスステージ',
+  sky: ['#FF9E5E', '#FFE7A8'],
+  far: { style: 'hills', color: '#F7B267', color2: '#FFD6A0' },
+  ground: { style: 'stripe', color: '#E8B04B', line: '#C98F2E' },
+  bgImage: '', groundImage: '',
+  bgm: '',
+};
 
 /* -----------------------------------------------------
    コインとショップアイコンの見た目（書き方は上の「絵の書き方」と同じ）

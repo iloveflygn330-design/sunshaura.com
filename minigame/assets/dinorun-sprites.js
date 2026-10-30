@@ -12,6 +12,7 @@
           4行目: 切る（3コマ）
           5行目: スピン（4コマ）
           6行目: やられる（2コマ）
+          （7行目: バタ足 … 任意。描いたら下の anims の flutter を書き換える）
         → 画像の大きさは 横 24×（いちばん多いコマ数）、縦 24×6
         行やコマ数を変えたいときは、下の anims の row・frames を書き換える
      3. PNG を minigame/dinorun/sprites/ に置き（フォルダがなければ作る）、image にその場所を書く
@@ -34,6 +35,9 @@ const DR_PLAYER = {
     slash: { row: 3, frames: 3, fps: 15 },
     spin:  { row: 4, frames: 4, fps: 20 },
     hurt:  { row: 5, frames: 2, fps: 6 },
+    // バタ足（空中で浮いているとき）。いまは「走る」の行を速くコマ送りして代用している。
+    // 専用の絵を描いたら、7行目（row: 6）に置いて row・frames・fps を書き換える（画像の縦も 24×7 にする）
+    flutter: { row: 0, frames: 4, fps: 24 },
   },
 
   /* 当たり判定 [左, 上, 幅, 高さ]（24×24 のコマの中の位置） */
@@ -126,5 +130,6 @@ const DR_PLAYER = {
     slash: [BODY.concat(LEGS_B), BODY.concat(LEGS_A), BODY.concat(LEGS_A)],
     spin:  [BODY.concat(LEGS_JUMP)],
     hurt:  [BODY.concat(LEGS_JUMP), BODY.concat(LEGS_JUMP)],
+    flutter: [BODY.concat(LEGS_A), BODY.concat(LEGS_C), BODY.concat(LEGS_A), BODY.concat(LEGS_C)],
   };
 })();
