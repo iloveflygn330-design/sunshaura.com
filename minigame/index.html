@@ -47,6 +47,11 @@
             1. 下に <button class="mg-game-card" onclick="mgStartGame('ゲームID')"> を追記
             2. 対応する <div class="mg-screen" id="mg-ゲームID"> をこのページ内に追記
             3. mgStartGame() の switch にゲームIDを追記（初期化処理が必要な場合）
+
+          ★拡張予定: ゲームを一覧に出さずに公開する（テスト中など）
+            ボタンに hidden を付けると一覧に出なくなる。ゲーム自体は
+            minigame/?game=ゲームID の直リンクでだけ開ける。
+            一覧に出すときは hidden を消すだけ。
         -->
         <div id="mg-game-list">
           <button class="mg-game-card" onclick="mgStartGame('shooting')">
@@ -61,7 +66,8 @@
             <span class="mg-game-icon">🦕</span>
             <span class="mg-game-name">きょうりゅうボイス</span>
           </button>
-          <button class="mg-game-card" onclick="mgStartGame('dinorun')">
+          <!-- きょうりゅうラン：テスト中のため一覧には出さない（直リンク minigame/?game=dinorun でだけ開ける） -->
+          <button class="mg-game-card" onclick="mgStartGame('dinorun')" hidden>
             <span class="mg-game-icon">🦖</span>
             <span class="mg-game-name">きょうりゅうラン</span>
           </button>

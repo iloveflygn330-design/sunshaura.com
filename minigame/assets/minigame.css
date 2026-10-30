@@ -31,6 +31,8 @@
   transition: transform var(--duration-ui), box-shadow var(--duration-ui);
 }
 .mg-game-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16); }
+/* hidden を付けたゲームは一覧に出さない（直リンク ?game=ゲームID でだけ開ける。index.html の説明を参照） */
+.mg-game-card[hidden] { display: none; }
 .mg-game-icon { font-size: 40px; }
 .mg-game-name { font-size: 15px; font-weight: 700; }
 
