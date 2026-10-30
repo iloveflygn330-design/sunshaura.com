@@ -30,10 +30,17 @@ const DR_CONFIG = {
   speedAccel: 0.5,         // 1秒ごとに速くなる量（0.5 なら 10分で最高速）
   pxPerMeter: 10,          // 距離の計算（10px = 1m）
 
-  /* --- ジャンプ・しゃがみ --- */
+  /* --- ジャンプ・スライディング --- */
   gravity: 1500,           // 重力（大きいほど早く落ちる）
   jumpVelocity: 460,       // ジャンプの強さ（ジャンプ高さUPで倍率がかかる）
-  fastFallRate: 3,         // 空中でしゃがむと、重力が何倍になるか（急降下）
+  slideTime: 0.55,         // スライディングの長さ（秒）。すべり終わるまで次は出せない（ジャンプで途中でやめられる）
+  slideBuffer: 0.15,       // 空中で押したとき、この秒数以内に着地したら着地と同時にすべる
+
+  /* --- 急降下 → ダッシュ（急降下のすぐあとに居合切り・スピンを使うと、前へ「ぎゅんっ」と出る） --- */
+  diveComboTime: 0.8,      // 急降下を使ってから、ダッシュにできる時間（秒）
+  dashDistance: 56,        // 前に出る距離（ドット）
+  dashTime: 0.16,          // 前に出るのにかかる時間（秒）
+  dashReturnSpeed: 36,     // 元の位置に戻る速さ（ドット/秒）
 
   /* --- 障害物の出方 ---
        次の障害物までの間隔は「秒」で決めている（速くなっても飛べる間隔を保つため）。
@@ -66,11 +73,17 @@ const DR_CONFIG = {
   worldLength: 1000,       // 1つのワールドの長さ（m）
   worldCalmTime: 1.6,      // ワールド移動の演出中、障害物を出さない時間（秒）
 
-  /* --- スコア = 距離(m) + 拾ったコインの数 × scoreCoin + 倒した障害物の数 × scoreKill + かすりの回数 × scoreGraze
-       ※ 変えたら、サーバー側（tools/dinorun-ranking/Code.gs）の SCORE_COIN / SCORE_KILL / SCORE_GRAZE も同じ値にする --- */
+  /* --- スコア = 距離(m) + 拾ったコインの数 × scoreCoin + 倒した障害物の数 × scoreKill
+                + かすりの回数 × scoreGraze + スライディングでくぐった回数 × scoreSlide
+       ※ 変えたら、サーバー側（tools/dinorun-ranking/Code.gs）の SCORE_COIN / SCORE_KILL / SCORE_GRAZE / SCORE_SLIDE も同じ値にする --- */
   scoreCoin: 10,
   scoreKill: 25,
   scoreGraze: 15,
+  scoreSlide: 20,
+
+  /* --- スライディングボーナス（立っていたらぶつかる障害物を、スライディングでくぐり抜けるともらえる）---
+       ※ かすりボーナスとは重ならない（くぐった障害物は、かすりにしない） */
+  slideCoin: 1,            // スライディングボーナスでもらえるコイン
 
   /* --- かすりボーナス（障害物にぶつからず、ぎりぎりでよけるともらえる） ---
        自機と障害物の当たり判定のすき間が grazeDistance ドット以内ですれ違ったら「かすり」。
@@ -97,37 +110,57 @@ const DR_CONFIG = {
 };
 
 /* -----------------------------------------------------
-   ★拡張予定: 音（いまは鳴らさない。ファイルを置いて src を書けば鳴るようになる）
+   ★拡張予定: 音
+     いまは、音のファイルがない音は「仮の電子音（tone）」で鳴らしている。
+     画面の 🔊 ボタンで、音のオン・オフができる（このブラウザに覚えておく）。
 
-   使い方:
+   本物の音に差し替えるには:
      1. 音のファイルを minigame/dinorun/sounds/ に置く（.mp3 か .ogg か .wav。フォルダがなければ作る）
      2. 下の該当する行の src に、minigame/ から見た場所を書く
-          例: jump: { src: 'dinorun/sounds/jump.mp3', volume: 0.6 },
-     3. src が空（''）の音は鳴らさない（エラーにもならない）
+          例: jump: { src: 'dinorun/sounds/jump.mp3', volume: 0.6, tone: ... },
+        src を書いた音は、tone ではなくファイルが鳴る（tone は消さずに残しておいてよい）
+     3. src も tone もない音は鳴らさない
+
+   仮の電子音（tone）の書き方:
+     tone: { wave: 'square', freq: 660, to: 990, dur: 0.08 }
+       wave … 音色。'square'（ピコピコ）/ 'triangle'（やわらかい）/ 'sawtooth'（ジャリッ）/ 'sine'（ポー）
+       freq … 高さ（Hz。440 がラの音。大きいほど高い）
+       to   … （任意）音の終わりの高さ。書くと、そこまで音が滑る
+       dur  … 長さ（秒）
+     いくつかの音を順番に鳴らすとき:
+     tone: { wave: 'square', notes: [[523, 0.06], [784, 0.1]] }   … [高さ, 長さ, 終わりの高さ（任意）] を並べる
 
    音の id とタイミング（dinorun.js が drSound('id') で呼ぶ）:
-     jump … ジャンプ / coin … コインを拾った / graze … かすりボーナス / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
-     kill … 障害物を壊した / shop … ショップに入った / buy … アイテムを買った / skip … ショップをスキップした
-     world … ワールド移動 / gameover … ゲームオーバー / select … 名前入力などのボタン / start … ゲーム開始
+     jump … ジャンプ / slide … スライディング / coin … コインを拾った / graze … かすりボーナス
+     slidebonus … スライディングボーナス / hit … ぶつかった / slash … 居合切り / spin … スピンアタック
+     dive … 急降下 / dash … ダッシュ / vacuum … コイン吸引 / kill … 障害物を壊した
+     shop … ショップに入った / buy … アイテムを買った / reroll … 品ぞろえの入れ替え / skip … ショップをスキップした
+     world … ワールド移動 / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
 
    BGM（ワールドごとに変えたいとき）:
      dinorun-worlds.js の各ワールドの bgm に、下の id を書く（例: bgm: 'bgm_home'）。
      ここに bgm_home: { src: 'dinorun/sounds/bgm_home.mp3', volume: 0.4, loop: true }, のように1行足す。
-     loop: true を付けた音はくり返し流れ、ワールドが変わると切り替わる。
+     loop: true を付けた音はくり返し流れ、ワールドが変わると切り替わる（BGM は電子音なし）。
    ----------------------------------------------------- */
 const DR_SOUNDS = {
-  jump:     { src: '', volume: 0.6 },
-  coin:     { src: '', volume: 0.5 },
-  graze:    { src: '', volume: 0.6 },
-  hit:      { src: '', volume: 0.8 },
-  slash:    { src: '', volume: 0.7 },
-  spin:     { src: '', volume: 0.7 },
-  kill:     { src: '', volume: 0.6 },
-  shop:     { src: '', volume: 0.7 },
-  buy:      { src: '', volume: 0.7 },
-  skip:     { src: '', volume: 0.6 },
-  world:    { src: '', volume: 0.7 },
-  gameover: { src: '', volume: 0.8 },
-  select:   { src: '', volume: 0.5 },
-  start:    { src: '', volume: 0.7 },
+  jump:       { src: '', volume: 0.5, tone: { wave: 'square', freq: 330, to: 660, dur: 0.09 } },
+  slide:      { src: '', volume: 0.4, tone: { wave: 'sawtooth', freq: 260, to: 120, dur: 0.14 } },
+  coin:       { src: '', volume: 0.4, tone: { wave: 'square', notes: [[988, 0.04], [1319, 0.08]] } },
+  graze:      { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[1047, 0.05], [1568, 0.09]] } },
+  slidebonus: { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[784, 0.05], [1175, 0.09]] } },
+  hit:        { src: '', volume: 0.7, tone: { wave: 'sawtooth', freq: 220, to: 60, dur: 0.25 } },
+  slash:      { src: '', volume: 0.5, tone: { wave: 'sawtooth', freq: 1800, to: 300, dur: 0.12 } },
+  spin:       { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 300, to: 900, dur: 0.2 } },
+  dive:       { src: '', volume: 0.5, tone: { wave: 'square', freq: 900, to: 150, dur: 0.12 } },
+  dash:       { src: '', volume: 0.6, tone: { wave: 'sawtooth', freq: 200, to: 1200, dur: 0.12 } },
+  vacuum:     { src: '', volume: 0.5, tone: { wave: 'sine', freq: 300, to: 1500, dur: 0.3 } },
+  kill:       { src: '', volume: 0.5, tone: { wave: 'square', freq: 600, to: 100, dur: 0.1 } },
+  shop:       { src: '', volume: 0.5, tone: { wave: 'square', notes: [[523, 0.07], [659, 0.07], [784, 0.12]] } },
+  buy:        { src: '', volume: 0.5, tone: { wave: 'square', notes: [[784, 0.06], [1047, 0.1]] } },
+  reroll:     { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[440, 0.05], [554, 0.05], [659, 0.08]] } },
+  skip:       { src: '', volume: 0.5, tone: { wave: 'square', notes: [[659, 0.06], [523, 0.1]] } },
+  world:      { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.2]] } },
+  gameover:   { src: '', volume: 0.6, tone: { wave: 'square', notes: [[392, 0.15], [330, 0.15], [262, 0.35]] } },
+  select:     { src: '', volume: 0.3, tone: { wave: 'square', freq: 880, dur: 0.04 } },
+  start:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[523, 0.08], [784, 0.08], [1047, 0.14]] } },
 };

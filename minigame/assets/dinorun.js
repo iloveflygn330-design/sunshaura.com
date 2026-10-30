@@ -31,25 +31,59 @@
      例: 数秒間スピードを落とす 'slow' を作るなら
        slow(run, skill) { run.slowT = skill.duration; }
        → drUpdate() の速さの計算で run.slowT > 0 のときに速さを下げる処理も足す
+       → 効果時間をバーで出したいときは、drEffectBars() に1行足す
+     ※ 使えないとき（急降下を地面で押したなど）は false を返すと、クールタイムが減らない（空振りにならない）
    ----------------------------------------------------- */
 const DR_SKILL_ACTIONS = {
-  /* 居合切り：目の前の range × height の範囲にある、壊せる障害物を切る */
+  /* 居合切り：目の前の range × height の範囲にある、壊せる障害物を切る
+     （急降下のすぐあとなら「ダッシュ切り」：前へ dashDistance 進みながら、その道のりもまとめて切る） */
   slash(run, skill) {
+    const dash = drTryDash(run);
     run.slashT = 0.28;
-    run.slashRange = skill.range;
+    run.slashRange = skill.range + dash;
     const p = drPlayerBox(run);
-    const area = { x: p.x + p.w - 2, y: DR_CONFIG.groundY - skill.height, w: skill.range, h: skill.height };
+    const area = { x: p.x + p.w - 2, y: DR_CONFIG.groundY - skill.height, w: skill.range + dash, h: skill.height };
     run.obstacles.forEach(o => {
       if (!o.dead && o.def.breakable !== false && drOverlap(area, drObstacleBox(o))) drKillObstacle(run, o);
     });
     drSound('slash');
   },
-  /* スピンアタック：duration 秒のあいだ回転。ぶつかった障害物を壊し、ダメージを受けない */
+  /* スピンアタック：duration 秒のあいだ回転。ぶつかった障害物を壊し、ダメージを受けない
+     （急降下のすぐあとなら、前へダッシュしながら回転する） */
   spin(run, skill) {
+    drTryDash(run);
     run.spinT = skill.duration;
+    run.spinTotal = skill.duration;
     drSound('spin');
   },
+  /* 急降下：空中から一気に着地する（地面にいるときは使えない）。
+     このあと DR_CONFIG.diveComboTime 秒以内に居合切りかスピンアタックを使うとダッシュになる */
+  dive(run, skill) {
+    if (run.onGround) return false;
+    run.vy = -skill.speed;
+    run.diving = true;
+    run.slideT = 0;
+    run.comboT = DR_CONFIG.diveComboTime;
+    drSound('dive');
+  },
+  /* コイン吸引：画面に出ているコインを全部、自機に吸い寄せる */
+  vacuum(run, skill) {
+    run.coins.forEach(c => { if (c.x < DR_CONFIG.width) c.vac = true; });
+    run.vacuumFx = 0.35;
+    drSound('vacuum');
+  },
 };
+
+/* 急降下のすぐあとなら、前へダッシュする（進む距離を返す。ダッシュしなければ 0） */
+function drTryDash(run) {
+  if (!(run.comboT > 0)) return 0;
+  run.comboT = 0;
+  run.dashT = DR_CONFIG.dashTime;
+  run.dashFrom = run.dashX;
+  drSound('dash');
+  return DR_CONFIG.dashDistance;
+}
+function drPX(run) { return DR_CONFIG.playerX + ((run && run.dashX) || 0); }   // 自機の左端（ダッシュで前に出ている分を足す）
 
 /* =====================================================
    ここから下はゲームの仕組み
@@ -62,7 +96,7 @@ const dr = {
   raf: 0, lastT: 0, clock: 0,
   run: null,          // いまのプレイ（drNewRun() で作る）
   demo: null,         // タイトル画面の後ろで流れている見本
-  duckKeys: new Set(),     // しゃがみを押している入力（キー・指ごと）
+  slideBufT: 0,            // 空中でスライディングを押したとき、着地したらすぐ出せるように覚えておく時間
   ranking: { all: [], month: [], local: true, ok: true, loaded: false },
   rankTab: 'month',
   entry: null,        // 名前入力中の状態
@@ -92,7 +126,6 @@ function dinorunStop() {
   if (!dr.active) return;
   dr.active = false;
   cancelAnimationFrame(dr.raf); dr.raf = 0;
-  dr.duckKeys.clear();
   drBgm(null);
   document.body.classList.remove('dr-active', 'dr-header-hidden', 'dr-modal');
   drUpdateHeaderToggle();
@@ -113,6 +146,7 @@ function drSetup() {
   drBuildPads();
   drBindInput();
   drBuildEntry();
+  drUpdateSoundBtn();
 
   // スキル・アイテムの画像（PNG）を指定していれば先に読み込んでおく
   drPreloadImages();
@@ -152,8 +186,8 @@ function drBuildPads() {
         <span class="dr-key">Space</span><span class="dr-btn-label">ジャンプ</span>
         <span class="dr-jump-count" aria-label="ジャンプ回数"></span>
       </button>`;
-    html += `<button type="button" class="dr-btn dr-duck-btn" data-act="duck">
-        <span class="dr-key">↓</span><span class="dr-btn-label">しゃがむ</span>
+    html += `<button type="button" class="dr-btn dr-duck-btn" data-act="slide">
+        <span class="dr-key">↓</span><span class="dr-btn-label">スライディング</span>
       </button>`;
     pad.innerHTML = html;
   });
@@ -170,13 +204,6 @@ function drBindInput() {
     try { btn.setPointerCapture(e.pointerId); } catch (err) { /* 古いブラウザ */ }
     drPress(btn.dataset.act, 'p' + e.pointerId);
   });
-  const release = e => {
-    const btn = e.target.closest('[data-act]');
-    if (btn && btn.dataset.act === 'duck') drRelease('duck', 'p' + e.pointerId);
-  };
-  pads.addEventListener('pointerup', release);
-  pads.addEventListener('pointercancel', release);
-  pads.addEventListener('lostpointercapture', release);
   pads.addEventListener('contextmenu', e => e.preventDefault());
 
   // ゲーム画面をタップ／クリック：プレイ中はジャンプ
@@ -187,10 +214,6 @@ function drBindInput() {
 
   // キーボード
   window.addEventListener('keydown', drOnKeyDown);
-  window.addEventListener('keyup', e => {
-    if (!dr.active) return;
-    if (e.code === 'ArrowDown' || e.code === 'KeyJ') drRelease('duck', 'k' + e.code);
-  });
 
   // 画面上のボタン（data-dr="..."）
   document.getElementById('dr-root').addEventListener('click', e => {
@@ -241,7 +264,7 @@ function drOnKeyDown(e) {
       break;
     case 'play':
       if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW' || c === 'KeyK') drPress('jump', 'k');
-      else if (c === 'ArrowDown' || c === 'KeyJ') drPress('duck', 'k' + c);
+      else if (c === 'ArrowDown' || c === 'KeyJ') drPress('slide');
       else if (c === 'KeyA') drPress('skill0');
       else if (c === 'KeyS') drPress('skill1');
       else if (c === 'KeyD') drPress('skill2');
@@ -259,6 +282,7 @@ function drOnKeyDown(e) {
       else if (c === 'Digit2') drBuy(1);
       else if (c === 'Digit3') drBuy(2);
       else if (c === 'Digit4') drBuy(3);
+      else if (c === 'KeyR') drReroll();
       else if (c === 'Enter' || c === 'Escape') drCloseShop();
       break;
     case 'entry':
@@ -266,6 +290,7 @@ function drOnKeyDown(e) {
       break;
     case 'over':
       if (c === 'Space' || c === 'Enter') drUiAction('over-next');
+      else if (c === 'KeyR') drUiAction('retry');
       break;
     case 'ranking':
       if (c === 'Space' || c === 'Enter' || c === 'Escape') drShowTitle();
@@ -280,11 +305,8 @@ function drPress(act, src) {
   if (dr.mode !== 'play' || !dr.run) return;
   const run = dr.run;
   if (act === 'jump') drJump(run);
-  else if (act === 'duck') { dr.duckKeys.add(src || 'x'); }
+  else if (act === 'slide') drSlide(run);
   else if (act.startsWith('skill')) drUseSkill(run, +act.slice(5));
-}
-function drRelease(act, src) {
-  if (act === 'duck') dr.duckKeys.delete(src || 'x');
 }
 
 /* 画面のボタン（data-dr）の処理 */
@@ -299,6 +321,9 @@ function drUiAction(act, el) {
     case 'resume': drResume(); break;
     case 'quit': drBgm(null); dr.run = null; drShowTitle(); break;
     case 'shop-close': drCloseShop(); break;
+    case 'reroll': drReroll(); break;
+    case 'retry': drStartGame(); break;
+    case 'sound': drToggleSound(); break;
     case 'buy': drBuy(+el.dataset.index); break;
     case 'pick-slot': drPickSlot(+el.dataset.slot); break;
     case 'swap-slot': drSwapSelect(+el.dataset.slot); break;
@@ -357,6 +382,14 @@ function drNewRun() {
     speed: DR_CONFIG.speedStart,
     y: 0, vy: 0,           // 自機の高さ（地面から上へ px）と縦の速さ
     onGround: true, jumpsUsed: 0, ducking: false,
+    slideT: 0,             // スライディングの残り時間（0 より大きい間はスライディング中。終わるまで次は出せない）
+    diving: false,         // 急降下中
+    comboT: 0,             // 急降下のあと、ダッシュにできる残り時間
+    dashT: 0, dashX: 0, dashFrom: 0,   // ダッシュ（前に出ている距離 dashX。だんだん元の位置に戻る）
+    magnet: 0,             // 磁石の範囲（ドット。0 なら磁石なし）
+    rerolls: 0,            // ショップで品ぞろえを入れ替えられる回数（1回のショップあたり）
+    slides: 0,             // スライディングでくぐったボーナスの回数
+    vacuumFx: 0,
     maxJumps: 1,           // ジャンプできる回数
     jumpPower: 1,          // ジャンプの強さの倍率
     lives: DR_CONFIG.startLives,
@@ -372,7 +405,7 @@ function drNewRun() {
     slots: [null, null, null],   // スキルボタン①②③に入っているスキルの id
     bench: [],             // ボタンから外したスキル（ショップで入れ直せる）
     levels: {},            // アイテムを何回買ったか（id → 回数）
-    spinT: 0, slashT: 0, slashRange: 0,
+    spinT: 0, spinTotal: 0, slashT: 0, slashRange: 0,
     obstacles: [], coins: [], effects: [], shopIcon: null,
     nextObstacleIn: DR_CONFIG.speedStart * 1.4,
     nextCoinIn: DR_CONFIG.speedStart * 0.8,
@@ -391,7 +424,6 @@ function drNewRun() {
 function drStartGame() {
   drSound('start');
   dr.run = drNewRun();
-  dr.duckKeys.clear();
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
   drBgm(drWorld(dr.run).bgm);
   drShowBanner(drWorld(dr.run).name, 'WORLD 1');
@@ -409,7 +441,6 @@ function drStartReady(next, sec) {
 
 function drPause() {
   if (dr.mode !== 'play' && dr.mode !== 'ready') return;
-  dr.duckKeys.clear();
   drSetMode('pause');
 }
 function drResume() {
@@ -456,7 +487,8 @@ function drWorld(run) { return DR_WORLDS[run.worldIndex % DR_WORLDS.length]; }
 function drMeters(run) { return run.dist / DR_CONFIG.pxPerMeter; }
 function drScore(run) {
   const C = DR_CONFIG;
-  return Math.floor(drMeters(run)) + run.coinsPicked * C.scoreCoin + run.kills * C.scoreKill + run.grazes * C.scoreGraze;
+  return Math.floor(drMeters(run)) + run.coinsPicked * C.scoreCoin + run.kills * C.scoreKill
+    + run.grazes * C.scoreGraze + run.slides * C.scoreSlide;
 }
 function drDifficulty(run) { return Math.min(1, (run.speed - DR_CONFIG.speedStart) / (DR_CONFIG.speedMax - DR_CONFIG.speedStart)); }
 function drLerp(a, b, t) { return a + (b - a) * t; }
@@ -476,15 +508,35 @@ function drUpdate(run, dt) {
   run.dist += move;
 
   // --- 自機 ---
-  const duckHeld = dr.duckKeys.size > 0;
-  let g = C.gravity;
-  if (!run.onGround && duckHeld) g *= C.fastFallRate;
   if (!run.onGround) {
-    run.vy -= g * dt;
+    if (!run.diving) run.vy -= C.gravity * dt;   // 急降下中は一定の速さで落ちる
     run.y += run.vy * dt;
-    if (run.y <= 0) { run.y = 0; run.vy = 0; run.onGround = true; run.jumpsUsed = 0; drPuff(run, 3); }
+    if (run.y <= 0) {
+      run.y = 0; run.vy = 0; run.onGround = true; run.jumpsUsed = 0;
+      drPuff(run, run.diving ? 10 : 3);
+      if (run.diving) { run.diving = false; dr.shake = Math.max(dr.shake, 0.12); }
+      // 空中でスライディングを押していたら、着地と同時に出す
+      if (dr.slideBufT > 0) { dr.slideBufT = 0; drSlide(run); }
+    }
   }
-  run.ducking = run.onGround && duckHeld && run.spinT <= 0;
+  if (dr.slideBufT > 0) dr.slideBufT = Math.max(0, dr.slideBufT - dt);
+  if (run.slideT > 0) run.slideT = Math.max(0, run.slideT - dt);
+  run.ducking = run.onGround && run.slideT > 0;
+
+  // --- ダッシュ（急降下のあとの居合切り・スピン）：前に出て、だんだん元の位置に戻る ---
+  if (run.dashT > 0) {
+    run.dashT = Math.max(0, run.dashT - dt);
+    const p = 1 - run.dashT / C.dashTime;
+    run.dashX = run.dashFrom + (C.dashDistance - run.dashFrom) * (1 - (1 - p) * (1 - p));
+    // 前に出ている途中でぶつかった、壊せる障害物はまとめて壊す
+    const pb = drPlayerBox(run);
+    run.obstacles.forEach(o => { if (!o.dead && o.def.breakable !== false && drOverlap(pb, drObstacleBox(o))) drKillObstacle(run, o); });
+    if (Math.random() < 0.8) run.effects.push({ type: 'ghost', x: drPX(run) - 6, y: C.groundY - run.y - DR_PLAYER.frameH, t: 0, life: 0.18 });
+  } else if (run.dashX > 0) {
+    run.dashX = Math.max(0, run.dashX - C.dashReturnSpeed * dt);
+  }
+  if (run.comboT > 0) run.comboT = Math.max(0, run.comboT - dt);
+  if (run.vacuumFx > 0) run.vacuumFx = Math.max(0, run.vacuumFx - dt);
 
   // --- タイマー ---
   if (run.invT > 0) run.invT = Math.max(0, run.invT - dt);
@@ -536,6 +588,7 @@ function drUpdate(run, dt) {
   });
   run.obstacles = run.obstacles.filter(o => o.x + o.def.w > -10 && (!o.dead || o.deadT < 0.4));
   run.coins.forEach(c => { c.x -= move; });
+  drPullCoins(run, dt);
   run.coins = run.coins.filter(c => c.x > -12 && !c.taken);
   run.effects.forEach(fx => { fx.t += dt; fx.x += (fx.vx || 0) * dt - (fx.scroll ? move : 0); fx.y += (fx.vy || 0) * dt; if (fx.g) fx.vy += fx.g * dt; });
   run.effects = run.effects.filter(fx => fx.t < fx.life);
@@ -547,7 +600,7 @@ function drUpdate(run, dt) {
       // ショップに寄らずに通り過ぎた → スキップボーナス
       const bonus = C.skipBonusBase + C.skipBonusPerShop * run.shopCount;
       run.wallet += bonus;
-      drFloatText(run, `SKIP +${bonus}`, C.playerX + 10, C.groundY - 50, '#FFD84A');
+      drFloatText(run, `SKIP +${bonus}`, drPX(run) + 10, C.groundY - 50, '#FFD84A');
       drSound('skip');
       drAfterShop(run);
     }
@@ -555,9 +608,12 @@ function drUpdate(run, dt) {
 
   // --- 当たり判定 ---
   const pb = drPlayerBox(run);
+  const standBox = drPlayerBoxAs(run, 'stand');
   for (const o of run.obstacles) {
     if (o.dead || o.hitDone) continue;
     drTrackGraze(run, pb, o);
+    // 立っていたらぶつかっていた障害物の下を、スライディングでくぐっている
+    if (run.ducking && drOverlap(standBox, drObstacleBox(o))) o.slidUnder = true;
     if (!drOverlap(pb, drObstacleBox(o))) continue;
     o.noGraze = true;
     if (run.spinT > 0) {
@@ -570,6 +626,7 @@ function drUpdate(run, dt) {
     drDamage(run);
     if (dr.mode !== 'play') return;
   }
+  drJudgeSlides(run, pb);
   drJudgeGrazes(run, pb);
   for (const c of run.coins) {
     if (!c.taken && drOverlap(pb, { x: c.x, y: c.y, w: DR_PICKUPS.coin.w, h: DR_PICKUPS.coin.h })) {
@@ -608,23 +665,72 @@ function drJudgeGrazes(run, pb) {
     const ob = drObstacleBox(o);
     if (ob.x + ob.w >= pb.x) continue;       // まだ自機の後ろまで来ていない
     o.judged = true;
-    if (o.dead || o.hitDone || o.noGraze || o.minGap > C.grazeDistance) continue;
+    if (o.dead || o.hitDone || o.noGraze || o.slidUnder || o.minGap > C.grazeDistance) continue;
     if (o.group && (done.has(o.group) || run.obstacles.some(x => x !== o && x.group === o.group && x.grazed))) continue;
     o.grazed = true;
     if (o.group) done.add(o.group);
     run.grazes++;
     run.wallet += C.grazeCoin;
-    drFloatText(run, 'GRAZE +' + C.scoreGraze, C.playerX + 4, C.groundY - run.y - 34, '#FFD84A');
+    drFloatText(run, 'GRAZE +' + C.scoreGraze, drPX(run) + 4, C.groundY - run.y - 34, '#FFD84A');
     drSparkle(run, ob.x + ob.w, ob.y + ob.h / 2, '#FFD84A', 5);
     drSound('graze');
   }
 }
 
 /* 自機の当たり判定の箱（画面の中の位置） */
-function drPlayerBox(run) {
-  const h = run.ducking ? DR_PLAYER.hit.duck : DR_PLAYER.hit.stand;
+function drPlayerBox(run) { return drPlayerBoxAs(run, run.ducking ? 'duck' : 'stand'); }
+function drPlayerBoxAs(run, pose) {
+  const h = DR_PLAYER.hit[pose];
   const top = DR_CONFIG.groundY - run.y - DR_PLAYER.frameH;
-  return { x: DR_CONFIG.playerX + h[0], y: top + h[1], w: h[2], h: h[3] };
+  return { x: drPX(run) + h[0], y: top + h[1], w: h[2], h: h[3] };
+}
+
+/* ---------- スライディング ----------
+   ボタンを押すと DR_CONFIG.slideTime 秒すべる（長押しはいらない）。すべり終わるまで次のスライディングは出せない。
+   すべっている間もジャンプ（＝スライディングをやめて跳ぶ）とスキルは使える。
+   空中で押したときは、着地してすぐ出せるよう少しだけ覚えておく（DR_CONFIG.slideBuffer 秒）。 */
+function drSlide(run) {
+  if (run.slideT > 0) return;
+  if (!run.onGround) { dr.slideBufT = DR_CONFIG.slideBuffer; return; }
+  run.slideT = DR_CONFIG.slideTime;
+  run.ducking = true;
+  drPuff(run, 4);
+  drSound('slide');
+}
+
+/* スライディングでくぐったボーナス：立っていたらぶつかっていた障害物を、すべってくぐり抜けたらもらえる
+   （つながって出た障害物はまとめて1回。くぐった障害物は、かすりボーナスにはしない） */
+function drJudgeSlides(run, pb) {
+  const C = DR_CONFIG;
+  for (const o of run.obstacles) {
+    if (o.slideJudged || !o.slidUnder) continue;
+    const ob = drObstacleBox(o);
+    if (ob.x + ob.w >= pb.x) continue;
+    o.slideJudged = true;
+    if (o.dead || o.hitDone) continue;
+    if (o.group && run.obstacles.some(x => x !== o && x.group === o.group && x.slideAwarded)) continue;
+    o.slideAwarded = true;
+    run.slides++;
+    run.wallet += C.slideCoin;
+    drFloatText(run, 'SLIDE +' + C.scoreSlide, drPX(run) + 2, C.groundY - 40, '#7FFFD4');
+    drSound('slidebonus');
+  }
+}
+
+/* ---------- コインを引き寄せる（磁石・コイン吸引） ---------- */
+function drPullCoins(run, dt) {
+  const pb = drPlayerBox(run);
+  const cx = pb.x + pb.w / 2, cy = pb.y + pb.h / 2;
+  for (const c of run.coins) {
+    if (c.taken) continue;
+    const dx = cx - (c.x + 4), dy = cy - (c.y + 4);
+    const d = Math.hypot(dx, dy);
+    if (!c.vac && !(run.magnet > 0 && d < run.magnet)) continue;
+    const sp = (c.vac ? 520 : 260) * dt + (c.vac ? 0 : run.speed * dt * 0.5);
+    if (d <= sp) { c.x = cx - 4; c.y = cy - 4; continue; }
+    c.x += dx / d * sp;
+    c.y += dy / d * sp;
+  }
 }
 function drObstacleBox(o) {
   const d = o.def;
@@ -696,6 +802,7 @@ function drAfterShop(run) {
 /* ---------- 自機の動き ---------- */
 function drJump(run) {
   const v = DR_CONFIG.jumpVelocity * run.jumpPower;
+  run.slideT = 0; run.ducking = false; run.diving = false;
   if (run.onGround) {
     run.onGround = false; run.vy = v; run.jumpsUsed = 1; run.y = Math.max(run.y, 0.01);
     drSound('jump');
@@ -713,7 +820,7 @@ function drUseSkill(run, slot) {
   const skill = run.skills[id];
   const fn = DR_SKILL_ACTIONS[skill.action];
   if (!fn) return;
-  fn(run, skill);
+  if (fn(run, skill) === false) return;   // 使えなかった（空振りにしない）
   run.cooldowns[id] = skill.cooldown;
 }
 
@@ -729,7 +836,7 @@ function drDamage(run) {
   run.lives--;
   dr.shake = 0.3;
   drSound('hit');
-  drSparkle(run, DR_CONFIG.playerX + 12, DR_CONFIG.groundY - run.y - 12, '#FF5A7A', 10);
+  drSparkle(run, drPX(run) + 12, DR_CONFIG.groundY - run.y - 12, '#FF5A7A', 10);
   if (run.lives <= 0) {
     run.lives = 0;
     drGameOver(run);
@@ -747,7 +854,7 @@ function drSparkle(run, x, y, color, n) {
 }
 function drPuff(run, n) {
   for (let i = 0; i < n; i++) {
-    run.effects.push({ type: 'dot', x: DR_CONFIG.playerX + drRand(6, 18), y: DR_CONFIG.groundY - run.y - 1, vx: drRand(-40, -10), vy: drRand(-20, -5), t: 0, life: 0.35, color: '#FFFFFF' });
+    run.effects.push({ type: 'dot', x: drPX(run) + drRand(6, 18), y: DR_CONFIG.groundY - run.y - 1, vx: drRand(-40, -10), vy: drRand(-20, -5), t: 0, life: 0.35, color: '#FFFFFF' });
   }
 }
 function drFloatText(run, text, x, y, color) {
@@ -767,9 +874,8 @@ function drItemAvailable(run, it) {
   return true;
 }
 
-function drOpenShop(run) {
-  drSound('shop');
-  dr.duckKeys.clear();
+/* ショップに並べるアイテムを選ぶ（いま買えるものから、DR_CONFIG.shopOffers 個をランダムに） */
+function drMakeOffers(run) {
   const pool = DR_ITEMS.filter(it => drItemAvailable(run, it));
   const offers = [];
   while (offers.length < DR_CONFIG.shopOffers && pool.length) {
@@ -777,16 +883,31 @@ function drOpenShop(run) {
     offers.push(it);
     pool.splice(pool.indexOf(it), 1);
   }
-  dr.shop = { offers, sold: [], picking: null, swapSel: null };
+  return offers;
+}
+
+function drOpenShop(run) {
+  drSound('shop');
+  dr.shop = { offers: drMakeOffers(run), sold: [], picking: null, swapSel: null, rerollsLeft: run.rerolls };
   drAfterShop(run);
   drSetMode('shop');
+  drRenderShop();
+}
+
+/* 品ぞろえを入れ替える（パッシブ「リロール」を持っているときだけ。1回のショップで run.rerolls 回まで） */
+function drReroll() {
+  const run = dr.run, shop = dr.shop;
+  if (!run || !shop || shop.picking || !(shop.rerollsLeft > 0)) return;
+  shop.rerollsLeft--;
+  shop.offers = drMakeOffers(run);
+  shop.sold = [];
+  drSound('reroll');
   drRenderShop();
 }
 
 function drCloseShop() {
   if (dr.mode !== 'shop' || (dr.shop && dr.shop.picking)) return;
   dr.shop = null;
-  dr.duckKeys.clear();
   drSetMode('play');   // ショップの前後は障害物がないので、カウントダウンなしですぐ再開
 }
 
@@ -809,7 +930,9 @@ function drBuy(index) {
     shop.picking = it.skill;       // どのボタンに入れるか選んでもらう（空きがあっても選べる）
     shop.pickDefault = empty;
   } else if (typeof it.apply === 'function') {
+    const rerollsBefore = run.rerolls;
     it.apply(run, it.requires ? run.skills[it.requires] : undefined);
+    shop.rerollsLeft += run.rerolls - rerollsBefore;   // リロールを買ったら、このショップからすぐ使える
   }
   drRenderShop();
   drUpdateHud(true);
@@ -847,6 +970,10 @@ function drRenderShop() {
   if (!run || !shop) return;
   const wallet = Math.floor(run.wallet);
   document.getElementById('dr-shop-wallet').textContent = wallet;
+  const rr = document.getElementById('dr-shop-reroll');
+  rr.hidden = !(shop.rerollsLeft > 0);
+  rr.disabled = !!shop.picking;
+  rr.querySelector('b').textContent = shop.rerollsLeft;
 
   const cards = document.getElementById('dr-shop-cards');
   if (!shop.offers.length) {
@@ -904,7 +1031,6 @@ function drRenderShop() {
 function drGameOver(run) {
   run.deadT = 0;
   run.vy = 260; run.onGround = false;
-  dr.duckKeys.clear();
   drBgm(null);
   drSound('gameover');
   drSetMode('dying');
@@ -922,10 +1048,10 @@ function drUpdateDying(run, dt) {
 function drShowResult(run) {
   const meters = Math.floor(drMeters(run));
   const score = drScore(run);
-  run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, grazes: run.grazes, durationMs: Math.round(run.t * 1000) };
+  run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, grazes: run.grazes, slides: run.slides, durationMs: Math.round(run.t * 1000) };
   document.getElementById('dr-res-score').textContent = score.toLocaleString();
   document.getElementById('dr-res-detail').innerHTML =
-    `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${DR_CONFIG.scoreCoin}<br>こわした ${run.kills}こ × ${DR_CONFIG.scoreKill}<br>かすり ${run.grazes}かい × ${DR_CONFIG.scoreGraze}`;
+    `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${DR_CONFIG.scoreCoin}<br>こわした ${run.kills}こ × ${DR_CONFIG.scoreKill}<br>かすり ${run.grazes}かい × ${DR_CONFIG.scoreGraze}<br>スライディング ${run.slides}かい × ${DR_CONFIG.scoreSlide}`;
   const qual = drQualifies(score);
   run.qualifies = qual;
   document.getElementById('dr-res-next').textContent = qual ? 'ランキングに名前を入れる' : 'タイトルにもどる';
@@ -1033,7 +1159,7 @@ async function drEntrySubmit() {
   msg.textContent = 'おくっています...';
   const f = run.final;
   const res = await DRRanking.submit({
-    token: run.token, name, score: f.score, distance: f.meters, coins: f.coins, kills: f.kills, grazes: f.grazes, durationMs: f.durationMs,
+    token: run.token, name, score: f.score, distance: f.meters, coins: f.coins, kills: f.kills, grazes: f.grazes, slides: f.slides, durationMs: f.durationMs,
   });
   if (!res.ok) {
     e.sending = false;
@@ -1145,12 +1271,33 @@ function drUpdatePads() {
     for (let i = 0; i < max; i++) html += `<span class="dr-jump-dot${i < left ? '' : ' is-used'}"></span>`;
     document.querySelectorAll('.dr-jump-count').forEach(el => { el.innerHTML = html; el.title = 'ジャンプ回数: ' + max; });
   }
-  // しゃがみボタンの押している表示
-  const duck = dr.duckKeys.size > 0;
-  if (dr.uiCache.duck !== duck) {
-    dr.uiCache.duck = duck;
-    document.querySelectorAll('.dr-duck-btn').forEach(b => b.classList.toggle('is-held', duck));
+  // スライディングボタン：スライディング中は押しこんだ見た目（終わるまで次は出せない）
+  const sliding = !!(run && run.slideT > 0);
+  if (dr.uiCache.slide !== sliding) {
+    dr.uiCache.slide = sliding;
+    document.querySelectorAll('.dr-duck-btn').forEach(b => b.classList.toggle('is-held', sliding));
   }
+  drUpdateEffectBars(run);
+}
+
+/* ---------- 効果時間のバー（ゲーム画面の左上、ハートの下）----------
+   ★拡張予定: 効果時間を見せたいものが増えたら、drEffectBars() の配列に1行足す
+     { id: '英数字', label: '画面に出す文字', left: 残り秒, total: 全体の秒, color: '#バーの色' }
+     left が 0 以下のものは表示しない。 */
+function drEffectBars(run) {
+  return [
+    { id: 'spin', label: 'SPIN', left: run.spinT, total: run.spinTotal || 1, color: '#7FFFD4' },
+  ];
+}
+function drUpdateEffectBars(run) {
+  const box = document.getElementById('dr-effects');
+  if (!box) return;
+  const bars = run && dr.mode !== 'title' ? drEffectBars(run).filter(b => b.left > 0) : [];
+  const key = bars.map(b => b.id + Math.round(b.left / b.total * 50)).join('|');
+  if (dr.uiCache.effects === key) return;
+  dr.uiCache.effects = key;
+  box.innerHTML = bars.map(b => `<div class="dr-effect"><span>${b.label}</span>
+      <i><b style="width:${Math.max(0, Math.min(1, b.left / b.total)) * 100}%;background:${b.color}"></b></i></div>`).join('');
 }
 
 function drUpdateCount() {
@@ -1267,7 +1414,11 @@ function drRender() {
     drDrawSprite(ctx, o.def.sprite, o.def.w, o.def.h, o.x, o.y, dr.clock + o.t0);
     ctx.globalAlpha = 1;
   });
-  // 自機
+  // 自機（急降下中は上に流れる線を出す）
+  if (dr.run && run.diving) {
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    for (let i = 0; i < 3; i++) ctx.fillRect(drPX(run) + 6 + i * 6, C.groundY - run.y - 40 - i * 4, 1, 16);
+  }
   if (dr.run) drDrawPlayer(ctx, run);
   else drDrawPlayer(ctx, run, true);
   // 居合切りの軌跡
@@ -1277,8 +1428,26 @@ function drRender() {
     const a = Math.max(0, 1 - fx.t / fx.life);
     if (fx.type === 'dot') { ctx.globalAlpha = a; ctx.fillStyle = fx.color; ctx.fillRect(Math.round(fx.x), Math.round(fx.y), 2, 2); }
     else if (fx.type === 'text') { ctx.globalAlpha = a; drPixelText(ctx, fx.text, fx.x, fx.y, fx.color, '#1B1B2F'); }
+    else if (fx.type === 'ghost') {   // ダッシュの残像
+      ctx.globalAlpha = a * 0.45;
+      const img = drImage(DR_PLAYER.image);
+      if (img) ctx.drawImage(img, 0, 0, DR_PLAYER.frameW, DR_PLAYER.frameH, Math.round(fx.x), Math.round(fx.y), DR_PLAYER.frameW, DR_PLAYER.frameH);
+      else ctx.drawImage(drPixelCanvas(DR_PLAYER.placeholder.run[0]), Math.round(fx.x), Math.round(fx.y));
+    }
     ctx.globalAlpha = 1;
   });
+  // コイン吸引の輪・磁石の範囲
+  if (dr.run && run.vacuumFx > 0) {
+    const pb = drPlayerBox(run);
+    ctx.strokeStyle = '#FFD84A'; ctx.globalAlpha = run.vacuumFx / 0.35;
+    ctx.beginPath(); ctx.arc(pb.x + pb.w / 2, pb.y + pb.h / 2, (1 - run.vacuumFx / 0.35) * C.width * 0.6 + 8, 0, Math.PI * 2); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  // 急降下のあと、ダッシュにできる間は足元が光る
+  if (dr.run && run.comboT > 0 && run.onGround) {
+    ctx.fillStyle = Math.floor(dr.clock * 20) % 2 ? '#FFD84A' : '#FFFFFF';
+    ctx.fillRect(drPX(run) + 2, C.groundY - 1, 20, 2);
+  }
   if (dr.debug) drDrawDebug(ctx, run);
   ctx.restore();
 }
@@ -1296,7 +1465,7 @@ function drDrawWorldFlash(ctx, fx) {
 
 function drDrawPlayer(ctx, run, isDemo) {
   const C = DR_CONFIG, P = DR_PLAYER;
-  const x = C.playerX, y = C.groundY - run.y - P.frameH;
+  const x = drPX(run), y = C.groundY - run.y - P.frameH;
   // 無敵中は点滅（切れる直前は速く点滅して知らせる）
   if (run.invT > 0 && dr.mode === 'play') {
     const period = run.invT > C.invincibleWarnTime ? 0.24 : 0.08;
@@ -1527,11 +1696,54 @@ function drUpdateDemo(dt) {
 /* =====================================================
    音（dinorun-config.js の DR_SOUNDS。src が空なら鳴らさない）
    ===================================================== */
-const drAudio = { cache: {}, bgm: null, bgmId: null };
+const drAudio = { cache: {}, bgm: null, bgmId: null, ctx: null, muted: false };
+try { drAudio.muted = localStorage.getItem('dinorun-mute') === '1'; } catch (e) { /* なくてもよい */ }
+
+/* 仮の電子音（ファイルを置くまでのあいだ鳴らす。DR_SOUNDS の tone の書き方は dinorun-config.js） */
+function drTone(tone, volume) {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!drAudio.ctx) drAudio.ctx = new AC();
+    const ac = drAudio.ctx;
+    if (ac.state === 'suspended') ac.resume();
+    const notes = tone.notes || [[tone.freq, tone.dur || 0.1, tone.to]];
+    let t = ac.currentTime;
+    const vol = (volume == null ? 0.5 : volume) * 0.25;   // 電子音は大きく聞こえるので小さめに
+    notes.forEach(([f, d, to]) => {
+      const osc = ac.createOscillator(), g = ac.createGain();
+      osc.type = tone.wave || 'square';
+      osc.frequency.setValueAtTime(f, t);
+      if (to) osc.frequency.exponentialRampToValueAtTime(to, t + d);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      osc.connect(g).connect(ac.destination);
+      osc.start(t); osc.stop(t + d + 0.02);
+      t += d;
+    });
+  } catch (e) { /* 音が鳴らなくてもゲームは続ける */ }
+}
+
+/* 音のオン・オフ（画面の 🔊 ボタン。このブラウザに覚えておく） */
+function drToggleSound() {
+  drAudio.muted = !drAudio.muted;
+  try { localStorage.setItem('dinorun-mute', drAudio.muted ? '1' : '0'); } catch (e) { /* なくてもよい */ }
+  if (drAudio.muted && drAudio.bgm) drAudio.bgm.pause();
+  if (!drAudio.muted && drAudio.bgm) drAudio.bgm.play().catch(() => {});
+  drUpdateSoundBtn();
+  drSound('select');
+}
+function drUpdateSoundBtn() {
+  document.querySelectorAll('[data-dr="sound"]').forEach(b => {
+    b.textContent = drAudio.muted ? '🔇' : '🔊';
+    b.setAttribute('aria-label', drAudio.muted ? '音を出す' : '音を消す');
+  });
+}
 
 function drSound(id) {
   const def = DR_SOUNDS[id];
-  if (!def || !def.src) return;
+  if (!def || drAudio.muted) return;
+  if (!def.src) { if (def.tone) drTone(def.tone, def.volume); return; }   // ファイルがなければ仮の電子音
   try {
     let base = drAudio.cache[id];
     if (!base) { base = new Audio(def.src); base.preload = 'auto'; drAudio.cache[id] = base; }
@@ -1551,6 +1763,7 @@ function drBgm(id) {
   try {
     const a = new Audio(def.src);
     a.loop = def.loop !== false;
+    if (drAudio.muted) { drAudio.bgm = a; return; }
     a.volume = def.volume == null ? 0.5 : def.volume;
     a.play().catch(() => {});
     drAudio.bgm = a;

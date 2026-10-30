@@ -16,10 +16,13 @@
      action   … 動きの種類。dinorun.js の DR_SKILL_ACTIONS に同じ名前の処理がある
                   'slash' … 目の前の一定範囲の障害物を切る
                   'spin'  … 一定時間、自機が回転して、ぶつかった障害物を壊す（その間はダメージなし）
+                  'dive'  … 空中から一気に着地する（地面では使えない）。すぐあとに slash / spin でダッシュ
+                  'vacuum' … 画面に出ているコインを全部吸い寄せる
      cooldown    … クールタイム（秒）。ショップのアイテムで短くなる
      minCooldown … クールタイムがこれ以上は短くならない値
      range / height … （slash）切れる範囲の横幅・高さ（ドット）
      duration    … （spin）回転している時間（秒）
+     speed       … （dive）落ちる速さ（ドット/秒）
 
    ★拡張予定: 新しいスキルを増やす場合
      1. 下に1件追加する（例: slow: { name: 'スロー', label: 'スロー', action: 'slow', cooldown: 15, minCooldown: 6, duration: 3 }）
@@ -37,7 +40,16 @@ const DR_SKILLS = {
   spin: {
     name: 'スピンアタック', label: 'スピン', action: 'spin',
     cooldown: 12.0, minCooldown: 4.0,
-    duration: 1.5,
+    duration: 0.8,
+  },
+  dive: {
+    name: '急降下', label: '急降下', action: 'dive',
+    cooldown: 3.0, minCooldown: 1.0,
+    speed: 900,
+  },
+  vacuum: {
+    name: 'コイン吸引', label: '吸引', action: 'vacuum',
+    cooldown: 20.0, minCooldown: 8.0,
   },
 };
 
@@ -69,6 +81,8 @@ const DR_SKILLS = {
      run.lives          … いまのライフ
      run.invincibleTime … ぶつかったあとの無敵時間（秒）
      run.coinMult       … コインを拾ったときの倍率（1 = ふつう）
+     run.magnet         … 磁石の範囲（ドット。0 = 磁石なし）
+     run.rerolls        … 1回のショップで品ぞろえを入れ替えられる回数
      run.skills.iai.cooldown など … 覚えたスキルの数値（requires を付けたアイテムでだけ使う）
        ↑ 2つ目の引数 skill には、requires で指定したスキルの数値が入っているので、skill.cooldown のように書ける
 
@@ -123,9 +137,9 @@ const DR_ITEMS = [
 
   /* --- スピンアタックの強化（スピンアタックを覚えているときだけ並ぶ） --- */
   {
-    id: 'spin_time', name: 'スピンアタック 持続時間強化', desc: '回転している時間が0.5秒のびる', icon: '⌛',
+    id: 'spin_time', name: 'スピンアタック 持続時間強化', desc: '回転している時間が0.4秒のびる', icon: '⌛',
     type: 'passive', requires: 'spin', maxLevel: 4, price: 40, priceUp: 1.6,
-    apply(run, skill) { skill.duration += 0.5; },
+    apply(run, skill) { skill.duration += 0.4; },
   },
   {
     id: 'spin_ct', name: 'スピンアタック クールタイム短縮', desc: 'もう一度使えるまでの時間が1.5秒短くなる', icon: '⏲',
@@ -138,6 +152,40 @@ const DR_ITEMS = [
     id: 'coin_mult', name: 'アイテム倍率アップ', desc: 'コインを拾ったときにもらえる数が増える（+25%）', icon: '💰',
     type: 'passive', maxLevel: 5, price: 25, priceUp: 1.8,
     apply(run) { run.coinMult += 0.25; },
+  },
+
+  /* --- 急降下（空中から一気に着地。すぐあとに居合切り・スピンでダッシュ） --- */
+  {
+    id: 'learn_dive', name: '急降下', desc: '空中から一気に着地する。直後に居合切りかスピンで前へダッシュ', icon: '⏬',
+    type: 'skill', skill: 'dive', maxLevel: 1, price: 45, priceUp: 1, weight: 2,
+  },
+  {
+    id: 'dive_ct', name: '急降下 クールタイム短縮', desc: 'もう一度使えるまでの時間が0.5秒短くなる', icon: '⏱',
+    type: 'passive', requires: 'dive', maxLevel: 3, price: 30, priceUp: 1.6,
+    apply(run, skill) { skill.cooldown = Math.max(skill.minCooldown, skill.cooldown - 0.5); },
+  },
+
+  /* --- コイン吸引・磁石 --- */
+  {
+    id: 'learn_vacuum', name: 'コイン吸引', desc: '画面に出ているコインを一瞬で全部集める', icon: '🌪',
+    type: 'skill', skill: 'vacuum', maxLevel: 1, price: 50, priceUp: 1, weight: 2,
+  },
+  {
+    id: 'vacuum_ct', name: 'コイン吸引 クールタイム短縮', desc: 'もう一度使えるまでの時間が3秒短くなる', icon: '⏲',
+    type: 'passive', requires: 'vacuum', maxLevel: 3, price: 35, priceUp: 1.6,
+    apply(run, skill) { skill.cooldown = Math.max(skill.minCooldown, skill.cooldown - 3); },
+  },
+  {
+    id: 'magnet', name: '磁石', desc: '近くのコインを自動で吸い寄せる（買うたびに範囲が広がる）', icon: '🧲',
+    type: 'passive', maxLevel: 4, price: 35, priceUp: 1.6,
+    apply(run) { run.magnet = run.magnet ? run.magnet + 16 : 32; },
+  },
+
+  /* --- ショップ --- */
+  {
+    id: 'reroll', name: 'リロール', desc: 'ショップの品ぞろえを1回入れ替えられる（毎回のショップで使える）', icon: '🔄',
+    type: 'passive', maxLevel: 2, price: 40, priceUp: 2.0,
+    apply(run) { run.rerolls += 1; },
   },
 
   /* ↑ ここに追加 ↑ */
