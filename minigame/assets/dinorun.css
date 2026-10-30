@@ -25,6 +25,8 @@ body.dr-header-hidden #body-content { padding-top: 0; }
 #dr-root {
   --dr-header-h: var(--header-height-pc);
   --dr-reserve: 290px;          /* ゲーム画面以外に使う高さ（戻るボタン・操作ボタン・余白） */
+  --dr-extra: 0px;              /* 急降下を覚えてスライディングボタンがのびた分（.dr-has-dive） */
+  --dr-dive-h: 34px;            /* スライディングボタンの下にのびる「急降下」の高さ */
   --dr-cyan: #2FE6F5;
   --dr-cyan-dark: #1E5FD6;
   --dr-navy: #12163A;
@@ -42,6 +44,7 @@ body.dr-header-hidden #body-content { padding-top: 0; }
 }
 @media (max-width: 759px) { #dr-root { --dr-header-h: var(--header-height-sp); --dr-reserve: 280px; } }
 body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
+#dr-root.dr-has-dive { --dr-extra: var(--dr-dive-h); }
 /* メニューを開いている間は、メニューが収まる高さを確保する */
 #dr-root.dr-menu-open { min-height: 430px; }
 
@@ -54,8 +57,8 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 #dr-stage {
   position: relative;
   aspect-ratio: 16 / 9;
-  width: min(100%, max(260px, calc((100vh - var(--dr-header-h) - var(--dr-reserve)) * 16 / 9)));
-  width: min(100%, max(260px, calc((100svh - var(--dr-header-h) - var(--dr-reserve)) * 16 / 9)));
+  width: min(100%, max(260px, calc((100vh - var(--dr-header-h) - var(--dr-reserve) - var(--dr-extra)) * 16 / 9)));
+  width: min(100%, max(260px, calc((100svh - var(--dr-header-h) - var(--dr-reserve) - var(--dr-extra)) * 16 / 9)));
   margin: 0 auto;
   border-radius: 10px;
   overflow: hidden;
@@ -195,9 +198,30 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-jump-count { position: absolute; top: 6px; right: 10px; display: flex; gap: 4px; }
 .dr-jump-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dr-navy); }
 .dr-jump-dot.is-used { opacity: 0.25; }
-.dr-duck-btn { height: 46px; background: #A9F4FA; }
-/* スライディング中は、終わるまで押せないことがわかるように灰色にする */
-.dr-duck-btn.is-held { background: #A2A8B4; border-color: #6E7484; color: #fff; }
+/* スライディングボタン（上半分）＋ 急降下（下半分。覚えたら .has-dive が付いて出てくる）
+   使えないあいだは灰色。使えるようになるまでの割合で、左から色が戻っていく（.dr-half-fill の幅を dinorun.js が変える） */
+.dr-duck-btn {
+  flex-direction: column; align-items: stretch; padding: 0; overflow: hidden;
+  background: #A2A8B4;
+  --dr-slide-color: #A9F4FA;
+  --dr-dive-color: #FFC46B;
+}
+.dr-duck-half {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  height: 46px; overflow: hidden;
+}
+.dr-duck-half > :not(.dr-half-fill) { position: relative; }
+.dr-duck-half .dr-key { position: absolute; }
+.dr-half-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: var(--dr-slide-color); }
+.dr-duck-half.is-ready .dr-half-fill { width: 100% !important; }
+.dr-duck-half.is-dive { display: none; height: var(--dr-dive-h); border-top: 2px dashed var(--dr-cyan-dark); font-size: 14px; }
+.dr-duck-half.is-dive .dr-half-fill { background: var(--dr-dive-color); }
+.dr-duck-half.is-dive small { font-size: 11px; margin-left: 2px; }
+.dr-duck-btn.has-dive .dr-duck-half.is-dive { display: flex; }
+.dr-duck-half:not(.is-ready) .dr-btn-label { opacity: 0.8; }
+/* 空中にいる間は「急降下」のほうを目立たせる（そのとき押すと急降下になる） */
+.dr-duck-btn.is-air .dr-duck-half.is-slide { opacity: 0.55; }
+.dr-duck-btn.is-air .dr-duck-half.is-dive.is-ready { box-shadow: inset 0 0 0 2px #fff; }
 
 .dr-keys-help { text-align: center; font-size: 12px; color: var(--color-placeholder); margin-top: 8px; }
 
@@ -209,7 +233,11 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 /* --- スマホ縦持ち：下に余白があるので、ボタンを大きめにして押しやすく --- */
 @media (max-width: 759px) and (orientation: portrait) {
   .dr-jump-btn { height: 78px; }
-  .dr-duck-btn { height: 56px; }
+  .dr-duck-half { height: 56px; }
+  /* 急降下が付いたら、スライディングを少し低くして、のびる分を小さくする（小さいスマホでもはみ出さないように） */
+  #dr-root { --dr-dive-h: 34px; }
+  #dr-root.dr-has-dive { --dr-extra: 24px; }
+  .dr-duck-btn.has-dive .dr-duck-half.is-slide { height: 46px; }
 }
 
 /* --- スマホ横持ち：ゲーム画面の下、左右に同じボタンを出す --- */
@@ -231,7 +259,11 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   .dr-skill-btn.is-empty .dr-skill-num { display: block; font-size: 14px; }
   .dr-ct { bottom: 4px; height: 4px; }
   .dr-jump-btn { height: 40px; font-size: 15px; }
-  .dr-duck-btn { height: 30px; font-size: 13px; }
+  .dr-duck-btn { font-size: 13px; }
+  .dr-duck-half { height: 30px; }
+  #dr-root { --dr-dive-h: 22px; }
+  .dr-duck-half.is-dive { font-size: 12px; }
+  .dr-duck-half.is-dive small { display: none; }
   .dr-keys-help { display: none; }
   /* ヘッダーを隠すボタンは「ゲーム選択に戻る」の行の右に置いて、高さを節約する */
   #dr-header-toggle { position: absolute; top: -24px; right: 0; margin: 0; }

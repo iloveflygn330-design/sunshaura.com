@@ -62,7 +62,8 @@ const DR_PALETTE = {
                                 // 天井から下がっていて、スライディングでしかくぐれないものは、
                                 //   h を DR_CONFIG.groundY - 15（= 169）にして fly: [15] にする（下の screen・banner を参照）
        hit: [2, 2, 10, 28],     // （任意）当たり判定 [左, 上, 幅, 高さ]。書かなければ、絵の外側1ドットを除いた範囲
-       breakable: true,         // 居合切り・スピンアタックで壊せるか（false にすると壊せない）
+       breakable: true,         // 居合切り・スピンアタック・赤い火の玉で壊せるか（false にすると壊せない。青い火の玉だけは消せる）
+       dashCut: true,           // （任意）breakable: false でも、急降下のあとのダッシュ切りなら切れる（天井から下がっているもの）
        minMeter: 0,             // （任意）この距離（m）より後でだけ出る
        weight: 1,               // （任意）出やすさ。大きいほど出やすい
        sprite: { pixels: [...] },  // 絵（上の「絵の書き方」を参照）
@@ -304,9 +305,9 @@ const DR_OBSTACLES = [
       '..........pp..........',
     ] },
   },
-  /* --- 天井から下がっているもの（スライディングでしかくぐれない。壊せない） --- */
+  /* --- 天井から下がっているもの（スライディングでしかくぐれない。ふだんは壊せないが、急降下のあとのダッシュ切りなら切れる） --- */
   {
-    id: 'screen', name: 'ビデオプレイヤーの画面', w: 34, h: 169, fly: [15], breakable: false, minMeter: 120, weight: 0.9,
+    id: 'screen', name: 'ビデオプレイヤーの画面', w: 34, h: 169, fly: [15], breakable: false, dashCut: true, minMeter: 120, weight: 0.9,
     hit: [3, 0, 28, 169],
     sprite: { pixels: drHangingPixels(34, [
       'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK',
@@ -327,7 +328,7 @@ const DR_OBSTACLES = [
     ], 'S') },
   },
   {
-    id: 'banner', name: 'ワールドの垂れ幕', w: 22, h: 169, fly: [15], breakable: false, minMeter: 300, weight: 0.8,
+    id: 'banner', name: 'ワールドの垂れ幕', w: 22, h: 169, fly: [15], breakable: false, dashCut: true, minMeter: 300, weight: 0.8,
     hit: [2, 0, 18, 169],
     sprite: { pixels: drHangingPixels(22, [
       'ssssssssssssssssssssss',
