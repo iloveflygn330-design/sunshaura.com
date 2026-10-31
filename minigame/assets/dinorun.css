@@ -543,3 +543,46 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
 /* ゲームオーバーの原因（「○○にぶつかってしまった…」） */
 .dr-res-cause { font-size: 13px; color: #FFB3C1; margin-top: 4px; }
 .dr-res-cause:empty { display: none; }
+
+/* =====================================================
+   回復薬のボタン（ハートの横。持っているときだけ出る）
+   ===================================================== */
+.dr-hud-life { display: flex; align-items: center; gap: 1.2cqw; }
+.dr-potion-btn {
+  pointer-events: auto; position: relative;
+  width: max(24px, 5cqw); height: max(22px, 4.4cqw);
+  border: 2px solid #fff; border-radius: 6px; background: rgba(18, 22, 58, 0.6);
+  font-size: max(12px, 2.6cqw); line-height: 1; cursor: pointer; padding: 0;
+}
+.dr-potion-btn .dr-key { top: auto; left: auto; right: 1px; bottom: -1px; font-size: 8px; color: #fff; }
+
+/* =====================================================
+   フェイズ（RPG のバトルなど）のあいだ（#dr-root に .dr-in-phase が付く。dinorun.js の drStartPhase）
+     ・上の表示は、ライフ・スコアなどを隠して、一時停止と音のボタンだけ残す（バトルは自分の画面に体力を出す）
+     ・スキルボタンの列の代わりに、そのフェイズのボタンの列（.dr-battle-row）を出す
+     ・ジャンプボタンにクールタイムのバーを出す。スライディングボタンは1段だけ（急降下の段は出さない）
+   ===================================================== */
+#dr-root.dr-in-phase .dr-hud-left, #dr-root.dr-in-phase .dr-hud-item { visibility: hidden; }
+#dr-root.dr-in-phase { --dr-extra: 0px; }
+.dr-battle-row { display: none; }
+#dr-root.dr-in-phase .dr-skill-row { display: none; }
+#dr-root.dr-in-phase .dr-battle-row { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; }
+#dr-root.dr-in-phase .dr-duck-half.is-dive { display: none; }
+.dr-jump-ct { display: none; }
+#dr-root.dr-in-phase .dr-jump-ct { display: block; }
+.dr-jump-btn.is-cooling { background: #A2A8B4; border-color: #6E7484; color: #fff; }
+
+/* フェイズのボタン（小さいボタン。スキル・回復薬・逃げる） */
+.dr-pbtn { height: 48px; flex-direction: column; gap: 1px; font-size: 13px; padding: 0 2px; overflow: hidden; }
+.dr-pbtn .dr-pbtn-name { position: relative; line-height: 1.15; text-align: center; }
+.dr-pbtn .dr-pbtn-sub { position: relative; font-size: 10px; opacity: 0.8; }
+.dr-pbtn .dr-ct { bottom: 4px; height: 4px; }
+.dr-pbtn:disabled, .dr-pbtn.is-cooling { background: #A2A8B4; border-color: #6E7484; color: #fff; }
+.dr-pbtn:disabled { opacity: 0.55; cursor: default; }
+.dr-pbtn.is-escape { background: #FFD3DC; border-color: #C7305A; }
+@media (max-width: 759px) and (orientation: portrait) { .dr-pbtn { height: 54px; } }
+@media (orientation: landscape) and (max-height: 520px) {
+  .dr-pbtn { height: 36px; font-size: 11px; }
+  .dr-pbtn .dr-pbtn-sub { display: none; }
+}
+.dr-victory { color: var(--dr-yellow); }
