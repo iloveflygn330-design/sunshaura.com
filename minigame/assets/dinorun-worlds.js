@@ -533,7 +533,7 @@ const DR_TUTORIAL = {
     { at: 58, obstacle: ['collider', { id: 'drone', lift: 91 }], coins: 'arc',
       text: '障害物をスレスレでよけると、\nボーナスコインがもらえるよ！\nコインの通りにジャンプしてみよう！\n\n+{grazeCoin}コイン' },
     { at: 108, obstacle: 'screen', coins: 'ground',
-      text: '中には、スライディングでよける必要があるオブジェクトがあるよ！\n\nスライディングもぎりぎりでよけると、ボーナスコインがもらえるよ！\n+{slideCoin}コイン\n\nPC: スライディングボタン or ↓キー\nSP: スライディングボタン' },
+      text: 'スライディングでしかよけられない障害物もあるよ！\nくぐり抜けると +{slideCoin}コイン！\n\nPC: ↓キー　SP: スライディングボタン' },
     { at: 163, obstacle: 'pit', coins: 'arc',
       text: '穴にも注意！\nジャンプで飛び越えよう！' },
     { at: 213, coins: 'row', shop: true,
