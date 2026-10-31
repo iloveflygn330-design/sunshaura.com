@@ -37,7 +37,7 @@
      ※ 使えないとき（急降下を地面で押したなど）は false を返すと、クールタイムが減らない（空振りにならない）
    ----------------------------------------------------- */
 const DR_SKILL_ACTIONS = {
-  /* 居合切り：目の前の range × height の範囲にある、壊せる障害物を切る。切ったものからコインが出る
+  /* 居合切り：自機から前へ range の先まで（高さ height）にある、壊せる障害物を全部切る。切ったものからコインが出る
      （急降下のすぐあとなら「ダッシュ切り」：前へ dashDistance 進みながら、その道のりもまとめて切る。
        ダッシュ切りのときは、天井から下がっているもの（障害物の dashCut: true）も切れる） */
   slash(run, skill) {
@@ -46,7 +46,8 @@ const DR_SKILL_ACTIONS = {
     run.slashT = 0.28;
     run.slashRange = skill.range + dash;
     const p = drPlayerBox(run);
-    const area = { x: p.x + p.w - 2, y: DR_CONFIG.groundY - skill.height, w: skill.range + dash, h: skill.height };
+    // 自機のうしろの端から、前の端＋range（＋ダッシュ）まで。重なっているものも、目の前のものも全部切れる
+    const area = { x: p.x, y: DR_CONFIG.groundY - skill.height, w: p.w - 2 + skill.range + dash, h: skill.height };
     run.obstacles.forEach(o => {
       if (!o.dead && drCanCut(run, o) && drOverlap(area, drObstacleBox(o))) { drKillObstacle(run, o); drDropCoins(run, o); }
     });
@@ -449,6 +450,7 @@ function drNewRun() {
     scroll: DR_CONFIG.speedStart,   // いま画面が流れている速さ（ボーナスステージでは速い）
     marks: [],             // ボーナスステージの、ジャンプの目印
     nextHardAt: 0,         // 次の「スキルを使わないと通れない区画」を出す距離（m。0 = まだ決めていない）
+    gateCount: 0,          // その区画を出した回数（はじめの DR_CONFIG.gateHintCount 回は札を出す）
     lives: DR_CONFIG.startLives,
     maxLives: DR_CONFIG.startLives,   // 最大ライフ（回復薬はここまで回復する）
     deathBy: null,         // 最後にぶつかった障害物（ゲームオーバーの原因の表示に使う）
@@ -871,12 +873,13 @@ function drJudgeSlides(run, pb) {
 }
 
 /* ---------- 切った障害物からコインを出す（居合切り）----------
-   DR_CONFIG.slashCoinDrop 個のコインが、障害物のあった場所からはねて出る（拾うとふつうのコインと同じ） */
+   DR_CONFIG.slashCoinDrop 個のコインが、障害物のあった場所から前のほうへ飛んで、地面の少し上に落ちる。
+   落ちたあとは流れてくるので、そのまま走っていれば拾える（自機の頭の上を越えて取りこぼさないように、低めに前へ飛ばす） */
 function drDropCoins(run, o) {
   const C = DR_CONFIG, ob = drObstacleBox(o);
   const y = Math.min(ob.y + ob.h, C.groundY) - 12;
   for (let i = 0; i < C.slashCoinDrop; i++) {
-    run.coins.push({ x: ob.x + ob.w / 2 - 4 + i * 5, y, taken: false, pop: true, vx: drRand(-10, 50), vy: -drRand(90, 150) });
+    run.coins.push({ x: ob.x + ob.w / 2 - 4 + i * 5, y, taken: false, pop: true, vx: run.scroll + drRand(50, 130), vy: -drRand(70, 120) });
   }
 }
 
@@ -973,7 +976,10 @@ function drSpawnGate(run) {
     && (run.cooldowns[id] || 0) <= arrive - 0.5);
   if (!ready) return 0;
   const group = ++run.groupSeq;
-  run.obstacles.push(drMakeObstacle(roof, x0, C.groundY - roof.fly[0] - roof.h, group));
+  const r = drMakeObstacle(roof, x0, C.groundY - roof.fly[0] - roof.h, group);
+  r.hint = (run.gateCount || 0) < C.gateHintCount;   // はじめの何回かは「スキルをつかって！」の札を出す
+  run.gateCount = (run.gateCount || 0) + 1;
+  run.obstacles.push(r);
   run.obstacles.push(drMakeObstacle(wall, wallX, C.groundY - wall.h, group));
   return roof.w;
 }
@@ -1034,15 +1040,47 @@ function drSpawnBonusCoins(run) {
   const n = Math.floor(drRand(C.bonusTrailMin, C.bonusTrailMax + 1));
   for (let i = 0; i < n; i++) run.coins.push({ x: x + i * 12, y: C.groundY - 4 - ch, taken: false });
   x += n * 12 + 30;
-  const v = C.jumpVelocity, g = C.gravity, air = 2 * v / g;   // ジャンプしてから着地するまでの秒数
-  run.marks.push({ x });
-  const k = C.bonusArcCoins;
+  const air = 2 * C.jumpVelocity / C.gravity;   // ふつうのジャンプで、跳んでから着地するまでの秒数
+  // 空中ジャンプ・バタ足を持っていたら、ときどき、それを使わないと取れない道すじにする
+  const kinds = [];
+  if (run.maxJumps >= 2) kinds.push('double');
+  if (run.flutterTime > 0) kinds.push('flutter');
+  const kind = kinds.length && Math.random() < C.bonusSpecialChance ? kinds[Math.floor(Math.random() * kinds.length)] : 'normal';
+  const path = drJumpPath(run, kind);
+  const total = path[path.length - 1].t;
+  run.marks.push({ x, kind });
+  const k = Math.round(C.bonusArcCoins * total / air);
   for (let i = 0; i < k; i++) {
-    const tt = air * (i + 0.6) / (k + 0.2);
-    const lift = v * tt - g * tt * tt / 2 + 10;           // 自機の体のまん中の高さ
+    const tt = total * (i + 0.6) / (k + 0.2);
+    const p = path[Math.min(path.length - 1, Math.round(tt / path.dt))];
+    const lift = p.y + 10;                                  // 自機の体のまん中の高さ
     run.coins.push({ x: x + s * tt - 10, y: C.groundY - lift - ch / 2, taken: false });
   }
-  return (x - (C.width + 6)) + s * air + drRand(30, 70);
+  return (x - (C.width + 6)) + s * total + drRand(30, 70);
+}
+
+/* ジャンプの道すじ（ボーナスステージのコインを並べるのに使う）。[{ t: 秒, y: 足の高さ }] を返す
+     'normal'  … ふつうのジャンプ
+     'double'  … 落ちてきて DR_CONFIG.bonusDoubleAt の高さになったら、もう一度ジャンプ（空中ジャンプ）
+     'flutter' … ボタンを押しっぱなしにして、てっぺんでバタ足して浮く（DR_CONFIG.bonusHoverMax 秒まで） */
+function drJumpPath(run, kind) {
+  const C = DR_CONFIG, v = C.jumpVelocity, g = C.gravity, dt = 1 / 120;
+  const hoverTime = kind === 'flutter' ? Math.min(run.flutterTime || 0, C.bonusHoverMax) : 0;
+  const pts = [];
+  let y = 0, vy = v, t = 0, hover = -1, jumped2 = false;
+  pts.dt = dt;
+  for (let i = 0; i < 2000; i++) {
+    pts.push({ t, y });
+    t += dt;
+    if (hover >= 0 && hover < hoverTime) { hover += dt; continue; }   // 浮いている
+    const before = vy;
+    vy -= g * dt;
+    if (before > 0 && vy <= 0 && kind === 'flutter' && hover < 0) { vy = 0; hover = 0; }   // てっぺんで浮く
+    y += vy * dt;
+    if (kind === 'double' && !jumped2 && vy < 0 && y <= C.bonusDoubleAt) { vy = v * 0.92; jumped2 = true; }   // 落ちてきたら2回目のジャンプ
+    if (y <= 0) { pts.push({ t, y: 0 }); break; }
+  }
+  return pts;
 }
 
 /* ---------- チュートリアル（DR_TUTORIAL。dinorun-worlds.js） ---------- */
@@ -1057,24 +1095,28 @@ function drTutorialTip(run) {
 function drTutorialSpawn(run, st) {
   const C = DR_CONFIG;
   const x0 = C.width + 6;
-  let cx = x0 + 20;           // コインを並べる目安（障害物のまん中）
-  if (st.obstacle) {
-    const def = DR_OBSTACLES.find(o => o.id === st.obstacle);
-    if (def) {
-      const group = ++run.groupSeq;
-      if (def.pit) { const o = drAddPit(run, def, x0, group); cx = x0 + o.w / 2; }
-      else {
-        const lift = st.lift !== undefined ? st.lift : (def.fly ? def.fly[0] : 0);
-        const y = C.groundY - lift - def.h;
-        run.obstacles.push(drMakeObstacle(def, x0, y, group));
-        cx = x0 + def.w / 2;
-      }
+  let cx = null;              // コインを並べる目安（最初の障害物のまん中）
+  const list = st.obstacle ? (Array.isArray(st.obstacle) ? st.obstacle : [st.obstacle]) : [];
+  list.forEach((item, i) => {
+    const id = typeof item === 'string' ? item : item.id;
+    const def = DR_OBSTACLES.find(o => o.id === id);
+    if (!def) return;
+    const group = ++run.groupSeq;
+    let mid;
+    if (def.pit) { const o = drAddPit(run, def, x0, group); mid = x0 + o.w / 2; }
+    else {
+      const lift = item.lift !== undefined ? item.lift : (i === 0 && st.lift !== undefined ? st.lift : (def.fly ? def.fly[0] : 0));
+      // 2つ目からは、最初の障害物のまん中にそろえる
+      const x = cx === null ? x0 : cx - def.w / 2;
+      run.obstacles.push(drMakeObstacle(def, x, C.groundY - lift - def.h, group));
+      mid = x + def.w / 2;
     }
-  }
+    if (cx === null) cx = mid;
+  });
+  if (cx === null) cx = x0 + 20;
   const ch = DR_PICKUPS.coin.h;
   if (st.coins === 'arc') drArcCoins(run, cx, 5);
   else if (st.coins === 'ground') for (let i = 0; i < 5; i++) run.coins.push({ x: cx - 40 + i * 18, y: C.groundY - 4 - ch, taken: false });
-  else if (st.coins === 'under') for (let i = 0; i < 7; i++) run.coins.push({ x: cx - 49 + i * 14, y: C.groundY - 6 - ch, taken: false });
   else if (st.coins === 'row') for (let i = 0; i < 3; i++) run.coins.push({ x: x0 + i * 26, y: C.groundY - 6 - ch, taken: false });
   if (st.shop) {
     drSpawnShop(run);
@@ -1086,6 +1128,9 @@ function drUpdateTip() {
   const el = document.getElementById('dr-tip');
   if (!el) return;
   const st = dr.run && ['play', 'pause', 'ready'].includes(dr.mode) ? drTutorialTip(dr.run) : null;
+  // 障害物が自機に近づいたら、まどをうすくして、うしろの障害物・コインが見えるようにする
+  const near = !!st && dr.run.obstacles.some(o => !o.dead && o.x < DR_CONFIG.width * 0.55 && o.x + o.w > 0);
+  el.classList.toggle('is-faint', near);
   const key = st ? DR_TUTORIAL.steps.indexOf(st) : -1;
   if (dr.uiCache.tip === key) return;
   dr.uiCache.tip = key;
@@ -1822,6 +1867,8 @@ function drRender() {
   const tilted = Math.abs(tilt) > 0.001;
   if (tilted) {
     ctx.save();
+    // 下り坂で地面が下がって見えにくくならないように、傾きに合わせて全体を上へ持ち上げる
+    ctx.translate(0, -Math.round(C.bonusRaise * Math.min(1, Math.abs(run.tilt) / C.bonusTilt)));
     ctx.translate(C.playerX + 12, C.groundY);
     ctx.rotate(tilt);
     ctx.translate(-(C.playerX + 12), -C.groundY);
@@ -1853,6 +1900,7 @@ function drRender() {
       const lx = lb.x === undefined ? (o.def.w - (lb.text.length * 4 - 1)) / 2 : lb.x;
       drPixelText(ctx, lb.text, o.x + lx, o.y + lb.y, lb.color || '#FFFFFF', '#1B1B2F');
     }
+    if (o.hint && !o.dead) drDrawHint(ctx, o, 'スキルをつかって！');
     ctx.globalAlpha = 1;
   });
   // 前へ進んでいる間（急降下コンボ）は、横に流れる線を出す
@@ -1906,6 +1954,27 @@ function drRender() {
   ctx.restore();
 }
 
+/* スキルの区画の札（シャッターの注意の板の上に、白い札を下げる） */
+function drDrawHint(ctx, o, text) {
+  drDrawBadge(ctx, o.x + o.def.w / 2, o.y + o.def.h - 15 - 23, text, '#FFFFFF', '#C7305A');
+}
+/* 日本語の小さい札（cx を真ん中に、top から下へ）。日本語なのでドット文字ではなくフォントで描く */
+function drDrawBadge(ctx, cx, top, text, bg, fg) {
+  ctx.save();
+  ctx.font = '10px "DotGothic16", sans-serif';
+  ctx.textBaseline = 'middle';
+  const w = Math.ceil(ctx.measureText(text).width) + 10, h = 15;
+  const x = Math.round(cx - w / 2);
+  const y = Math.round(top) - (Math.floor(dr.clock * 3) % 2);
+  ctx.fillStyle = '#1B1B2F';
+  ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
+  ctx.fillStyle = bg;
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = fg || '#1B1B2F';
+  ctx.fillText(text, x + 5, y + h / 2 + 1);
+  ctx.restore();
+}
+
 /* 落下穴：地面にまっすぐな穴。上のほうを少し明るくして、下ほど暗くする */
 function drDrawPit(ctx, o) {
   const C = DR_CONFIG;
@@ -1920,6 +1989,9 @@ function drDrawPit(ctx, o) {
 function drDrawMark(ctx, m) {
   const C = DR_CONFIG;
   const x = Math.round(m.x), on = Math.floor(dr.clock * 8) % 2;
+  // 空中ジャンプ・バタ足の道すじには、目印の上に「2回ジャンプ」「長押し」の札を出す
+  if (m.kind === 'double') drDrawBadge(ctx, x, C.groundY - 40, '2回ジャンプ', '#7FFFD4');
+  else if (m.kind === 'flutter') drDrawBadge(ctx, x, C.groundY - 40, '長押し', '#9FE8FF');
   ctx.fillStyle = on ? '#FFFFFF' : '#FFD84A';
   // 地面の上の「▲」
   for (let i = 0; i < 4; i++) ctx.fillRect(x - i, C.groundY - 1 - (3 - i) * 2, 1 + i * 2, 2);
