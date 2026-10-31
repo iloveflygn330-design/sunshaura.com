@@ -530,9 +530,10 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
 .dr-tip-body { margin: 0; padding: 0.6em 0.8em 0.7em; }
 .dr-tip-body span { display: block; }
 .dr-tip-body span + span { margin-top: 0.6em; }
-/* ゲーム画面がせまいとき（スマホ縦）は、まどを広く・文字を小さくして、画面からはみ出さないようにする */
+/* ゲーム画面がせまいとき（スマホ縦）は、まどを広く・文字を小さくして、画面の上のほうに出す
+   （スコア・コインの表示には重なってよい。自機・障害物の高さをなるべく隠さないように） */
 @container (max-width: 520px) {
-  #dr-tip { left: 17%; top: 17%; width: 68%; font-size: 8.5px; line-height: 1.3; }
+  #dr-tip { left: 17%; top: 2%; width: 66%; font-size: 8.5px; line-height: 1.3; }
   .dr-tip-head { padding: 0.35em 0.7em; }
   .dr-tip-body { padding: 0.4em 0.7em 0.5em; }
   .dr-tip-body span + span { margin-top: 0.35em; }
