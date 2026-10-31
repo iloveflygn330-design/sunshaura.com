@@ -8,7 +8,8 @@
      コインを集めて、途中で地面に出てくるショップに触ると、ショップで強化を買える（ジャンプで飛び越すとスキップ）。
      障害物にぶつからず、ぎりぎりでよけると「かすりボーナス」（コイン）。地面の穴（落下穴）はジャンプで飛び越す。
      走った距離でワールドが切り替わる。ボーナスチケットを買うと、次のワールドの前にボーナスステージ（障害物なし・下り坂）。
-     5ワールド目からは、ときどきスキルを使わないと通れない区画（シャッター＋かべ）が出る。ライフが 0 になったらゲームオーバー → 名前（英字3文字）を入れてランキングへ。
+     5ワールド目からは、ときどきスキルを使わないと通れない区画（シャッター＋かべ）が出る。
+     5ワールド目からは、ときどき「入り口の敵」も出る。触れると別の遊び（フェイズ）に切りかわる（いまは RPG のバトル。dinorun-rpg.js）。ライフが 0 になったらゲームオーバー → 名前（英字3文字）を入れてランキングへ。
 
    操作:
      PC     … Space / ↑ ジャンプ（バタ足ジャンプを覚えたら、長押しで空中に浮く）、↓ スライディング（急降下を覚えたら、空中では急降下）、A / S / D スキル①②③、P / Esc 一時停止
@@ -18,6 +19,7 @@
    画面の流れ（dr.mode）:
      title（タイトル）→ ready（カウントダウン）→ play（プレイ中）
        ⇄ shop（ショップ。ゲームは止まる）/ pause（一時停止）
+       ⇄ phase（RPG などのフェイズ。入り口の敵に触れると始まる）→ phaseResult（フェイズの結果）→ ready → play
        → dying（やられ演出）→ over（結果）→ entry（名前入力）→ ranking（ランキング）→ title
 
    ふつうは、このファイルは触らなくてよい。中身を増やすときは:
@@ -98,7 +100,7 @@ const DR_SKILL_ACTIONS = {
 };
 
 /* 居合切りで切れるか（ふつうは breakable のものだけ。ダッシュ切りなら dashCut のものも） */
-function drCanCut(run, o) { return !o.def.pit && (o.def.breakable !== false || (run.dashCut && o.def.dashCut)); }
+function drCanCut(run, o) { return !o.def.pit && !o.def.encounter && (o.def.breakable !== false || (run.dashCut && o.def.dashCut)); }
 
 /* 急降下のすぐあとなら、前へダッシュする（進む距離を返す。ダッシュしなければ 0）。居合切りで使う */
 function drTryDash(run) {
@@ -117,6 +119,25 @@ function drStartRush(run, meters, time) {
 }
 function drPX(run) { return DR_CONFIG.playerX + ((run && run.dashX) || 0); }   // 自機の左端（ダッシュで前に出ている分を足す）
 
+/* -----------------------------------------------------
+   ★拡張予定: フェイズ（入り口の敵に触れると切りかわる、別の遊び。RPG のバトル・音ゲーなど）
+     いまは RPG だけ（dinorun-rpg.js が DR_PHASES.rpg を登録する）。新しいフェイズを足すときは:
+       1. 新しいファイル（例: dinorun-rhythm.js）を作り、index.html で dinorun.js のあとに読み込む
+       2. そのファイルで  DR_PHASES.rhythm = { start, update, render, press, pads, end }  を登録する
+            start(run, enc)  … フェイズが始まるとき（enc は入り口の敵の設定）
+            update(dt)       … 毎フレーム（dr.mode === 'phase' のあいだ）
+            render(ctx)      … ゲーム画面の描画（384 × 216）
+            press(act)       … ボタン・キー。act は 'jump' / 'slide' / 'potion' / 'escape' / 'pskill0'～
+            pads()           … 下のボタンの表示の更新（毎フレーム）
+            end()            … 終わるとき（ボタンの表示などを元に戻す）
+       3. dinorun-rpg-data.js の DR_ENCOUNTERS に、そのフェイズの入り口の敵（色を変える）を足す
+     終わるときは drEndPhase('win' / 'escape' / 'lose') を呼ぶ。
+       'win' … ハートが全回復してノーマルフェイズに戻る / 'escape' … ハートが 1 になって戻る / 'lose' … ゲームオーバー
+       （勝ち・負けの意味はフェイズごとに変えてよい。戻り方を変えたいときは drEndPhase() に足す）
+     結果の画面を出したいときは drShowPhaseResult(タイトル, 中身のHTML) を呼ぶ（「つぎへ」で drEndPhase('win')）
+   ----------------------------------------------------- */
+const DR_PHASES = {};
+
 /* =====================================================
    ここから下はゲームの仕組み
    ===================================================== */
@@ -129,7 +150,9 @@ const dr = {
   run: null,          // いまのプレイ（drNewRun() で作る）
   demo: null,         // タイトル画面の後ろで流れている見本
   slideBufT: 0,            // 空中でスライディングを押したとき、着地したらすぐ出せるように覚えておく時間
-  jumpHeld: new Set(),     // いま押しっぱなしのジャンプボタン・キー（バタ足ジャンプ用。'k'+キー名 / 'p'+指の番号）
+  jumpHeld: new Set(),
+  phase: null,             // いま遊んでいるフェイズ { type, enc, impl }（ノーマルフェイズのときは null）
+  pauseFrom: 'play',       // 一時停止する前のモード（戻るときに使う）     // いま押しっぱなしのジャンプボタン・キー（バタ足ジャンプ用。'k'+キー名 / 'p'+指の番号）
   ranking: { all: [], month: [], local: true, ok: true, loaded: false },
   rankTab: 'month',
   entry: null,        // 名前入力中の状態
@@ -215,9 +238,12 @@ function drBuildPads() {
         </button>`;
     }
     html += '</div>';
+    // フェイズ（RPG のバトルなど）のあいだだけ出る小さいボタンの列（中身はそのフェイズが入れる。dinorun-rpg.js）
+    html += '<div class="dr-battle-row"></div>';
     html += `<button type="button" class="dr-btn dr-jump-btn" data-act="jump">
         <span class="dr-key">Space</span><span class="dr-btn-label">ジャンプ</span>
         <span class="dr-jump-count" aria-label="ジャンプ回数"></span>
+        <span class="dr-ct dr-jump-ct"><span class="dr-ct-fill"></span></span>
       </button>`;
     // スライディングボタン。急降下を覚えると下半分に「急降下」が増える（空中で押すと急降下）。
     // 上半分・下半分それぞれ、使えないあいだは灰色で、使えるようになるまで左から色が戻っていく（.dr-half-fill）
@@ -274,9 +300,9 @@ function drBindInput() {
 
   // ほかのタブに切り替えたら一時停止
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden && dr.active && (dr.mode === 'play' || dr.mode === 'ready')) drPause();
+    if (document.hidden && dr.active && (dr.mode === 'play' || dr.mode === 'ready' || dr.mode === 'phase')) drPause();
   });
-  window.addEventListener('pagehide', () => { if (dr.active && dr.mode === 'play') drPause(); });
+  window.addEventListener('pagehide', () => { if (dr.active && (dr.mode === 'play' || dr.mode === 'phase')) drPause(); });
 }
 
 /* スマホ横持ちは高さが足りないので、ヘッダーを自動で隠す（縦持ちに戻したら出す）。
@@ -314,7 +340,21 @@ function drOnKeyDown(e) {
       else if (c === 'KeyA') drPress('skill0');
       else if (c === 'KeyS') drPress('skill1');
       else if (c === 'KeyD') drPress('skill2');
+      else if (c === 'KeyQ') drUsePotion();
+      else if (c === 'KeyB' && dr.debug) drStartPhase(DR_ENCOUNTERS[0]);   // テスト用：URL に &drdebug を付けると B キーでバトルを始められる
       else if (c === 'KeyP' || c === 'Escape') drPause();
+      break;
+    case 'phase':
+      // フェイズ中のキー（ジャンプ・スライディングは走るときと同じキー。Q 回復薬、X 逃げる、1〜6 スキル）
+      if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW' || c === 'KeyK') drPress('jump');
+      else if (c === 'ArrowDown' || c === 'KeyJ') drPress('slide');
+      else if (c === 'KeyQ') drPress('potion');
+      else if (c === 'KeyX') drPress('escape');
+      else if (/^(Digit|Numpad)[1-9]$/.test(c)) drPress('pskill' + (+c.slice(-1) - 1));
+      else if (c === 'KeyP' || c === 'Escape') drPause();
+      break;
+    case 'phaseResult':
+      if (c === 'Space' || c === 'Enter') drUiAction('phase-next');
       break;
     case 'pause':
       if (c === 'KeyP' || c === 'Escape' || c === 'Enter' || c === 'Space') drResume();
@@ -348,7 +388,9 @@ function drOnKeyDown(e) {
 /* 操作（ボタン・キー共通） */
 function drPress(act, src) {
   if (dr.mode === 'title' && act === 'jump') { drStartGame(); return; }
+  if (dr.mode === 'phase' && dr.phase && dr.run) { dr.phase.impl.press(act, src); return; }
   if (dr.mode !== 'play' || !dr.run) return;
+  if (act === 'potion') { drUsePotion(); return; }
   const run = dr.run;
   if (act === 'jump') { if (src) dr.jumpHeld.add(src); drJump(run); }
   else if (act === 'slide') drSlide(run);
@@ -380,6 +422,8 @@ function drUiAction(act, el) {
     case 'entry-down': drEntryChange(+el.dataset.i, -1); break;
     case 'entry-ok': drEntrySubmit(); break;
     case 'entry-skip': drShowTitle(); break;
+    case 'potion': drUsePotion(); break;
+    case 'phase-next': if (dr.mode === 'phaseResult') drEndPhase('win'); break;
   }
 }
 
@@ -393,12 +437,13 @@ function drSetMode(mode) {
   root.querySelectorAll('[data-show]').forEach(el => {
     el.hidden = !el.dataset.show.split(' ').includes(mode);
   });
-  root.classList.toggle('dr-menu-open', !['play', 'ready', 'dying'].includes(mode));
+  root.classList.toggle('dr-menu-open', !['play', 'ready', 'dying', 'phase'].includes(mode));
   // タイトル以外のメニューを出している間（スマホではヘッダーの上に重ねる。dinorun.css の body.dr-modal）
-  document.body.classList.toggle('dr-modal', dr.active && !['play', 'ready', 'dying', 'title'].includes(mode));
+  document.body.classList.toggle('dr-modal', dr.active && !['play', 'ready', 'dying', 'title', 'phase'].includes(mode));
 }
 
 function drShowTitle() {
+  drCleanupPhase();
   drBgm(null);
   dr.run = null;
   dr.titleSwapT = 0;
@@ -451,6 +496,10 @@ function drNewRun() {
     marks: [],             // ボーナスステージの、ジャンプの目印
     nextHardAt: 0,         // 次の「スキルを使わないと通れない区画」を出す距離（m。0 = まだ決めていない）
     gateCount: 0,          // その区画を出した回数（はじめの DR_CONFIG.gateHintCount 回は札を出す）
+    potion: 0,             // 持っている回復薬の数（1個まで。ハートの横のボタン・Q キーで使う。フェイズ中も使える）
+    encounter: null,       // このワールドで出す入り口の敵 { def, at（m） }（出さないときは null）
+    bosses: 0,             // フェイズで倒したボスの数
+    bossScore: 0,          // フェイズで倒したボスのスコアの合計（スコアに足す）
     lives: DR_CONFIG.startLives,
     maxLives: DR_CONFIG.startLives,   // 最大ライフ（回復薬はここまで回復する）
     deathBy: null,         // 最後にぶつかった障害物（ゲームオーバーの原因の表示に使う）
@@ -486,6 +535,7 @@ function drNewRun() {
 
 function drStartGame() {
   drSound('start');
+  drCleanupPhase();
   dr.run = drNewRun();
   dr.jumpHeld.clear();
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
@@ -504,12 +554,13 @@ function drStartReady(next, sec) {
 }
 
 function drPause() {
-  if (dr.mode !== 'play' && dr.mode !== 'ready') return;
+  if (dr.mode !== 'play' && dr.mode !== 'ready' && dr.mode !== 'phase') return;
+  dr.pauseFrom = dr.mode === 'ready' ? dr.readyNext : dr.mode;   // フェイズ中に止めたら、フェイズに戻る
   drSetMode('pause');
 }
 function drResume() {
   if (dr.mode !== 'pause') return;
-  drStartReady('play', DR_CONFIG.resumeCountSec);
+  drStartReady(dr.pauseFrom === 'phase' && dr.phase ? 'phase' : 'play', DR_CONFIG.resumeCountSec);
 }
 
 /* ---------- ループ ---------- */
@@ -523,6 +574,7 @@ function drLoop(now) {
   dr.clock += dt;
 
   if (dr.mode === 'play') drUpdate(dr.run, dt);
+  else if (dr.mode === 'phase' && dr.phase) dr.phase.impl.update(dt);
   else if (dr.mode === 'ready') {
     dr.readyT -= dt;
     if (dr.readyT <= 0) drSetMode(dr.readyNext);
@@ -553,7 +605,7 @@ function drMeters(run) { return run.dist / DR_CONFIG.pxPerMeter; }
 function drScore(run) {
   const C = DR_CONFIG;
   return Math.floor(drMeters(run)) + run.coinsPicked * C.scoreCoin + run.kills * C.scoreKill
-    + run.grazes * C.scoreGraze + run.slides * C.scoreSlide;
+    + run.grazes * C.scoreGraze + run.slides * C.scoreSlide + (run.bossScore || 0);
 }
 function drDifficulty(run) { return Math.min(1, (run.speed - DR_CONFIG.speedStart) / (DR_CONFIG.speedMax - DR_CONFIG.speedStart)); }
 function drLerp(a, b, t) { return a + (b - a) * t; }
@@ -667,6 +719,7 @@ function drUpdate(run, dt) {
       } else {
         if (run.bonus) { run.bonus = false; run.marks = []; }
         run.worldIndex++;
+        drRollEncounter(run);
       }
       const w = drWorld(run);
       drShowBanner(w.name, run.bonus ? 'BONUS STAGE' : 'WORLD ' + (run.worldIndex + 1));
@@ -744,6 +797,11 @@ function drUpdate(run, dt) {
   const standBox = drPlayerBoxAs(run, 'stand');
   for (const o of run.obstacles) {
     if (o.dead || o.hitDone || o.def.pit) continue;   // 落下穴は「自機」のところで判定している
+    // 入り口の敵：触れたらフェイズが始まる（スピン中・無敵中でも）
+    if (o.def.encounter) {
+      if (drOverlap(pb, drObstacleBox(o))) { drStartPhase(o.def.encounter, o); return; }
+      continue;
+    }
     drTrackGraze(run, pb, o);
     // 立っていたらぶつかっていた障害物の下を、スライディングでくぐっている
     if (run.ducking && drOverlap(standBox, drObstacleBox(o))) o.slidUnder = true;
@@ -890,7 +948,7 @@ function drUpdateShots(run, dt) {
     s.x += step; s.dist += step; s.t += dt;
     const box = { x: s.x - s.r, y: s.y - s.r, w: s.r * 2, h: s.r * 2 };
     for (const o of run.obstacles) {
-      if (o.dead || o.def.pit || s.hit.has(o) || !drOverlap(box, drObstacleBox(o))) continue;
+      if (o.dead || o.def.pit || o.def.encounter || s.hit.has(o) || !drOverlap(box, drObstacleBox(o))) continue;
       s.hit.add(o);
       if (s.blue) { drKillObstacle(run, o); continue; }                // 青：なんでも消す
       if (o.def.breakable === false) { s.done = true; break; }          // 赤：壊せないものに当たったら消える
@@ -933,6 +991,13 @@ function drOverlap(a, b) {
 function drSpawnObstacle(run) {
   const C = DR_CONFIG;
   const meters = drMeters(run);
+  // 入り口の敵（このワールドで出ると決まっていて、その距離まで来たら出す）
+  if (run.encounter && meters >= run.encounter.at) {
+    const def = drEncounterObstacle(run.encounter.def);
+    run.encounter = null;
+    run.obstacles.push(drMakeObstacle(def, C.width + 6, C.groundY - def.h, ++run.groupSeq));
+    return def.w;
+  }
   // スキルを使わないと通れない区画（hardFromWorld ワールド目から、hardGapMin〜Max m ごと）
   if (run.worldIndex + 1 >= C.hardFromWorld) {
     if (!run.nextHardAt) run.nextHardAt = meters + drRand(60, 160);
@@ -1268,6 +1333,98 @@ function drFloatText(run, text, x, y, color) {
   run.effects.push({ type: 'text', text, x, y, vy: -18, t: 0, life: 1.0, color });
 }
 
+/* ---------- 回復薬（1個まで持てる。いつでも使える） ----------
+   ノーマルフェイズ … ハートが最大まで回復（ハートが減っていないときは使わない）
+   フェイズ中      … そのフェイズの press('potion') が使う（RPG なら HP が全回復） */
+function drUsePotion() {
+  const run = dr.run;
+  if (!run || !(run.potion > 0)) return;
+  if (dr.mode === 'phase' && dr.phase) { dr.phase.impl.press('potion'); return; }
+  if (dr.mode !== 'play') return;
+  if (run.lives >= run.maxLives) { drFloatText(run, 'FULL', drPX(run) + 4, DR_CONFIG.groundY - run.y - 34, '#FFFFFF'); return; }
+  run.potion = 0;
+  run.lives = run.maxLives;
+  drSparkle(run, drPX(run) + 12, DR_CONFIG.groundY - run.y - 12, '#7FFFD4', 10);
+  drSound('potion');
+  drUpdateHud(true);
+}
+
+/* ---------- フェイズ（入り口の敵・切りかえ・戻り方。中身は DR_PHASES。上の「★拡張予定: フェイズ」を参照） ---------- */
+/* ワールドが切りかわったとき、このワールドで入り口の敵を出すか決める（1ワールドに1体まで） */
+function drRollEncounter(run) {
+  run.encounter = null;
+  if (typeof DR_ENCOUNTERS === 'undefined') return;
+  const world = run.worldIndex + 1;
+  for (const enc of DR_ENCOUNTERS) {
+    if (world < (enc.fromWorld || 1) || !DR_PHASES[enc.phase]) continue;
+    if (Math.random() < enc.chance) {
+      const start = run.nextWorldAt - DR_CONFIG.worldLength;   // このワールドが始まった距離（m）
+      run.encounter = { def: enc, at: start + DR_CONFIG.worldLength * drRand(0.25, 0.75) };
+      return;
+    }
+  }
+}
+/* 入り口の敵を、障害物と同じ形にしたもの（当たり判定・描画は障害物のしくみを使う） */
+function drEncounterObstacle(enc) {
+  if (!enc.obstacleDef) {
+    enc.obstacleDef = { id: enc.id, name: enc.name, w: enc.w, h: enc.h, fly: null, breakable: false, encounter: enc, sprite: enc.sprite };
+  }
+  return enc.obstacleDef;
+}
+/* フェイズを始める（入り口の敵に触れたとき） */
+function drStartPhase(enc, obstacle) {
+  const run = dr.run, impl = enc && DR_PHASES[enc.phase];
+  if (!run || !impl) return;
+  if (obstacle) run.obstacles = run.obstacles.filter(o => o !== obstacle);
+  dr.jumpHeld.clear();
+  dr.phase = { type: enc.phase, enc, impl };
+  document.getElementById('dr-root').classList.add('dr-in-phase');
+  dr.uiCache = {};
+  impl.start(run, enc);
+  drSetMode('phase');
+}
+/* フェイズを終える。outcome: 'win'（ハート全回復）/ 'escape'（ハートが 1）/ 'lose'（ゲームオーバー） */
+function drEndPhase(outcome) {
+  const run = dr.run, C = DR_CONFIG;
+  if (!run || !dr.phase) return;
+  drCleanupPhase();
+  if (outcome === 'lose') {
+    drBgm(null);
+    drSound('gameover');
+    drShowResult(run);
+    return;
+  }
+  if (outcome === 'win') run.lives = run.maxLives;
+  else if (outcome === 'escape') run.lives = 1;
+  // その場から再開：画面の障害物を消して、少しのあいだ無敵・障害物なし
+  run.obstacles = [];
+  run.shots = [];
+  run.invT = Math.max(run.invT, run.invincibleTime);
+  run.calmT = Math.max(run.calmT, 3);
+  run.nextObstacleIn = Math.max(run.nextObstacleIn, run.speed * 2);
+  run.slideT = 0; run.ducking = false;
+  drBgm(drWorld(run).bgm);
+  drUpdateHud(true);
+  drStartReady('play', C.resumeCountSec);
+}
+/* フェイズの後片づけ（ボタンの表示を元に戻す）。タイトルに戻るときなどにも呼ぶ */
+function drCleanupPhase() {
+  if (!dr.phase) return;
+  const p = dr.phase;
+  dr.phase = null;
+  try { p.impl.end(); } catch (e) { /* 片づけに失敗してもゲームは続ける */ }
+  const root = document.getElementById('dr-root');
+  if (root) root.classList.remove('dr-in-phase');
+  document.querySelectorAll('.dr-battle-row').forEach(el => { el.innerHTML = ''; });
+  dr.uiCache = {};
+}
+/* フェイズの結果の画面（「つぎへ」で drEndPhase('win')） */
+function drShowPhaseResult(title, html) {
+  document.getElementById('dr-pr-title').textContent = title;
+  document.getElementById('dr-pr-detail').innerHTML = html;
+  drSetMode('phaseResult');
+}
+
 /* ---------- ショップ ---------- */
 function drItemPrice(run, it) {
   const lv = run.levels[it.id] || 0;
@@ -1479,7 +1636,8 @@ function drUpdateDying(run, dt) {
 function drShowResult(run) {
   const meters = Math.floor(drMeters(run));
   const score = drScore(run);
-  run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, grazes: run.grazes, slides: run.slides, durationMs: Math.round(run.t * 1000) };
+  run.final = { score, meters, coins: run.coinsPicked, kills: run.kills, grazes: run.grazes, slides: run.slides,
+    bosses: run.bosses || 0, bossScore: run.bossScore || 0, durationMs: Math.round(run.t * 1000) };
   document.getElementById('dr-res-score').textContent = score.toLocaleString();
   document.getElementById('dr-res-cause').textContent = drDeathText(run);
   const C = DR_CONFIG;
@@ -1488,6 +1646,7 @@ function drShowResult(run) {
     `きょり ${meters}m<br>コイン ${run.coinsPicked}こ × ${C.scoreCoin}<br>こわした ${run.kills}こ × ${C.scoreKill}`
     + (C.scoreGraze ? `<br>かすり ${run.grazes}かい × ${C.scoreGraze}` : '')
     + (C.scoreSlide ? `<br>スライディング ${run.slides}かい × ${C.scoreSlide}` : '')
+    + (run.bosses ? `<br>たおしたボス ${run.bosses}たい（+${run.bossScore.toLocaleString()}）` : '')
     + (!C.scoreGraze || !C.scoreSlide ? `<br><small>かすり ${run.grazes}かい・スライディング ${run.slides}かい</small>` : '');
   const qual = drQualifies(score);
   run.qualifies = qual;
@@ -1604,7 +1763,8 @@ async function drEntrySubmit() {
   msg.textContent = 'おくっています...';
   const f = run.final;
   const res = await DRRanking.submit({
-    token: run.token, name, score: f.score, distance: f.meters, coins: f.coins, kills: f.kills, grazes: f.grazes, slides: f.slides, durationMs: f.durationMs,
+    token: run.token, name, score: f.score, distance: f.meters, coins: f.coins, kills: f.kills, grazes: f.grazes, slides: f.slides,
+    bosses: f.bosses, bossScore: f.bossScore, durationMs: f.durationMs,
   });
   if (!res.ok) {
     e.sending = false;
@@ -1670,6 +1830,9 @@ function drUpdateHud(force) {
   set('dr-coins', String(Math.floor(run.wallet)));
   set('dr-dist', Math.floor(drMeters(run)) + 'm');
   drSetHearts(run.lives, run.maxLives, force);
+  // 回復薬を持っているときだけ、ハートの横にボタンを出す
+  const pot = document.getElementById('dr-potion');
+  if (pot && (force || dr.uiCache.potion !== run.potion)) { dr.uiCache.potion = run.potion; pot.hidden = !(run.potion > 0); }
 }
 
 /* ハート：いまのライフの数だけ赤、最大ライフまでの残りは空（うすい灰色） */
@@ -1688,6 +1851,8 @@ function drSetHearts(n, max, force) {
 
 function drUpdatePads() {
   const run = dr.run;
+  // フェイズ中は、そのフェイズがボタンの表示を決める
+  if (dr.phase && run) { dr.phase.impl.pads(); return; }
   const playing = dr.mode === 'play';
   for (let i = 0; i < 3; i++) {
     const id = run ? run.slots[i] : null;
@@ -1856,6 +2021,12 @@ function drDrawSprite(ctx, sprite, w, h, x, y, t) {
 function drRender() {
   const ctx = dr.ctx, C = DR_CONFIG;
   if (!ctx) return;
+  // フェイズ中（一時停止・結果の画面・再開のカウントダウンも）は、そのフェイズが画面を描く
+  if (dr.phase && (['phase', 'phaseResult'].includes(dr.mode) || (dr.mode === 'pause' && dr.pauseFrom === 'phase')
+      || (dr.mode === 'ready' && dr.readyNext === 'phase'))) {
+    ctx.save(); dr.phase.impl.render(ctx); ctx.restore();
+    return;
+  }
   const run = dr.run || dr.demo;
   if (!run) return;
   ctx.save();
@@ -2230,6 +2401,7 @@ const DR_FONT = {
   '4': '101101111001001', '5': '111100111001111', '6': '111100111101111', '7': '111001010010010',
   '8': '111101111101111', '9': '111101111001111', '+': '000010111010000', '-': '000000111000000',
   '!': '010010010000010', '.': '000000000000010', ' ': '000000000000000', ':': '000010000010000',
+  '/': '001001010100100',
   A: '010101111101101', B: '110101110101110', C: '011100100100011', D: '110101101101110', E: '111100110100111',
   F: '111100110100100', G: '011100101101011', H: '101101111101101', I: '111010010010111', J: '001001001101010',
   K: '101101110101101', L: '100100100100111', M: '101111111101101', N: '110101101101101', O: '010101101101010',

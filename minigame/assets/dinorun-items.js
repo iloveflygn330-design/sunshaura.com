@@ -94,6 +94,7 @@ const DR_SKILLS = {
      run.bonusNext      … true にすると、次のワールドの前にボーナスステージが入る
      run.lives          … いまのライフ
      run.maxLives       … 最大ライフ（回復薬はここまで回復する。ハートの空きの数にもなる）
+     run.potion         … 持っている回復薬の数（1個まで）
      run.invincibleTime … ぶつかったあとの無敵時間（秒）
      run.coinMult       … コインを拾ったときの倍率（1 = ふつう）
      run.magnet         … 磁石の範囲（ドット。0 = 磁石なし）
@@ -134,11 +135,11 @@ const DR_ITEMS = [
     apply(run) { run.maxLives += 1; run.lives += 1; },
   },
   {
-    // 使いきり。ライフが減っているときだけ並ぶ
-    id: 'potion', name: '回復薬', desc: 'ライフが最大まで回復する', icon: '🧪',
+    // 1個まで持てる（持っている間は並ばない）。使うのはいつでも：ハートの横のボタン・Q キー（dinorun.js の drUsePotion）
+    id: 'potion', name: '回復薬', desc: '1個だけ持てる。好きなときに使うと、ライフが最大まで回復（バトル中はHPが全回復）', icon: '🧪',
     type: 'passive', consumable: true, price: 40, priceUp: 1.25, weight: 1.5,
-    available(run) { return run.lives < run.maxLives; },
-    apply(run) { run.lives = run.maxLives; },
+    available(run) { return !(run.potion > 0); },
+    apply(run) { run.potion = 1; },
   },
   {
     id: 'inv_up', name: '被弾後無敵時間UP', desc: 'ぶつかったあとの無敵が0.75秒のびる', icon: '✨',

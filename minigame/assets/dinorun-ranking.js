@@ -11,7 +11,7 @@
    GAS とのやりとり（サーバー側の Code.gs と同じ約束で動いている。片方だけ変えないこと）:
      GET  ?action=top         … ランキング { ok, all: [...], month: [...] }（1件 = { name, score, date }）
      GET  ?action=start       … プレイ開始の受付番号 { ok, token }（不正対策。スコア送信のときに必要）
-     POST { action: 'submit', token, name, score, distance, coins, kills, grazes, slides, durationMs }
+     POST { action: 'submit', token, name, score, distance, coins, kills, grazes, slides, bosses, bossScore, durationMs }
                               … スコア送信 { ok, rankAll, rankMonth }（ランク外は 0）
      ※ POST は Content-Type を付けずに送る（付けると GAS が受け付けない「事前確認」が走るため）
    ===================================================== */

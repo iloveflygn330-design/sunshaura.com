@@ -8,7 +8,7 @@
    サイト側（minigame/assets/dinorun-ranking.js）とのやりとり:
      GET  ?action=top    … ランキング（全期間・今月の上位）
      GET  ?action=start  … プレイ開始の受付番号（不正対策）
-     POST { action: 'submit', token, name, score, distance, coins, kills, grazes, slides, durationMs } … スコア登録
+     POST { action: 'submit', token, name, score, distance, coins, kills, grazes, slides, bosses, bossScore, durationMs } … スコア登録
 
    秘密の値（Discord の Webhook URL）はこのコードに書かない。
    Apps Script の「プロジェクトの設定 → スクリプト プロパティ」に DISCORD_WEBHOOK_URL として入れる。
@@ -22,6 +22,7 @@ const SCORE_COIN   = 10;              // DR_CONFIG.scoreCoin
 const SCORE_KILL   = 25;              // DR_CONFIG.scoreKill
 const SCORE_GRAZE  = 0;               // DR_CONFIG.scoreGraze（いまは、かすりはスコアではなくコインがもらえる）
 const SCORE_SLIDE  = 0;               // DR_CONFIG.scoreSlide（スライディングボーナスも同じ）
+const MAX_BOSS_SCORE = 20000;         // ボス1体を倒したときのスコアの上限（DR_BOSSES の score ＋ タイムボーナスの最大）
 const MAX_METERS_PER_SEC = 44 * 1.6;  // 最高速（DR_CONFIG.speedMax ÷ pxPerMeter）に余裕を足したもの
                                       // （急降下コンボのスピン＋15m・スライディング＋8m で、最高速より速く進むことがあるので大きめ）
 const TOKEN_TTL_SEC = 21600;          // 受付番号の有効期限（秒。6時間が上限）
@@ -76,7 +77,9 @@ function submit_(b) {
   const score = n(b.score), distance = n(b.distance), coins = n(b.coins), kills = n(b.kills), durationMs = n(b.durationMs);
   const grazes = b.grazes === undefined ? 0 : n(b.grazes);
   const slides = b.slides === undefined ? 0 : n(b.slides);
-  if ([score, distance, coins, kills, grazes, slides, durationMs].some(v => v < 0)) return { ok: false, error: 'invalid number' };
+  const bosses = b.bosses === undefined ? 0 : n(b.bosses);           // RPG フェイズで倒したボスの数
+  const bossScore = b.bossScore === undefined ? 0 : n(b.bossScore);  // そのスコアの合計
+  if ([score, distance, coins, kills, grazes, slides, bosses, bossScore, durationMs].some(v => v < 0)) return { ok: false, error: 'invalid number' };
 
   const durSec = durationMs / 1000;
   const elapsedSec = (Date.now() - started) / 1000;
@@ -88,8 +91,10 @@ function submit_(b) {
   if (coins > distance * 0.6 + 20) return { ok: false, error: 'coin check' };
   if (kills > distance * 0.5 + 10) return { ok: false, error: 'kill check' };
   if (kills + grazes + slides > distance * 0.5 + 10) return { ok: false, error: 'graze check' };
+  // ボスは1ワールド（1000m）に1体まで。1体ぶんのスコアにも上限がある
+  if (bosses > Math.floor(distance / 1000) + 1 || bossScore > bosses * MAX_BOSS_SCORE) return { ok: false, error: 'boss check' };
   // スコアの計算が合わないのはおかしい
-  if (score !== distance + coins * SCORE_COIN + kills * SCORE_KILL + grazes * SCORE_GRAZE + slides * SCORE_SLIDE) return { ok: false, error: 'score check' };
+  if (score !== distance + coins * SCORE_COIN + kills * SCORE_KILL + grazes * SCORE_GRAZE + slides * SCORE_SLIDE + bossScore) return { ok: false, error: 'score check' };
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
@@ -98,7 +103,7 @@ function submit_(b) {
     before = getTop_();
     const sheet = getSheet_();
     const now = new Date();
-    sheet.appendRow([now, "'" + Utilities.formatDate(now, TIMEZONE, 'yyyy/MM'), name, score, distance, coins, kills, Math.round(durSec), grazes, slides]);
+    sheet.appendRow([now, "'" + Utilities.formatDate(now, TIMEZONE, 'yyyy/MM'), name, score, distance, coins, kills, Math.round(durSec), grazes, slides, bosses, bossScore]);
     SpreadsheetApp.flush();
     after = getTop_();
   } finally {
@@ -145,7 +150,7 @@ function getSheet_() {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(['日時', '月', '名前', 'スコア', '距離(m)', 'コイン', '壊した数', '遊んだ秒数', 'かすり', 'スライディング']);
+    sheet.appendRow(['日時', '月', '名前', 'スコア', '距離(m)', 'コイン', '壊した数', '遊んだ秒数', 'かすり', 'スライディング', 'ボス', 'ボスのスコア']);
     sheet.setFrozenRows(1);
   }
   return sheet;

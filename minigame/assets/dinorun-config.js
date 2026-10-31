@@ -197,6 +197,9 @@ const DR_CONFIG = {
      dive … 急降下 / dash … ダッシュ・前へ進む / vacuum … コイン吸引 / kill … 障害物を壊した
      fire … 赤い火の玉 / bluefire … 青い火の玉
      shop … ショップに入った / buy … アイテムを買った / reroll … 品ぞろえの入れ替え / skip … ショップをスキップした
+     potion … 回復薬を使った
+     encounter … 入り口の敵に触れた / fight … バトル開始 / stomp … ふみつけ / guard … 防御で半減 / perfect … パーフェクト防御
+     warn … ボスの技の予告（光る）/ bosshit … ボスの攻撃が当たった / victory … ボスを倒した / escape … 逃げた
      world … ワールド移動 / bonus … ボーナスステージに入った / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
 
    BGM（ワールドごとに変えたいとき）:
@@ -226,6 +229,16 @@ const DR_SOUNDS = {
   reroll:     { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[440, 0.05], [554, 0.05], [659, 0.08]] } },
   skip:       { src: '', volume: 0.5, tone: { wave: 'square', notes: [[659, 0.06], [523, 0.1]] } },
   world:      { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.2]] } },
+  potion:     { src: '', volume: 0.5, tone: { wave: 'triangle', notes: [[523, 0.06], [784, 0.06], [1047, 0.12]] } },
+  encounter:  { src: '', volume: 0.6, tone: { wave: 'square', notes: [[220, 0.06], [330, 0.06], [440, 0.06], [660, 0.06], [880, 0.14]] } },
+  fight:      { src: '', volume: 0.6, tone: { wave: 'square', notes: [[523, 0.08], [523, 0.08], [784, 0.2]] } },
+  stomp:      { src: '', volume: 0.5, tone: { wave: 'square', freq: 400, to: 120, dur: 0.1 } },
+  guard:      { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 900, to: 600, dur: 0.12 } },
+  perfect:    { src: '', volume: 0.6, tone: { wave: 'triangle', notes: [[1319, 0.05], [1760, 0.12]] } },
+  warn:       { src: '', volume: 0.35, tone: { wave: 'square', freq: 1200, dur: 0.05 } },
+  bosshit:    { src: '', volume: 0.7, tone: { wave: 'sawtooth', freq: 180, to: 50, dur: 0.25 } },
+  victory:    { src: '', volume: 0.6, tone: { wave: 'square', notes: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.3], [784, 0.1], [1047, 0.4]] } },
+  escape:     { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 800, to: 200, dur: 0.3 } },
   bonus:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[784, 0.08], [988, 0.08], [1175, 0.08], [1568, 0.25]] } },
   gameover:   { src: '', volume: 0.6, tone: { wave: 'square', notes: [[392, 0.15], [330, 0.15], [262, 0.35]] } },
   select:     { src: '', volume: 0.3, tone: { wave: 'square', freq: 880, dur: 0.04 } },
