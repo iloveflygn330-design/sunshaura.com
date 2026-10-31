@@ -509,6 +509,7 @@ function drNewRun() {
     lives: DR_CONFIG.startLives,
     maxLives: DR_CONFIG.startLives,   // 最大ライフ（回復薬はここまで回復する）
     deathBy: null,         // 最後にぶつかった障害物（ゲームオーバーの原因の表示に使う）
+    deathTip: '',          // ゲームオーバーの画面に出すヒント（ボスに負けたとき。dinorun-rpg.js の drRpgLose）
     lastPit: null,         // いま落ちかけている穴
     tutStep: 0,            // チュートリアルの、次に出す番号（DR_TUTORIAL.steps）
     invincibleTime: DR_CONFIG.invincibleTime,
@@ -1655,6 +1656,7 @@ function drShowResult(run) {
     bosses: run.bosses || 0, bossScore: run.bossScore || 0, durationMs: Math.round(run.t * 1000) };
   document.getElementById('dr-res-score').textContent = score.toLocaleString();
   document.getElementById('dr-res-cause').textContent = drDeathText(run);
+  document.getElementById('dr-res-tip').textContent = run.deathTip || '';
   const C = DR_CONFIG;
   // かすり・スライディングは、スコアに入るとき（scoreGraze・scoreSlide が 0 より大きい）だけ計算の行を出す
   document.getElementById('dr-res-detail').innerHTML =
