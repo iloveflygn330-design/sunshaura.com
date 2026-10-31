@@ -524,6 +524,8 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
   animation: drTipIn 0.25s ease;
 }
 #dr-tip[hidden] { display: none; }
+#dr-tip { transition: opacity 0.25s; }
+#dr-tip.is-faint { opacity: 0.25; }   /* 障害物が自機に近づいたら、うしろが見えるようにうすくする */
 .dr-tip-head { margin: 0; padding: 0.5em 0.8em; background: #17333A; border-bottom: 1px solid #3A4A55; }
 .dr-tip-body { margin: 0; padding: 0.6em 0.8em 0.7em; }
 .dr-tip-body span { display: block; }

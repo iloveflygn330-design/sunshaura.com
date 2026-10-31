@@ -106,7 +106,7 @@ const DR_SKILLS = {
 const DR_ITEMS = [
   /* --- スキルを覚える（買うと、どのボタンに割り当てるか選ぶ画面が出る） --- */
   {
-    id: 'learn_iai', name: '居合切り', desc: '目の前の障害物を切る技を覚える', icon: '🗡',
+    id: 'learn_iai', name: '居合切り', desc: '目の前の障害物を切る技を覚える。切った障害物からコインが出る', icon: '🗡',
     type: 'skill', skill: 'iai', maxLevel: 1, price: 40, priceUp: 1, weight: 3,
   },
   {
