@@ -203,6 +203,11 @@ function drSetup() {
   drBindInput();
   drBuildEntry();
   drUpdateSoundBtn();
+  // テスト用：URL に &drdebug を付けて開いたときだけ、一時停止ボタンの横に「⚔」ボタン（押すとすぐバトル。スマホでも試せる）
+  if (dr.debug) {
+    const pause = document.querySelector('#dr-hud [data-dr="pause"]');
+    if (pause) pause.insertAdjacentHTML('beforebegin', '<button type="button" class="dr-pause-btn dr-debug-btn" data-dr="debug-battle" aria-label="バトルを始める（テスト用）">⚔</button>');
+  }
 
   // スキル・アイテムの画像（PNG）を指定していれば先に読み込んでおく
   drPreloadImages();
@@ -341,7 +346,7 @@ function drOnKeyDown(e) {
       else if (c === 'KeyS') drPress('skill1');
       else if (c === 'KeyD') drPress('skill2');
       else if (c === 'KeyQ') drUsePotion();
-      else if (c === 'KeyB' && dr.debug) drStartPhase(DR_ENCOUNTERS[0]);   // テスト用：URL に &drdebug を付けると B キーでバトルを始められる
+      else if (c === 'KeyB' && dr.debug) drDebugBattle();   // テスト用：URL に &drdebug を付けると B キーでバトルを始められる
       else if (c === 'KeyP' || c === 'Escape') drPause();
       break;
     case 'phase':
@@ -424,6 +429,7 @@ function drUiAction(act, el) {
     case 'entry-skip': drShowTitle(); break;
     case 'potion': drUsePotion(); break;
     case 'phase-next': if (dr.mode === 'phaseResult') drEndPhase('win'); break;
+    case 'debug-battle': drDebugBattle(); break;
   }
 }
 
@@ -1371,6 +1377,15 @@ function drEncounterObstacle(enc) {
   }
   return enc.obstacleDef;
 }
+/* テスト用：プレイ中にすぐバトルを始める（URL に &drdebug を付けたときだけ。B キーか「⚔」ボタン）。
+   4ワールド目までなら、5ワールド目として戦う（本番と同じ強さで試せるように） */
+function drDebugBattle() {
+  const run = dr.run;
+  if (!dr.debug || !run || dr.mode !== 'play' || typeof DR_ENCOUNTERS === 'undefined') return;
+  if (run.worldIndex < 4) run.worldIndex = 4;
+  drStartPhase(DR_ENCOUNTERS[0]);
+}
+
 /* フェイズを始める（入り口の敵に触れたとき） */
 function drStartPhase(enc, obstacle) {
   const run = dr.run, impl = enc && DR_PHASES[enc.phase];

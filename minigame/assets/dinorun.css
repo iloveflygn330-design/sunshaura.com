@@ -586,3 +586,6 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
   .dr-pbtn .dr-pbtn-sub { display: none; }
 }
 .dr-victory { color: var(--dr-yellow); }
+
+/* テスト用の「⚔」ボタン（URL に &drdebug を付けたときだけ出る）。フェイズ中は隠す */
+#dr-root.dr-in-phase .dr-debug-btn { display: none; }
