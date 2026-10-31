@@ -543,6 +543,8 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
 /* ゲームオーバーの原因（「○○にぶつかってしまった…」） */
 .dr-res-cause { font-size: 13px; color: #FFB3C1; margin-top: 4px; }
 .dr-res-cause:empty { display: none; }
+.dr-res-tip { font-size: 12px; color: #FFE7A8; margin-top: 4px; }
+.dr-res-tip:empty { display: none; }
 
 /* =====================================================
    回復薬のボタン（ハートの横。持っているときだけ出る）
@@ -580,6 +582,12 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
 .dr-pbtn:disabled, .dr-pbtn.is-cooling { background: #A2A8B4; border-color: #6E7484; color: #fff; }
 .dr-pbtn:disabled { opacity: 0.55; cursor: default; }
 .dr-pbtn.is-escape { background: #FFD3DC; border-color: #C7305A; }
+/* 技のボタン：もとのスキルのアイコンをうすく出す。溜めのときは黄色く光る */
+.dr-pbtn .dr-pbtn-icon { position: absolute; right: 2px; top: 1px; font-size: 22px; line-height: 1; opacity: 0.22; pointer-events: none; }
+.dr-pbtn .dr-key { top: 2px; left: 4px; font-size: 10px; }
+.dr-pbtn.is-charged:not(.is-cooling) { background: #FFF1A8; border-color: #E0A800; box-shadow: 0 0 0 2px #FFD84A; }
+/* 技が多いとき（7つ以上）は2段にする */
+#dr-root.dr-in-phase .dr-battle-row[data-count="7"], #dr-root.dr-in-phase .dr-battle-row[data-count="8"] { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 759px) and (orientation: portrait) { .dr-pbtn { height: 54px; } }
 @media (orientation: landscape) and (max-height: 520px) {
   .dr-pbtn { height: 36px; font-size: 11px; }
@@ -589,3 +597,21 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
 
 /* テスト用の「⚔」ボタン（URL に &drdebug を付けたときだけ出る）。フェイズ中は隠す */
 #dr-root.dr-in-phase .dr-debug-btn { display: none; }
+/* 下のキーボードの説明：バトル中はバトルのキーにする（スマホ・横向きの小さい画面では、どちらも出さない） */
+.dr-keys-help.dr-keys-battle, #dr-root.dr-in-phase .dr-keys-help.dr-keys-run { display: none; }
+@media (hover: hover) and (not ((orientation: landscape) and (max-height: 520px))) {
+  #dr-root.dr-in-phase .dr-keys-help.dr-keys-battle { display: block; }
+}
+/* 画面がせまいときは、技のボタンを短い名前にする（dinorun-rpg-data.js の skills の short） */
+.dr-pbtn .dr-pbtn-short { display: none; }
+@media (max-width: 759px), (orientation: landscape) and (max-height: 520px) {
+  .dr-pbtn .dr-pbtn-name { display: none; }
+  .dr-pbtn .dr-pbtn-short { display: block; position: relative; line-height: 1.15; }
+  .dr-pbtn .dr-pbtn-sub { font-size: 9px; white-space: nowrap; }
+  .dr-pbtn .dr-pbtn-icon { font-size: 18px; }
+  .dr-pbtn .dr-pbtn-short { white-space: nowrap; letter-spacing: -0.5px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  #dr-root.dr-in-phase .dr-battle-row { gap: 4px; }
+  .dr-pbtn { font-size: 10px; }
+}
