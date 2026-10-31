@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-01",
+  "title": "「FF14」のVRアトラクションがお台場に登場ほか、今日のVR・AIニュース4本",
+  "category": "その他",
+  "thumb": "",
+  "intro": "ハロウィン明けの今日は、お台場に登場する『ファイナルファンタジーXIV』のVRアトラクションを中心にお届けします。ほかに、Quest 3向けに作り直されたフライトゲームや、VR釣りゲームの追加コンテンツ、宇宙でAIを動かすGoogleの実験衛星の話題も取り上げます。",
+  "items": [
+    {
+      "headline": "FF14の「チョコボレースVR」、お台場で11月20日稼働",
+      "category": "その他",
+      "overview": "XR体験施設「ティフォニウム お台場」に、VRアトラクション「ファイナルファンタジーXIV：チョコボレースVR」が11月20日に登場します。チョコボに乗って砂漠や水晶の洞窟、溶岩の地下などを駆け抜け、途中で蛮神タイタンも現れる内容です。10月31日から体験の予約受付が始まりました。",
+      "points": [
+        "料金は2,900円、体験時間は約15分",
+        "1回につき1〜8人で同時に遊べる",
+        "対象は7歳以上（13歳未満は保護者の同意が必要）",
+        "場所はダイバーシティ東京 プラザ5階"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/161712" }
+      ]
+    },
+    {
+      "headline": "『Ultrawings』1と2、Quest 3向けの新版が登場",
+      "category": "その他",
+      "overview": "VRフライトゲーム『Ultrawings』シリーズの2作品が、Quest 3専用に作り直された新しい版として発売されました。1作目は「Ultrawings Remastered」、2作目は「Ultrawings 2 Gold Edition」です。描画の解像度が上がり、海や空の表現、振動の表現なども強化されています。",
+      "points": [
+        "Remasteredは14.99ドル、Gold Editionは19.99ドル",
+        "2本セットは24.99ドルで、別々に買うより10ドル安い",
+        "1作目は4機の飛行機と200以上のミッションを収録",
+        "旧版の持ち主向けの割引があるかは未発表"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/ultrawings-1-2-get-new-built-for-quest-3-editions-available-now/" }
+      ]
+    },
+    {
+      "headline": "『Real VR Fishing』、五大湖が舞台の追加コンテンツ",
+      "category": "その他",
+      "overview": "VR釣りゲーム『Real VR Fishing』の有料追加コンテンツ「Great Lakes & Oceans」が発表されました。アメリカとカナダの間にある五大湖などの新しい釣り場と、新しい魚が加わります。小さな魚とやり取りしている最中に現れて獲物を奪っていく、手ごわい「淡水の怪物」も登場します。",
+      "points": [
+        "釣り場10か所と新しい魚30種、サメ3種を追加",
+        "Questは11月10日、SteamVRは11月11日に配信",
+        "価格は12.99ドル",
+        "怪物を初めて釣ると専用の竿とリールが手に入る"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/real-vr-fishings-next-dlc-takes-players-to-the-great-lakes-introduces-freshwater-monsters/" }
+      ]
+    },
+    {
+      "headline": "Google、宇宙のデータセンター実験衛星が稼働",
+      "category": "AI",
+      "overview": "Googleが宇宙でAIを動かす計画「Suncatcher」の試作衛星が、軌道上で稼働を始めました。衛星にはGoogleのAI用チップ「TPU」が4つ載っていて、AIモデル「Gemma 4」を動かしています。最初の仕事は、宇宙にいることをテーマにした俳句を作ることでした。",
+      "points": [
+        "TPUは一度に1つ、約20分だけ動かせる",
+        "熱や放射線にチップが耐えられるかを調べる",
+        "結果がよければ2027年にさらに2機を打ち上げる予定"
+      ],
+      "sources": [
+        { "name": "TechCrunch", "url": "https://techcrunch.com/2026/10/30/googles-first-data-center-satellite-is-online-and-writing-poetry/" }
+      ]
+    }
+  ],
+  "outro": "チョコボレースVRは予約がすでに始まっています。気になる方は早めにチェックしてみてください。"
+}
