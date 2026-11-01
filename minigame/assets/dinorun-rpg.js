@@ -66,6 +66,7 @@ DR_PHASES.rpg = {
     };
     drRpgMsg(`${bossDef.name}が あらわれた！`);
     drRpgSetPads(true);
+    if (typeof drRpgPreloadEffects === 'function') drRpgPreloadEffects();   // 技のエフェクトの PNG を先に読みこむ
     drBgm(C.bgm || null);
     drSound('encounter');
   },
@@ -182,7 +183,7 @@ function drRpgBattle(dt) {
   // あとから入るダメージ（バタ足）
   while (R.pending.length && R.pending[0].at <= R.time) {
     const d = R.pending.shift();
-    drRpgEffect('stomp', DR_RPG_BOSS_X - 30 + drRand(-12, 12), DR_RPG_BOSS_FEET - b.def.h + 38 + drRand(-6, 6), { small: true, life: 0.2 });
+    drRpgEffect('flutter', DR_RPG_BOSS_X - 30 + drRand(-12, 12), DR_RPG_BOSS_FEET - b.def.h + 38 + drRand(-6, 6));
     drRpgAttack(d.base, d.name, { normal: true, small: true });
     if (R.st !== 'battle') return;
   }
@@ -201,7 +202,7 @@ function drRpgBattle(dt) {
   if (b.paraT > 0) {
     b.paraT = Math.max(0, b.paraT - dt);
     if (b.paraT <= 0) b.paraImmT = DR_RPG.paraImmune || 0;   // 麻痺がとけたら、しばらく麻痺しない
-    if (Math.random() < 0.06) drRpgEffect('bolt', DR_RPG_BOSS_X + drRand(-b.def.w * 0.35, b.def.w * 0.3), DR_RPG_BOSS_FEET - drRand(24, b.def.h * 0.8));
+    if (Math.random() < 0.015) drRpgEffect('bolt', DR_RPG_BOSS_X + drRand(-b.def.w * 0.35, b.def.w * 0.3), DR_RPG_BOSS_FEET - drRand(24, b.def.h * 0.8));
     return;
   }
   if (!b.act) {
@@ -288,7 +289,7 @@ function drRpgAttack(base, name, opt) {
   b.hurtT = 0.2;
   const x = DR_RPG_BOSS_X + drRand(-24, 24), y = DR_RPG_BOSS_FEET - b.def.h * 0.55 + drRand(-10, 10);
   drRpgFx(String(dmg), x, y, crit ? '#FFD84A' : '#FFFFFF', opt.small && !crit ? 1 : 2);
-  if (crit) { drRpgFxJp('会心！', x, y - 16, '#FFD84A', 12); R.shake = Math.max(R.shake, 0.25); drSound('crit'); drRpgFlash('#FFFFFF', 0.07, 0.45); }
+  if (crit) { drRpgEffect('crit', x, y); drRpgFxJp('会心！', x, y - 16, '#FFD84A', 12); R.shake = Math.max(R.shake, 0.25); drSound('crit'); drRpgFlash('#FFFFFF', 0.07, 0.45); }
   else if (dmg >= b.maxHp * 0.12) R.shake = Math.max(R.shake, 0.2);   // 大ダメージ
   if (!opt.small) drRpgMsg(`${name}！ ${dmg}のダメージ${crit ? '（会心の一撃！）' : ''}`);
   drSound(opt.small ? 'kill' : 'stomp');
@@ -387,7 +388,7 @@ function drRpgUseSkill(s) {
     // 居合切り：ボスの前へ踏みこんで切る
     p.anim = { type: 'dash', t: 0, go: 0.12, stay: 0.14, back: 0.16, hits: [0.12], next: 0, total: 0.42,
       onHit() {
-        drRpgEffect('slash', DR_RPG_BOSS_X - 10, DR_RPG_BOSS_FEET - R.b.def.h * 0.5, { big: charged, life: charged ? 0.42 : 0.32 });
+        drRpgEffect(charged ? 'slashBig' : 'slash', DR_RPG_BOSS_X - 10, DR_RPG_BOSS_FEET - R.b.def.h * 0.5);
         if (charged) drRpgFlash('#FFFFFF', 0.1, 0.5);
         drSound('slash');
         drRpgAttack(p.atk * (charged ? cfg.chargedPower : cfg.power), name);
@@ -411,7 +412,7 @@ function drRpgUseSkill(s) {
         R.shots.push({ x0: DR_RPG_PLAYER_X + 20, y0: DR_RPG_PLAYER_FEET - 26, x1: DR_RPG_BOSS_X - 20, y1: DR_RPG_BOSS_FEET - R.b.def.h * 0.5,
           t: 0, dur: 0.35, blue: charged, r: (charged ? 9 : 5) + R.fireLv,
           onHit() {
-            drRpgEffect('fireHit', this.x1, this.y1, { blue: charged, life: charged ? 0.5 : 0.4 });
+            drRpgEffect(charged ? 'blueHit' : 'fireHit', this.x1, this.y1);
             if (charged) drRpgFlash('#9FE8FF', 0.08, 0.35);
             drRpgAttack(p.atk * power, name);
           } });

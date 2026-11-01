@@ -4,7 +4,7 @@
 
    使い方（dinorun-rpg.js から）:
      drRpgEffect('stomp', x, y)            … エフェクトを1つ出す（x, y はゲーム画面のドット）
-     drRpgEffect('slash', x, y, { big: true }) … 追加の指定があるときは4つめに書く
+     drRpgEffect('breath', x, y, { tx, ty }) … 追加の指定があるときは4つめに書く（tx・ty … ねらう場所）
      drRpgFlash('#FFFFFF', 0.08, 0.5)      … 画面全体を一瞬光らせる（色・秒数・こさ）
 
    絵:
@@ -16,11 +16,20 @@
        3. dinorun-rpg.js の、出したいところで drRpgEffect('名前', x, y) を呼ぶ
    ===================================================== */
 
-/* エフェクトを1つ出す。opt … 描き方に渡す追加の指定（big・blue・tx・ty など）。life を書くとその秒数になる */
+/* エフェクトを1つ出す。opt … 描き方に渡す追加の指定（big・blue・tx・ty など）。life を書くとその秒数になる
+   出ている秒数は、life（DR_RPG_EFFECTS）→ PNG のコマ数 ÷ fps → 0.35 秒 の順に決まる */
 function drRpgEffect(id, x, y, opt) {
   if (!drRpg) return;
   const def = (typeof DR_RPG_EFFECTS !== 'undefined' && DR_RPG_EFFECTS[id]) || {};
-  drRpg.fx.push(Object.assign({ type: 'eff', id, x, y, t: 0, life: def.life || 0.35, seed: Math.floor(Math.random() * 1e9) }, opt || {}));
+  const img = def.image ? drImage(def.image) : null;
+  const life = def.life || (img && def.fps ? (def.frames || 1) / def.fps : 0) || def.drawLife || 0.35;
+  drRpg.fx.push(Object.assign({ type: 'eff', id, x, y, t: 0, life, seed: Math.floor(Math.random() * 1e9) }, opt || {}));
+}
+
+/* エフェクトの PNG を先に読みこんでおく（バトルが始まるとき。読みこみ中は仮のドット絵が出る） */
+function drRpgPreloadEffects() {
+  if (typeof DR_RPG_EFFECTS === 'undefined') return;
+  for (const k in DR_RPG_EFFECTS) if (DR_RPG_EFFECTS[k].image) drImage(DR_RPG_EFFECTS[k].image);
 }
 
 /* 画面全体を一瞬光らせる（会心・パーフェクト・スタンピングなど）。強いほうが残る */
@@ -38,14 +47,19 @@ function drRpgDrawEffect(ctx, f) {
   const img = def.image ? drImage(def.image) : null;
   ctx.save();
   if (img) {
-    // PNG：左から右へ並んだコマを、life の間に1回流す
-    const n = def.frames || 1, w = def.w || img.width / n, h = def.h || img.height;
-    const fr = Math.min(n - 1, Math.floor(q * n));
+    // PNG：コマを左上から右へ（cols コマで折り返して）並べた画像。life の間に1回流す（loop なら fps でくり返す）
+    const n = def.frames || 1, cols = def.cols || n;
+    const w = def.w || img.width / cols, h = def.h || img.height / Math.ceil(n / cols);
+    const fr = def.loop && def.fps ? Math.floor(f.t * def.fps) % n : Math.min(n - 1, Math.floor(q * n));
     const s = f.scale || 1;
     const ax = def.ax == null ? 0.5 : def.ax, ay = def.ay == null ? 0.5 : def.ay;
-    ctx.translate(Math.round(f.x), Math.round(f.y));
-    if (f.flip) ctx.scale(-1, 1);
-    ctx.drawImage(img, fr * w, 0, w, h, Math.round(-w * s * ax), Math.round(-h * s * ay), w * s, h * s);
+    const flip = !!def.flip !== !!f.flip;   // 設定と呼び出しの両方で反転を指定したら、元の向き
+    ctx.translate(Math.round(f.x + (def.ox || 0) * (flip ? -1 : 1)), Math.round(f.y + (def.oy || 0)));
+    if (flip) ctx.scale(-1, 1);
+    // aim: true … 右向きの絵を、f.tx・f.ty（ねらう場所）のほうへ回す（ブレスなど）
+    if (def.aim && f.tx != null) ctx.rotate(Math.atan2(f.ty - f.y - (def.oy || 0), Math.abs(f.tx - f.x)));
+    if (def.fade) drFxFade(ctx, q, 1 - def.fade);   // 終わりの fade の割合でだんだん消える（切りつめたエフェクト用）
+    ctx.drawImage(img, (fr % cols) * w, Math.floor(fr / cols) * h, w, h, Math.round(-w * s * ax), Math.round(-h * s * ay), w * s, h * s);
   } else {
     const draw = DR_RPG_FX_DRAW[f.id];
     if (draw) draw(ctx, f, q, drFxRandom(f.seed || 1));
@@ -150,6 +164,11 @@ const DR_RPG_FX_DRAW = {
       ctx.fillRect(Math.round(f.x - w), Math.round(f.y), Math.round(w * 2), 2);
     }
   },
+  /* 溜めの居合切り・溜めの青い火の玉・会心（PNG がないときは、ほかの仮の絵を使い回す） */
+  slashBig(ctx, f, q, rnd) { DR_RPG_FX_DRAW.slash(ctx, Object.assign({}, f, { big: true }), q, rnd); },
+  blueHit(ctx, f, q, rnd) { DR_RPG_FX_DRAW.fireHit(ctx, Object.assign({}, f, { blue: true }), q, rnd); },
+  crit(ctx, f, q, rnd) { DR_RPG_FX_DRAW.stomp(ctx, f, q, rnd); },
+  flutter(ctx, f, q, rnd) { DR_RPG_FX_DRAW.stomp(ctx, Object.assign({}, f, { small: true }), q, rnd); },   // バタ足（小さいふみつけ）
   /* 火の玉が当たった：ドットの爆発（blue … 溜めの青い火の玉） */
   fireHit(ctx, f, q, rnd) {
     const blue = !!f.blue;
