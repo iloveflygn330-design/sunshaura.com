@@ -134,6 +134,7 @@ const DR_RPG = {
   camSideEnd: 0.75,
   wipeLineColor: '#5FD3FF', // イナズマの線の色
   fightTime: 1.0,          // 「FIGHT!」を出している時間
+  fightFade: 0.15,         // 「FIGHT!」のうしろの網掛けの帯が、フェードイン・フェードアウトする時間（文字も帯といっしょに消える）
   winTime: 1.6,            // 勝ったあと、結果を出すまで
   loseTime: 1.4,           // 負けたあと、ゲームオーバーの画面を出すまで
   escapeRunTime: 0.6,      // 逃げるときに走り去る時間
