@@ -1,0 +1,75 @@
+{
+  "date": "2026-11-02",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今週もニュースを始めるのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはよう、ずんだもん。11月になったね。", "read": "おはよう、ずんだもん。じゅういちがつになったね。", "face": "smile" },
+      { "who": "zundamon", "text": "11月2日のニュースは4本なのだ。", "read": "じゅういちがつふつかのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。フルトラ用のルームウェアが発表されたのだ！", "read": "いっぽんめ。フルトラ用のルームウェアが発表されたのだ！", "face": "smile" },
+      { "who": "zunko", "text": "ルームウェア？トラッカーとどう関係あるの？", "face": "look" },
+      { "who": "zundamon", "text": "服にトラッカー用のベルトが縫い付けてあるのだ。" },
+      { "who": "zundamon", "text": "体のあちこちにベルトを巻く手間がへるのだ。" },
+      { "who": "zunko", "text": "それは助かるね。洗濯はできるのかな？" },
+      { "who": "zundamon", "text": "トラッカーを外せば、洗濯機で洗えるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "クラファンは11月16日から始まる予定なのだ。", "read": "クラファンは、じゅういちがつじゅうろくにちから始まる予定なのだ。" },
+      { "who": "zunko", "text": "着たまま、くつろげそうでいいね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。VRシューター『Forefront』なのだ。", "read": "にほんめ。ブイアールシューター、フォアフロントなのだ。" },
+      { "who": "zundamon", "text": "11月5日に、PS VR2で発売されるのだ！", "read": "じゅういちがついつかに、ピーエスブイアールツーで発売されるのだ！", "face": "surprise" },
+      { "who": "zunko", "text": "ほかの機種の人とも一緒に遊べるの？" },
+      { "who": "zundamon", "text": "PCやQuestとクロスプレイできるのだ。", "read": "ピーシーやクエストと、クロスプレイできるのだ。" },
+      { "who": "zundamon", "text": "トリガーやヘッドセットの振動にも対応なのだ。" },
+      { "who": "zunko", "text": "手ごたえがあると、もっと夢中になれそう。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。『Dungeons Of Eternity』の更新なのだ。", "read": "さんぼんめ。ダンジョンズ・オブ・エタニティの更新なのだ。" },
+      { "who": "zundamon", "text": "ハロウィンがテーマのアップデートなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "どんなものが増えたの？" },
+      { "who": "zundamon", "text": "吸血鬼の中ボスや、ミイラが出てくるのだ。", "face": "surprise" },
+      { "who": "zundamon", "text": "爆発するカボチャ頭のガイコツもいるのだ…。", "face": "look" },
+      { "who": "zunko", "text": "にぎやかだけど、ちょっと手ごわそうだね。" },
+      { "who": "zundamon", "text": "人気のエリアも、ずっと遊べるようになったのだ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。VRゲーム会社Schell Gamesの話なのだ。", "read": "よんほんめ。ブイアールゲーム会社、シェルゲームズの話なのだ。" },
+      { "who": "zundamon", "text": "多くの社員を削減したことが分かったのだ。", "face": "surprise", "style": "なみだめ" },
+      { "who": "zunko", "text": "今年は、ほかのVRスタジオでも続いているんだよね。", "read": "今年は、ほかのブイアールスタジオでも続いているんだよね。", "face": "surprise" },
+      { "who": "zundamon", "text": "そうなのだ。8月にも削減があったのだ。", "read": "そうなのだ。はちがつにも削減があったのだ。" },
+      { "who": "zundamon", "text": "新作『Dragon Grove』は来年春の予定なのだ。", "read": "新作、ドラゴングローブは、来年春の予定なのだ。" },
+      { "who": "zunko", "text": "新作が無事に届くといいね。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "ふたご座", "comment": "新しい挑戦がうまくいく", "lucky": "スマートウォッチ" },
+        { "rank": 2, "sign": "やぎ座", "comment": "計画どおりに物事が進む", "lucky": "手帳" },
+        { "rank": 3, "sign": "うお座", "comment": "やさしい言葉が返ってくる", "lucky": "ハンドクリーム" },
+        { "rank": 4, "sign": "しし座", "comment": "体を動かすと気分が上がる", "lucky": "スポーツタオル" },
+        { "rank": 5, "sign": "おひつじ座", "comment": "早起きで良いスタート", "lucky": "目覚まし時計" },
+        { "rank": 6, "sign": "かに座", "comment": "身近な人と話すと吉", "lucky": "クッキー" },
+        { "rank": 7, "sign": "おとめ座", "comment": "丁寧な作業が評価される", "lucky": "シャープペン" },
+        { "rank": 8, "sign": "てんびん座", "comment": "迷ったら直感を信じて", "lucky": "キーホルダー" },
+        { "rank": 9, "sign": "さそり座", "comment": "読書でひらめきが生まれる", "lucky": "しおり" },
+        { "rank": 10, "sign": "おうし座", "comment": "あたたかい食事で元気に", "lucky": "スープ" },
+        { "rank": 11, "sign": "いて座", "comment": "ひと息つくと視野が広がる", "lucky": "ハーブティー" },
+        { "rank": 12, "sign": "みずがめ座", "comment": "のんびりペースで大丈夫", "lucky": "ふかふかの靴下" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ。イタコ、よろしくなのだ！", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、ふたご座ですわ。新しい挑戦がうまくいきそうです。", "read": "今日のいちいは、ふたござですわ。新しい挑戦がうまくいきそうです。", "face": "smile" },
+        { "who": "itako", "text": "2位はやぎ座、3位はうお座ですわ。", "read": "にいはやぎざ、さんいはうおざですわ。" },
+        { "who": "zundamon", "text": "ふたご座のみんな、おめでとうなのだ！", "read": "ふたござのみんな、おめでとうなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はみずがめ座。のんびりペースで大丈夫ですわ。", "read": "じゅうにいは、みずがめざ。のんびりペースで大丈夫ですわ。" },
+        { "who": "zundamon", "text": "あったかい靴下で、ゆっくりいくのだ。", "face": "look" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zunko", "text": "今日も聞いてくれてありがとう。" },
+      { "who": "zundamon", "text": "また明日も見に来てほしいのだ！", "face": "smile" }
+    ]}
+  ]
+}

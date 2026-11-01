@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-02",
+  "title": "VRフルトラ用ルームウェア「フクトラ」発表ほか、今日のVRニュース4本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "今日は、VRChatユーザー向けに作られたフルトラッキング用のルームウェアの話題からお届けします。あわせて、VRシューター『Forefront』のPS VR2版の発売日、『Dungeons Of Eternity』のハロウィンアップデート、VRゲーム開発会社Schell Gamesの人員削減の4本を紹介します。",
+  "items": [
+    {
+      "headline": "フルトラ用ルームウェア「フクトラ」、クラファンへ",
+      "category": "VR機器・技術",
+      "overview": "有限会社オフィスホドタが、VRのフルトラッキングを楽にするルームウェア「フクトラ」を発表しました。服にトラッカー用のベルトが縫い付けられていて、体の各部にベルトを巻く手間を減らせます。ベルトの締め方は、ダンス向け・普段使い・ゆったりの3通りに切り替えられます。CAMPFIREで11月16日20時から12月27日まで、先行販売のクラウドファンディングを行う予定です。",
+      "points": [
+        "VRChatユーザー向けに、ベルトのずれや締め付けの悩みから開発",
+        "トラッカーを外せば、ベルトを付けたまま洗濯機で洗える",
+        "取り付け部は25mm幅と30mm幅の2種類から選べる",
+        "クラファンはCAMPFIREで11月16日20時から12月27日まで"
+      ],
+      "sources": [
+        { "name": "MoguLive", "url": "https://www.moguravr.com/fukutora-vr/" }
+      ]
+    },
+    {
+      "headline": "VRシューター『Forefront』、11月5日にPS VR2へ",
+      "category": "その他",
+      "overview": "Triangle Factoryが開発する32人対戦のVRシューター『Forefront』が、11月5日にPlayStation VR2で発売されます。PC VRやQuest版とのクロスプレイに対応し、別の機種の人とも一緒に遊べます。PS VR2版では、アダプティブトリガーやヘッドセットの振動にも対応します。",
+      "points": [
+        "PC VR・Quest・PS VR2の3機種でクロスプレイが可能",
+        "PS5とPS5 Proのどちらでも90Hzで動作",
+        "アダプティブトリガーとヘッドセットの振動に対応"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/forefront-is-coming-to-playstation-vr2-next-week/" }
+      ]
+    },
+    {
+      "headline": "『Dungeons Of Eternity』、ハロウィン更新で新要素",
+      "category": "その他",
+      "overview": "協力型のVRダンジョンゲーム『Dungeons Of Eternity』に、ハロウィンをテーマにした「Monster Mash」アップデートが配信されました。人気のエリア「Stormgrave」が常設になり、吸血鬼の中ボスや、爆発するカボチャ頭のガイコツなど新しい敵が加わりました。ハロウィンの見た目アイテムのDLCも6.99ドルで販売されています。",
+      "points": [
+        "期間限定だったエリア「Stormgrave」が常設に",
+        "吸血鬼の中ボスやミイラなど、新しい敵が登場",
+        "プレイ期間に応じた3周年記念トロフィーも追加",
+        "SteamとMeta Questで配信中"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/dungeons-of-eternity-monster-mash-update-adds-a-fan-favorite-realm-halloween-decor/" }
+      ]
+    },
+    {
+      "headline": "VRゲーム開発のSchell Games、多くの社員を削減",
+      "category": "その他",
+      "overview": "『I Expect You To Die』シリーズなどで知られるVRゲーム開発会社Schell Gamesが、社員の大きな割合を削減したことが分かりました。同社は2026年8月にも人員削減を行っており、今年2回目です。会社は、スタジオを今後も続けていくための判断だと説明しています。開発中の新作『Dragon Grove』は、2027年春にQuest 3などへの配信を予定しています。",
+      "points": [
+        "削減した人数は明らかにされていない",
+        "2026年は、ほかのVRスタジオでも人員削減や閉鎖が続いている",
+        "新作『Dragon Grove』は2027年春の予定"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/schell-games-lays-off-large-portion-of-staff/" }
+      ]
+    }
+  ],
+  "outro": "フルトラの準備が楽になると、VRで過ごす時間がもっと気軽になりそうです。今日も良い一日を。"
+}
