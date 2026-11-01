@@ -19,6 +19,9 @@
   │    ├─ assets/dinorun-sprites.js ← ★拡張予定: 自機（恐竜）の絵。いまは仮のドット絵。PNG のスプライトシートに差し替えられる
   │    ├─ assets/dinorun-ranking.js ← ランキングの読み書き（Google Apps Script とのやりとり）
   │    ├─ assets/dinorun.js / dinorun.css ← きょうりゅうランの動き・見た目（minigame/?game=dinorun で直接開ける）
+  │    ├─ assets/dinorun-rpg-data.js ← ★拡張予定: RPG フェイズ（ボスとのバトル）の数値・ボス・入り口の敵・技のエフェクトの PNG
+  │    ├─ assets/dinorun-rpg.js     ← RPG フェイズの動き（エンカウントの演出・バトル・画面）
+  │    ├─ assets/dinorun-rpg-fx.js  ← ★拡張予定: 技のエフェクトの仮のドット絵（PNG を用意したらそちらが優先）
   │    └─ dinorun/                ← （まだない）本番の絵・音を置く場所。sprites/・worlds/・sounds/ を作って入れる
   ├─ tools/dinorun-ranking/     ← きょうりゅうランのランキング用 Google Apps Script（Code.gs）と設定手順（README.md）。サイトには公開しない
   ├─ about/index.html           ← このサイトについて（プロフィールカード＋クレジット。カードを投げて遊べる）

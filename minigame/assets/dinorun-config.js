@@ -200,6 +200,8 @@ const DR_CONFIG = {
      potion … 回復薬を使った
      encounter … 入り口の敵に触れた / fight … バトル開始 / stomp … ふみつけ / guard … 防御で半減 / perfect … パーフェクト防御
      warn … ボスの技の予告（光る）/ bosshit … ボスの攻撃が当たった / victory … ボスを倒した / escape … 逃げた
+     stamp … スタンピング / charge … 「溜め」になった / crit … 会心の一撃 / para … ボスが麻痺した / heal … 回復魔法
+     breath … ボスのほのおのブレス / boom … ボスが爆発した（倒した）
      world … ワールド移動 / bonus … ボーナスステージに入った / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
 
    BGM（ワールドごとに変えたいとき）:
@@ -237,6 +239,13 @@ const DR_SOUNDS = {
   perfect:    { src: '', volume: 0.6, tone: { wave: 'triangle', notes: [[1319, 0.05], [1760, 0.12]] } },
   warn:       { src: '', volume: 0.35, tone: { wave: 'square', freq: 1200, dur: 0.05 } },
   bosshit:    { src: '', volume: 0.7, tone: { wave: 'sawtooth', freq: 180, to: 50, dur: 0.25 } },
+  stamp:      { src: '', volume: 0.7, tone: { wave: 'square', notes: [[160, 0.05, 60], [90, 0.18, 40]] } },
+  charge:     { src: '', volume: 0.45, tone: { wave: 'triangle', notes: [[523, 0.05], [784, 0.05], [1047, 0.05], [1568, 0.1]] } },
+  crit:       { src: '', volume: 0.55, tone: { wave: 'square', notes: [[1760, 0.03], [2637, 0.09, 1760]] } },
+  para:       { src: '', volume: 0.45, tone: { wave: 'sawtooth', notes: [[1400, 0.03, 300], [1400, 0.03, 300], [1400, 0.06, 200]] } },
+  heal:       { src: '', volume: 0.5, tone: { wave: 'sine', notes: [[659, 0.07], [880, 0.07], [1175, 0.07], [1568, 0.16]] } },
+  breath:     { src: '', volume: 0.6, tone: { wave: 'sawtooth', freq: 90, to: 260, dur: 0.45 } },
+  boom:       { src: '', volume: 0.7, tone: { wave: 'sawtooth', notes: [[120, 0.08, 40], [90, 0.12, 30], [60, 0.25, 20]] } },
   victory:    { src: '', volume: 0.6, tone: { wave: 'square', notes: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.3], [784, 0.1], [1047, 0.4]] } },
   escape:     { src: '', volume: 0.5, tone: { wave: 'triangle', freq: 800, to: 200, dur: 0.3 } },
   bonus:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[784, 0.08], [988, 0.08], [1175, 0.08], [1568, 0.25]] } },

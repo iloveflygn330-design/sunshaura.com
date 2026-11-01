@@ -20,7 +20,8 @@
      DR_RPG        … 数値（恐竜君のステータス・防御の判定・CT・ごほうび・演出の長さ）
      DR_BOSSES     … ★拡張予定: ボスの一覧
      DR_ENCOUNTERS … ★拡張予定: 入り口の敵の一覧（色でどのフェイズになるか分ける）
-   バトルの動きは dinorun-rpg.js。
+     DR_RPG_EFFECTS … ★拡張予定: 技のエフェクトの絵（PNG に差し替えるところ）
+   バトルの動きは dinorun-rpg.js、エフェクトの仮のドット絵は dinorun-rpg-fx.js。
    ===================================================== */
 
 const DR_RPG = {
@@ -75,8 +76,10 @@ const DR_RPG = {
 
   /* --- 麻痺（磁石を持っているとき、ふみつけ・バタ足のダメージ1回ごとに抽選） ---
        確率 = paraBase + (磁石の Lv - 1) × paraPerLv。会心のときは × critMult
-       麻痺するとボスは paraTime 秒動けない（出しかけの技も止まる）。麻痺中にまた麻痺すると時間がのびる（最大 paraMax 秒） */
-  paraBase: 0.03, paraPerLv: 0.02, paraTime: 5, paraMax: 15,
+       麻痺するとボスは paraTime 秒動けない（出しかけの技も止まる）。麻痺中にまた麻痺すると paraStack 秒のびる（最大 paraMax 秒）
+       麻痺がとけたあと paraImmune 秒は、麻痺しない（ずっと止まったままにならないように。0 なら すぐまた麻痺する）
+       目安（W5・ボットが最速で操作）: 磁石 Lv1 ＋ バタ足 Lv1 で、バトルの 3 割くらいの時間 麻痺している */
+  paraBase: 0.03, paraPerLv: 0.02, paraTime: 5, paraStack: 1, paraMax: 7, paraImmune: 8,
 
   /* --- バタ足（バタ足ジャンプを持っているとき、ふみつけ1回ごとに Lv × flutterHitsPerLv 回の小さいダメージ。麻痺の抽選もある） --- */
   flutterHitsPerLv: 2, flutterPower: 0.1,
@@ -147,13 +150,15 @@ const DR_RPG = {
    ★拡張予定: ボス
      バトルが始まるとき、fromWorld ～ toWorld に当てはまるボスの中からランダムに1体選ぶ。
      ワールドが fromWorld より1つ進むごとに、HP と攻撃力が growth の割合で上がる（0.15 なら +15%）。
+     HP の目安（W5 で HP 1200、ボットが最速で操作したときに倒すまでの秒数。人が操作するとこれより長くなる）:
+       ジャンプ1回だけ 約55秒 / ジャンプ2回 約30秒 / 居合切り＋ジャンプ2回 約22秒 / 居合切り＋急降下＋ジャンプ2回 約17秒 / ほぼ全部 約13秒
 
    1件の書き方:
      {
        id: 'dummy',               // 英数字の名前
        name: 'かりのボス',          // 画面に出る名前（ゲームオーバーの「〇〇にやられてしまった…」にも使う）
        fromWorld: 5, toWorld: 99, // 出てくるワールドの範囲（1 から数える）
-       hp: 600, atk: 26,          // fromWorld のときの HP と攻撃力
+       hp: 1200, atk: 26,         // fromWorld のときの HP と攻撃力
        growth: 0.15,
        score: 10000,              // 倒したときのスコア（タイムボーナスは別）
        gapMin: 0.8, gapMax: 1.8,  // 技を出し終わってから、次の技を出すまでの秒数（毎回この範囲でぶれる）
@@ -164,6 +169,8 @@ const DR_RPG = {
          // type: 'normal'（通常攻撃）/ 'strong'（強攻撃）… どちらも3回光ってから、4拍目に当たる（防御できる）
          //        光る間隔は bpm で決まる（120 なら 0.5 秒ごと）。ダメージ = 攻撃力 × power
          //       'skill'（スキル攻撃）… 防御できない。技の名前を出して、wind 秒後に当たる
+         // fx … 当たるときのエフェクト（DR_RPG_EFFECTS の名前。省くと 通常 claw・強 smash・スキル breath）
+         // sound … 当たるときの音（dinorun-config.js の DR_SOUNDS の名前。省くと bosshit。スキル攻撃は breath）
        w: 144, h: 120,            // 画面に描く大きさ（ドット。最大 192 × 160。足元がゲーム画面の床にそろう）
        image: '',                 // ★ PNG に差し替えるときの場所（例: 'dinorun/rpg/boss_dummy.png'）。大きさは w × h で描く
        sprite: { pixels: [...] }, // image が空のときの仮のドット絵（w × h に拡大して描く）
@@ -219,12 +226,12 @@ function drRpgPlaceholderBoss() {
 const DR_BOSSES = [
   {
     id: 'dummy', name: 'かりのボス', fromWorld: 5, toWorld: 99,
-    hp: 600, atk: 26, growth: 0.15, score: 10000,
+    hp: 1200, atk: 26, growth: 0.15, score: 10000,
     gapMin: 0.8, gapMax: 1.8,
     attacks: [
-      { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0, bpm: 120 },
-      { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2, bpm: 100 },
-      { type: 'skill', name: 'ほのおのブレス', weight: 0.7, power: 2.2, wind: 1.2 },
+      { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0, bpm: 120, fx: 'claw' },
+      { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2, bpm: 100, fx: 'smash' },
+      { type: 'skill', name: 'ほのおのブレス', weight: 0.7, power: 2.2, wind: 1.2, fx: 'breath', sound: 'breath' },
     ],
     w: 144, h: 120,
     image: '',
@@ -233,6 +240,41 @@ const DR_BOSSES = [
 
   /* ↑ ここに追加 ↑ */
 ];
+
+/* -----------------------------------------------------
+   ★拡張予定: 技のエフェクト（バトルで出る絵）
+     いまは仮のドット絵（dinorun-rpg-fx.js の DR_RPG_FX_DRAW で描いている）。
+     PNG を用意して image に場所を書くと、その絵に差し替わる（仮のドット絵より PNG が優先）。
+
+   PNG の作り方:
+     1コマ w × h ドットの絵を、左から右へ frames コマ横に並べた1枚の画像（スプライトシート）。背景は透明。
+       例: 48 × 48 ドットで 6 コマなら、288 × 48 ドットの PNG
+     ゲーム画面は 384 × 216 ドット。描いた大きさのまま（拡大しないで）画面に出る。
+     life の秒数で、1コマ目から最後のコマまでを1回流す（6 コマ・0.3 秒なら 1 コマ 0.05 秒）。
+
+   1件の書き方:
+     stomp: { image: 'dinorun/rpg/fx_stomp.png', frames: 6, w: 48, h: 48, life: 0.3 },
+       ax・ay … 絵のどこを、出す場所に合わせるか（省くと 0.5・0.5 = 絵のまん中。ax: 0.5, ay: 1 なら下のまん中）
+       lead … ボスの攻撃のエフェクトだけ: 当たる何秒前から出すか（炎が届くまでの時間など）
+   新しいエフェクトを足すとき:
+     1. ここに1件足す  2. PNG がないあいだの仮の絵がほしければ dinorun-rpg-fx.js の DR_RPG_FX_DRAW に同じ名前で足す
+     3. dinorun-rpg.js で drRpgEffect('名前', x, y) を呼ぶ（ボスの攻撃なら、DR_BOSSES の attacks に fx: '名前' と書くだけ）
+   ----------------------------------------------------- */
+const DR_RPG_EFFECTS = {
+  stomp:   { image: '', frames: 6, w: 48, h: 48, life: 0.3 },             // ふみつけが当たった（バタ足は小さく出る）
+  stamp:   { image: '', frames: 8, w: 192, h: 64, life: 0.5, ay: 0.75 },  // スタンピング（地面に広がる衝撃）
+  slash:   { image: '', frames: 6, w: 96, h: 96, life: 0.32 },            // 居合切り（溜めのときは big: 大きく金色）
+  fireHit: { image: '', frames: 6, w: 64, h: 64, life: 0.4 },             // 火の玉が当たった（溜めのときは blue: 青く大きく）
+  spinHit: { image: '', frames: 6, w: 64, h: 64, life: 0.3 },             // スピンが当たった
+  heal:    { image: '', frames: 8, w: 64, h: 64, life: 0.8, ay: 0.85 },   // 回復魔法・回復薬
+  guard:   { image: '', frames: 4, w: 48, h: 48, life: 0.3 },             // 防御できた（半減）
+  perfect: { image: '', frames: 6, w: 64, h: 64, life: 0.4 },             // パーフェクト防御
+  claw:    { image: '', frames: 5, w: 48, h: 48, life: 0.32 },            // ボスの通常攻撃が当たった
+  smash:   { image: '', frames: 6, w: 64, h: 64, life: 0.38 },            // ボスの強攻撃が当たった
+  breath:  { image: '', frames: 8, w: 192, h: 96, life: 0.75, lead: 0.3, ax: 1, ay: 0.5 },   // ほのおのブレス（ボスの口から自機へ）
+  bolt:    { image: '', frames: 4, w: 32, h: 48, life: 0.25 },            // 麻痺の稲妻
+  boom:    { image: '', frames: 8, w: 64, h: 64, life: 0.45 },            // ボスを倒したときの爆発
+};
 
 /* -----------------------------------------------------
    ★拡張予定: 入り口の敵（ノーマルフェイズの地面に出てくる。触れるとフェイズが切りかわる）
