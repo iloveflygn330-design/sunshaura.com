@@ -46,7 +46,7 @@ DR_PHASES.rpg = {
       time: 0,                 // バトルが始まってからの秒数（FIGHT! のあとから数える）
       p: { name: C.playerName, hp: maxHp, maxHp, atk: C.atkBase + lv * C.atkPerLv, anim: null, hurtT: 0, guardT: 0, charged: false },
       b: { def: bossDef, name: bossDef.name, hp: Math.round(bossDef.hp * k), maxHp: Math.round(bossDef.hp * k), atk: Math.round(bossDef.atk * k),
-           act: null, nextIn: 1.2, hurtT: 0, lunge: 0, paraT: 0 },
+           act: null, nextIn: 1.2, hurtT: 0, lunge: 0, paraT: 0, paraImmT: 0 },
       ct: { jump: 0, guard: 0 },   // 技ごとのクールタイムの残り（技のボタンはスキルの id で入る）
       skills: drRpgSkillList(run),
       guardAt: -99,            // 最後に防御を押した時刻（drRpg.time）
@@ -61,6 +61,8 @@ DR_PHASES.rpg = {
       pending: [],             // あとから入るダメージ（バタ足）
       shots: [],               // 飛んでいる火の玉
       fx: [], msg: '', shake: 0, reward: null, shown: false,
+      flash: null,             // 画面全体が一瞬光る（drRpgFlash）
+      booms: 0,                // 倒したときの爆発を何回出したか
     };
     drRpgMsg(`${bossDef.name}が あらわれた！`);
     drRpgSetPads(true);
@@ -73,8 +75,20 @@ DR_PHASES.rpg = {
     if (!R) return;
     R.t += dt;
     if (R.shake > 0) R.shake = Math.max(0, R.shake - dt);
-    R.fx.forEach(f => { f.t += dt; f.x += (f.vx || 0) * dt; f.y += (f.vy || 0) * dt; });
+    R.fx.forEach(f => { f.t += dt; f.vy = (f.vy || 0) + (f.g || 0) * dt; f.x += (f.vx || 0) * dt; f.y += f.vy * dt; });
     R.fx = R.fx.filter(f => f.t < f.life);
+    if (R.flash) { R.flash.t += dt; if (R.flash.t >= R.flash.life) R.flash = null; }
+    // 倒したとき：ボスのあちこちで爆発してから、ファンファーレ
+    if (R.st === 'win') {
+      const b = R.b;
+      while (R.booms < 7 && R.t >= R.booms * 0.12) {
+        R.booms++;
+        drRpgEffect('boom', DR_RPG_BOSS_X + drRand(-b.def.w * 0.35, b.def.w * 0.35), DR_RPG_BOSS_FEET - drRand(10, b.def.h * 0.85));
+        drSound('boom');
+        R.shake = Math.max(R.shake, 0.12);
+      }
+      if (!R.fanfare && R.t >= 0.7) { R.fanfare = true; drSound('victory'); drRpgFlash('#FFFFFF', 0.15, 0.6); }
+    }
     if (R.st === 'close' && R.t >= C.closeTime + C.closeHold) { R.st = 'intro'; R.t = 0; }
     else if (R.st === 'intro' && R.t >= C.introTime) { R.st = 'fight'; R.t = 0; drSound('fight'); }
     else if (R.st === 'fight' && R.t >= C.fightTime) { R.st = 'battle'; R.t = 0; }
@@ -128,17 +142,11 @@ function drRpgSkillList(run) {
 function drRpgMsg(text) { if (drRpg) drRpg.msg = text; }
 /* 数字・英字（ドット文字）の演出 */
 function drRpgFx(text, x, y, color, scale) {
-  drRpg.fx.push({ type: 'text', text, x, y, vy: -22, t: 0, life: 0.9, color, scale: scale || 2 });
+  drRpg.fx.push({ type: 'text', text, x, y, vy: -48, g: 80, t: 0, life: 0.9, color, scale: scale || 2 });   // ぽんと上がって、ゆっくりになる
 }
 /* 日本語の演出（フォントで描く） */
 function drRpgFxJp(text, x, y, color, size) {
   drRpg.fx.push({ type: 'jp', text, x, y, vy: -18, t: 0, life: 1.0, color, size: size || 11 });
-}
-function drRpgSparks(x, y, color, n, speed) {
-  for (let i = 0; i < n; i++) {
-    const a = Math.random() * Math.PI * 2, sp = drRand(30, speed || 110);
-    drRpg.fx.push({ type: 'dot', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 0, life: drRand(0.3, 0.6), color });
-  }
 }
 
 /* ---------- バトルの進み方 ---------- */
@@ -164,15 +172,23 @@ function drRpgBattle(dt) {
   // 火の玉（届いたらダメージ）
   for (const s of R.shots) {
     s.t += dt;
+    // 飛んでいるあいだの火の粉
+    const q = Math.min(1, s.t / s.dur);
+    if (Math.random() < 0.8) R.fx.push({ type: 'dot', x: s.x0 + (s.x1 - s.x0) * q - drRand(2, 6), y: s.y0 + (s.y1 - s.y0) * q - Math.sin(q * Math.PI) * 12 + drRand(-s.r, s.r) * 0.6,
+      vx: -30, vy: drRand(-20, 0), t: 0, life: drRand(0.12, 0.25), color: s.blue ? (Math.random() < 0.5 ? '#9FE8FF' : '#2F6BFF') : (Math.random() < 0.5 ? '#FFD84A' : '#FF9A3C'), size: 2 });
     if (s.t >= s.dur && !s.done) { s.done = true; s.onHit(); if (R.st !== 'battle') return; }
   }
   R.shots = R.shots.filter(s => !s.done);
   // あとから入るダメージ（バタ足）
   while (R.pending.length && R.pending[0].at <= R.time) {
     const d = R.pending.shift();
+    drRpgEffect('stomp', DR_RPG_BOSS_X - 30 + drRand(-12, 12), DR_RPG_BOSS_FEET - b.def.h + 38 + drRand(-6, 6), { small: true, life: 0.2 });
     drRpgAttack(d.base, d.name, { normal: true, small: true });
     if (R.st !== 'battle') return;
   }
+
+  // 溜めのあいだは、黄色い光の粒がのぼる
+  if (p.charged && Math.random() < 0.35) R.fx.push({ type: 'dot', x: DR_RPG_PLAYER_X + drRand(-16, 16), y: DR_RPG_PLAYER_FEET - drRand(0, 20), vx: 0, vy: -45, t: 0, life: 0.4, color: Math.random() < 0.5 ? '#FFD84A' : '#FFFFFF' });
 
   // 逃げる（押してから escapeDelay 秒後）
   if (R.escapeT > 0) {
@@ -180,10 +196,12 @@ function drRpgBattle(dt) {
     if (R.escapeT <= 0) { R.st = 'escaped'; R.t = 0; drRpgMsg('うまく にげきれた！'); drSound('escape'); return; }
   }
 
+  b.paraImmT = Math.max(0, b.paraImmT - dt);
   // ボス：麻痺している間は動かない
   if (b.paraT > 0) {
     b.paraT = Math.max(0, b.paraT - dt);
-    if (Math.random() < 0.3) drRpg.fx.push({ type: 'dot', x: DR_RPG_BOSS_X + drRand(-50, 50), y: DR_RPG_BOSS_FEET - drRand(10, b.def.h), vx: 0, vy: -20, t: 0, life: 0.3, color: '#FFD84A' });
+    if (b.paraT <= 0) b.paraImmT = DR_RPG.paraImmune || 0;   // 麻痺がとけたら、しばらく麻痺しない
+    if (Math.random() < 0.06) drRpgEffect('bolt', DR_RPG_BOSS_X + drRand(-b.def.w * 0.35, b.def.w * 0.3), DR_RPG_BOSS_FEET - drRand(24, b.def.h * 0.8));
     return;
   }
   if (!b.act) {
@@ -193,6 +211,9 @@ function drRpgBattle(dt) {
     const a = b.act, prev = a.t;
     a.t += dt;
     if (a.atk.type !== 'skill') for (let i = 1; i < 3; i++) if (prev < i * a.beat && a.t >= i * a.beat) drSound('warn');
+    // 当たる少し前から出すエフェクト（ブレスの炎など。DR_RPG_EFFECTS の lead）
+    const fx = drRpgBossFx(a.atk), lead = ((typeof DR_RPG_EFFECTS !== 'undefined' && DR_RPG_EFFECTS[fx]) || {}).lead || 0;
+    if (lead && !a.fxShown && a.t >= a.hitAt - lead) { a.fxShown = true; drRpgBossEffect(fx); }
     if (a.t >= a.hitAt) drRpgBossHit();
   }
 }
@@ -226,17 +247,35 @@ function drRpgBossHit() {
   b.act = null;
   b.nextIn = drRand(b.def.gapMin, b.def.gapMax);
   const px = DR_RPG_PLAYER_X, py = DR_RPG_PLAYER_FEET - 44;
-  if (skill) {   // ほのおの演出
-    for (let i = 0; i < 24; i++) R.fx.push({ type: 'dot', x: DR_RPG_BOSS_X - 60, y: DR_RPG_BOSS_FEET - 70, vx: drRand(-380, -200), vy: drRand(20, 120), t: 0, life: drRand(0.4, 0.7), color: i % 2 ? '#FF9A3C' : '#FF5A7A', size: 3 });
+  // 当たるときのエフェクト（lead があるものは、もう出ている）
+  const fx = drRpgBossFx(a.atk), lead = ((typeof DR_RPG_EFFECTS !== 'undefined' && DR_RPG_EFFECTS[fx]) || {}).lead || 0;
+  if (!lead || !a.fxShown) drRpgBossEffect(fx);
+  if (kind === 'perfect') {
+    drRpgEffect('perfect', px + 14, py + 18);
+    drRpgFlash('#9FFFE8', 0.1, 0.35);
+    drRpgFx('PERFECT!', px, py - 14, '#7FFFD4', 2); drSound('perfect'); drRpgMsg('パーフェクトガード！ ダメージ 0'); return;
   }
-  if (kind === 'perfect') { drRpgFx('PERFECT!', px, py - 14, '#7FFFD4', 2); drSound('perfect'); drRpgMsg('パーフェクトガード！ ダメージ 0'); return; }
+  if (kind === 'guard') drRpgEffect('guard', px + 14, py + 18);
   p.hp = Math.max(0, p.hp - dmg);
   p.hurtT = 0.4;
   drRpgFx(String(dmg), px, py, '#FF5A7A', 2);
   if (kind === 'guard') { drRpgFx('GUARD', px, py - 20, '#9FE8FF', 1); drSound('guard'); drRpgMsg(`ガード！ ${dmg}のダメージ`); }
   else if (kind === 'spin') { drRpgFxJp('スピンで軽減！', px, py - 24, '#7FFFD4', 12); drSound('guard'); drRpgMsg(`スピンで ふせいだ！ ${dmg}のダメージ`); R.shake = 0.2; }
-  else { drSound('bosshit'); drRpgMsg(`${dmg}のダメージを うけた！`); if (a.atk.type !== 'normal') R.shake = 0.35; }
+  else {
+    drSound(a.atk.sound || (skill ? 'breath' : 'bosshit'));
+    drRpgMsg(`${dmg}のダメージを うけた！`);
+    if (a.atk.type !== 'normal') { R.shake = 0.35; drRpgFlash(skill ? '#FF9A3C' : '#FF5A7A', 0.1, 0.3); }
+  }
   if (p.hp <= 0) drRpgLose();
+}
+
+/* ボスの攻撃のエフェクトの名前（attacks の fx。省いたときは種類で決まる） */
+function drRpgBossFx(atk) { return atk.fx || (atk.type === 'skill' ? 'breath' : atk.type === 'strong' ? 'smash' : 'claw'); }
+/* ボスの攻撃のエフェクトを出す（ブレスはボスの口から自機へ、ほかは自機の上） */
+function drRpgBossEffect(fx) {
+  const def = drRpg.b.def, px = DR_RPG_PLAYER_X, py = DR_RPG_PLAYER_FEET - 26;
+  if (fx === 'breath') drRpgEffect(fx, DR_RPG_BOSS_X - def.w * 0.38, DR_RPG_BOSS_FEET - def.h * 0.72, { tx: px + 6, ty: py });
+  else drRpgEffect(fx, px, py);
 }
 
 /* ボスに攻撃する。base … ダメージのもと（攻撃力 × 倍率）。会心の抽選をして、ふみつけ・バタ足（normal）なら麻痺の抽選もする */
@@ -249,15 +288,17 @@ function drRpgAttack(base, name, opt) {
   b.hurtT = 0.2;
   const x = DR_RPG_BOSS_X + drRand(-24, 24), y = DR_RPG_BOSS_FEET - b.def.h * 0.55 + drRand(-10, 10);
   drRpgFx(String(dmg), x, y, crit ? '#FFD84A' : '#FFFFFF', opt.small && !crit ? 1 : 2);
-  if (crit) { drRpgFxJp('会心！', x, y - 16, '#FFD84A', 12); R.shake = Math.max(R.shake, 0.25); }
+  if (crit) { drRpgFxJp('会心！', x, y - 16, '#FFD84A', 12); R.shake = Math.max(R.shake, 0.25); drSound('crit'); drRpgFlash('#FFFFFF', 0.07, 0.45); }
   else if (dmg >= b.maxHp * 0.12) R.shake = Math.max(R.shake, 0.2);   // 大ダメージ
   if (!opt.small) drRpgMsg(`${name}！ ${dmg}のダメージ${crit ? '（会心の一撃！）' : ''}`);
   drSound(opt.small ? 'kill' : 'stomp');
   // 麻痺（磁石）
-  if (opt.normal && R.para > 0 && b.hp > 0 && Math.random() < R.para * (crit ? C.critMult : 1)) {
-    b.paraT = Math.min(C.paraMax, b.paraT + C.paraTime);
+  if (opt.normal && R.para > 0 && b.hp > 0 && !(b.paraImmT > 0) && Math.random() < R.para * (crit ? C.critMult : 1)) {
+    b.paraT = Math.min(C.paraMax, b.paraT + (b.paraT > 0 ? (C.paraStack == null ? C.paraTime : C.paraStack) : C.paraTime));   // 麻痺中にまた麻痺したら paraStack 秒のびる
     b.act = null;                                  // 出しかけの技も止まる
     drRpgFxJp('マヒ！', DR_RPG_BOSS_X, DR_RPG_BOSS_FEET - b.def.h - 4, '#FFD84A', 12);
+    for (let i = 0; i < 3; i++) drRpgEffect('bolt', DR_RPG_BOSS_X + (i - 1) * 30, DR_RPG_BOSS_FEET - b.def.h * 0.55 + drRand(-10, 10));
+    drSound('para');
     drRpgMsg(`${b.name}は しびれて うごけない！`);
   }
   if (b.hp <= 0) drRpgWin();
@@ -274,8 +315,7 @@ function drRpgWin() {
   run.bossScore = (run.bossScore || 0) + score;
   run.wallet += coins;
   R.reward = { score, timeBonus, coins, sec: R.time };
-  drRpgMsg(`${b.name}を たおした！`);
-  drSound('victory');
+  drRpgMsg(`${b.name}を たおした！`);   // 爆発とファンファーレは update で出す
 }
 
 function drRpgShowResult() {
@@ -317,6 +357,9 @@ function drRpgStomp() {
     type: 'stomp', t: 0, n, rise, each, back, hits, next: 0, total: rise + n * each + back,
     onHit(i) {
       const stamp = R.hasDive && i === n - 1;
+      const hx = DR_RPG_BOSS_X - 30, hy = DR_RPG_BOSS_FEET - R.b.def.h + 34;   // 踏んだところ（自機の足元）
+      drRpgEffect('stomp', hx, hy);
+      if (stamp) { drRpgEffect('stamp', DR_RPG_BOSS_X, DR_RPG_BOSS_FEET); drRpgFlash('#FFE88A', 0.08, 0.35); drSound('stamp'); }
       drRpgAttack(p.atk * C.stompPower * (stamp ? C.stampPower : 1), stamp ? 'スタンピング' : 'ふみつけ', { normal: true });
       if (R.st !== 'battle') return;
       // バタ足：小さいダメージを少しずつ
@@ -325,6 +368,7 @@ function drRpgStomp() {
         p.charged = true;
         drRpgFxJp('溜め！', DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET - 64, '#FFD84A', 12);
         R.shake = Math.max(R.shake, 0.15);
+        drSound('charge');
       }
     },
   };
@@ -343,7 +387,8 @@ function drRpgUseSkill(s) {
     // 居合切り：ボスの前へ踏みこんで切る
     p.anim = { type: 'dash', t: 0, go: 0.12, stay: 0.14, back: 0.16, hits: [0.12], next: 0, total: 0.42,
       onHit() {
-        R.fx.push({ type: 'slash', x: DR_RPG_BOSS_X - 20, y: DR_RPG_BOSS_FEET - R.b.def.h * 0.5, t: 0, life: 0.3, big: charged });
+        drRpgEffect('slash', DR_RPG_BOSS_X - 10, DR_RPG_BOSS_FEET - R.b.def.h * 0.5, { big: charged, life: charged ? 0.42 : 0.32 });
+        if (charged) drRpgFlash('#FFFFFF', 0.1, 0.5);
         drSound('slash');
         drRpgAttack(p.atk * (charged ? cfg.chargedPower : cfg.power), name);
       } };
@@ -354,7 +399,7 @@ function drRpgUseSkill(s) {
     for (let i = 0; i < n; i++) hits.push(0.14 + i * 0.16);
     p.anim = { type: 'dash', spin: true, t: 0, go: 0.14, stay: 0.16 * n, back: 0.16, hits, next: 0, total: 0.3 + 0.16 * n,
       onHit() {
-        R.fx.push({ type: 'ring', x: DR_RPG_BOSS_X - 30, y: DR_RPG_BOSS_FEET - 30, t: 0, life: 0.3 });
+        drRpgEffect('spinHit', DR_RPG_BOSS_X - 30, DR_RPG_BOSS_FEET - 34);
         drSound('spin');
         drRpgAttack(p.atk * cfg.power, name);
       } };
@@ -365,7 +410,11 @@ function drRpgUseSkill(s) {
       onHit() {
         R.shots.push({ x0: DR_RPG_PLAYER_X + 20, y0: DR_RPG_PLAYER_FEET - 26, x1: DR_RPG_BOSS_X - 20, y1: DR_RPG_BOSS_FEET - R.b.def.h * 0.5,
           t: 0, dur: 0.35, blue: charged, r: (charged ? 9 : 5) + R.fireLv,
-          onHit() { drRpgSparks(this.x1, this.y1, charged ? '#9FE8FF' : '#FF9A3C', 12); drRpgAttack(p.atk * power, name); } });
+          onHit() {
+            drRpgEffect('fireHit', this.x1, this.y1, { blue: charged, life: charged ? 0.5 : 0.4 });
+            if (charged) drRpgFlash('#9FE8FF', 0.08, 0.35);
+            drRpgAttack(p.atk * power, name);
+          } });
         drSound(charged ? 'bluefire' : 'fire');
       } };
   } else if (s.action === 'vacuum') {
@@ -375,9 +424,9 @@ function drRpgUseSkill(s) {
         const heal = Math.min(p.maxHp - p.hp, Math.round(p.maxHp * cfg.heal));
         p.hp += heal;
         drRpgFx('+' + heal, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET - 50, '#7FFFD4', 2);
-        drRpgSparks(DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET - 24, '#7FFFD4', 14, 70);
+        drRpgEffect('heal', DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET);
         drRpgMsg(`${cfg.name}！ HPが ${heal} かいふく`);
-        drSound('potion');
+        drSound('heal');
       } };
   }
 }
@@ -397,6 +446,7 @@ function drRpgPotion() {
   run.potion = 0;
   p.hp = p.maxHp;
   drRpgFx('HEAL', DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET - 60, '#7FFFD4', 2);
+  drRpgEffect('heal', DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET);
   drRpgMsg('かいふくやくを つかった！ HPが ぜんかいふく');
   drSound('potion');
 }
@@ -536,6 +586,13 @@ function drRpgRender(ctx) {
   }
 
   drRpgDrawScene(ctx, 0, 0);
+  // 画面全体が一瞬光る
+  if (R.flash) {
+    ctx.globalAlpha = R.flash.alpha * (1 - R.flash.t / R.flash.life);
+    ctx.fillStyle = R.flash.color;
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+  }
   drRpgDrawUi(ctx);
 
   // ボスのスキル攻撃の名前（防御できない）
@@ -651,7 +708,7 @@ function drRpgDrawScene(ctx, back, tilt, side) {
   ctx.save();
   if (R.shake > 0) ctx.translate(Math.round(drRand(-3, 3)), Math.round(drRand(-3, 3)));
   if (tilt) { ctx.translate(W / 2, DR_RPG_FLOOR); ctx.rotate(tilt); ctx.translate(-W / 2, -DR_RPG_FLOOR); }   // 地平線のまん中を軸に傾ける
-  drRpgDrawBg(ctx, back, tilt, side);
+  drRpgDrawBg(ctx, back, tilt || (R.shake > 0 ? 0.0001 : 0), side);   // ゆれているときも、すみが空かないように広く描く
   drRpgDepth(ctx, DR_RPG_BOSS_X, DR_RPG_BOSS_FEET, back, side, () => drRpgDrawBoss(ctx, 0));
   drRpgDepth(ctx, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET, back, side, () => drRpgDrawPlayer(ctx, 0));
   // 火の玉
@@ -677,17 +734,9 @@ function drRpgDrawScene(ctx, back, tilt, side) {
     } else if (f.type === 'dot') {
       ctx.fillStyle = f.color;
       ctx.fillRect(Math.round(f.x), Math.round(f.y), f.size || 2, f.size || 2);
-    } else if (f.type === 'slash') {
-      const q = f.t / f.life, r = (f.big ? 70 : 50) * (0.6 + q * 0.4);
-      ctx.strokeStyle = f.big ? '#FFD84A' : '#FFFFFF';
-      ctx.lineWidth = f.big ? 5 : 3;
-      ctx.beginPath(); ctx.arc(f.x, f.y, r, -Math.PI * 0.75, Math.PI * 0.15); ctx.stroke();
-      ctx.lineWidth = 1;
-    } else if (f.type === 'ring') {
-      ctx.strokeStyle = '#7FFFD4';
-      ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(f.x, f.y, 10 + (f.t / f.life) * 30, 0, Math.PI * 2); ctx.stroke();
-      ctx.lineWidth = 1;
+    } else if (f.type === 'eff') {     // 技のエフェクト（dinorun-rpg-fx.js）
+      ctx.globalAlpha = 1;
+      drRpgDrawEffect(ctx, f);
     }
   });
   ctx.globalAlpha = 1;
