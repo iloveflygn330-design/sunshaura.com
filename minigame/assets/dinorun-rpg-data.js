@@ -243,37 +243,47 @@ const DR_BOSSES = [
 
 /* -----------------------------------------------------
    ★拡張予定: 技のエフェクト（バトルで出る絵）
-     いまは仮のドット絵（dinorun-rpg-fx.js の DR_RPG_FX_DRAW で描いている）。
-     PNG を用意して image に場所を書くと、その絵に差し替わる（仮のドット絵より PNG が優先）。
+     いまの絵は pixelfx（https://github.com/patch-gg/pixelfx 、MIT ライセンス）で書き出した PNG。
+     書き出しのツールは tools/dinorun-fx/（サイトには公開しない）。色や種類を変えるときは、そのツールの FX を書きかえて書き出し直す。
+     image を空にすると、仮のドット絵（dinorun-rpg-fx.js の DR_RPG_FX_DRAW）にもどる。
 
-   PNG の作り方:
-     1コマ w × h ドットの絵を、左から右へ frames コマ横に並べた1枚の画像（スプライトシート）。背景は透明。
-       例: 48 × 48 ドットで 6 コマなら、288 × 48 ドットの PNG
+   PNG の作り方（自分で描くとき）:
+     1コマ w × h ドットの絵を、左上から右へ並べ、cols コマで次の段へ折り返した1枚の画像（スプライトシート）。背景は透明。
+       例: 48 × 48 ドットで 6 コマ・cols 6 なら、288 × 48 ドットの PNG
      ゲーム画面は 384 × 216 ドット。描いた大きさのまま（拡大しないで）画面に出る。
-     life の秒数で、1コマ目から最後のコマまでを1回流す（6 コマ・0.3 秒なら 1 コマ 0.05 秒）。
 
    1件の書き方:
-     stomp: { image: 'dinorun/rpg/fx_stomp.png', frames: 6, w: 48, h: 48, life: 0.3 },
-       ax・ay … 絵のどこを、出す場所に合わせるか（省くと 0.5・0.5 = 絵のまん中。ax: 0.5, ay: 1 なら下のまん中）
+     stomp: { image: 'dinorun/rpg/fx/stomp.png', frames: 16, cols: 8, w: 124, h: 73, fps: 30, ax: 0.28, ay: 0.78 },
+       frames … コマの数 / cols … 1段に並べたコマの数 / w・h … 1コマの大きさ
+       fps … 1秒に何コマ進めるか（出ている時間 = frames ÷ fps）。life（秒）を書くと、その時間で全部のコマを流す
+       ax・ay … 絵のどこを、出す場所に合わせるか（0〜1。0.5・0.5 = 絵のまん中、0.5・1 = 下のまん中）
+       ox・oy … 出す場所から、さらに何ドットずらすか / flip: true … 左右反転して出す
+       aim: true … 右向きの絵を、ねらう場所（drRpgEffect の opt の tx・ty）のほうへ回して出す
+       fade … 終わりの何割で、だんだん消すか（途中で切った絵を自然に消す）
        lead … ボスの攻撃のエフェクトだけ: 当たる何秒前から出すか（炎が届くまでの時間など）
    新しいエフェクトを足すとき:
-     1. ここに1件足す  2. PNG がないあいだの仮の絵がほしければ dinorun-rpg-fx.js の DR_RPG_FX_DRAW に同じ名前で足す
+     1. ここに1件足す（pixelfx から書き出すなら tools/dinorun-fx/export_fx.py の FX にも足す）
+     2. PNG がないあいだの仮の絵がほしければ dinorun-rpg-fx.js の DR_RPG_FX_DRAW に同じ名前で足す
      3. dinorun-rpg.js で drRpgEffect('名前', x, y) を呼ぶ（ボスの攻撃なら、DR_BOSSES の attacks に fx: '名前' と書くだけ）
    ----------------------------------------------------- */
 const DR_RPG_EFFECTS = {
-  stomp:   { image: '', frames: 6, w: 48, h: 48, life: 0.3 },             // ふみつけが当たった（バタ足は小さく出る）
-  stamp:   { image: '', frames: 8, w: 192, h: 64, life: 0.5, ay: 0.75 },  // スタンピング（地面に広がる衝撃）
-  slash:   { image: '', frames: 6, w: 96, h: 96, life: 0.32 },            // 居合切り（溜めのときは big: 大きく金色）
-  fireHit: { image: '', frames: 6, w: 64, h: 64, life: 0.4 },             // 火の玉が当たった（溜めのときは blue: 青く大きく）
-  spinHit: { image: '', frames: 6, w: 64, h: 64, life: 0.3 },             // スピンが当たった
-  heal:    { image: '', frames: 8, w: 64, h: 64, life: 0.8, ay: 0.85 },   // 回復魔法・回復薬
-  guard:   { image: '', frames: 4, w: 48, h: 48, life: 0.3 },             // 防御できた（半減）
-  perfect: { image: '', frames: 6, w: 64, h: 64, life: 0.4 },             // パーフェクト防御
-  claw:    { image: '', frames: 5, w: 48, h: 48, life: 0.32 },            // ボスの通常攻撃が当たった
-  smash:   { image: '', frames: 6, w: 64, h: 64, life: 0.38 },            // ボスの強攻撃が当たった
-  breath:  { image: '', frames: 8, w: 192, h: 96, life: 0.75, lead: 0.3, ax: 1, ay: 0.5 },   // ほのおのブレス（ボスの口から自機へ）
-  bolt:    { image: '', frames: 4, w: 32, h: 48, life: 0.25 },            // 麻痺の稲妻
-  boom:    { image: '', frames: 8, w: 64, h: 64, life: 0.45 },            // ボスを倒したときの爆発
+  stomp: { image: 'dinorun/rpg/fx/stomp.png', frames: 16, cols: 8, w: 124, h: 73, fps: 30, ax: 0.282, ay: 0.781 },   // ふみつけ（pixelfx impacts/hit-spark）
+  stamp: { image: 'dinorun/rpg/fx/stamp.png', frames: 36, cols: 8, w: 138, h: 44, fps: 30, ax: 0.507, ay: 0.659, fade: 0.3 },   // スタンピング（pixelfx impacts/heavy-landing）
+  slash: { image: 'dinorun/rpg/fx/slash.png', frames: 24, cols: 8, w: 131, h: 104, fps: 30, ax: 0.336, ay: 0.885, ox: -10, oy: 42 },   // 居合切り（pixelfx melee/sword-slash）
+  slashBig: { image: 'dinorun/rpg/fx/slashBig.png', frames: 24, cols: 8, w: 136, h: 104, fps: 30, ax: 0.324, ay: 0.885, ox: -10, oy: 42 },   // 溜めの居合切り（pixelfx melee/sword-slash）
+  fireHit: { image: 'dinorun/rpg/fx/fireHit.png', frames: 21, cols: 8, w: 93, h: 83, fps: 30, ax: 0.516, ay: 0.807, oy: 20 },   // 火の玉が当たった（pixelfx impacts/blunt-hit）
+  blueHit: { image: 'dinorun/rpg/fx/blueHit.png', frames: 20, cols: 8, w: 208, h: 192, fps: 15, ax: 0.524, ay: 0.500, fade: 0.3 },   // 溜めの青い火の玉が当たった（pixelfx explosions/plasma-explosion）
+  spinHit: { image: 'dinorun/rpg/fx/spinHit.png', frames: 13, cols: 8, w: 178, h: 102, fps: 15, ax: 0.427, ay: 0.804 },   // スピンが当たった（pixelfx melee/spin-slash）
+  heal: { image: 'dinorun/rpg/fx/heal.png', frames: 24, cols: 8, w: 142, h: 119, fps: 15, ax: 0.500, ay: 0.731 },   // 回復魔法・回復薬（pixelfx holy/heal-aoe）
+  guard: { image: 'dinorun/rpg/fx/guard.png', frames: 17, cols: 8, w: 110, h: 78, fps: 15, ax: 0.182, ay: 0.808 },   // 防御できた（半減）（pixelfx impacts/shield-block）
+  perfect: { image: 'dinorun/rpg/fx/perfect.png', frames: 31, cols: 8, w: 175, h: 102, fps: 30, ax: 0.486, ay: 0.843 },   // パーフェクト防御（pixelfx impacts/parry）
+  claw: { image: 'dinorun/rpg/fx/claw.png', frames: 28, cols: 8, w: 78, h: 62, fps: 30, ax: 0.090, ay: 0.806, ox: -22, oy: 12 },   // ボスの通常攻撃（pixelfx melee/claw-swipe）
+  smash: { image: 'dinorun/rpg/fx/smash.png', frames: 14, cols: 8, w: 175, h: 133, fps: 15, ax: 0.446, ay: 0.774 },   // ボスの強攻撃（pixelfx impacts/crit-hit）
+  crit: { image: 'dinorun/rpg/fx/crit.png', frames: 14, cols: 8, w: 175, h: 133, fps: 15, ax: 0.446, ay: 0.774 },   // 会心の一撃（pixelfx impacts/crit-hit）
+  breath: { image: 'dinorun/rpg/fx/breath.png', frames: 14, cols: 8, w: 157, h: 115, fps: 15, ax: 0.076, ay: 0.617, flip: true, aim: true, lead: 0.3, life: 0.8, fade: 0.3 },   // ほのおのブレス（ボスの口から恐竜君へ向けて）（pixelfx fire/fire-breath）
+  bolt: { image: 'dinorun/rpg/fx/bolt.png', frames: 18, cols: 8, w: 131, h: 106, fps: 30, ax: 0.580, ay: 0.500, fade: 0.3 },   // 麻痺の稲妻（pixelfx lightning/zap-hit）
+  boom: { image: 'dinorun/rpg/fx/boom.png', frames: 18, cols: 8, w: 205, h: 176, fps: 15, ax: 0.507, ay: 0.750, fade: 0.35 },   // ボスを倒したときの爆発（pixelfx explosions/small-explosion）
+  flutter: { image: '', drawLife: 0.2 },   // バタ足の小さいダメージ（仮のドット絵の小さいふみつけ）
 };
 
 /* -----------------------------------------------------
