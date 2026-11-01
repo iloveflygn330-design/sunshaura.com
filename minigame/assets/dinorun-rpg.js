@@ -530,8 +530,8 @@ function drRpgRender(ctx) {
   }
   // 暗転が開ける（暗転と逆の動き）。見えてくるのはバトル用のカメラの画面。カメラは手前から近づいてくる
   if (R.st === 'intro') {
-    const k = drRpgCamLeft();
-    drRpgWipe(ctx, Math.max(0, 1 - R.t / C.openTime), () => drRpgDrawScene(ctx, C.camBack * k, (C.camTilt || 0) * k));
+    const cam = drRpgCam();
+    drRpgWipe(ctx, Math.max(0, 1 - R.t / C.openTime), () => drRpgDrawScene(ctx, cam.back, cam.tilt, cam.side));
     return;
   }
 
@@ -558,14 +558,17 @@ function drRpgRender(ctx) {
   }
 }
 
-/* カメラの動きの残り（intro のとき。1 = 動き始め（camBack だけ手前・camTilt だけ傾いている）、0 = いつもの位置）。
-   線が入ってきて画面が見え始めるところから動き出し、introTime で止まる（だんだんゆっくり） */
-function drRpgCamLeft() {
+/* intro のときのカメラの位置 { back（手前へのずれ）, tilt（傾き）, side（横のずれ） }。どれも 0 がいつもの位置。
+   線が入ってきて画面が見え始めるところから動き出し、introTime で止まる（だんだんゆっくり）。
+   横のずれは camSideEnd のところで先に無くなるので、上から見ると斜めから入ってきて、最後はまっすぐ近づく軌道になる */
+function drRpgCam() {
   const R = drRpg, C = DR_RPG;
-  if (!R || R.st !== 'intro') return 0;
+  if (!R || R.st !== 'intro') return { back: 0, tilt: 0, side: 0 };
   const from = C.openTime / 3;   // 画面が見え始めるころ（素材のコマで 9/27）
   const p = Math.max(0, Math.min(1, (R.t - from) / Math.max(0.01, C.introTime - from)));
-  return Math.pow(1 - p, 3);
+  const ps = Math.min(1, p / Math.max(0.01, C.camSideEnd || 1));
+  const k = Math.pow(1 - p, 3), ks = Math.pow(1 - ps, 2);   // 横は少しゆるやかに減らして、斜めに入ってくるのが見えるようにする
+  return { back: (C.camBack || 0) * k, tilt: (C.camTilt || 0) * k, side: (C.camSide || 0) * ks };
 }
 
 /* エンカウントの切りかえ。素材の動画（battlestart_all.mp4・27コマ）の動きをまねている。
@@ -632,17 +635,17 @@ function drRpgWipe(ctx, q, drawScene) {
 }
 
 /* バトルの画面（背景・ボス・自機・火の玉・演出）。
-   back … カメラがどれだけ手前にいるか、tilt … カメラの傾き（ラジアン）。どちらも 0 がいつもの位置 */
-function drRpgDrawScene(ctx, back, tilt) {
+   back … カメラがどれだけ手前にいるか、tilt … カメラの傾き（ラジアン）、side … カメラの横のずれ。どれも 0 がいつもの位置 */
+function drRpgDrawScene(ctx, back, tilt, side) {
   const R = drRpg, W = DR_CONFIG.width, H = DR_CONFIG.height;
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, W, H);
   ctx.save();
   if (R.shake > 0) ctx.translate(Math.round(drRand(-3, 3)), Math.round(drRand(-3, 3)));
   if (tilt) { ctx.translate(W / 2, DR_RPG_FLOOR); ctx.rotate(tilt); ctx.translate(-W / 2, -DR_RPG_FLOOR); }   // 地平線のまん中を軸に傾ける
-  drRpgDrawBg(ctx, back, tilt);
-  drRpgDepth(ctx, DR_RPG_BOSS_X, DR_RPG_BOSS_FEET, back, () => drRpgDrawBoss(ctx, 0));
-  drRpgDepth(ctx, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET, back, () => drRpgDrawPlayer(ctx, 0));
+  drRpgDrawBg(ctx, back, tilt, side);
+  drRpgDepth(ctx, DR_RPG_BOSS_X, DR_RPG_BOSS_FEET, back, side, () => drRpgDrawBoss(ctx, 0));
+  drRpgDepth(ctx, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET, back, side, () => drRpgDrawPlayer(ctx, 0));
   // 火の玉
   R.shots.forEach(s => {
     const q = Math.min(1, s.t / s.dur);
@@ -685,14 +688,16 @@ function drRpgDrawScene(ctx, back, tilt) {
 
 /* 奥行きのある床の上に立っているものを、カメラの位置に合わせて描く（遠近法）。
    (x0, y0) … いつもの位置での足元。床の上の端（DR_RPG_FLOOR）が地平線で、足元が下にあるほど手前にいる。
-   カメラが back だけ手前に下がると、手前のもの（自機）ほど大きく小さくなり、奥のもの（ボス）はあまり変わらない */
+   カメラが back だけ手前に下がると、手前のもの（自機）ほど大きく小さくなり、奥のもの（ボス）はあまり変わらない。
+   カメラが side だけ横にずれると、手前のものほど大きく反対側へずれて見える */
 const DR_RPG_EYE = 60;   // カメラの高さ（奥行きの計算に使う。足元が床の上の端から 60 ドット下 = 奥行き 1）
-function drRpgDepth(ctx, x0, y0, back, draw) {
-  if (back <= 0) { draw(); return; }
+function drRpgDepth(ctx, x0, y0, back, side, draw) {
+  if (back <= 0 && !side) { draw(); return; }
   const W = DR_CONFIG.width, F = DR_RPG_FLOOR;
   const z = DR_RPG_EYE / Math.max(1, y0 - F), k = z / (z + back);
   ctx.save();
-  ctx.translate(W / 2 + (x0 - W / 2) * k, F + (y0 - F) * k);
+  // 横：カメラが右にずれると、ものは左に見える。手前のもの（奥行き z が小さい）ほど大きくずれる
+  ctx.translate(W / 2 + ((x0 - W / 2) * z - (side || 0)) / (z + back), F + (y0 - F) * k);
   ctx.scale(k, k);
   ctx.translate(-x0, -y0);
   draw();
@@ -700,8 +705,9 @@ function drRpgDepth(ctx, x0, y0, back, draw) {
 }
 
 /* 背景。back … カメラがどれだけ手前にいるか（床の線が流れて、近づいていくように見える）。
-   tilt … カメラの傾き。傾いているときは、画面のすみが空かないように、空と床を画面より広く描く */
-function drRpgDrawBg(ctx, back, tilt) {
+   tilt … カメラの傾き。傾いているときは、画面のすみが空かないように、空と床を画面より広く描く
+   side … カメラの横のずれ。ずれているあいだだけ、奥へのびる床の線をうすく出して、横に動いているのが分かるようにする */
+function drRpgDrawBg(ctx, back, tilt, side) {
   const W = DR_CONFIG.width, H = DR_CONFIG.height, F = DR_RPG_FLOOR;
   const img = drImage(DR_RPG.bgImage);
   if (img) {   // 背景の PNG は近づいても大きさを変えない（遠くの景色なので）。傾いているときだけ、すみが空かないように少し大きく描く
@@ -725,6 +731,18 @@ function drRpgDrawBg(ctx, back, tilt) {
     if (y < F + 4) break;
     ctx.fillStyle = `rgba(160, 80, 20, ${0.3 * Math.min(1, (y - F - 4) / 24)})`;
     ctx.fillRect(X0, Math.round(y), XW, 1);
+  }
+  // 奥へのびる床の線（カメラが横にずれているあいだだけ。まっすぐになるにつれて消える）
+  if (side) {
+    const fade = Math.min(1, Math.abs(side) / Math.max(1, Math.abs(DR_RPG.camSide || 1) * 0.25));
+    ctx.strokeStyle = `rgba(160, 80, 20, ${0.3 * fade})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let X = -2400; X <= 2400; X += 80) {
+      ctx.moveTo(W / 2, F + 3);
+      ctx.lineTo(W / 2 + (X - side) * (YB - F) / DR_RPG_EYE, YB);
+    }
+    ctx.stroke();
   }
 }
 
