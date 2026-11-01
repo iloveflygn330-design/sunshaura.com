@@ -310,7 +310,7 @@ function drRpgStomp() {
   if (drRpgBusy() || R.ct.jump > 0) return;
   R.ct.jump = C.jumpCT;
   const n = Math.max(1, R.run.maxJumps);
-  const rise = 0.22, each = 0.18, back = 0.22;
+  const rise = C.stompRise, each = C.stompEach, back = C.stompBack;
   const hits = [];
   for (let i = 0; i < n; i++) hits.push(rise + i * each);
   p.anim = {
@@ -530,11 +530,12 @@ function drRpgRender(ctx) {
   }
   // 暗転が開ける（暗転と逆の動き）。見えてくるのはバトル用のカメラの画面。カメラは手前から近づいてくる
   if (R.st === 'intro') {
-    drRpgWipe(ctx, Math.max(0, 1 - R.t / C.openTime), () => drRpgDrawScene(ctx, drRpgCamBack()));
+    const cam = drRpgCam();
+    drRpgWipe(ctx, Math.max(0, 1 - R.t / C.openTime), () => drRpgDrawScene(ctx, cam.back, cam.tilt, cam.side));
     return;
   }
 
-  drRpgDrawScene(ctx, 0);
+  drRpgDrawScene(ctx, 0, 0);
   drRpgDrawUi(ctx);
 
   // ボスのスキル攻撃の名前（防御できない）
@@ -547,9 +548,17 @@ function drRpgRender(ctx) {
 
   // 大きい文字（FIGHT! / WIN! / LOSE）
   if (R.st === 'fight') {
+    // うしろに網掛けの帯を敷いて、文字を読みやすくする
+    // 帯は左からスライドイン＋フェードイン → 右へスライドアウト＋フェードアウト（文字は帯が消えるときにいっしょに消える）
+    const fade = Math.max(0.01, C.fightFade || 0.2);
+    const aIn = Math.min(1, R.t / fade), aOut = Math.min(1, Math.max(0, (C.fightTime - R.t) / fade));
+    const slide = aOut < 1 ? Math.pow(1 - aOut, 2) * W : -Math.pow(1 - aIn, 2) * W;   // 入るときはだんだんゆっくり、出るときはだんだん速く
+    drRpgShade(ctx, H / 2 - 44, 80, Math.min(aIn, aOut), slide);
     const pop = Math.min(1, R.t / 0.15);
+    ctx.globalAlpha = aOut;
     drRpgBigText(ctx, 'FIGHT!', H / 2 - 30, '#FFD84A', 3 + 2 * pop);
     drRpgJpText(ctx, 'ボスを倒せ！', W / 2, H / 2 + 6, '#FFFFFF', 14, 'center');
+    ctx.globalAlpha = 1;
   } else if (R.st === 'win') {
     drRpgBigText(ctx, 'WIN!', H / 2 - 40, '#FFD84A', 5);
   } else if (R.st === 'lose') {
@@ -557,14 +566,17 @@ function drRpgRender(ctx) {
   }
 }
 
-/* カメラがいまどれだけ手前にいるか（intro のとき。0 = いつもの位置）。
-   線が入ってきて画面が見え始めるところから動き出し、introTime で止まる（だんだんゆっくり） */
-function drRpgCamBack() {
+/* intro のときのカメラの位置 { back（手前へのずれ）, tilt（傾き）, side（横のずれ） }。どれも 0 がいつもの位置。
+   線が入ってきて画面が見え始めるところから動き出し、introTime で止まる（だんだんゆっくり）。
+   横のずれは camSideEnd のところで先に無くなるので、上から見ると斜めから入ってきて、最後はまっすぐ近づく軌道になる */
+function drRpgCam() {
   const R = drRpg, C = DR_RPG;
-  if (!R || R.st !== 'intro') return 0;
+  if (!R || R.st !== 'intro') return { back: 0, tilt: 0, side: 0 };
   const from = C.openTime / 3;   // 画面が見え始めるころ（素材のコマで 9/27）
   const p = Math.max(0, Math.min(1, (R.t - from) / Math.max(0.01, C.introTime - from)));
-  return C.camBack * Math.pow(1 - p, 3);
+  const ps = Math.min(1, p / Math.max(0.01, C.camSideEnd || 1));
+  const k = Math.pow(1 - p, 3), ks = Math.pow(1 - ps, 2);   // 横は少しゆるやかに減らして、斜めに入ってくるのが見えるようにする
+  return { back: (C.camBack || 0) * k, tilt: (C.camTilt || 0) * k, side: (C.camSide || 0) * ks };
 }
 
 /* エンカウントの切りかえ。素材の動画（battlestart_all.mp4・27コマ）の動きをまねている。
@@ -630,16 +642,18 @@ function drRpgWipe(ctx, q, drawScene) {
   ctx.lineWidth = 1;
 }
 
-/* バトルの画面（背景・ボス・自機・火の玉・演出）。back … カメラがどれだけ手前にいるか（0 = いつもの位置） */
-function drRpgDrawScene(ctx, back) {
+/* バトルの画面（背景・ボス・自機・火の玉・演出）。
+   back … カメラがどれだけ手前にいるか、tilt … カメラの傾き（ラジアン）、side … カメラの横のずれ。どれも 0 がいつもの位置 */
+function drRpgDrawScene(ctx, back, tilt, side) {
   const R = drRpg, W = DR_CONFIG.width, H = DR_CONFIG.height;
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, W, H);
   ctx.save();
   if (R.shake > 0) ctx.translate(Math.round(drRand(-3, 3)), Math.round(drRand(-3, 3)));
-  drRpgDrawBg(ctx, back);
-  drRpgDepth(ctx, DR_RPG_BOSS_X, DR_RPG_BOSS_FEET, back, () => drRpgDrawBoss(ctx, 0));
-  drRpgDepth(ctx, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET, back, () => drRpgDrawPlayer(ctx, 0));
+  if (tilt) { ctx.translate(W / 2, DR_RPG_FLOOR); ctx.rotate(tilt); ctx.translate(-W / 2, -DR_RPG_FLOOR); }   // 地平線のまん中を軸に傾ける
+  drRpgDrawBg(ctx, back, tilt, side);
+  drRpgDepth(ctx, DR_RPG_BOSS_X, DR_RPG_BOSS_FEET, back, side, () => drRpgDrawBoss(ctx, 0));
+  drRpgDepth(ctx, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET, back, side, () => drRpgDrawPlayer(ctx, 0));
   // 火の玉
   R.shots.forEach(s => {
     const q = Math.min(1, s.t / s.dur);
@@ -682,40 +696,61 @@ function drRpgDrawScene(ctx, back) {
 
 /* 奥行きのある床の上に立っているものを、カメラの位置に合わせて描く（遠近法）。
    (x0, y0) … いつもの位置での足元。床の上の端（DR_RPG_FLOOR）が地平線で、足元が下にあるほど手前にいる。
-   カメラが back だけ手前に下がると、手前のもの（自機）ほど大きく小さくなり、奥のもの（ボス）はあまり変わらない */
+   カメラが back だけ手前に下がると、手前のもの（自機）ほど大きく小さくなり、奥のもの（ボス）はあまり変わらない。
+   カメラが side だけ横にずれると、手前のものほど大きく反対側へずれて見える */
 const DR_RPG_EYE = 60;   // カメラの高さ（奥行きの計算に使う。足元が床の上の端から 60 ドット下 = 奥行き 1）
-function drRpgDepth(ctx, x0, y0, back, draw) {
-  if (back <= 0) { draw(); return; }
+function drRpgDepth(ctx, x0, y0, back, side, draw) {
+  if (back <= 0 && !side) { draw(); return; }
   const W = DR_CONFIG.width, F = DR_RPG_FLOOR;
   const z = DR_RPG_EYE / Math.max(1, y0 - F), k = z / (z + back);
   ctx.save();
-  ctx.translate(W / 2 + (x0 - W / 2) * k, F + (y0 - F) * k);
+  // 横：カメラが右にずれると、ものは左に見える。手前のもの（奥行き z が小さい）ほど大きくずれる
+  ctx.translate(W / 2 + ((x0 - W / 2) * z - (side || 0)) / (z + back), F + (y0 - F) * k);
   ctx.scale(k, k);
   ctx.translate(-x0, -y0);
   draw();
   ctx.restore();
 }
 
-/* 背景。back … カメラがどれだけ手前にいるか（床の線が流れて、近づいていくように見える） */
-function drRpgDrawBg(ctx, back) {
+/* 背景。back … カメラがどれだけ手前にいるか（床の線が流れて、近づいていくように見える）。
+   tilt … カメラの傾き。傾いているときは、画面のすみが空かないように、空と床を画面より広く描く
+   side … カメラの横のずれ。ずれているあいだだけ、奥へのびる床の線をうすく出して、横に動いているのが分かるようにする */
+function drRpgDrawBg(ctx, back, tilt, side) {
   const W = DR_CONFIG.width, H = DR_CONFIG.height, F = DR_RPG_FLOOR;
   const img = drImage(DR_RPG.bgImage);
-  if (img) { ctx.drawImage(img, 0, 0, W, H); return; }   // 背景の PNG は動かさない（遠くの景色なので、カメラが動いても変わらない）
+  if (img) {   // 背景の PNG は近づいても大きさを変えない（遠くの景色なので）。傾いているときだけ、すみが空かないように少し大きく描く
+    const z = 1 + Math.abs(tilt || 0) * 2.5;
+    ctx.drawImage(img, W / 2 - W * z / 2, H / 2 - H * z / 2, W * z, H * z);
+    return;
+  }
+  const X0 = tilt ? -W : 0, XW = tilt ? W * 3 : W, Y0 = tilt ? -H : 0, YB = tilt ? H * 2 : H;   // 描く範囲
   const g = ctx.createLinearGradient(0, 0, 0, F);
   g.addColorStop(0, '#FFE6A8'); g.addColorStop(1, '#FFF6DE');
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, W, F);
+  ctx.fillRect(X0, Y0, XW, F - Y0);
   ctx.fillStyle = '#E8913A';
-  ctx.fillRect(0, F, W, H - F);
+  ctx.fillRect(X0, F, XW, YB - F);
   ctx.fillStyle = '#F2A65A';
-  ctx.fillRect(0, F, W, 3);
+  ctx.fillRect(X0, F, XW, 3);
   // 床の奥行きの線（奥行き 0.5 ごとに1本。遠くほどつまって、うすくなる）
   for (let i = 2; i < 80; i++) {
     const y = F + DR_RPG_EYE / (i * 0.5 + (back || 0));
     if (y >= H) continue;
     if (y < F + 4) break;
     ctx.fillStyle = `rgba(160, 80, 20, ${0.3 * Math.min(1, (y - F - 4) / 24)})`;
-    ctx.fillRect(0, Math.round(y), W, 1);
+    ctx.fillRect(X0, Math.round(y), XW, 1);
+  }
+  // 奥へのびる床の線（カメラが横にずれているあいだだけ。まっすぐになるにつれて消える）
+  if (side) {
+    const fade = Math.min(1, Math.abs(side) / Math.max(1, Math.abs(DR_RPG.camSide || 1) * 0.25));
+    ctx.strokeStyle = `rgba(160, 80, 20, ${0.3 * fade})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let X = -2400; X <= 2400; X += 80) {
+      ctx.moveTo(W / 2, F + 3);
+      ctx.lineTo(W / 2 + (X - side) * (YB - F) / DR_RPG_EYE, YB);
+    }
+    ctx.stroke();
   }
 }
 
@@ -884,6 +919,32 @@ function drRpgJpText(ctx, text, x, y, color, size, align, maxW) {
   ctx.fillText(text, Math.round(x), Math.round(y), maxW);
   ctx.restore();
 }
+/* 網掛けの帯（画面の幅いっぱい）。y … 上の端、h … 高さ、alpha … こさ（0～1）、x … 横にずらす量（スライドするとき） */
+function drRpgShade(ctx, y, h, alpha, x) {
+  if (alpha <= 0) return;
+  const W = DR_CONFIG.width;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(Math.round(x || 0), 0);
+  ctx.fillStyle = 'rgba(27, 27, 47, 0.55)';
+  ctx.fillRect(0, y, W, h);
+  // 1ドットおきに少し濃くして、網の目にする（2 × 2 ドットの模様をくり返す。模様は1回だけ作る）
+  if (!drRpgShade.pat) {
+    const c = document.createElement('canvas');
+    c.width = 2; c.height = 2;
+    const g = c.getContext('2d');
+    g.fillStyle = 'rgba(27, 27, 47, 0.35)';
+    g.fillRect(0, 0, 1, 1); g.fillRect(1, 1, 1, 1);
+    drRpgShade.pat = ctx.createPattern(c, 'repeat');
+  }
+  ctx.fillStyle = drRpgShade.pat;
+  ctx.fillRect(0, y, W, h);
+  // 上下のふち
+  ctx.fillStyle = 'rgba(255, 216, 74, 0.8)';
+  ctx.fillRect(0, y, W, 1); ctx.fillRect(0, y + h - 1, W, 1);
+  ctx.restore();
+}
+
 function drRpgBigText(ctx, text, y, color, scale) {
   const w = (text.length * 4 - 1) * scale;
   ctx.save();
