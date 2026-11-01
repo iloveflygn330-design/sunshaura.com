@@ -548,10 +548,12 @@ function drRpgRender(ctx) {
 
   // 大きい文字（FIGHT! / WIN! / LOSE）
   if (R.st === 'fight') {
-    // うしろに網掛けの帯を敷いて、文字を読みやすくする（帯はフェードイン・フェードアウト。文字は帯が消えるときにいっしょに消える）
-    const fade = Math.max(0.01, C.fightFade || 0.15);
+    // うしろに網掛けの帯を敷いて、文字を読みやすくする
+    // 帯は左からスライドイン＋フェードイン → 右へスライドアウト＋フェードアウト（文字は帯が消えるときにいっしょに消える）
+    const fade = Math.max(0.01, C.fightFade || 0.2);
     const aIn = Math.min(1, R.t / fade), aOut = Math.min(1, Math.max(0, (C.fightTime - R.t) / fade));
-    drRpgShade(ctx, H / 2 - 44, 80, Math.min(aIn, aOut));
+    const slide = aOut < 1 ? Math.pow(1 - aOut, 2) * W : -Math.pow(1 - aIn, 2) * W;   // 入るときはだんだんゆっくり、出るときはだんだん速く
+    drRpgShade(ctx, H / 2 - 44, 80, Math.min(aIn, aOut), slide);
     const pop = Math.min(1, R.t / 0.15);
     ctx.globalAlpha = aOut;
     drRpgBigText(ctx, 'FIGHT!', H / 2 - 30, '#FFD84A', 3 + 2 * pop);
@@ -917,12 +919,13 @@ function drRpgJpText(ctx, text, x, y, color, size, align, maxW) {
   ctx.fillText(text, Math.round(x), Math.round(y), maxW);
   ctx.restore();
 }
-/* 網掛けの帯（画面の幅いっぱい）。y … 上の端、h … 高さ、alpha … こさ（0～1） */
-function drRpgShade(ctx, y, h, alpha) {
+/* 網掛けの帯（画面の幅いっぱい）。y … 上の端、h … 高さ、alpha … こさ（0～1）、x … 横にずらす量（スライドするとき） */
+function drRpgShade(ctx, y, h, alpha, x) {
   if (alpha <= 0) return;
   const W = DR_CONFIG.width;
   ctx.save();
   ctx.globalAlpha = alpha;
+  ctx.translate(Math.round(x || 0), 0);
   ctx.fillStyle = 'rgba(27, 27, 47, 0.55)';
   ctx.fillRect(0, y, W, h);
   // 1ドットおきに少し濃くして、網の目にする（2 × 2 ドットの模様をくり返す。模様は1回だけ作る）
