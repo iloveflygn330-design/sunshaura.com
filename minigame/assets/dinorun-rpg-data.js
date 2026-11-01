@@ -52,13 +52,14 @@ const DR_RPG = {
          power … ダメージ = 攻撃力 × power（±10% ぶれる）
          「溜め」のときに使うと強くなる（溜めは使うと消える。回復魔法は溜めを使わない）
            居合切り … chargedPower（威力特大）/ 火の玉 … 全体攻撃・威力 × chargedMult / スピン … 全体に chargedHits 回
+         スピンは、回っているあいだ（踏みこんで戻ってくるまで）ボスのスキル攻撃のダメージが skillCut の割合へる（0.5 なら半分）
          火の玉は、ショップの「火の玉 強化」1段階ごとに power が powerPerLv 上がる
          回復魔法 … 最大HPの heal の割合を回復
        ★拡張予定: 新しいスキルの動きを足したら、ここに同じ名前で1件足し、dinorun-rpg.js の drRpgUseSkill() に動きを書く */
   skills: {
     slash:  { name: '居合切り', short: '居合', sub: '単体・大', ct: 3.0, power: 3.0, chargedPower: 5.0 },
     fire:   { name: '火の玉', short: '火の玉', sub: '単体・中', ct: 2.5, power: 1.6, powerPerLv: 0.4, chargedMult: 1.8 },
-    spin:   { name: 'スピン', short: 'スピン', sub: '全体・小', ct: 4.0, power: 1.2, chargedHits: 2 },
+    spin:   { name: 'スピン', short: 'スピン', sub: '全体・小', ct: 4.0, power: 1.2, chargedHits: 2, skillCut: 0.5 },
     vacuum: { name: '回復魔法', short: '回復', sub: 'HP30%', ct: 12.0, heal: 0.3 },
   },
 
@@ -82,7 +83,7 @@ const DR_RPG = {
   tips: [
     { skill: 'iai', text: 'ヒント：居合切りを覚えると、バトルで大ダメージの技が使えるよ！' },
     { skill: 'fire', text: 'ヒント：火の玉を覚えると、バトルで遠くから攻撃できるよ！ 強化すると威力アップ' },
-    { skill: 'spin', text: 'ヒント：スピンアタックを覚えると、バトルで全体攻撃ができるよ！' },
+    { skill: 'spin', text: 'ヒント：スピンアタックを覚えると、バトルで全体攻撃ができるよ！ 回っているあいだはボスのスキル攻撃も軽くなる' },
     { skill: 'vacuum', text: 'ヒント：コイン吸引を覚えると、バトルでは回復魔法になるよ！' },
     { skill: 'dive', text: 'ヒント：急降下を覚えると、ふみつけの最後がスタンピングになって「溜め」が使えるよ！' },
     { item: 'magnet', text: 'ヒント：磁石を持っていると、ふみつけでボスを麻痺させられることがあるよ！' },
@@ -110,9 +111,18 @@ const DR_RPG = {
   loseCloseUnder: 0.25,    // これ未満なら「惜敗」
   loseBigFrom: 0.7,        // これ以上なら「惨敗」（あいだは「敗北」）
 
-  /* --- 演出の長さ（秒） --- */
-  closeTime: 0.5,          // 黒い画面が上下から迫ってきて暗転するまで
-  introTime: 1.0,          // 暗転が開けて、回りながら近づき、キャラクターがそろうまで
+  /* --- 演出の長さ（秒） ---
+       エンカウント（素材の動画 battlestart_all.mp4 と同じ動き）:
+         close … イナズマの線が2本すれちがいながら、黒い画面が上下から迫って暗転（closeTime）→ 真っ暗のまま closeHold
+         intro … 暗転と逆の動きで、バトル用のカメラの画面が見えてくる（openTime）。
+                 同時にカメラが、手前の離れたところから恐竜君たちのところまで、だんだんゆっくり進む（introTime で止まる）
+                 camBack … カメラが最初にどれだけ手前にいるか（大きいほど遠くから。3 なら恐竜君は 1/4 くらいの大きさから） */
+  closeTime: 0.45,
+  closeHold: 0.1,
+  openTime: 0.45,
+  introTime: 1.1,
+  camBack: 3,
+  wipeLineColor: '#5FD3FF', // イナズマの線の色
   fightTime: 1.0,          // 「FIGHT!」を出している時間
   winTime: 1.6,            // 勝ったあと、結果を出すまで
   loseTime: 1.4,           // 負けたあと、ゲームオーバーの画面を出すまで
@@ -132,7 +142,7 @@ const DR_RPG = {
        id: 'dummy',               // 英数字の名前
        name: 'かりのボス',          // 画面に出る名前（ゲームオーバーの「〇〇にやられてしまった…」にも使う）
        fromWorld: 5, toWorld: 99, // 出てくるワールドの範囲（1 から数える）
-       hp: 600, atk: 18,          // fromWorld のときの HP と攻撃力
+       hp: 600, atk: 26,          // fromWorld のときの HP と攻撃力
        growth: 0.15,
        score: 10000,              // 倒したときのスコア（タイムボーナスは別）
        gapMin: 0.8, gapMax: 1.8,  // 技を出し終わってから、次の技を出すまでの秒数（毎回この範囲でぶれる）
@@ -198,12 +208,12 @@ function drRpgPlaceholderBoss() {
 const DR_BOSSES = [
   {
     id: 'dummy', name: 'かりのボス', fromWorld: 5, toWorld: 99,
-    hp: 600, atk: 18, growth: 0.15, score: 10000,
+    hp: 600, atk: 26, growth: 0.15, score: 10000,
     gapMin: 0.8, gapMax: 1.8,
     attacks: [
       { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0, bpm: 120 },
       { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2, bpm: 100 },
-      { type: 'skill', name: 'ほのおのブレス', weight: 0.7, power: 1.5, wind: 1.2 },
+      { type: 'skill', name: 'ほのおのブレス', weight: 0.7, power: 2.2, wind: 1.2 },
     ],
     w: 144, h: 120,
     image: '',

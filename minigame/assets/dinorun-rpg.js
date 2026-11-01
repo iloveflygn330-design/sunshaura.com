@@ -4,7 +4,8 @@
    数値・ボス・入り口の敵・負けたときのヒントは dinorun-rpg-data.js。ふつうはこのファイルは触らなくてよい。
 
    流れ（drRpg.st）:
-     close（黒い画面が上下から迫って暗転）→ intro（回りながら近づき、自機は左・ボスは右から出てくる）
+     close（イナズマの線がすれちがい、黒い画面が上下から迫って暗転）
+     → intro（暗転と逆の動きでバトル用のカメラに切りかわり、カメラが手前から恐竜君たちのところまで、だんだんゆっくり進む）
      → fight（「FIGHT!」）→ battle（リアルタイムのバトル）
      → win（勝ち。結果の画面 → ノーマルフェイズへ）/ lose（負け。ゲームオーバー）/ escaped（逃げた。ノーマルフェイズへ）
 
@@ -16,6 +17,7 @@
      回復薬（Q）・にげる（X）
      会心の一撃 … どの攻撃にもある。麻痺 … 磁石を持っているとき、ふみつけ・バタ足で
      ボス … 通常攻撃・強攻撃は3回光ってから4拍目に当たる（防御できる）。スキル攻撃は技名を出して当たる（防御できない）
+            スキル攻撃は、スピンで回っているあいだに受けると軽くなる
 
    画面（384 × 216 ドット）:
      上 … ボスの名前と HP、右 … ボス
@@ -73,7 +75,7 @@ DR_PHASES.rpg = {
     if (R.shake > 0) R.shake = Math.max(0, R.shake - dt);
     R.fx.forEach(f => { f.t += dt; f.x += (f.vx || 0) * dt; f.y += (f.vy || 0) * dt; });
     R.fx = R.fx.filter(f => f.t < f.life);
-    if (R.st === 'close' && R.t >= C.closeTime) { R.st = 'intro'; R.t = 0; }
+    if (R.st === 'close' && R.t >= C.closeTime + C.closeHold) { R.st = 'intro'; R.t = 0; }
     else if (R.st === 'intro' && R.t >= C.introTime) { R.st = 'fight'; R.t = 0; drSound('fight'); }
     else if (R.st === 'fight' && R.t >= C.fightTime) { R.st = 'battle'; R.t = 0; }
     else if (R.st === 'battle') drRpgBattle(dt);
@@ -218,6 +220,7 @@ function drRpgBossHit() {
   let mult = 1, kind = 'hit';
   if (!skill && since >= 0 && since <= R.perfWin) { mult = 0; kind = 'perfect'; }
   else if (!skill && since >= 0 && since <= R.guardWin) { mult = 0.5; kind = 'guard'; }
+  else if (skill && p.anim && p.anim.spin) { mult = 1 - (DR_RPG.skills.spin.skillCut || 0); kind = 'spin'; }   // スピン中はスキル攻撃が軽くなる
   const dmg = Math.round(b.atk * a.atk.power * drRand(0.9, 1.1) * mult);
   b.lunge = 0.3;
   b.act = null;
@@ -231,6 +234,7 @@ function drRpgBossHit() {
   p.hurtT = 0.4;
   drRpgFx(String(dmg), px, py, '#FF5A7A', 2);
   if (kind === 'guard') { drRpgFx('GUARD', px, py - 20, '#9FE8FF', 1); drSound('guard'); drRpgMsg(`ガード！ ${dmg}のダメージ`); }
+  else if (kind === 'spin') { drRpgFxJp('スピンで軽減！', px, py - 24, '#7FFFD4', 12); drSound('guard'); drRpgMsg(`スピンで ふせいだ！ ${dmg}のダメージ`); R.shake = 0.2; }
   else { drSound('bosshit'); drRpgMsg(`${dmg}のダメージを うけた！`); if (a.atk.type !== 'normal') R.shake = 0.35; }
   if (p.hp <= 0) drRpgLose();
 }
@@ -440,7 +444,8 @@ function drRpgUpdatePads() {
   const jumpBusy = busy || R.ct.jump > 0 || !fighting;
   const jr = 1 - R.ct.jump / C.jumpCT, gr = 1 - R.ct.guard / C.guardCT;
   const sk = R.skills.map(s => Math.round((1 - (R.ct[s.id] || 0) / s.cfg.ct) * 20)).join(',');
-  const key = `${R.st}|${busy}|${jumpBusy}|${Math.round(jr * 20)}|${Math.round(gr * 20)}|${sk}|${R.p.charged}|${run.potion}|${R.escapeT > 0}|${R.p.hp >= R.p.maxHp}`;
+  const skillComing = fighting && !!R.b.act && R.b.act.atk.type === 'skill';   // ボスのスキル攻撃の前 → スピンのボタンを光らせる
+  const key = `${R.st}|${busy}|${jumpBusy}|${Math.round(jr * 20)}|${Math.round(gr * 20)}|${sk}|${R.p.charged}|${run.potion}|${R.escapeT > 0}|${R.p.hp >= R.p.maxHp}|${skillComing}`;
   if (dr.uiCache.rpgPads === key) return;
   dr.uiCache.rpgPads = key;
   document.querySelectorAll('.dr-jump-btn').forEach(el => {
@@ -459,6 +464,7 @@ function drRpgUpdatePads() {
     document.querySelectorAll(`.dr-pbtn[data-act="pskill${i}"]`).forEach(el => {
       el.classList.toggle('is-cooling', ct > 0 || busy || !fighting);
       el.classList.toggle('is-charged', R.p.charged && s.action !== 'vacuum');
+      el.classList.toggle('is-hint', skillComing && s.action === 'spin' && ct <= 0);
       el.querySelector('.dr-ct-fill').style.width = (1 - ct / s.cfg.ct) * 100 + '%';
     });
   });
@@ -517,42 +523,123 @@ function drRpgRender(ctx) {
   const W = DR_CONFIG.width, H = DR_CONFIG.height;
   ctx.imageSmoothingEnabled = false;
 
-  // 暗転：走っていた画面に、上下から黒い画面が迫ってくる（ふちは斜め）
+  // 暗転：走っていた画面が、イナズマの線と黒い画面に閉じられていく
   if (R.st === 'close') {
-    ctx.drawImage(R.snap, 0, 0);
-    const p = Math.min(1, R.t / C.closeTime);
-    const hh = (H / 2 + 50) * (1 - p * p);
-    const s = hh * 0.55, cy = H / 2;
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.rect(0, 0, W, H);
-    ctx.moveTo(-20 + s, cy - hh); ctx.lineTo(W + 20 + s, cy - hh);
-    ctx.lineTo(W + 20 - s, cy + hh); ctx.lineTo(-20 - s, cy + hh); ctx.closePath();
-    ctx.fill('evenodd');
+    drRpgWipe(ctx, Math.min(1, R.t / C.closeTime), () => ctx.drawImage(R.snap, 0, 0));
+    return;
+  }
+  // 暗転が開ける（暗転と逆の動き）。見えてくるのはバトル用のカメラの画面。カメラは手前から近づいてくる
+  if (R.st === 'intro') {
+    drRpgWipe(ctx, Math.max(0, 1 - R.t / C.openTime), () => drRpgDrawScene(ctx, drRpgCamBack()));
     return;
   }
 
-  // 暗転が開けて、回りながら近づく（だんだんゆっくり）。後半で自機は左から、ボスは右から出てくる
-  let scale = 1, rot = 0, alpha = 1, charIn = 1;
-  if (R.st === 'intro') {
-    const p = Math.min(1, R.t / C.introTime), e = 1 - Math.pow(1 - p, 3);
-    scale = 0.45 + 0.55 * e;
-    rot = (1 - e) * 0.5;
-    alpha = Math.min(1, p * 3);
-    charIn = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
-    charIn = 1 - Math.pow(1 - charIn, 2);
+  drRpgDrawScene(ctx, 0);
+  drRpgDrawUi(ctx);
+
+  // ボスのスキル攻撃の名前（防御できない）
+  const ba = R.b.act;
+  if (R.st === 'battle' && ba && ba.atk.type === 'skill') {
+    ctx.fillStyle = 'rgba(199, 48, 90, 0.85)';
+    ctx.fillRect(0, 40, W, 22);
+    drRpgJpText(ctx, `${ba.atk.name}！`, W / 2, 44, '#FFFFFF', 14, 'center');
   }
+
+  // 大きい文字（FIGHT! / WIN! / LOSE）
+  if (R.st === 'fight') {
+    const pop = Math.min(1, R.t / 0.15);
+    drRpgBigText(ctx, 'FIGHT!', H / 2 - 30, '#FFD84A', 3 + 2 * pop);
+    drRpgJpText(ctx, 'ボスを倒せ！', W / 2, H / 2 + 6, '#FFFFFF', 14, 'center');
+  } else if (R.st === 'win') {
+    drRpgBigText(ctx, 'WIN!', H / 2 - 40, '#FFD84A', 5);
+  } else if (R.st === 'lose') {
+    drRpgBigText(ctx, 'LOSE', H / 2 - 40, '#FF5A7A', 5);
+  }
+}
+
+/* カメラがいまどれだけ手前にいるか（intro のとき。0 = いつもの位置）。
+   線が入ってきて画面が見え始めるところから動き出し、introTime で止まる（だんだんゆっくり） */
+function drRpgCamBack() {
+  const R = drRpg, C = DR_RPG;
+  if (!R || R.st !== 'intro') return 0;
+  const from = C.openTime / 3;   // 画面が見え始めるころ（素材のコマで 9/27）
+  const p = Math.max(0, Math.min(1, (R.t - from) / Math.max(0.01, C.introTime - from)));
+  return C.camBack * Math.pow(1 - p, 3);
+}
+
+/* エンカウントの切りかえ。素材の動画（battlestart_all.mp4・27コマ）の動きをまねている。
+     q … 0 = まだ閉じていない、1 = 終わり（暗転するときは 0 → 1、開けるときは 1 → 0 で、同じ動きを逆に流す）
+     drawScene … 見えている部分に描くもの
+   動き（W・H は画面の幅と高さ）:
+     ・見えている部分の上の端と下の端が、まん中へ向かってまっすぐ閉じる（素材の 18 コマ目で閉じきる）
+     ・ギザギザの斜めの線（イナズマ）が2本。A は右へ、B は左へ動いて、まん中ですれちがう（12.5 コマ目）
+       見えているのは「上下の端のあいだ」かつ「A と B のあいだ」だけ
+     ・A は下の黒い部分に、B は上の黒い部分に、線として見える。上下の端にも細い線が出る */
+function drRpgWipe(ctx, q, drawScene) {
+  const W = DR_CONFIG.width, H = DR_CONFIG.height, cy = H / 2;
+  const f = q * 27;                               // 素材のコマ番号
+  const y1 = Math.min(cy, cy * f / 18), y2 = H - y1;
+  const xa = W * (0.5 + (f - 12.5) * 0.075);      // A の線の、画面のまん中の高さでの x
+  const xb = W * (0.5 - (f - 12.5) * 0.075);
+  const SLOPE = 1.35;                             // 線のかたむき（上へ 1 進むと右へ 1.35）
+  const STEP = 9, NOTCH = 2.5;                    // ギザギザの間隔と、段の高さ（ドット）
+  const baseX = (xc, y) => xc - (y - cy) * SLOPE;
+  // ギザギザの線の点（上から下へ）。段の位置は画面に固定して、動いてもちらつかないようにする
+  const zig = xc => {
+    const pts = [], K = Math.ceil(cy / STEP) + 2;
+    for (let k = -K; k < K; k++) {
+      const ya = cy + k * STEP, yb = ya + STEP;
+      pts.push([baseX(xc, ya), ya], [baseX(xc, ya) - 0.3, ya + NOTCH]);
+      if (k === K - 1) pts.push([baseX(xc, yb), yb]);
+    }
+    return pts;
+  };
+  const A = zig(xa), B = zig(xb);
+  const path = pts => pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+  const open = y2 - y1 > 0.5;
+
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  if (open) {
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, y1, W, y2 - y1); ctx.clip();
+    ctx.beginPath(); path(A); for (let i = B.length - 1; i >= 0; i--) ctx.lineTo(B[i][0], B[i][1]); ctx.closePath(); ctx.clip();
+    drawScene();
+    ctx.restore();
+  }
+  // イナズマの線（A は下の黒い部分、B は上の黒い部分）
+  ctx.strokeStyle = DR_RPG.wipeLineColor || '#5FD3FF';
+  ctx.lineWidth = 1.2;
+  const stroke = (pts, top, bottom) => {
+    if (bottom - top <= 0) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, bottom - top); ctx.clip();
+    ctx.beginPath(); path(pts); ctx.stroke(); ctx.restore();
+  };
+  stroke(A, y2, H);
+  stroke(B, 0, y1);
+  // 上下の端の細い線（すれちがう前は左から、すれちがったあとは右へ）
+  if (open) {
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    for (const y of [Math.round(y1) + 0.5, Math.round(y2) - 0.5]) {
+      if (xa < xb) { ctx.moveTo(0, y); ctx.lineTo(baseX(xb, y), y); }
+      else { ctx.moveTo(baseX(xa, y), y); ctx.lineTo(W, y); }
+    }
+    ctx.stroke();
+  }
+  ctx.lineWidth = 1;
+}
+
+/* バトルの画面（背景・ボス・自機・火の玉・演出）。back … カメラがどれだけ手前にいるか（0 = いつもの位置） */
+function drRpgDrawScene(ctx, back) {
+  const R = drRpg, W = DR_CONFIG.width, H = DR_CONFIG.height;
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, W, H);
   ctx.save();
   if (R.shake > 0) ctx.translate(Math.round(drRand(-3, 3)), Math.round(drRand(-3, 3)));
-  ctx.translate(W / 2, H / 2); ctx.rotate(rot); ctx.scale(scale, scale); ctx.translate(-W / 2, -H / 2);
-  ctx.globalAlpha = alpha;
-  drRpgDrawBg(ctx);
-  ctx.globalAlpha = alpha * charIn;
-  drRpgDrawBoss(ctx, (1 - charIn) * 80);
-  drRpgDrawPlayer(ctx, -(1 - charIn) * 80);
-  ctx.globalAlpha = 1;
+  drRpgDrawBg(ctx, back);
+  drRpgDepth(ctx, DR_RPG_BOSS_X, DR_RPG_BOSS_FEET, back, () => drRpgDrawBoss(ctx, 0));
+  drRpgDepth(ctx, DR_RPG_PLAYER_X, DR_RPG_PLAYER_FEET, back, () => drRpgDrawPlayer(ctx, 0));
   // 火の玉
   R.shots.forEach(s => {
     const q = Math.min(1, s.t / s.dur);
@@ -591,33 +678,29 @@ function drRpgRender(ctx) {
   });
   ctx.globalAlpha = 1;
   ctx.restore();
-
-  if (R.st !== 'intro') drRpgDrawUi(ctx);
-
-  // ボスのスキル攻撃の名前（防御できない）
-  const ba = R.b.act;
-  if (R.st === 'battle' && ba && ba.atk.type === 'skill') {
-    ctx.fillStyle = 'rgba(199, 48, 90, 0.85)';
-    ctx.fillRect(0, 40, W, 22);
-    drRpgJpText(ctx, `${ba.atk.name}！`, W / 2, 44, '#FFFFFF', 14, 'center');
-  }
-
-  // 大きい文字（FIGHT! / WIN! / LOSE）
-  if (R.st === 'fight') {
-    const pop = Math.min(1, R.t / 0.15);
-    drRpgBigText(ctx, 'FIGHT!', H / 2 - 30, '#FFD84A', 3 + 2 * pop);
-    drRpgJpText(ctx, 'ボスを倒せ！', W / 2, H / 2 + 6, '#FFFFFF', 14, 'center');
-  } else if (R.st === 'win') {
-    drRpgBigText(ctx, 'WIN!', H / 2 - 40, '#FFD84A', 5);
-  } else if (R.st === 'lose') {
-    drRpgBigText(ctx, 'LOSE', H / 2 - 40, '#FF5A7A', 5);
-  }
 }
 
-function drRpgDrawBg(ctx) {
+/* 奥行きのある床の上に立っているものを、カメラの位置に合わせて描く（遠近法）。
+   (x0, y0) … いつもの位置での足元。床の上の端（DR_RPG_FLOOR）が地平線で、足元が下にあるほど手前にいる。
+   カメラが back だけ手前に下がると、手前のもの（自機）ほど大きく小さくなり、奥のもの（ボス）はあまり変わらない */
+const DR_RPG_EYE = 60;   // カメラの高さ（奥行きの計算に使う。足元が床の上の端から 60 ドット下 = 奥行き 1）
+function drRpgDepth(ctx, x0, y0, back, draw) {
+  if (back <= 0) { draw(); return; }
+  const W = DR_CONFIG.width, F = DR_RPG_FLOOR;
+  const z = DR_RPG_EYE / Math.max(1, y0 - F), k = z / (z + back);
+  ctx.save();
+  ctx.translate(W / 2 + (x0 - W / 2) * k, F + (y0 - F) * k);
+  ctx.scale(k, k);
+  ctx.translate(-x0, -y0);
+  draw();
+  ctx.restore();
+}
+
+/* 背景。back … カメラがどれだけ手前にいるか（床の線が流れて、近づいていくように見える） */
+function drRpgDrawBg(ctx, back) {
   const W = DR_CONFIG.width, H = DR_CONFIG.height, F = DR_RPG_FLOOR;
   const img = drImage(DR_RPG.bgImage);
-  if (img) { ctx.drawImage(img, 0, 0, W, H); return; }
+  if (img) { ctx.drawImage(img, 0, 0, W, H); return; }   // 背景の PNG は動かさない（遠くの景色なので、カメラが動いても変わらない）
   const g = ctx.createLinearGradient(0, 0, 0, F);
   g.addColorStop(0, '#FFE6A8'); g.addColorStop(1, '#FFF6DE');
   ctx.fillStyle = g;
@@ -626,9 +709,14 @@ function drRpgDrawBg(ctx) {
   ctx.fillRect(0, F, W, H - F);
   ctx.fillStyle = '#F2A65A';
   ctx.fillRect(0, F, W, 3);
-  // 床の奥行きの線
-  ctx.fillStyle = 'rgba(160, 80, 20, 0.25)';
-  for (let i = 0; i < 6; i++) ctx.fillRect(0, F + 8 + i * i * 2.6, W, 1);
+  // 床の奥行きの線（奥行き 0.5 ごとに1本。遠くほどつまって、うすくなる）
+  for (let i = 2; i < 80; i++) {
+    const y = F + DR_RPG_EYE / (i * 0.5 + (back || 0));
+    if (y >= H) continue;
+    if (y < F + 4) break;
+    ctx.fillStyle = `rgba(160, 80, 20, ${0.3 * Math.min(1, (y - F - 4) / 24)})`;
+    ctx.fillRect(0, Math.round(y), W, 1);
+  }
 }
 
 function drRpgDrawBoss(ctx, offX) {

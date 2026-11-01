@@ -586,6 +586,9 @@ body.dr-header-hidden #loading-bar:not(.reveal) { visibility: hidden; }
 .dr-pbtn .dr-pbtn-icon { position: absolute; right: 2px; top: 1px; font-size: 22px; line-height: 1; opacity: 0.22; pointer-events: none; }
 .dr-pbtn .dr-key { top: 2px; left: 4px; font-size: 10px; }
 .dr-pbtn.is-charged:not(.is-cooling) { background: #FFF1A8; border-color: #E0A800; box-shadow: 0 0 0 2px #FFD84A; }
+/* ボスのスキル攻撃の前：スピンで軽くできるので、スピンのボタンを点滅させて知らせる */
+.dr-pbtn.is-hint:not(.is-cooling) { animation: drSpinHint 0.3s steps(1) infinite; }
+@keyframes drSpinHint { 50% { box-shadow: 0 0 0 3px #7FFFD4; border-color: #2FB89A; } }
 /* 技が多いとき（7つ以上）は2段にする */
 #dr-root.dr-in-phase .dr-battle-row[data-count="7"], #dr-root.dr-in-phase .dr-battle-row[data-count="8"] { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 759px) and (orientation: portrait) { .dr-pbtn { height: 54px; } }
