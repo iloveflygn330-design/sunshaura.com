@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-03",
+  "title": "VRChat、AIラベル見送りでSteam評価が「やや不評」にほか、今日のVRニュース4本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "今日は、AI生成コンテンツへのラベルを付けない方針を示したVRChatで、Steamのレビュー評価が大きく下がっている話題から始めます。ほかに、謎解きもできるVRChatのくつろぎワールド、ARグラス「XREAL AURA」の国内予約開始、Steamハードウェア調査でのSteam Frameの伸びをお届けします。",
+  "items": [
+    {
+      "headline": "VRChat、AIラベル見送りでSteamレビューが急落",
+      "category": "VRChat公式",
+      "overview": "VRChatは10月29日、ユーザー調査の結果をもとに、AI生成コンテンツに「AI生成」ラベルを付けたり、AI作品を除外するフィルターを設けたりはしない方針を発表しました。これを受けてSteamでは低評価レビューが相次ぎ、直近30日のレビュー約4,000件のうち好評は33%で「やや不評」となっています。VRChatは、実際と異なるサムネイルの禁止、ワールドへの高評価・低評価の仕組み、任意の「人の手による制作」表示の検討などを進めるとしています。記事の時点では、反発を受けた追加の声明は出ていません。",
+      "points": [
+        "調査では回答者の約95%が何らかのAI表示を望んでいた",
+        "10月29日だけで約950件の低評価レビューが投稿された",
+        "高評価・低評価の投票機能は2026年末〜2027年初めごろの予定",
+        "今後VRChatが方針を見直すかは、まだ分かっていない"
+      ],
+      "sources": [
+        {
+          "name": "AUTOMATON",
+          "url": "https://automaton-media.com/articles/newsjp/20261102-477090/"
+        },
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/vrchat-user-backlash-ai-content-label/"
+        }
+      ]
+    },
+    {
+      "headline": "くつろぎと謎解きのVRChatワールド「ESCAPISM」",
+      "category": "ワールド",
+      "overview": "MoguLiveが、海外クリエイターのb e c a u s eさんによるVRChatワールド「E S C A P I S M」を紹介しています。青空の下の草原に建つ近代的な邸宅で、映画室やビリヤードのあるゲーム部屋、みんなで休める寝室などがそろったくつろぎ空間です。AIの管理人キャラクターに話しかけると、時間帯や天気、オーロラを切り替えられます。屋敷に散らばる手紙を集めると、この世界の秘密に迫る謎解きも楽しめます。",
+      "points": [
+        "謎解きは任意で、ふだんのホームワールドとしても使える",
+        "時間帯・天気・オーロラを自由に変えられる",
+        "制作者によると、物語の続きを制作中"
+      ],
+      "sources": [
+        {
+          "name": "MoguLive",
+          "url": "https://www.moguravr.com/photogenic-vrchat-world-2026-1102/"
+        }
+      ]
+    },
+    {
+      "headline": "ARグラス「XREAL AURA」、国内で予約開始",
+      "category": "VR機器・技術",
+      "overview": "Android XRを搭載したXREALのARグラス「XREAL AURA」が、11月2日に日本で予約受付を始めました。年末までは発売記念価格として199,900円（税込）から購入でき、11月中旬から順次届けられる予定です。グラス本体は95g未満で、視野角は70度です。バッテリーとプロセッサーはケーブルでつながる別ユニットに入っていて、Google Playのアプリも使えます。",
+      "points": [
+        "発売記念価格は199,900円（税込）から、年末まで",
+        "11月中旬から順次発送の予定",
+        "Android XR搭載で、Google Playのアプリが使える",
+        "USB-C接続でパソコンの画面も映せる"
+      ],
+      "sources": [
+        {
+          "name": "Mogura VR",
+          "url": "https://www.moguravr.com/xreal-aura-android-xr-preorder/"
+        }
+      ]
+    },
+    {
+      "headline": "Steam Frame、Steam上のVR機器の約24台に1台に",
+      "category": "VR機器・技術",
+      "overview": "Valveが公開した10月のSteamハードウェア調査で、Steam Frameの割合がVRヘッドセット全体の4.13%となり、9月の0.41%から大きく伸びました。VR.orgはこれを「約24台に1台」と伝えています。VRヘッドセットを使うSteamユーザーも1.35%から1.75%に増えましたが、記事ではその伸びの大部分は回答者の言語の構成の変化によるもので、Steam Frameの分は約6分の1と分析しています。1位はMeta Quest 3の27.27%でした。",
+      "points": [
+        "Steam Frameは名前の出ている機種の中で6位",
+        "Quest 3とQuest 2の合計は5割を切った",
+        "予約者への案内は「12月まで、または2027年」とされている"
+      ],
+      "sources": [
+        {
+          "name": "VR.org",
+          "url": "https://vr.org/articles/steam-frame-october-survey-1-in-24-vr-headsets-language-swing-2026"
+        }
+      ]
+    }
+  ],
+  "outro": "VRChatのAI表示をめぐる議論は、今後の公式の動きにも注目です。今日もよいVRライフを！"
+}
