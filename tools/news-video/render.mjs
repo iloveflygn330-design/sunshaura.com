@@ -45,6 +45,13 @@ function makeDescription() {
   const [y, m, d] = date.split('-');
   const lines = [];
   lines.push(`${y}年${Number(m)}月${Number(d)}日のVRニュースを、ずんだもんたちが読み上げます。`);
+  // ★拡張予定: 冒頭の注意書きを増やす・変える場合は、この NOTES に1行ずつ書く
+  const NOTES = [
+    '※この動画はAIを用いて作成しています。',
+    '※ニュースは公開情報をもとにAIが要約しています。正確な情報は各出典をご確認ください。',
+    '※星座占いはエンタメです。'
+  ];
+  NOTES.forEach((n) => lines.push(n));
   lines.push('');
   lines.push('▼ 記事ページ');
   lines.push(articleUrl);
@@ -54,9 +61,6 @@ function makeDescription() {
     lines.push(`${i + 1}. ${it.headline}`);
     (it.sources || []).forEach((s) => lines.push(`   出典：${s.name} ${s.url}`));
   });
-  lines.push('');
-  lines.push('※ ニュースは公開情報をもとにAI（Claude）が要約しています。正確な情報は各出典をご確認ください。');
-  lines.push('※ 星座占いはエンタメです。');
   lines.push('');
   lines.push('▼ クレジット');
   video.credits.voice.split(' / ').forEach((v) => lines.push(v));
