@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-04",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "みんな、こんにちは！ずんだもんなのだ！", "face": "smile" },
+      { "who": "metan", "text": "四国めたんよ。今日もさくっと聞かせてちょうだい。" },
+      { "who": "zundamon", "text": "11月4日のVRニュースは3本なのだ。", "read": "じゅういちがつよっかのブイアールニュースは、さんぼんなのだ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。初音ミクのライブがVRChatで開かれるのだ！", "read": "いっぽんめ。はつねミクのライブが、ブイアールチャットで開かれるのだ！", "face": "smile" },
+      { "who": "metan", "text": "へえ、ミクのライブ？いつやるのよ。", "face": "look" },
+      { "who": "zundamon", "text": "12月5日、12日、19日の土曜日なのだ。", "read": "じゅうにがつ、いつか、じゅうににち、じゅうくにちの、どようびなのだ。" },
+      { "who": "zundamon", "text": "しかも1日3回、朝9時と昼2時と夜10時にやるのだ。", "read": "しかもいちにちさんかい、あさくじと、ひるにじと、よるじゅうじにやるのだ。" },
+      { "who": "metan", "text": "それで、チケットはおいくらなの？", "face": "look" },
+      { "who": "zundamon", "text": "なんと参加無料なのだ！スマホからも入れるのだ。", "face": "smile" },
+      { "who": "metan", "text": "無料！？それなら、わたくしも絶対行くわ。", "face": "surprise", "style": "あまあま" },
+      { "who": "zundamon", "text": "限定アイテムの販売もあるから、お財布は気をつけるのだ。", "face": "look" },
+      { "who": "metan", "text": "……そこは見なかったことにするわ。", "face": "anger" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Quest 2とQuest Proの新機能が終わるのだ。", "read": "にほんめ。クエストツーと、クエストプロの、新機能が終わるのだ。" },
+      { "who": "metan", "text": "えっ、もう使えなくなっちゃうってこと？", "face": "surprise" },
+      { "who": "zundamon", "text": "大丈夫なのだ。今あるアプリはそのまま遊べるのだ。" },
+      { "who": "zundamon", "text": "最後の大きな更新は、2027年の春までに届くのだ。", "read": "最後の大きな更新は、にせんにじゅうななねんの、はるまでに届くのだ。" },
+      { "who": "zundamon", "text": "それ以降の新機能は、Quest 3と3Sからなのだ。", "read": "それ以降の新機能は、クエストスリーと、スリーエスからなのだ。" },
+      { "who": "metan", "text": "安全のための修正は続くのよね？" },
+      { "who": "zundamon", "text": "うん、2027年の終わりまで続くのだ。", "read": "うん、にせんにじゅうななねんの、終わりまで続くのだ。", "face": "smile" },
+      { "who": "metan", "text": "買い替えの予定、ちゃんと考えておかないとね。", "face": "look" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。PS VR2が公式ストアから消えたのだ。", "read": "さんぼんめ。ピーエスブイアールツーが、公式ストアから消えたのだ。", "face": "surprise" },
+      { "who": "metan", "text": "公式ストアって、日本のも？" },
+      { "who": "zundamon", "text": "日本とアメリカのストアで、買えなくなっているのだ。" },
+      { "who": "zundamon", "text": "アメリカでは、定価より高い転売品が中心らしいのだ。", "face": "amazement" },
+      { "who": "metan", "text": "高く売られてるなんて、納得いかないわね。", "face": "anger" },
+      { "who": "zundamon", "text": "ただ、ソニーからの正式な発表はまだないのだ。" },
+      { "who": "metan", "text": "続報を待つしかなさそうね。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "かに座", "comment": "楽しい予定が増える日", "lucky": "カレンダー" },
+        { "rank": 2, "sign": "やぎ座", "comment": "地道な努力が認められる", "lucky": "腕時計" },
+        { "rank": 3, "sign": "ふたご座", "comment": "おしゃべりで運気アップ", "lucky": "マイク" },
+        { "rank": 4, "sign": "おうし座", "comment": "おいしいものに出会える日", "lucky": "おにぎり" },
+        { "rank": 5, "sign": "しし座", "comment": "堂々とふるまうと吉", "lucky": "スカーフ" },
+        { "rank": 6, "sign": "うお座", "comment": "音楽で気分が晴れる日", "lucky": "イヤホン" },
+        { "rank": 7, "sign": "おひつじ座", "comment": "朝のひと手間が効く日", "lucky": "歯ブラシ" },
+        { "rank": 8, "sign": "てんびん座", "comment": "整理整頓で運気回復", "lucky": "収納ボックス" },
+        { "rank": 9, "sign": "さそり座", "comment": "聞き役に回ると吉", "lucky": "クッション" },
+        { "rank": 10, "sign": "いて座", "comment": "予定に余裕を持つと吉", "lucky": "手帳" },
+        { "rank": 11, "sign": "みずがめ座", "comment": "ひと休みで良い案が", "lucky": "ハーブティー" },
+        { "rank": 12, "sign": "おとめ座", "comment": "温かい飲み物でほっと", "lucky": "マフラー" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "お待ちかね、星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、かに座。楽しい予定が増えそうですわ。", "read": "今日のいちいは、かにざ。楽しい予定が増えそうですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はやぎ座、3位はふたご座です。", "read": "にいは、やぎざ、さんいは、ふたござです。" },
+        { "who": "zundamon", "text": "上位のみんな、いい一日になるのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はおとめ座。温かい飲み物でほっとしてくださいね。", "read": "じゅうにいは、おとめざ。温かい飲み物でほっとしてくださいね。" },
+        { "who": "zundamon", "text": "寒くなってきたし、ずんだシェイク…は冷たいのだ。", "face": "amazement", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "今日はミクのライブが一番の収穫ね。" },
+      { "who": "zundamon", "text": "みんな、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

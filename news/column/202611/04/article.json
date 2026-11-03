@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-04",
+  "title": "初音ミクのVRChat無料ライブが12月開催へほか、今日のVRニュース3本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日はVRChatで行われる初音ミクの無料ライブの発表と、VR機器に関する大きな動きを2つお届けします。Quest 2・Quest Proのサポート終了予定と、PS VR2の公式ストアからの販売終了についてまとめました。",
+  "items": [
+    {
+      "headline": "初音ミクの無料ライブ、12月にVRChatで開催",
+      "category": "イベント",
+      "overview": "Gugenkaは、初音ミクの公式イベント「初音ミク 夜空プログラム PLAYBACK LIVE in VRChat」を開催すると発表しました。ライブは12月5日・12日・19日の土曜日に、それぞれ9時・14時・22時の3回行われます。会場の専用ワールドは12月1日から20日まで公開され、参加は無料です。12月1日からは、過去のメインビジュアルをもとにした新しいVRChat向けアイテムの販売も始まります。",
+      "points": [
+        "参加無料。PC・スマホ・単体VR機器から参加できる",
+        "1日3回の公演なので、時間を選んで参加しやすい",
+        "限定アイテムの新作販売と、一部アイテムの再販もある"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/161836" }
+      ]
+    },
+    {
+      "headline": "Quest 2とQuest Pro、2027年にサポート縮小へ",
+      "category": "VR機器・技術",
+      "overview": "Metaは、Quest 2とQuest Proの新機能の提供を終える予定を明らかにしました。2027年の初めに最後のOSアップデートの配信が始まり、3月までにすべての端末に届く見込みです。それ以降の新機能はQuest 3・Quest 3S以降のみが対象になります。一方で、セキュリティ修正などは2027年末まで続き、今あるアプリも引き続き遊べます。",
+      "points": [
+        "新機能の追加は、2027年春のアップデートが最後",
+        "セキュリティ修正や重大な不具合の修正は2027年末まで続く",
+        "手持ちのアプリやゲームはそのまま遊べる",
+        "Quest 3・3Sとのクロスプレイも、対応タイトルでは続く"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/meta-is-winding-down-quest-2-quest-pro-support-next-year/" },
+        { "name": "Road to VR", "url": "https://roadtovr.com/meta-quest-2-pro-end-of-life-update/" }
+      ]
+    },
+    {
+      "headline": "PS VR2、日米のPlayStation公式ストアから消える",
+      "category": "VR機器・技術",
+      "overview": "Road to VRによると、ソニーのVRヘッドセット「PS VR2」が、アメリカと日本のPlayStation公式ストアで販売されなくなりました。アメリカではAmazonなどの大手通販でも在庫がほぼなくなり、残っているのは定価より高い転売品が中心とのことです。ヨーロッパとイギリスの公式ストアにはまだ掲載されています。ソニーはこの件について公式なコメントを出していません。",
+      "points": [
+        "日本の公式ストアでも買えなくなっている",
+        "ヨーロッパ・イギリスでは公式ストアにまだ掲載がある",
+        "ソニーから販売終了の正式な発表は出ていない"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/sony-psvr-2-out-of-stock-ps-store-amazon/" }
+      ]
+    }
+  ],
+  "outro": "VR機器は世代交代の時期に入りつつあるようです。今日も良いVRライフをお過ごしください。"
+}
