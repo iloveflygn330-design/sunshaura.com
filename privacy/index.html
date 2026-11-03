@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- アクセス解析（Google アナリティクス。設定・自分のアクセスを数えない方法は assets/analytics.js） -->
+  <script src="../assets/analytics.js"></script>
+  <!-- ページ間遷移の到着判定（全ページ共通。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
+  <title>プライバシーポリシー | sunshaura.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- サイト共通（ヘッダー・フッター・ページ移動の演出） -->
+  <link rel="stylesheet" href="../assets/site-common.css">
+  <link rel="stylesheet" href="../assets/legal.css">
+</head>
+<!--
+  プライバシーポリシー（privacy/index.html）
+
+  このページの URL（https://sunshaura.com/privacy/）は、Google Cloud の OAuth 同意画面と
+  YouTube API Services の審査（監査）申請に登録している。URL を変えるときは、そちらの登録も直すこと。
+
+  ★拡張予定: 内容を変えたときは、下の「制定日・改定日」も更新する
+  ★拡張予定: 新しく外部サービス（解析ツール・広告・別の API など）を使い始めたら、
+    「2. アクセス解析」と同じ形で項目を追加し、英語の要約（Summary in English）にも1行足す
+-->
+<body class="site-page">
+
+  <!-- ヘッダー（中身は assets/site-header.js が全ページ共通で組み立てる） -->
+  <header id="header"></header>
+
+  <!-- ページ間遷移アニメーション用（全ページ共通の構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon"></div><!-- アイコンは assets/page-transition.js が入れる -->
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="body-content" data-transition-body>
+    <article class="legal">
+      <h1>プライバシーポリシー</h1>
+      <p class="legal-date">制定日：2026年11月4日</p>
+
+      <p>sunshaura.com（以下「本サイト」）の運営者シャウラ（以下「運営者」）は、本サイトおよび運営者が本サイトのために使うツールにおける情報の取り扱いについて、以下のとおり定めます。</p>
+
+      <h2>1. 取得する情報</h2>
+      <p>本サイトには、会員登録やお問い合わせフォームはありません。氏名・メールアドレスなど、個人を特定する情報を本サイト上で取得することはありません。</p>
+
+      <h2>2. アクセス解析</h2>
+      <p>本サイトでは、利用状況の把握とサイト改善のために、Google LLC が提供するアクセス解析ツール「Google アナリティクス」を使用しています。Google アナリティクスは Cookie を使用して、閲覧したページ、滞在時間、おおまかな地域、使用している端末やブラウザなどの情報を、個人を特定しない形で収集します。</p>
+      <ul>
+        <li>収集された情報は、Google のプライバシーポリシーに基づいて管理されます：<a href="https://policies.google.com/privacy?hl=ja" target="_blank" rel="noopener">Google プライバシーポリシー</a></li>
+        <li>Google によるデータの使われ方：<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a></li>
+        <li>収集を望まない場合は、ブラウザの設定で Cookie を無効にするか、<a href="https://tools.google.com/dlpage/gaoptout?hl=ja" target="_blank" rel="noopener">Google アナリティクス オプトアウト アドオン</a>をご利用ください。</li>
+      </ul>
+
+      <h2>3. YouTube API Services の利用について</h2>
+      <p>運営者は、本サイトで毎日公開しているニュース動画を、運営者自身の YouTube チャンネルに投稿するために、YouTube API Services を利用した自作ツール（アプリケーション名「sunshaura news uploader」）を使用しています。</p>
+      <ul>
+        <li>このツールを使うのは運営者本人だけです。運営者以外の方の Google アカウントや YouTube アカウントにアクセスすることはなく、第三者のデータを取得・保存・共有することはありません。</li>
+        <li>このツールが要求する権限は、運営者の YouTube チャンネルへの動画のアップロード（<code>https://www.googleapis.com/auth/youtube.upload</code>）のみです。</li>
+        <li>認証に必要な情報（OAuth のアクセストークン・リフレッシュトークン）は、GitHub の暗号化された Secrets にのみ保存し、動画の投稿以外の目的には使用しません。第三者に提供することもありません。</li>
+        <li>投稿する動画・タイトル・説明文・サムネイルは、本サイトの記事をもとに運営者が作成したものです。</li>
+        <li>このツールは YouTube API Services を使用しています。YouTube の利用規約は <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube 利用規約</a>、Google のプライバシーポリシーは <a href="https://policies.google.com/privacy?hl=ja" target="_blank" rel="noopener">Google プライバシーポリシー</a> をご覧ください。</li>
+        <li>このツールに許可したアクセス権は、<a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener">Google アカウントのセキュリティ設定（サードパーティ アプリとの連携）</a>からいつでも取り消すことができます。取り消した場合、保存しているトークンは使用できなくなり、運営者はそれを削除します。</li>
+      </ul>
+
+      <h2>4. 外部サイトへのリンク・埋め込み</h2>
+      <p>本サイトには、ニュースの出典などの外部サイトへのリンクがあります。リンク先での情報の取り扱いについては、各サイトのプライバシーポリシーをご確認ください。</p>
+
+      <h2>5. お問い合わせ</h2>
+      <p>本ポリシーに関するお問い合わせは、運営者の X（旧Twitter）アカウント <a href="https://x.com/shaura330" target="_blank" rel="noopener">@shaura330</a> までご連絡ください。</p>
+
+      <h2>6. 改定</h2>
+      <p>本ポリシーの内容は、必要に応じて予告なく改定することがあります。改定後の内容は、このページに掲載した時点から有効になります。</p>
+
+      <section class="legal-en" lang="en">
+        <h2>Summary in English</h2>
+        <p>sunshaura.com is a personal website run by Shaura. The site does not collect personally identifiable information. It uses Google Analytics, which uses cookies to collect anonymous usage data (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>; opt-out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>).</p>
+        <p>The site owner uses a private tool, "sunshaura news uploader", which uses YouTube API Services to upload the site's own daily news videos to the owner's own YouTube channel. It is used only by the site owner, requests only the <code>youtube.upload</code> scope, and does not access, collect, store or share any data of other users. OAuth tokens are stored only in encrypted GitHub Secrets and are never shared with third parties. By using YouTube features, you agree to the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a> and the <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>. Access can be revoked at any time via the <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener">Google security settings page</a>.</p>
+        <p>Contact: <a href="https://x.com/shaura330" target="_blank" rel="noopener">@shaura330 on X</a>. Effective date: November 4, 2026.</p>
+      </section>
+    </article>
+  </main>
+
+  <!-- フッター（中身は assets/site-header.js の SITE_FOOTER_HTML。全ページ共通） -->
+  <footer class="site-footer" data-site-footer>sunshaura.com</footer>
+
+  <script src="../assets/page-transition.js"></script>
+  <script src="../assets/site-header.js"></script>
+  <script>SunHeader.render({ root: '../', current: 'privacy' });</script>
+</body>
+</html>

@@ -55,7 +55,9 @@
        リンクや著作権表記を足す場合はここに書く。{ROOT} はサイトのトップへの相対パスに置き換わる。
          例: 'sunshaura.com　<a href="{ROOT}about/" data-transition>このサイトについて</a>'
        ※ サイト内リンクには data-transition を付けると「ちょっとまってね...」の演出が入る */
-  var SITE_FOOTER_HTML = 'sunshaura.com';
+  var SITE_FOOTER_HTML = 'sunshaura.com' +
+    '　<a href="{ROOT}privacy/" data-transition>プライバシーポリシー</a>' +
+    '　<a href="{ROOT}terms/" data-transition>利用規約</a>';
 
   /* 矢印を出す基準のボタン数（これより多いとナビの左右に ‹ › が出る） */
   var NAV_VISIBLE = 3;

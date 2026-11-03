@@ -1,0 +1,39 @@
+/* =====================================================
+   プライバシーポリシー・利用規約ページ用のCSS
+   （privacy/index.html と terms/index.html で共通。サイト共通の site-common.css の下で読み込む）
+
+   ★拡張予定: 規約系のページを増やす場合（例: 特定商取引法に基づく表記）
+     privacy/ をフォルダごとコピーして中身を書き換え、<head> でこのCSSを読み込むだけでよい
+   ===================================================== */
+.legal {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 20px 72px;
+  line-height: 1.95;
+  font-size: 15px;
+}
+.legal h1 {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
+  color: var(--color-main);
+  margin-bottom: 6px;
+}
+.legal .legal-date { font-size: 13px; color: rgba(0, 0, 0, 0.5); margin-bottom: 28px; }
+.legal h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 32px 0 10px;
+  padding-left: 12px;
+  border-left: 5px solid var(--color-main-light);
+}
+.legal p, .legal li { margin-bottom: 8px; }
+.legal ul { padding-left: 1.4em; }
+.legal a { color: var(--color-main); word-break: break-all; }
+.legal .legal-en {
+  margin-top: 48px;
+  padding: 20px 22px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  font-size: 14px;
+}
+.legal .legal-en h2 { margin-top: 18px; }
