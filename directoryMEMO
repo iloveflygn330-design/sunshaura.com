@@ -30,6 +30,8 @@
   │    ├─ assets/about-data.js   ← ★拡張予定: プロフィール・クレジット・動きの数値（クレジットはここに1件足すだけ）
   │    ├─ assets/about.js / about.css ← カードの物理演算（Matter.js）・見た目
   │    └─ data/status.json       ← 「今のひとこと」（Discord から自動取り込み。.github/scripts/discord-status.js）。手で触らない
+  ├─ privacy/index.html         ← プライバシーポリシー（Google OAuth 同意画面・YouTube API の審査に URL を登録している）
+  ├─ terms/index.html           ← 利用規約（同上）。2ページ共通の見た目は assets/legal.css。フッターからリンク
   ├─ gallery/ ・ news/          ← フォトギャラリー・ニュース（下に詳細）
   ├─ avatars.json               ← 全アバターデータ（ここだけ編集）
   └─ assets/
