@@ -22,8 +22,6 @@
 name: YouTube upload
 
 on:
-  push:                                   # 【テスト用・マージ前に削除】ブランチで1回試すため
-    branches: [feature/youtube-upload]
   workflow_dispatch:
     inputs:
       date:
@@ -47,7 +45,7 @@ jobs:
         id: fetch
         env:
           GH_TOKEN: ${{ github.token }}
-          DATE: ${{ github.event.inputs.date || '2026-11-04' }}
+          DATE: ${{ github.event.inputs.date }}
           FORCE: ${{ github.event.inputs.force }}
         run: |
           mkdir -p out
@@ -67,13 +65,13 @@ jobs:
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
           YT_PRIVACY: ${{ vars.YT_PRIVACY || 'private' }}
-        run: node tools/news-video/upload-youtube.mjs out "${{ github.event.inputs.date || '2026-11-04' }}"
+        run: node tools/news-video/upload-youtube.mjs out "${{ github.event.inputs.date }}"
 
       - name: アップロード結果を Releases に置く
         if: steps.fetch.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          DATE: ${{ github.event.inputs.date || '2026-11-04' }}
+          DATE: ${{ github.event.inputs.date }}
         run: |
           [ -f "out/youtube-$DATE.txt" ] || exit 0
           gh release upload "news-$DATE" "out/youtube-$DATE.txt" --clobber
