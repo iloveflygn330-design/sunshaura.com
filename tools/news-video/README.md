@@ -6,6 +6,8 @@
 | `build-voice.mjs` | 台本（script.json）から音声（voice.mp3）とタイミング（video.json）を作る。GitHub Actions（news-voice.yml）が実行する |
 | `src/NewsVideo.jsx` | 動画の見た目（Remotion） |
 | `src/index.jsx` | 記事ページへの埋め込みと、再生前の待機画面 |
+| `render.mjs` | MP4の書き出しと、YouTube用のタイトル・説明文・サムネイル候補を作る（News voice の mp4 ジョブが実行） |
+| `upload-youtube.mjs` | 書き出したMP4を YouTube にアップロードする（Secrets の YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN を使う。公開設定は Variables の YT_PRIVACY） |
 | `build.mjs` | プレイヤーのビルド（`npm install && npm run build` → `news/assets/video/news-video.js`） |
 
 ## ★拡張予定: キャラクターを増やす手順

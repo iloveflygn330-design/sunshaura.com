@@ -1,0 +1,78 @@
+# =====================================================
+# ニュース動画を YouTube にアップロードする（手動実行用）
+#
+# ふだんは毎朝の「News voice」の mp4 ジョブが、書き出しのあとに自動でアップロードする。
+# このワークフローは、失敗したときのやり直しや、過去の日付の動画を上げたいとき用。
+#
+# 実行方法:
+#   Actions タブ → 「YouTube upload」→ Run workflow → 日付（例: 2026-11-04）を入力
+#   すでにアップロード済みの日付はスキップする（二重投稿の防止）。
+#   どうしても上げ直したいときは「force」にチェックを入れる。
+#
+# 必要な Secrets（Settings → Secrets and variables → Actions → Secrets）:
+#   YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN
+# 公開設定（Settings → Secrets and variables → Actions → Variables）:
+#   YT_PRIVACY … private（既定）/ unlisted / public
+#   ★拡張予定: YouTube API Services の審査（監査）に通ったら、Variables に YT_PRIVACY = public を登録する
+#     （審査前は public にしても YouTube 側で非公開に固定される）
+#
+# 動画ファイルなどは、News voice が作った GitHub の Releases（news-<日付>）から取ってくる。
+# このワークフローは main にコミットしないので、deploy.yml の workflow_run への追加は不要。
+# =====================================================
+name: YouTube upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'アップロードする動画の日付（例: 2026-11-04）'
+        required: true
+      force:
+        description: 'アップロード済みでも上げ直す'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # Releases に youtube-<日付>.txt を置くため
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Releases から動画を取ってくる
+        id: fetch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DATE: ${{ github.event.inputs.date }}
+          FORCE: ${{ github.event.inputs.force }}
+        run: |
+          mkdir -p out
+          if gh release view "news-$DATE" --json assets --jq '.assets[].name' | grep -q "youtube-$DATE.txt" && [ "$FORCE" != "true" ]; then
+            echo "news-$DATE はアップロード済みのためスキップします（上げ直す場合は force にチェック）"
+            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          gh release download "news-$DATE" --dir out --clobber \
+            --pattern "sunshaura-news-$DATE.mp4" --pattern "thumbnail-$DATE.jpg" \
+            --pattern "title-$DATE.txt" --pattern "description-$DATE.txt"
+          ls -la out
+
+      - name: YouTube にアップロード
+        if: steps.fetch.outputs.skip != 'true'
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          YT_PRIVACY: ${{ vars.YT_PRIVACY || 'private' }}
+        run: node tools/news-video/upload-youtube.mjs out "${{ github.event.inputs.date }}"
+
+      - name: アップロード結果を Releases に置く
+        if: steps.fetch.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DATE: ${{ github.event.inputs.date }}
+        run: |
+          [ -f "out/youtube-$DATE.txt" ] || exit 0
+          gh release upload "news-$DATE" "out/youtube-$DATE.txt" --clobber
+          echo "YouTube: $(cat out/youtube-$DATE.txt)"
