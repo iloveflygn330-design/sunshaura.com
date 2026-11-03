@@ -178,6 +178,26 @@ jobs:
             fi
           done
 
+      # YouTube へのアップロード（認証情報の Secrets がなければ何もしない）
+      #   公開設定は Variables の YT_PRIVACY（未登録なら private）。手動でやり直す場合は youtube-upload.yml
+      - name: YouTube にアップロード
+        env:
+          GH_TOKEN: ${{ github.token }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          YT_PRIVACY: ${{ vars.YT_PRIVACY || 'private' }}
+        run: |
+          for f in out/sunshaura-news-*.mp4; do
+            date=$(basename "$f" .mp4 | sed 's/sunshaura-news-//')
+            # すでにアップロード済みの日付（作り直しで再実行したときなど）はスキップ
+            if gh release view "news-$date" --json assets --jq '.assets[].name' | grep -q "youtube-$date.txt"; then
+              echo "news-$date はアップロード済みのためスキップ"; continue
+            fi
+            node tools/news-video/upload-youtube.mjs out "$date" || { echo "::warning::$date の YouTube アップロードに失敗しました"; continue; }
+            [ -f "out/youtube-$date.txt" ] && gh release upload "news-$date" "out/youtube-$date.txt" --clobber
+          done
+
       - name: Discord に通知
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -194,7 +214,9 @@ jobs:
               const page = `https://github.com/${process.env.REPO}/releases/tag/news-${date}`;
               const dl = `https://github.com/${process.env.REPO}/releases/download/news-${date}/${f}`;
               // ---- メッセージ本文（★拡張予定: 文面を変える場合はここを編集） ----
+              const yt = fs.existsSync(`out/youtube-${date}.txt`) ? fs.readFileSync(`out/youtube-${date}.txt`, 'utf8').trim() : '';
               const content = `🎬 **動画を書き出したのだ！**\n${title}\n` +
+                (yt ? `YouTube: ${yt}\n` : '') +
                 `MP4（${size}MB）: ${dl}\n` +
                 `タイトル・説明文・サムネイル: ${page}`;
               const res = await fetch(process.env.DISCORD_WEBHOOK_URL, {
