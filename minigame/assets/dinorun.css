@@ -234,7 +234,7 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   position: relative; display: none;
   grid-template-columns: 1fr 1.5fr 1fr; grid-template-rows: auto 1fr auto;
   align-items: center; justify-items: center;
-  height: 118px; padding: 6px 4px;
+  height: 150px; padding: 6px 4px;
   border: 2px solid var(--dr-cyan-dark); border-bottom-width: 5px; border-radius: 12px;
   background: radial-gradient(ellipse at 50% 50%, #C8FAFD 0, #8CF0F8 45%, var(--dr-cyan) 100%);
   color: var(--dr-navy);
@@ -282,7 +282,8 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   #dr-root { --dr-dive-h: 34px; }
   #dr-root.dr-has-dive { --dr-extra: 24px; }
   .dr-duck-btn.has-dive .dr-duck-half.is-slide { height: 46px; }
-  .dr-tap-area { height: 142px; }   /* ジャンプ（78）＋ スライディング（56）＋ すき間 と同じ高さ */
+  .dr-tap-area { height: 176px; }   /* ジャンプ（78）＋ スライディング（56）より大きめ（指を置きやすいように） */
+  .dr-tap-center { font-size: 18px; }
 }
 
 /* --- スマホ横持ち：ゲーム画面の下、左右に同じボタンを出す --- */
@@ -309,7 +310,7 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   #dr-root { --dr-dive-h: 22px; }
   .dr-duck-half.is-dive { font-size: 12px; }
   .dr-duck-half.is-dive small { display: none; }
-  .dr-tap-area { height: 75px; padding: 2px; border-bottom-width: 4px; }
+  .dr-tap-area { height: 80px; padding: 2px; border-bottom-width: 4px; }
   .dr-tap-hint { font-size: 11px; padding: 0 6px; }
   .dr-tap-center { font-size: 13px; }
   .dr-tap-center small, .dr-tap-dive { display: none !important; }
