@@ -149,16 +149,20 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   pointer-events: none;
 }
 
-/* ヘッダーを隠すボタン（スマホだけ出す） */
-#dr-header-toggle {
-  display: none;
-  margin: 6px 0 0 auto;
+/* 「ゲーム選択に戻る」の行の右のボタン（操作の切りかえ・ヘッダーを隠す）。スマホ・タブレットだけ出す
+   ゲーム画面とボタンのあいだを空けないように、ゲーム画面より上に置いている */
+.dr-top-btns { display: none; gap: 6px; margin-left: auto; }
+.dr-top-btns button {
   padding: 4px 10px;
   border: 1px solid #E07A8A; border-radius: 4px;
   background: #FAD1D7; color: var(--color-text);
-  font-size: 12px; cursor: pointer;
+  font-family: inherit; font-size: 12px; white-space: nowrap; cursor: pointer;
 }
+@media (max-width: 400px) { .dr-top-btns { gap: 4px; } .dr-top-btns button { padding: 3px 7px; font-size: 11px; } }
+#dr-header-toggle { display: none; }
+@media (hover: none), (max-width: 759px), (max-height: 520px) { .dr-top-btns { display: flex; } }
 @media (max-width: 759px), (max-height: 520px) { #dr-header-toggle { display: block; } }
+#mg-dinorun .mg-game-header { flex-wrap: nowrap; }
 
 /* =====================================================
    操作ボタン
@@ -224,6 +228,45 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-duck-btn.is-air .dr-duck-half.is-slide { opacity: 0.55; }
 .dr-duck-btn.is-air .dr-duck-half.is-dive.is-ready { box-shadow: inset 0 0 0 2px #fff; }
 
+/* タップエリア（タップモードのとき、ジャンプ・スライディングのボタンのかわりに出る。dinorun.js の drBindTapArea）
+   まん中 … タップでジャンプ / 上下左右 … スワイプしたときに出るもの（スキルはクールタイム中・空きだとうすくなる） */
+.dr-tap-area {
+  position: relative; display: none;
+  grid-template-columns: 1fr 1.5fr 1fr; grid-template-rows: auto 1fr auto;
+  align-items: center; justify-items: center;
+  height: 150px; padding: 6px 4px;
+  border: 2px solid var(--dr-cyan-dark); border-bottom-width: 5px; border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 50%, #C8FAFD 0, #8CF0F8 45%, var(--dr-cyan) 100%);
+  color: var(--dr-navy);
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  cursor: pointer;
+  transition: transform 0.06s, border-bottom-width 0.06s;
+}
+#dr-root.dr-tapmode .dr-tap-area { display: grid; }
+#dr-root.dr-tapmode .dr-jump-btn, #dr-root.dr-tapmode .dr-duck-btn { display: none; }
+#dr-root.dr-tapmode.dr-has-dive { --dr-extra: 0px; }   /* タップエリアは急降下を覚えても高さが変わらない */
+.dr-tap-area.is-held { transform: translateY(3px); border-bottom-width: 2px; }
+.dr-tap-hint {
+  padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+  font-size: 13px; background: rgba(255, 255, 255, 0.6);
+}
+.dr-tap-hint b { font-weight: 400; }
+.dr-tap-hint.is-up { grid-column: 2; grid-row: 1; }
+.dr-tap-hint.is-left { grid-column: 1; grid-row: 2; }
+.dr-tap-hint.is-right { grid-column: 3; grid-row: 2; }
+.dr-tap-hint.is-down { grid-column: 2; grid-row: 3; }
+.dr-tap-hint.is-off { opacity: 0.45; }
+.dr-tap-hint.is-fired { animation: drTapFire 0.35s ease-out; }
+@keyframes drTapFire { 0% { background: var(--dr-yellow); transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); } }
+.dr-tap-center { grid-column: 2; grid-row: 2; text-align: center; font-size: 16px; line-height: 1.25; white-space: nowrap; pointer-events: none; }
+.dr-tap-center small { display: block; font-size: 11px; opacity: 0.75; }
+.dr-tap-area > * { pointer-events: none; }   /* 文字の上を押しても、エリア全体で受け取る */
+.dr-tap-battle { display: none; }
+#dr-root.dr-in-phase .dr-tap-run { display: none; }
+#dr-root.dr-in-phase .dr-tap-battle { display: inline; }
+.dr-tap-dive { display: none; font-size: 11px; }
+.dr-tap-area.has-dive .dr-tap-dive { display: inline; }
+
 .dr-keys-help { text-align: center; font-size: 12px; color: var(--color-placeholder); margin-top: 8px; }
 
 /* スマホなど（マウスがない端末）はキーの表示を出さない */
@@ -239,6 +282,8 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   #dr-root { --dr-dive-h: 34px; }
   #dr-root.dr-has-dive { --dr-extra: 24px; }
   .dr-duck-btn.has-dive .dr-duck-half.is-slide { height: 46px; }
+  .dr-tap-area { height: 176px; }   /* ジャンプ（78）＋ スライディング（56）より大きめ（指を置きやすいように） */
+  .dr-tap-center { font-size: 18px; }
 }
 
 /* --- スマホ横持ち：ゲーム画面の下、左右に同じボタンを出す --- */
@@ -248,7 +293,7 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   #mg-dinorun .mg-back-btn { padding: 2px 4px; }
   #dr-root { --dr-reserve: 165px; max-width: none; }
   #dr-root.dr-menu-open { min-height: 300px; }
-  #dr-header-toggle { margin-top: 2px; padding: 2px 8px; font-size: 11px; }
+  .dr-top-btns button { padding: 2px 8px; font-size: 11px; }
   #dr-pads { display: flex; justify-content: space-between; max-width: none; margin-top: 2px; }
   .dr-pad, .dr-pad[data-side="sub"] { display: grid; width: min(42%, 280px); gap: 5px; }
   .dr-skill-row { gap: 5px; }
@@ -265,9 +310,11 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   #dr-root { --dr-dive-h: 22px; }
   .dr-duck-half.is-dive { font-size: 12px; }
   .dr-duck-half.is-dive small { display: none; }
+  .dr-tap-area { height: 80px; padding: 2px; border-bottom-width: 4px; }
+  .dr-tap-hint { font-size: 11px; padding: 0 6px; }
+  .dr-tap-center { font-size: 13px; }
+  .dr-tap-center small, .dr-tap-dive { display: none !important; }
   .dr-keys-help { display: none; }
-  /* ヘッダーを隠すボタンは「ゲーム選択に戻る」の行の右に置いて、高さを節約する */
-  #dr-header-toggle { position: absolute; top: -24px; right: 0; margin: 0; }
   .dr-panel { padding: 10px; }
   .dr-panel-title { font-size: 18px; margin-bottom: 6px; }
   .dr-card { padding: 6px; }

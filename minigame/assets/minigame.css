@@ -112,3 +112,6 @@
 }
 .mg-jk-btn:hover:not(:disabled) { border-color: var(--color-main); transform: translateY(-2px); }
 .mg-jk-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+/* このページのフッターは文字を小さくして1行におさめる（ゲームのボタンの下に出るので、場所をとらないように） */
+.site-footer { padding: 10px 12px; font-size: 10px; letter-spacing: 0.04em; }

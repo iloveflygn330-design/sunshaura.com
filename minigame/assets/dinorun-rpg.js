@@ -479,6 +479,12 @@ function drRpgSetPads(on) {
     <button type="button" class="dr-btn dr-pbtn is-escape" data-act="escape"><span class="dr-key">X</span>
       <span class="dr-pbtn-name">にげる</span><span class="dr-pbtn-short">にげる</span><span class="dr-pbtn-sub">ハート1に</span></button>`;
   document.querySelectorAll('.dr-battle-row').forEach(el => { el.innerHTML = html; el.dataset.count = drRpg.skills.length + 2; });
+  // タップモードのタップエリア：右・上・左へスワイプで、技の1・2・3番目（短い名前を出す）
+  document.querySelectorAll('.dr-tap-hint[data-slot]').forEach(h => {
+    const s = drRpg.skills[+h.dataset.slot];
+    const b = h.querySelector('.dr-tap-battle');
+    if (b) b.textContent = s ? (s.cfg.short || s.cfg.name) : '技' + (+h.dataset.slot + 1);
+  });
   // ジャンプ回数（ふみつける回数）の表示
   const n = Math.max(1, drRpg.run.maxJumps);
   let dots = '';
@@ -520,6 +526,11 @@ function drRpgUpdatePads() {
     });
   });
   document.querySelectorAll('.dr-pbtn[data-act="potion"]').forEach(el => { el.disabled = !fighting || !(run.potion > 0) || R.p.hp >= R.p.maxHp; });
+  // タップモードのタップエリア：使えない技の向きはうすく
+  document.querySelectorAll('.dr-tap-hint[data-slot]').forEach(h => {
+    const s = R.skills[+h.dataset.slot];
+    h.classList.toggle('is-off', !s || (R.ct[s.id] || 0) > 0 || busy || !fighting);
+  });
   document.querySelectorAll('.dr-pbtn[data-act="escape"]').forEach(el => { el.disabled = !fighting || R.escapeT > 0; });
 }
 
