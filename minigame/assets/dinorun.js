@@ -201,6 +201,7 @@ function drSetup() {
   drCheckData();
   drBuildPads();
   drBindInput();
+  drInitControl();
   drBuildEntry();
   drUpdateSoundBtn();
   // テスト用：URL に &drdebug を付けて開いたときだけ、一時停止ボタンの横に「⚔」ボタン（押すとすぐバトル。スマホでも試せる）
@@ -258,6 +259,17 @@ function drBuildPads() {
         <span class="dr-duck-half is-dive"><span class="dr-half-fill"></span>
           <span class="dr-key">↓（空中）</span><span class="dr-btn-label">急降下<small>（空中で）</small></span></span>
       </button>`;
+    // タップエリア（タップモードのとき、ジャンプ・スライディングのボタンのかわりに出る）
+    //   まん中をタップ（長押し）でジャンプ、上下左右にスワイプでスライディング・スキル。まわりの文字は「どっちにスワイプすると何が出るか」
+    //   .dr-tap-run はふだん、.dr-tap-battle はフェイズ（バトル）中に出る文字
+    html += `<div class="dr-tap-area" role="button" aria-label="タップでジャンプ。スワイプでスライディングとスキル">
+        <span class="dr-tap-hint is-up" data-dir="up" data-slot="1">↑ <b class="dr-tap-name dr-tap-run">スキル②</b><b class="dr-tap-battle">技2</b></span>
+        <span class="dr-tap-hint is-left" data-dir="left" data-slot="2">← <b class="dr-tap-name dr-tap-run">スキル③</b><b class="dr-tap-battle">技3</b></span>
+        <span class="dr-tap-center"><span class="dr-tap-run">タップでジャンプ<small>長押しでバタ足</small></span><span class="dr-tap-battle">タップでふみつけ</span></span>
+        <span class="dr-tap-hint is-right" data-dir="right" data-slot="0"><b class="dr-tap-name dr-tap-run">スキル①</b><b class="dr-tap-battle">技1</b> →</span>
+        <span class="dr-tap-hint is-down" data-dir="down">↓ <b><span class="dr-tap-run">スライディング<small class="dr-tap-dive">・空中で急降下</small></span><span class="dr-tap-battle">防御</span></b></span>
+        <span class="dr-jump-count" aria-label="ジャンプ回数"></span>
+      </div>`;
     pad.innerHTML = html;
   });
 }
@@ -274,6 +286,7 @@ function drBindInput() {
     drPress(btn.dataset.act, 'p' + e.pointerId);
   });
   pads.addEventListener('contextmenu', e => e.preventDefault());
+  drBindTapArea(pads);
   // 指・マウスを離したら、ジャンプの押しっぱなしをやめる（バタ足ジャンプ）
   const release = e => dr.jumpHeld.delete('p' + e.pointerId);
   window.addEventListener('pointerup', release);
@@ -297,6 +310,9 @@ function drBindInput() {
     drUiAction(b.dataset.dr, b);
   });
 
+  // 操作の切りかえ（タップモード ⇄ ボタンモード）
+  document.getElementById('dr-ctrl-toggle').addEventListener('click', () => drSetControl(dr.control === 'tap' ? 'button' : 'tap', true));
+
   // ヘッダーを隠す／出す（スマホ用）
   document.getElementById('dr-header-toggle').addEventListener('click', () => {
     document.body.classList.toggle('dr-header-hidden');
@@ -308,6 +324,84 @@ function drBindInput() {
     if (document.hidden && dr.active && (dr.mode === 'play' || dr.mode === 'ready' || dr.mode === 'phase')) drPause();
   });
   window.addEventListener('pagehide', () => { if (dr.active && (dr.mode === 'play' || dr.mode === 'phase')) drPause(); });
+}
+
+/* ---------- タップモード ----------
+   タップエリアに指を置いたら、tapDecideMs ミリ秒のあいだ様子を見る:
+     swipeDist 以上動いた → スワイプ（向きで スライディング・スキル①②③）
+     動かずに離した、または時間が過ぎた → タップ（ジャンプ。押したままならバタ足）
+   ジャンプしたあと、指を置いたまま大きく動かしたら、そのスワイプも1回だけ使える（ジャンプ → 下へスワイプで急降下 など） */
+function drBindTapArea(pads) {
+  const C = DR_CONFIG;
+  const touches = new Map();   // pointerId → { x, y, state: 'wait' | 'tap' | 'done', timer, area }
+  const actFor = dir => {
+    if (dir === 'down') return 'slide';
+    const n = { right: 0, up: 1, left: 2 }[dir];
+    return dr.mode === 'phase' ? 'pskill' + n : 'skill' + n;   // バトル中は、その技のボタン（左から順に①②③）
+  };
+  const flash = (area, dir) => {
+    const h = area.querySelector(`.dr-tap-hint[data-dir="${dir}"]`);
+    if (!h) return;
+    h.classList.remove('is-fired'); void h.offsetWidth; h.classList.add('is-fired');
+  };
+  const tap = (id, t) => {
+    t.state = 'tap';
+    t.ax = t.lx; t.ay = t.ly;   // ジャンプしたときの指の位置（ここから大きく動いたらスワイプも使える）
+    t.area.classList.add('is-held');
+    drPress('jump', 'p' + id);
+  };
+  pads.addEventListener('pointerdown', e => {
+    const area = e.target.closest('.dr-tap-area');
+    if (!area) return;
+    e.preventDefault();
+    try { area.setPointerCapture(e.pointerId); } catch (err) { /* 古いブラウザ */ }
+    const t = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, state: 'wait', area };
+    t.timer = setTimeout(() => { if (t.state === 'wait') tap(e.pointerId, t); }, C.tapDecideMs);
+    touches.set(e.pointerId, t);
+  });
+  pads.addEventListener('pointermove', e => {
+    const t = touches.get(e.pointerId);
+    if (!t || t.state === 'done') return;
+    t.lx = e.clientX; t.ly = e.clientY;
+    const ox = t.state === 'tap' ? t.ax : t.x, oy = t.state === 'tap' ? t.ay : t.y;
+    const dx = e.clientX - ox, dy = e.clientY - oy;
+    const need = t.state === 'tap' ? C.swipeDist * 1.5 : C.swipeDist;   // ジャンプのあとは少し大きく動かしたときだけ
+    if (Math.hypot(dx, dy) < need) return;
+    const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    clearTimeout(t.timer);
+    if (t.state === 'tap') dr.jumpHeld.delete('p' + e.pointerId);   // バタ足もやめる
+    t.state = 'done';
+    flash(t.area, dir);
+    drPress(actFor(dir), 'p' + e.pointerId);
+  });
+  const end = e => {
+    const t = touches.get(e.pointerId);
+    if (!t) return;
+    clearTimeout(t.timer);
+    if (t.state === 'wait' && e.type === 'pointerup') tap(e.pointerId, t);   // すぐ離した → ジャンプ
+    dr.jumpHeld.delete('p' + e.pointerId);
+    t.area.classList.remove('is-held');
+    touches.delete(e.pointerId);
+  };
+  pads.addEventListener('pointerup', end);
+  pads.addEventListener('pointercancel', end);
+}
+
+/* 操作のしかた（'tap' … タップモード / 'button' … ボタンモード）。save = true ならこのブラウザに覚えておく */
+function drSetControl(mode, save) {
+  dr.control = mode === 'tap' ? 'tap' : 'button';
+  const root = document.getElementById('dr-root');
+  if (root) root.classList.toggle('dr-tapmode', dr.control === 'tap');
+  const b = document.getElementById('dr-ctrl-toggle');
+  if (b) b.textContent = dr.control === 'tap' ? '操作：タップ' : '操作：ボタン';
+  if (save) { try { localStorage.setItem('dinorun-control', dr.control); } catch (e) { /* 覚えられなくても遊べる */ } }
+}
+/* 最初の操作のしかた：前に選んだもの → なければ、タッチの端末（スマホ・タブレット）はタップモード、PC はボタンモード */
+function drInitControl() {
+  let m = null;
+  try { m = localStorage.getItem('dinorun-control'); } catch (e) { /* なくてもよい */ }
+  if (m !== 'tap' && m !== 'button') m = window.matchMedia('(hover: none)').matches ? 'tap' : 'button';
+  drSetControl(m, false);
 }
 
 /* スマホ横持ちは高さが足りないので、ヘッダーを自動で隠す（縦持ちに戻したら出す）。
@@ -522,6 +616,7 @@ function drNewRun() {
     tutStep: 0,            // チュートリアルの、次に出す番号（DR_TUTORIAL.steps）
     invincibleTime: DR_CONFIG.invincibleTime,
     invT: 0,               // 無敵の残り時間
+    stumbleT: 0,           // 「おっとと」とよろけている残り時間（drStumble）
     coinMult: 1,           // コイン倍率
     wallet: 0,             // 持っているコイン（倍率がかかるので小数もある。表示は切り捨て）
     coinsPicked: 0,        // 拾ったコインの個数（スコア用。倍率はかからない）
@@ -705,6 +800,7 @@ function drUpdate(run, dt) {
 
   // --- タイマー ---
   if (run.invT > 0) run.invT = Math.max(0, run.invT - dt);
+  if (run.stumbleT > 0) run.stumbleT = Math.max(0, run.stumbleT - dt);
   if (run.spinT > 0) run.spinT = Math.max(0, run.spinT - dt);
   if (run.slashT > 0) run.slashT = Math.max(0, run.slashT - dt);
   if (run.calmT > 0) run.calmT = Math.max(0, run.calmT - dt);
@@ -1300,13 +1396,20 @@ function drPitHit(run) {
 
 function drUseSkill(run, slot) {
   const id = run.slots[slot];
-  if (!id) return;
-  if ((run.cooldowns[id] || 0) > 0) return;
+  if (!id) { drStumble(run); return; }
+  if ((run.cooldowns[id] || 0) > 0) { drStumble(run); return; }   // クールタイム中：おっとと
   const skill = run.skills[id];
   const fn = DR_SKILL_ACTIONS[skill.action];
   if (!fn) return;
   if (fn(run, skill) === false) return;   // 使えなかった（空振りにしない）
   run.cooldowns[id] = skill.cooldown;
+}
+
+/* クールタイム中（または空き）のスキルを使おうとした：恐竜君が「おっとと」とよろける（見た目だけ。動きは変わらない） */
+function drStumble(run) {
+  if (run.stumbleT > DR_CONFIG.stumbleTime * 0.6) return;   // よろけ始めたばかりなら、やり直さない（連打で音が鳴りっぱなしにならないように）
+  run.stumbleT = DR_CONFIG.stumbleTime;
+  drSound('oops');
 }
 
 function drKillObstacle(run, o) {
@@ -1896,6 +1999,11 @@ function drUpdatePads() {
       b.querySelector('.dr-skill-name').dataset.short = skill ? skill.label : '';
       b.querySelector('.dr-ct-fill').style.width = (skill ? ratio * 100 : 0) + '%';
     });
+    // タップエリアの、スワイプの向きの文字（スキルの短い名前。クールタイム中・空きはうすく）
+    document.querySelectorAll(`.dr-tap-hint[data-slot="${i}"]`).forEach(h => {
+      h.querySelector('.dr-tap-name').textContent = skill ? skill.label : 'スキル' + '①②③'[i];
+      h.classList.toggle('is-off', !ready);
+    });
   }
   // ジャンプ回数（アイコンの数で表示。使った分は薄くなる）
   const max = run ? run.maxJumps : 1;
@@ -1929,6 +2037,7 @@ function drUpdatePads() {
       dh.classList.toggle('is-ready', !!dive && diveCd <= 0);
       dh.querySelector('.dr-half-fill').style.width = diveRatio * 100 + '%';
     });
+    document.querySelectorAll('.dr-tap-area').forEach(a => a.classList.toggle('has-dive', !!dive));
   }
   drUpdateEffectBars(run);
 }
@@ -2234,6 +2343,15 @@ function drDrawPlayer(ctx, run, isDemo) {
   else if (anim === 'slash') f = Math.min(a.frames - 1, Math.floor((0.28 - run.slashT) * a.fps));
   else if (a.fps) f = Math.floor((anim === 'hurt' ? run.deadT : t) * a.fps) % a.frames;
 
+  // おっとと（クールタイム中のスキルを使おうとした）：足元を軸に、前後にぐらぐらゆれる（だんだん小さく）
+  const st = isDemo ? 0 : (run.stumbleT || 0);
+  const sk = st / (C.stumbleTime || 0.45);   // 1（よろけ始め）→ 0
+  if (st > 0) {
+    const ang = Math.sin((1 - sk) * Math.PI * 5) * 0.32 * sk;
+    const fx = x + P.frameW / 2, fy = Math.round(y) + P.frameH;
+    ctx.save();
+    ctx.translate(fx, fy); ctx.rotate(ang); ctx.translate(-fx, -fy);
+  }
   const img = drImage(P.image);
   if (img) {
     ctx.drawImage(img, f * P.frameW, a.row * P.frameH, P.frameW, P.frameH, x, Math.round(y), P.frameW, P.frameH);
@@ -2254,6 +2372,16 @@ function drDrawPlayer(ctx, run, isDemo) {
       }
     } else {
       ctx.drawImage(pc, x, Math.round(y));
+    }
+  }
+  if (st > 0) {
+    ctx.restore();
+    // 頭のまわりに汗が飛ぶ
+    const k = 1 - sk;
+    ctx.fillStyle = '#7FD8FF';
+    for (const [dx, dy] of [[1, -1], [1.6, 0.2]]) {
+      const sx = Math.round(x + P.frameW - 2 + dx * k * 10), sy = Math.round(y + 2 - dy * k * 8 + k * k * 10);
+      ctx.fillRect(sx, sy, 2, 3); ctx.fillRect(sx + (dx > 1.2 ? 0 : 1), sy - 1, 1, 1);
     }
   }
   ctx.globalAlpha = 1;

@@ -217,6 +217,13 @@
       <div class="mg-screen" id="mg-dinorun">
         <div class="mg-game-header">
           <button class="mg-back-btn" onclick="mgBackToSelect()">← ゲーム選択に戻る</button>
+          <!-- スマホ用のボタン（ゲーム画面とボタンのあいだを空けないように、この行の右に置く）
+               操作の切りかえ … タップモード（大きなタップエリアをスワイプ）⇄ ボタンモード（ジャンプ・スライディングのボタン）。このブラウザに覚えておく
+               ヘッダーを隠す … ヘッダーを隠して画面を広く使う -->
+          <div class="dr-top-btns">
+            <button type="button" id="dr-ctrl-toggle" aria-label="操作のしかたを切りかえる">操作：タップ</button>
+            <button type="button" id="dr-header-toggle">▲ ヘッダーを隠す</button>
+          </div>
         </div>
 
         <div id="dr-root" data-mode="title">
@@ -249,10 +256,8 @@
             <div id="dr-tip" hidden><p class="dr-tip-head">ゲームの説明</p><p class="dr-tip-body"></p></div>
           </div>
 
-          <!-- スマホ用：ヘッダーを隠して画面を広く使う -->
-          <button type="button" id="dr-header-toggle">▲ ヘッダーを隠す</button>
-
-          <!-- 操作ボタン（中身は dinorun.js の drBuildPads() が作る。スマホ横持ちのときは sub も出る） -->
+          <!-- 操作ボタン（中身は dinorun.js の drBuildPads() が作る。スマホ横持ちのときは sub も出る）
+               タップモードのときは、ジャンプ・スライディングのボタンのかわりに「タップエリア」が出る -->
           <div id="dr-pads">
             <div class="dr-pad" data-side="main"></div>
             <div class="dr-pad" data-side="sub"></div>

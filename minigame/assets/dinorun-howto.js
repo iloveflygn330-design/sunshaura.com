@@ -58,6 +58,11 @@ const DR_HOWTO_PAGES = [
     text: 'お店で覚えた技は、上の3つのボタンで使えるよ。ボタンのバーがたまると、また使える。',
     key: 'PC：A・S・D　一時停止 P',
   },
+  {
+    tab: 'control', title: 'タップでそうさ（スマホ）', image: 'dinorun/howto/tap.webp',
+    text: '大きなエリアを<b>タップ</b>でジャンプ。<b>下へスワイプ</b>でスライディング、<b>右・上・左</b>でスキル①②③！',
+    key: '右上の「操作」ボタンで、ボタンでのそうさに切りかえられるよ',
+  },
   /* --- アイテム --- */
   {
     tab: 'item', title: 'コインとショップ', image: 'dinorun/howto/shop.webp',

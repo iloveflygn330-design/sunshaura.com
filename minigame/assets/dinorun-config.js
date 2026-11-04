@@ -37,6 +37,15 @@ const DR_CONFIG = {
   slideLock: false,        // true … すべり終わるまで次のスライディングを出せない（もとの動き）
                            // false … すべっている途中でも押せる（押すと、そこからまた slideTime 秒すべる）
   slideBuffer: 0.15,       // 空中で押したとき、この秒数以内に着地したら着地と同時にすべる
+
+  /* --- タップモード（スマホ。ジャンプ・スライディングのボタンのかわりに、1つの大きな「タップエリア」で操作する） ---
+       タップ（長押し）… ジャンプ（バタ足）/ 下へスワイプ … スライディング・急降下
+       右へスワイプ … スキル① / 上へスワイプ … スキル② / 左へスワイプ … スキル③
+       指を置いてから tapDecideMs ミリ秒のあいだに swipeDist ドット（画面の点）以上動いたらスワイプ、動かなければタップ（ジャンプ）。
+       tapDecideMs を小さくするとジャンプが早く出るが、スワイプのつもりがジャンプになりやすい */
+  tapDecideMs: 90,
+  swipeDist: 18,
+  stumbleTime: 0.45,       // クールタイム中のスキルを使おうとしたときに「おっとと」とよろける時間（秒）
   // バタ足ジャンプ（パッシブ。浮いていられる秒数は dinorun-items.js の flutter アイテムで決める）
   //   ジャンプボタンを押しっぱなしにすると、ジャンプのいちばん高いところでバタ足して、その高さのまま浮く
   //   空中でジャンプ回数を使い切ってから押しなおしても、その高さで浮く（ボタンを離すか、時間が切れると落ちる）
@@ -202,6 +211,7 @@ const DR_CONFIG = {
      warn … ボスの技の予告（光る）/ bosshit … ボスの攻撃が当たった / victory … ボスを倒した / escape … 逃げた
      stamp … スタンピング / charge … 「溜め」になった / crit … 会心の一撃 / para … ボスが麻痺した / heal … 回復魔法
      breath … ボスのほのおのブレス / boom … ボスが爆発した（倒した）
+     oops … クールタイム中のスキルを使おうとして「おっとと」とよろけた
      world … ワールド移動 / bonus … ボーナスステージに入った / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
 
    BGM（ワールドごとに変えたいとき）:
@@ -239,6 +249,7 @@ const DR_SOUNDS = {
   perfect:    { src: '', volume: 0.6, tone: { wave: 'triangle', notes: [[1319, 0.05], [1760, 0.12]] } },
   warn:       { src: '', volume: 0.35, tone: { wave: 'square', freq: 1200, dur: 0.05 } },
   bosshit:    { src: '', volume: 0.7, tone: { wave: 'sawtooth', freq: 180, to: 50, dur: 0.25 } },
+  oops:       { src: '', volume: 0.4, tone: { wave: 'triangle', notes: [[700, 0.05], [520, 0.05], [640, 0.05], [480, 0.08]] } },
   stamp:      { src: '', volume: 0.7, tone: { wave: 'square', notes: [[160, 0.05, 60], [90, 0.18, 40]] } },
   charge:     { src: '', volume: 0.45, tone: { wave: 'triangle', notes: [[523, 0.05], [784, 0.05], [1047, 0.05], [1568, 0.1]] } },
   crit:       { src: '', volume: 0.55, tone: { wave: 'square', notes: [[1760, 0.03], [2637, 0.09, 1760]] } },
