@@ -353,10 +353,78 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-tab.is-on { background: #fff; color: var(--dr-navy); }
 
 /* --- あそびかた --- */
-.dr-howto-list { text-align: left; font-size: 14px; line-height: 1.7; padding-left: 1.2em; }
-.dr-howto-list li { margin-bottom: 6px; }
-.dr-howto-list b { color: var(--dr-yellow); font-weight: 400; }
-.dr-howto-keys { font-size: 12px; color: #C8CCE8; margin-top: 6px; }
+/* ---------- あそびかた（ページ送り。中身は dinorun-howto.js の DR_HOWTO_PAGES） ----------
+   上に絵（クリーム色の枠）、下に説明（ミント色の枠）、その下に章のタブと ◀ ページ数 ▶ */
+.dr-panel.dr-howto { width: min(100%, 620px); display: flex; flex-direction: column; gap: 8px; padding: 12px 14px 14px; }
+.dr-howto-top { position: relative; display: flex; align-items: center; justify-content: center; }
+.dr-howto-top .dr-panel-title { margin: 0; }
+.dr-howto-close {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  padding: 4px 10px; font-size: 12px; cursor: pointer;
+  background: transparent; color: var(--dr-mint); border: 2px solid var(--dr-mint); border-radius: 6px;
+}
+.dr-howto-close:hover { background: rgba(127, 255, 212, 0.15); }
+.dr-howto-body { display: flex; flex-direction: column; gap: 8px; }
+.dr-howto-pic {
+  aspect-ratio: 16 / 9; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: #FFF6DE; border: 3px solid var(--dr-yellow); border-radius: 4px;
+  touch-action: pan-y;
+}
+.dr-howto-pic img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; user-select: none; -webkit-user-drag: none; }
+/* 絵のかわりにアイコンのカードを並べるページ（技を覚える・からだを強くする） */
+.dr-howto-pic.is-icons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; align-content: center; }
+.dr-howto-card {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 8px; align-items: center;
+  padding: 6px 8px; text-align: left; color: var(--dr-navy);
+  background: #fff; border: 2px solid #E8C25A; border-radius: 6px; box-shadow: 0 2px 0 #E8C25A;
+}
+.dr-howto-card-icon { grid-row: 1 / 3; font-size: 24px; line-height: 1; }
+.dr-howto-card-name { font-size: 13px; color: #8A3A12; }
+.dr-howto-card-text { font-size: 11px; line-height: 1.35; }
+.dr-howto-text {
+  min-height: 6.6em; padding: 8px 12px; text-align: left;
+  background: var(--dr-navy); border: 2px solid var(--dr-mint); border-radius: 4px;
+}
+.dr-howto-head { font-size: 16px; color: var(--dr-yellow); margin-bottom: 2px; }
+.dr-howto-desc { font-size: 14px; line-height: 1.6; }
+.dr-howto-desc b { color: var(--dr-yellow); font-weight: 400; }
+.dr-howto-key { font-size: 12px; color: #C8CCE8; margin-top: 4px; }
+.dr-howto-tabs { display: grid; grid-template-columns: repeat(var(--tabs, 5), 1fr); gap: 6px; }
+.dr-howto-tab {
+  padding: 6px 2px; font-size: 12px; white-space: nowrap; cursor: pointer;
+  color: var(--dr-navy); background: var(--dr-cyan); border: none; border-radius: 6px;
+  box-shadow: 0 3px 0 var(--dr-cyan-dark);
+}
+.dr-howto-tab.is-active { background: var(--dr-yellow); box-shadow: 0 3px 0 #B8860B; }
+.dr-howto-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
+.dr-howto-arrow {
+  width: 76px; height: 36px; font-size: 16px; cursor: pointer;
+  color: var(--dr-navy); background: var(--dr-cyan); border: none; border-radius: 8px;
+  box-shadow: 0 4px 0 var(--dr-cyan-dark);
+}
+.dr-howto-arrow:active:not(:disabled), .dr-howto-tab:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--dr-cyan-dark); }
+.dr-howto-arrow:disabled { opacity: 0.3; cursor: default; }
+.dr-howto-count { font-size: 14px; color: #C8CCE8; }
+/* スマホ（たて）：文字を少し小さく */
+@media (max-width: 759px) {
+  .dr-panel.dr-howto { padding: 10px; gap: 7px; }
+  .dr-howto-tab { font-size: 10px; letter-spacing: -0.5px; }
+  .dr-howto-desc { font-size: 13px; }
+  .dr-howto-card { padding: 4px 6px; column-gap: 6px; }
+  .dr-howto-card-icon { font-size: 18px; }
+  .dr-howto-card-name { font-size: 11px; }
+  .dr-howto-card-text { font-size: 9px; }
+}
+/* スマホ（横）：高さが足りないので、絵と説明を横に並べる */
+@media (orientation: landscape) and (max-height: 520px) {
+  .dr-panel.dr-howto { width: min(100%, 760px); gap: 6px; padding: 8px 12px 10px; }
+  .dr-howto-top .dr-panel-title { font-size: 16px; }
+  .dr-howto-body { flex-direction: row; align-items: stretch; }
+  .dr-howto-pic { flex: 0 0 52%; }
+  .dr-howto-text { flex: 1; min-height: 0; }
+  .dr-howto-arrow { height: 30px; }
+}
 
 /* --- ショップ --- */
 .dr-shop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
