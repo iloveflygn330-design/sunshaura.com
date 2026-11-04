@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-05",
+  "speed": 1.15,
+  "guest": "ankomon",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのVRニュースなのだ。", "read": "おはようなのだ！ずんだもんのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "今日はあんこもんも来てあげたもん。", "face": "point" },
+      { "who": "zundamon", "text": "来てくれてうれしいのだ、あんこもん。", "face": "smile" },
+      { "who": "zundamon", "text": "11月5日のニュースは3本なのだ！", "read": "じゅういちがついつかのニュースは、さんぼんなのだ！" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目は、映画『超かぐや姫！』のライブの話なのだ。", "read": "いっぽんめは、映画、ちょうかぐやひめの、ライブの話なのだ。" },
+      { "who": "zundamon", "text": "12月26日の夜9時から、無料で見られるのだ。", "read": "じゅうにがつにじゅうろくにちの夜くじから、無料で見られるのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "無料？それってどこで見られるの？", "face": "think" },
+      { "who": "zundamon", "text": "YouTubeと、VRChatのワールドなのだ。", "read": "ユーチューブと、ブイアールチャットのワールドなのだ。" },
+      { "who": "zundamon", "text": "VRChatでは全部で8回も公演があるのだ。", "read": "ブイアールチャットでは、全部ではちかいも公演があるのだ。" },
+      { "who": "ankomon", "text": "8回もあれば、行ける時間がありそうだもん。", "read": "はちかいもあれば、行ける時間がありそうだもん。", "face": "smile" },
+      { "who": "zundamon", "text": "ワールドはもう公開中で、下見もできるのだ。", "face": "look" },
+      { "who": "ankomon", "text": "じゃあ、ずんだもんより先に下見しておくもん！", "face": "point", "style": "つよつよ" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目は、SteamVRのベータ版の更新なのだ。", "read": "にほんめは、スチームブイアールの、ベータ版の更新なのだ。" },
+      { "who": "zundamon", "text": "Steam Linkで遊ぶときの画質が良くなるのだ。", "read": "スチームリンクで遊ぶときの画質が、良くなるのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "Steam Linkって、何に使うものなの？", "read": "スチームリンクって、何に使うものなの？", "face": "think" },
+      { "who": "zundamon", "text": "QuestなどでPCのVRを無線で遊ぶ仕組みなのだ。", "read": "クエストなどで、ピーシーのブイアールを、無線で遊ぶ仕組みなのだ。" },
+      { "who": "zundamon", "text": "文字がくっきり、色もはっきり見えるのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "ベータ版って、すぐ使えるの？", "read": "ベータばんって、すぐ使えるの？" },
+      { "who": "zundamon", "text": "Steamの設定で、ベータに切り替えれば使えるのだ。", "read": "スチームの設定で、ベータに切り替えれば使えるのだ。" },
+      { "who": "ankomon", "text": "VRChatもきれいに見えたら、うれしいもん。", "read": "ブイアールチャットもきれいに見えたら、うれしいもん。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目は、GoogleのAIと3Dの話なのだ。", "read": "さんぼんめは、グーグルの、エーアイと、スリーディーの話なのだ。" },
+      { "who": "zundamon", "text": "AIが書いた3Dのコードを、安全に使う仕組みなのだ。", "read": "エーアイが書いたスリーディーのコードを、安全に使う仕組みなのだ。" },
+      { "who": "ankomon", "text": "AIのコードって、危ないの？", "read": "エーアイのコードって、危ないの？", "face": "surprise" },
+      { "who": "zundamon", "text": "そのまま動かすのは信用できない、という考えなのだ。", "face": "look" },
+      { "who": "zundamon", "text": "だから先に3Dファイルに変えて、それだけを届けるのだ。", "read": "だから先に、スリーディーファイルに変えて、それだけを届けるのだ。" },
+      { "who": "ankomon", "text": "なるほど。ちゃんと考えてあるもん。", "face": "think" },
+      { "who": "zundamon", "text": "VR機器向けの部品もあるのだ。今は開発者向けなのだ。", "read": "ブイアール機器向けの部品もあるのだ。今は開発者向けなのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "いて座", "comment": "新しい場所の下見が大当たり", "lucky": "ホットケーキ" },
+        { "rank": 2, "sign": "おうし座", "comment": "設定を見直すと快適さアップ", "lucky": "メガネふき" },
+        { "rank": 3, "sign": "みずがめ座", "comment": "ひらめきが形になりやすい日", "lucky": "スケッチブック" },
+        { "rank": 4, "sign": "かに座", "comment": "友だちとの約束がはずむ", "lucky": "カレンダー" },
+        { "rank": 5, "sign": "おひつじ座", "comment": "早起きで一日が軽やかに", "lucky": "温かいお茶" },
+        { "rank": 6, "sign": "てんびん座", "comment": "整理整とんで気分すっきり", "lucky": "ケーブルバンド" },
+        { "rank": 7, "sign": "しし座", "comment": "写真をたくさん撮ると吉", "lucky": "スマホスタンド" },
+        { "rank": 8, "sign": "うお座", "comment": "ゆっくり音楽を聴くと元気に", "lucky": "ヘッドホン" },
+        { "rank": 9, "sign": "やぎ座", "comment": "小さな目標をひとつ決めよう", "lucky": "付せん" },
+        { "rank": 10, "sign": "おとめ座", "comment": "あわてず一歩ずつ進めば吉", "lucky": "ハンドクリーム" },
+        { "rank": 11, "sign": "ふたご座", "comment": "早めの休けいで調子が戻る", "lucky": "ブランケット" },
+        { "rank": 12, "sign": "さそり座", "comment": "甘いものでひと息つこう", "lucky": "あんこのおやつ" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、いて座のみなさんですわ。", "read": "今日のいちいは、いてざのみなさんですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はおうし座、3位はみずがめ座です。", "read": "にいはおうしざ、さんいはみずがめざです。" },
+        { "who": "zundamon", "text": "いて座は、新しい場所の下見が大当たりなのだ！", "read": "いてざは、新しい場所の下見が大当たりなのだ！", "face": "surprise" },
+        { "who": "itako", "text": "12位はさそり座。甘いものでひと息ついてくださいね。", "read": "じゅうにいはさそりざ。甘いものでひと息ついてくださいね。" },
+        { "who": "zundamon", "text": "ラッキーアイテムは、あんこのおやつなのだ。", "face": "look" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "ankomon", "text": "あんこのおやつが当たりなら、今日はあんこもんの勝ちだもん！", "face": "point", "style": "つよつよ" },
+      { "who": "zundamon", "text": "勝ち負けじゃないのだ…。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

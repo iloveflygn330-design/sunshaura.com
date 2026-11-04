@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-05",
+  "title": "「超かぐや姫！」のVRChat無料ライブが12月26日開催へほか、今日のVR・AIニュース3本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、映画『超かぐや姫！』のVRChat無料ライブの詳細発表を中心にお届けします。あわせて、Steam Linkで遊ぶ人の画質が上がるSteamVRのベータ更新と、AIが書いた3D表示コードを安全に扱うためにGoogleが公開した新しい仕組みを紹介します。",
+  "items": [
+    {
+      "headline": "「超かぐや姫！」VRChat無料ライブ、12月26日開催",
+      "category": "イベント",
+      "overview": "映画『超かぐや姫！』の無料オンラインライブ「ツクヨミ感謝祭～めちゃうまパンケーキパーティー～」が、12月26日（土）21時からYouTubeで配信されます。VRChatでは、映画に登場する仮想空間「ツクヨミ」を再現したワールドで、計8回の公演が行われる予定です。11月3日の情報番組でライブPVとビジュアルが公開され、出演する3人が「ray 超かぐや姫！Version」のMVの衣装で登場することが分かりました。VRChatのツクヨミワールドでは、チュートリアルエリアとミニゲームがすでに公開されています。",
+      "points": [
+        "視聴は無料。YouTube配信は終了後にアーカイブも公開",
+        "VRChatの公演は8回。各回の開始時刻は公式告知で確認を",
+        "本番前からツクヨミワールドを下見・探索できる",
+        "VR機器やPCがなくてもYouTubeで楽しめる"
+      ],
+      "sources": [
+        {
+          "name": "MoguLive",
+          "url": "https://www.moguravr.com/tsukuyomi-kansha-sai-vrchat-live/"
+        },
+        {
+          "name": "PANORA",
+          "url": "https://panora.tokyo/archives/161988"
+        }
+      ]
+    },
+    {
+      "headline": "SteamVRベータ更新、Steam Linkの画質が向上",
+      "category": "VR機器・技術",
+      "overview": "Valveは、SteamVR 2.19.1のベータ版を公開し、Steam Linkで映像をストリーミングする際の画質を改善しました。対象はMeta Quest、HTC Vive Focus、PICOなど、Steam Linkに対応する単体型VR機器です。標準の描画解像度が、ヘッドセットの画面解像度の1.4倍を目安に引き上げられたほか、色の情報を高品質に縮小してから圧縮することで、細かい色の表現がつぶれにくくなりました。改善はVRゲームだけでなく、SteamVRの画面やデスクトップ表示、外部のオーバーレイにも効きます。",
+      "points": [
+        "文字がくっきり、色もはっきり見えるようになる",
+        "QuestでPCのVRChatを遊ぶ人にも関係する更新",
+        "ベータ版なので、SteamVRのプロパティから切り替えが必要"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/steamvr-beta-update-image-quality-quest-frame-pico/"
+        }
+      ]
+    },
+    {
+      "headline": "Google、AIが書いた3Dコードを安全に扱う仕組み公開",
+      "category": "AI",
+      "overview": "Googleは、AIなどが書いた3D表示用のThree.jsのコードを、あらかじめ3Dファイル（GLBやUSDZ）に変換する仕組み「Three-Live」をオープンソースで公開しました。Googleは、AIがその場で生成したコードは信頼できず、安全な隔離環境が必要だと説明しています。この仕組みでは、コードを閉じた環境で実行し、利用者には完成した3Dファイルだけが届くため、生成されたコードがそのまま利用者の前で動くことはありません。ウェブ向けの部品のほか、VRヘッドセット向けやAndroid・iOS向けの開発キットも用意されています。",
+      "points": [
+        "AIに3Dを作らせるときの安全対策として注目",
+        "変換は数ミリ秒ほどと、とても速いのが特徴",
+        "Android XR向けの開発基盤「XR Blocks」の関連プロジェクト",
+        "現在は開発者向けのプレビュー段階"
+      ],
+      "sources": [
+        {
+          "name": "VR.org",
+          "url": "https://vr.org/articles/google-three-live-threejs-compiler-untrusted-ai-code-2026"
+        }
+      ]
+    }
+  ],
+  "outro": "「超かぐや姫！」のライブは、本番前にワールドを下見しておくと当日さらに楽しめそうです。SteamVRのベータ版は、気になる人から試してみてください。"
+}
