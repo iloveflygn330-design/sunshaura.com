@@ -19,10 +19,12 @@
   │    ├─ assets/dinorun-sprites.js ← ★拡張予定: 自機（恐竜）の絵。いまは仮のドット絵。PNG のスプライトシートに差し替えられる
   │    ├─ assets/dinorun-ranking.js ← ランキングの読み書き（Google Apps Script とのやりとり）
   │    ├─ assets/dinorun.js / dinorun.css ← きょうりゅうランの動き・見た目（minigame/?game=dinorun で直接開ける）
+  │    ├─ assets/dinorun-howto.js  ← ★拡張予定: 「あそびかた」のページ（DR_HOWTO_PAGES に1件足すとページが増える）
   │    ├─ assets/dinorun-rpg-data.js ← ★拡張予定: RPG フェイズ（ボスとのバトル）の数値・ボス・入り口の敵・技のエフェクトの PNG
   │    ├─ assets/dinorun-rpg.js     ← RPG フェイズの動き（エンカウントの演出・バトル・画面）
   │    ├─ assets/dinorun-rpg-fx.js  ← ★拡張予定: 技のエフェクトの仮のドット絵（PNG を用意したらそちらが優先）
-  │    └─ dinorun/                ← 本番の絵・音を置く場所。rpg/fx/ … バトルの技のエフェクト（pixelfx で書き出した PNG。CREDITS.txt はライセンスなので消さない）
+  │    └─ dinorun/                ← 本番の絵・音を置く場所。howto/ … 「あそびかた」の絵（ゲーム画面を切り取ったもの。イラストに差し替えてよい）
+  │                                  rpg/fx/ … バトルの技のエフェクト（pixelfx で書き出した PNG。CREDITS.txt はライセンスなので消さない）
   │                                  ほかの絵・音は sprites/・worlds/・sounds/ を作って入れる
   ├─ tools/dinorun-fx/          ← きょうりゅうランの技のエフェクトを pixelfx から書き出すツール（export_fx.py・README.md）。サイトには公開しない
   ├─ tools/dinorun-ranking/     ← きょうりゅうランのランキング用 Google Apps Script（Code.gs）と設定手順（README.md）。サイトには公開しない

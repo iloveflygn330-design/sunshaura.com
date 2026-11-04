@@ -387,6 +387,11 @@ function drOnKeyDown(e) {
       if (c === 'Space' || c === 'Enter' || c === 'Escape') drShowTitle();
       else if (c === 'ArrowLeft' || c === 'ArrowRight' || c === 'Tab') { e.preventDefault(); drSetRankTab(dr.rankTab === 'month' ? 'all' : 'month'); }
       break;
+    case 'howto':   // あそびかた：← → でページ送り、Esc でもどる
+      if (c === 'ArrowLeft') drHowtoMove(-1);
+      else if (c === 'ArrowRight' || c === 'Space') drHowtoMove(1);
+      else if (c === 'Escape' || c === 'Enter') drShowTitle();
+      break;
   }
 }
 
@@ -408,7 +413,10 @@ function drUiAction(act, el) {
   switch (act) {
     case 'start': drStartGame(); break;
     case 'ranking': drShowRanking(); break;
-    case 'howto': drSetMode('howto'); break;
+    case 'howto': drSetMode('howto'); drHowtoOpen(); break;
+    case 'howto-prev': drHowtoMove(-1); break;     // あそびかた（dinorun-howto.js）
+    case 'howto-next': drHowtoMove(1); break;
+    case 'howto-tab': drHowtoTab(el.dataset.tab); break;
     case 'title': drShowTitle(); break;
     case 'pause': if (dr.mode === 'play') drPause(); break;
     case 'resume': drResume(); break;
