@@ -57,7 +57,10 @@
        ※ サイト内リンクには data-transition を付けると「ちょっとまってね...」の演出が入る */
   var SITE_FOOTER_HTML = 'sunshaura.com' +
     '　<a href="{ROOT}privacy/" data-transition>プライバシーポリシー</a>' +
-    '　<a href="{ROOT}terms/" data-transition>利用規約</a>';
+    '　<a href="{ROOT}terms/" data-transition>利用規約</a>' +
+    // YouTube チャンネルへのリンク（外部サイトなので data-transition は付けない。アイコンは YouTube 公式の赤い再生ボタンの形）
+    // ★拡張予定: SNS などのリンクを増やす場合は、この下に同じ形で '　<a href="URL" target="_blank" rel="noopener">名前</a>' を足す
+    '　<a href="https://www.youtube.com/@Sunshaura" target="_blank" rel="noopener"><svg viewBox="-1.5 -1.5 31 23" width="1.4em" height="1em" aria-hidden="true" style="vertical-align:-0.15em;margin-right:0.3em"><rect width="28" height="20" rx="5" fill="#FF0000" stroke="#FFFFFF" stroke-width="1.5"/><path d="M11 5.5v9l8-4.5z" fill="#FFFFFF"/></svg>YouTube</a>';
 
   /* 矢印を出す基準のボタン数（これより多いとナビの左右に ‹ › が出る） */
   var NAV_VISIBLE = 3;
