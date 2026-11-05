@@ -332,10 +332,19 @@ function drBindInput() {
      下・右・左へ swipeDist 以上動いた → スワイプ（下 … スライディング・急降下 / 右 … スキル① / 左 … スキル③）
      上へ少しでも動いた・動かずに離した・時間が過ぎた → ジャンプ（押したままならバタ足）
    スワイプは指を置いた瞬間から速く動くので、短い時間で見分けられる（ジャンプが遅れて感じないように、待つ時間は短くしている）
+   ※ 待つ時間は setTimeout ではなく、毎フレーム（drLoop → dr.tapTick）とタッチのイベントのたびに確かめる。
+     スマホは指を置いているあいだ setTimeout が大きく遅れることがある（0.1〜0.4 秒）ため。
+     時間は「指を置いた瞬間」（イベントの timeStamp）から数えるので、イベントが遅れて届いても待ちすぎない
    ジャンプしたあと、指を置いたまま大きく動かしたら、そのスワイプも1回だけ使える（ジャンプ → 下へスワイプで急降下 など） */
 function drBindTapArea(pads) {
   const C = DR_CONFIG;
-  const touches = new Map();   // pointerId → { x, y, state: 'wait' | 'tap' | 'done', timer, area }
+  const touches = new Map();   // pointerId → { x, y, state: 'wait' | 'tap' | 'done', t0（指を置いた時刻）, area }
+  const now = () => performance.now();
+  // 指を置いてから tapDecideMs たっても動いていなければ、ジャンプ（毎フレーム・イベントのたびに呼ぶ）
+  const check = () => {
+    touches.forEach((t, id) => { if (t.state === 'wait' && now() - t.t0 >= C.tapDecideMs) tap(id, t); });
+  };
+  dr.tapTick = check;
   const actFor = dir => {
     if (dir === 'down') return 'slide';
     const n = { right: 0, left: 2 }[dir];
@@ -357,14 +366,18 @@ function drBindTapArea(pads) {
     if (!area) return;
     e.preventDefault();
     try { area.setPointerCapture(e.pointerId); } catch (err) { /* 古いブラウザ */ }
-    const t = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, state: 'wait', area };
-    t.timer = setTimeout(() => { if (t.state === 'wait') tap(e.pointerId, t); }, C.tapDecideMs);
+    // 指を置いた時刻：イベントの timeStamp（performance.now と同じ時計）。おかしな値なら今の時刻
+    const ts = e.timeStamp > 0 && e.timeStamp <= now() + 1 && now() - e.timeStamp < 1000 ? e.timeStamp : now();
+    const t = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, state: 'wait', area, t0: ts };
+    t.timer = setTimeout(check, C.tapDecideMs);   // 念のため（ふだんは毎フレームの check が先に動く）
     touches.set(e.pointerId, t);
+    check();   // イベントが遅れて届いて、もう時間が過ぎていたら、すぐジャンプ
   });
   pads.addEventListener('pointermove', e => {
     const t = touches.get(e.pointerId);
     if (!t || t.state === 'done') return;
     t.lx = e.clientX; t.ly = e.clientY;
+    if (t.state === 'wait' && now() - t.t0 >= C.tapDecideMs) { tap(e.pointerId, t); }   // 時間が過ぎてから動いた分は、ジャンプのあとの動きとして扱う
     const ox = t.state === 'tap' ? t.ax : t.x, oy = t.state === 'tap' ? t.ay : t.y;
     const dx = e.clientX - ox, dy = e.clientY - oy, dist = Math.hypot(dx, dy);
     const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
@@ -687,6 +700,7 @@ function drLoop(now) {
   let dt = (now - dr.lastT) / 1000;
   dr.lastT = now;
   if (dt > 0.05) dt = 0.05;    // 重くなったときにワープしないように
+  if (dr.tapTick) dr.tapTick();   // タップモード：指を置いたまま待つ時間が過ぎたらジャンプ（drBindTapArea）
   if (dt < 0) dt = 0;
   dr.clock += dt;
 
