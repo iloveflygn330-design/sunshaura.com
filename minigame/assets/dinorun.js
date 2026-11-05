@@ -260,14 +260,14 @@ function drBuildPads() {
           <span class="dr-key">↓（空中）</span><span class="dr-btn-label">急降下<small>（空中で）</small></span></span>
       </button>`;
     // タップエリア（タップモードのとき、ジャンプ・スライディングのボタンのかわりに出る）
-    //   まん中をタップ（長押し）・上へスワイプでジャンプ、下・右・左へスワイプでスライディング・スキル①③。まわりの文字は「どっちにスワイプすると何が出るか」
+    //   まん中をタップ（長押し）・上へスワイプでジャンプ、下へスワイプでスライディング、左へスワイプでスキル①、右へスワイプでスキル③。まわりの文字は「どっちにスワイプすると何が出るか」
     //   「長押しでバタ足」は、バタ足ジャンプを覚えたら出る（.has-flutter）
     //   .dr-tap-run はふだん、.dr-tap-battle はフェイズ（バトル）中に出る文字
     html += `<div class="dr-tap-area" role="button" aria-label="タップでジャンプ。スワイプでスライディングとスキル">
         <span class="dr-tap-hint is-up" data-dir="up">↑ <b><span class="dr-tap-run">ジャンプ</span><span class="dr-tap-battle">ふみつけ</span></b></span>
-        <span class="dr-tap-hint is-left" data-dir="left" data-slot="2">← <b class="dr-tap-name dr-tap-run">スキル③</b><b class="dr-tap-battle">技3</b></span>
+        <span class="dr-tap-hint is-left" data-dir="left" data-slot="0">← <b class="dr-tap-name dr-tap-run">スキル①</b><b class="dr-tap-battle">技1</b></span>
         <span class="dr-tap-center"><span class="dr-tap-run">タップでジャンプ<small>長押しでバタ足</small></span><span class="dr-tap-battle">タップでふみつけ</span></span>
-        <span class="dr-tap-hint is-right" data-dir="right" data-slot="0"><b class="dr-tap-name dr-tap-run">スキル①</b><b class="dr-tap-battle">技1</b> →</span>
+        <span class="dr-tap-hint is-right" data-dir="right" data-slot="2"><b class="dr-tap-name dr-tap-run">スキル③</b><b class="dr-tap-battle">技3</b> →</span>
         <span class="dr-tap-hint is-down" data-dir="down">↓ <b><span class="dr-tap-run">スライディング<small class="dr-tap-dive">・空中で急降下</small></span><span class="dr-tap-battle">防御</span></b></span>
         <span class="dr-jump-count" aria-label="ジャンプ回数"></span>
       </div>`;
@@ -329,7 +329,7 @@ function drBindInput() {
 
 /* ---------- タップモード ----------
    タップエリアに指を置いたら、tapDecideMs ミリ秒（2〜3フレーム）だけ様子を見る:
-     下・右・左へ swipeDist 以上動いた → スワイプ（下 … スライディング・急降下 / 右 … スキル① / 左 … スキル③）
+     下・右・左へ swipeDist 以上動いた → スワイプ（下 … スライディング・急降下 / 左 … スキル① / 右 … スキル③）
      上へ少しでも動いた・動かずに離した・時間が過ぎた → ジャンプ（押したままならバタ足）
    スワイプは指を置いた瞬間から速く動くので、短い時間で見分けられる（ジャンプが遅れて感じないように、待つ時間は短くしている）
    ※ 待つ時間は setTimeout ではなく、毎フレーム（drLoop → dr.tapTick）とタッチのイベントのたびに確かめる。
@@ -347,7 +347,7 @@ function drBindTapArea(pads) {
   dr.tapTick = check;
   const actFor = dir => {
     if (dir === 'down') return 'slide';
-    const n = { right: 0, left: 2 }[dir];
+    const n = { left: 0, right: 2 }[dir];
     return dr.mode === 'phase' ? 'pskill' + n : 'skill' + n;   // バトル中は、その技のボタン（左から1番目・3番目）
   };
   const flash = (area, dir) => {
