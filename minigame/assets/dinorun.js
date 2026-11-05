@@ -266,9 +266,9 @@ function drBuildPads() {
     html += `<div class="dr-tap-area" role="button" aria-label="タップでジャンプ。スワイプでスライディングとスキル">
         <span class="dr-tap-hint is-up" data-dir="up">↑ <b><span class="dr-tap-run">ジャンプ</span><span class="dr-tap-battle">ふみつけ</span></b></span>
         <span class="dr-tap-hint is-left" data-dir="left" data-slot="0">← <b class="dr-tap-name dr-tap-run">スキル①</b><b class="dr-tap-battle">技1</b></span>
-        <span class="dr-tap-center"><span class="dr-tap-run">タップでジャンプ<small>長押しでバタ足</small></span><span class="dr-tap-battle">タップでふみつけ</span></span>
+        <span class="dr-tap-center"><span class="dr-tap-run">タップで<wbr>ジャンプ<small>長押しでバタ足</small></span><span class="dr-tap-battle">タップで<wbr>ふみつけ</span></span>
         <span class="dr-tap-hint is-right" data-dir="right" data-slot="2"><b class="dr-tap-name dr-tap-run">スキル③</b><b class="dr-tap-battle">技3</b> →</span>
-        <span class="dr-tap-hint is-down" data-dir="down">↓ <b><span class="dr-tap-run">スライディング<small class="dr-tap-dive">・空中で急降下</small></span><span class="dr-tap-battle">防御</span></b></span>
+        <span class="dr-tap-hint is-down" data-dir="down">↓ <b><span class="dr-tap-run">スライディング<small class="dr-tap-dive">（空中で急降下）</small></span><span class="dr-tap-battle">防御</span></b></span>
         <span class="dr-jump-count" aria-label="ジャンプ回数"></span>
       </div>`;
     pad.innerHTML = html;
@@ -329,7 +329,8 @@ function drBindInput() {
 
 /* ---------- タップモード ----------
    タップエリアに指を置いたら、tapDecideMs ミリ秒（2〜3フレーム）だけ様子を見る:
-     下・右・左へ swipeDist 以上動いた → スワイプ（下 … スライディング・急降下 / 左 … スキル① / 右 … スキル③）
+     下へ swipeDist 以上動いた → スライディング・急降下
+     左右へ swipeDistSkill 以上、しっかり横向きに動いた → スキル（左 … スキル① / 右 … スキル③。ななめに動いたときは決めない）
      上へ少しでも動いた・動かずに離した・時間が過ぎた → ジャンプ（押したままならバタ足）
    スワイプは指を置いた瞬間から速く動くので、短い時間で見分けられる（ジャンプが遅れて感じないように、待つ時間は短くしている）
    ※ 待つ時間は setTimeout ではなく、毎フレーム（drLoop → dr.tapTick）とタッチのイベントのたびに確かめる。
@@ -386,8 +387,12 @@ function drBindTapArea(pads) {
       if (t.state === 'wait' && dist >= 4) { clearTimeout(t.timer); flash(t.area, 'up'); tap(e.pointerId, t); }
       return;
     }
-    const need = t.state === 'tap' ? C.swipeDist * 2.5 : C.swipeDist;   // ジャンプのあとは、大きく動かしたときだけ（急降下など）
+    // スキル（左右）は、スライディングより大きく・しっかり横向きに動かしたときだけ（暴発しないように）
+    const skill = dir === 'left' || dir === 'right';
+    const base = skill ? (C.swipeDistSkill || C.swipeDist) : C.swipeDist;
+    const need = t.state === 'tap' ? base * 2.5 : base;   // ジャンプのあとは、大きく動かしたときだけ（急降下など）
     if (dist < need) return;
+    if (skill && Math.abs(dx) < Math.abs(dy) * (C.swipeSkillRatio || 1)) return;   // ななめ：まだ決めない（時間が過ぎればジャンプ）
     clearTimeout(t.timer);
     if (t.state === 'tap') dr.jumpHeld.delete('p' + e.pointerId);   // バタ足もやめる
     t.state = 'done';
