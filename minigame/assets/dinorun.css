@@ -259,7 +259,8 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-tap-hint.is-fired { animation: drTapFire 0.35s ease-out; }
 @keyframes drTapFire { 0% { background: var(--dr-yellow); transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); } }
 .dr-tap-center { grid-column: 2; grid-row: 2; text-align: center; font-size: 16px; line-height: 1.25; white-space: nowrap; pointer-events: none; }
-.dr-tap-center small { display: block; font-size: 11px; opacity: 0.75; }
+.dr-tap-center small { display: none; font-size: 11px; opacity: 0.75; }
+.dr-tap-area.has-flutter .dr-tap-center small { display: block; }   /* バタ足ジャンプを覚えたら出す */
 .dr-tap-area > * { pointer-events: none; }   /* 文字の上を押しても、エリア全体で受け取る */
 .dr-tap-battle { display: none; }
 #dr-root.dr-in-phase .dr-tap-run { display: none; }

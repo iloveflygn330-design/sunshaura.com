@@ -260,10 +260,11 @@ function drBuildPads() {
           <span class="dr-key">↓（空中）</span><span class="dr-btn-label">急降下<small>（空中で）</small></span></span>
       </button>`;
     // タップエリア（タップモードのとき、ジャンプ・スライディングのボタンのかわりに出る）
-    //   まん中をタップ（長押し）でジャンプ、上下左右にスワイプでスライディング・スキル。まわりの文字は「どっちにスワイプすると何が出るか」
+    //   まん中をタップ（長押し）・上へスワイプでジャンプ、下・右・左へスワイプでスライディング・スキル①③。まわりの文字は「どっちにスワイプすると何が出るか」
+    //   「長押しでバタ足」は、バタ足ジャンプを覚えたら出る（.has-flutter）
     //   .dr-tap-run はふだん、.dr-tap-battle はフェイズ（バトル）中に出る文字
     html += `<div class="dr-tap-area" role="button" aria-label="タップでジャンプ。スワイプでスライディングとスキル">
-        <span class="dr-tap-hint is-up" data-dir="up" data-slot="1">↑ <b class="dr-tap-name dr-tap-run">スキル②</b><b class="dr-tap-battle">技2</b></span>
+        <span class="dr-tap-hint is-up" data-dir="up">↑ <b><span class="dr-tap-run">ジャンプ</span><span class="dr-tap-battle">ふみつけ</span></b></span>
         <span class="dr-tap-hint is-left" data-dir="left" data-slot="2">← <b class="dr-tap-name dr-tap-run">スキル③</b><b class="dr-tap-battle">技3</b></span>
         <span class="dr-tap-center"><span class="dr-tap-run">タップでジャンプ<small>長押しでバタ足</small></span><span class="dr-tap-battle">タップでふみつけ</span></span>
         <span class="dr-tap-hint is-right" data-dir="right" data-slot="0"><b class="dr-tap-name dr-tap-run">スキル①</b><b class="dr-tap-battle">技1</b> →</span>
@@ -327,17 +328,18 @@ function drBindInput() {
 }
 
 /* ---------- タップモード ----------
-   タップエリアに指を置いたら、tapDecideMs ミリ秒のあいだ様子を見る:
-     swipeDist 以上動いた → スワイプ（向きで スライディング・スキル①②③）
-     動かずに離した、または時間が過ぎた → タップ（ジャンプ。押したままならバタ足）
+   タップエリアに指を置いたら、tapDecideMs ミリ秒（2〜3フレーム）だけ様子を見る:
+     下・右・左へ swipeDist 以上動いた → スワイプ（下 … スライディング・急降下 / 右 … スキル① / 左 … スキル③）
+     上へ少しでも動いた・動かずに離した・時間が過ぎた → ジャンプ（押したままならバタ足）
+   スワイプは指を置いた瞬間から速く動くので、短い時間で見分けられる（ジャンプが遅れて感じないように、待つ時間は短くしている）
    ジャンプしたあと、指を置いたまま大きく動かしたら、そのスワイプも1回だけ使える（ジャンプ → 下へスワイプで急降下 など） */
 function drBindTapArea(pads) {
   const C = DR_CONFIG;
   const touches = new Map();   // pointerId → { x, y, state: 'wait' | 'tap' | 'done', timer, area }
   const actFor = dir => {
     if (dir === 'down') return 'slide';
-    const n = { right: 0, up: 1, left: 2 }[dir];
-    return dr.mode === 'phase' ? 'pskill' + n : 'skill' + n;   // バトル中は、その技のボタン（左から順に①②③）
+    const n = { right: 0, left: 2 }[dir];
+    return dr.mode === 'phase' ? 'pskill' + n : 'skill' + n;   // バトル中は、その技のボタン（左から1番目・3番目）
   };
   const flash = (area, dir) => {
     const h = area.querySelector(`.dr-tap-hint[data-dir="${dir}"]`);
@@ -364,10 +366,15 @@ function drBindTapArea(pads) {
     if (!t || t.state === 'done') return;
     t.lx = e.clientX; t.ly = e.clientY;
     const ox = t.state === 'tap' ? t.ax : t.x, oy = t.state === 'tap' ? t.ay : t.y;
-    const dx = e.clientX - ox, dy = e.clientY - oy;
-    const need = t.state === 'tap' ? C.swipeDist * 1.5 : C.swipeDist;   // ジャンプのあとは少し大きく動かしたときだけ
-    if (Math.hypot(dx, dy) < need) return;
+    const dx = e.clientX - ox, dy = e.clientY - oy, dist = Math.hypot(dx, dy);
     const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    // 上へ動いた：すぐにジャンプ（もうジャンプしていたら何もしない）
+    if (dir === 'up') {
+      if (t.state === 'wait' && dist >= 4) { clearTimeout(t.timer); flash(t.area, 'up'); tap(e.pointerId, t); }
+      return;
+    }
+    const need = t.state === 'tap' ? C.swipeDist * 2.5 : C.swipeDist;   // ジャンプのあとは、大きく動かしたときだけ（急降下など）
+    if (dist < need) return;
     clearTimeout(t.timer);
     if (t.state === 'tap') dr.jumpHeld.delete('p' + e.pointerId);   // バタ足もやめる
     t.state = 'done';
@@ -2038,6 +2045,12 @@ function drUpdatePads() {
       dh.querySelector('.dr-half-fill').style.width = diveRatio * 100 + '%';
     });
     document.querySelectorAll('.dr-tap-area').forEach(a => a.classList.toggle('has-dive', !!dive));
+  }
+  // タップエリアの「長押しでバタ足」は、バタ足ジャンプを覚えたら出す
+  const flutter = !!(run && run.flutterTime > 0);
+  if (dr.uiCache.flutter !== flutter) {
+    dr.uiCache.flutter = flutter;
+    document.querySelectorAll('.dr-tap-area').forEach(a => a.classList.toggle('has-flutter', flutter));
   }
   drUpdateEffectBars(run);
 }
