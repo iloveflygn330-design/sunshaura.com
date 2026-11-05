@@ -45,7 +45,7 @@ const DR_CONFIG = {
        動かなければ（または上へ動いたら、すぐに）ジャンプ。
        tapDecideMs を小さくするとジャンプが早く出るが、ゆっくりスワイプしたときにジャンプになりやすい。
        swipeDist を小さくするとスワイプが早く決まるが、指のぶれでスワイプになりやすい */
-  tapDecideMs: 60,
+  tapDecideMs: 120,
   swipeDist: 10,
   stumbleTime: 0.45,       // クールタイム中のスキルを使おうとしたときに「おっとと」とよろける時間（秒）
   // バタ足ジャンプ（パッシブ。浮いていられる秒数は dinorun-items.js の flutter アイテムで決める）
