@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-06",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今日もVRニュースの時間なのだ。", "read": "おはようなのだ！今日もブイアールニュースの時間なのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはよう、ずんだもん。金曜日もよろしくね。", "face": "smile" },
+      { "who": "zundamon", "text": "11月6日のニュースは4本なのだ！", "read": "じゅういちがつむいかのニュースは、よんほんなのだ！" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChat向けの服が新しく発売されたのだ。", "read": "いっぽんめ。ブイアールチャット向けの服が新しく発売されたのだ。" },
+      { "who": "zundamon", "text": "アパレルの夢展望の服を、アバター用に作ったのだ。", "read": "アパレルのゆめてんぼうの服を、アバター用に作ったのだ。" },
+      { "who": "zunko", "text": "現実のお店の服を、アバターで着られるの？", "face": "surprise" },
+      { "who": "zundamon", "text": "そうなのだ。服5つと靴1つ、全部で6点なのだ。", "read": "そうなのだ。服いつつと靴ひとつ、全部でろくてんなのだ。" },
+      { "who": "zundamon", "text": "値段はアバター1体分で800円から1800円なのだ。", "read": "値段はアバターいったいぶんで、はっぴゃくえんから、せんはっぴゃくえんなのだ。" },
+      { "who": "zunko", "text": "対応しているアバターは決まってるのかな？", "face": "look" },
+      { "who": "zundamon", "text": "アイテムごとに6から18体なのだ。確認が大事なのだ。", "read": "アイテムごとに、ろくから、じゅうはったいなのだ。確認が大事なのだ。" },
+      { "who": "zunko", "text": "レースのドレス、ちょっと着てみたいな。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Quest Linkの困った不具合が直ったのだ。", "read": "にほんめ。クエストリンクの困った不具合が直ったのだ。" },
+      { "who": "zundamon", "text": "NVIDIAのPCだと、映像が固まることがあったのだ。", "read": "エヌビディアのピーシーだと、映像が固まることがあったのだ。", "face": "surprise" },
+      { "who": "zunko", "text": "VRの中で画面が止まるのは困るよね。", "read": "ブイアールの中で画面が止まるのは困るよね。", "face": "surprise" },
+      { "who": "zundamon", "text": "3月から、なんと233日も続いていたのだ。", "read": "さんがつから、なんと、にひゃくさんじゅうさんにちも続いていたのだ。", "face": "amazement", "style": "なみだめ" },
+      { "who": "zundamon", "text": "ドライバー621.01で修正されたのだ。", "read": "ドライバー、ろくにいちてんぜろいちで修正されたのだ。" },
+      { "who": "zunko", "text": "古いドライバーに戻していた人は、更新だね。" },
+      { "who": "zundamon", "text": "これで安心してVRChatで遊べるのだ！", "read": "これで安心してブイアールチャットで遊べるのだ！", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。メガネ型の端末が11月12日に予約開始なのだ。", "read": "さんぼんめ。メガネ型の端末が、じゅういちがつじゅうににちに予約開始なのだ。" },
+      { "who": "zundamon", "text": "SamsungとGoogleのAndroid XRの端末なのだ。", "read": "サムスンとグーグルの、アンドロイドエックスアールの端末なのだ。" },
+      { "who": "zunko", "text": "メガネに画面が映るの？", "face": "look" },
+      { "who": "zundamon", "text": "画面はないのだ。カメラと音声で使うのだ。" },
+      { "who": "zundamon", "text": "電池は最大9時間で、ケースでも充電できるのだ。", "read": "電池はさいだいくじかんで、ケースでも充電できるのだ。" },
+      { "who": "zunko", "text": "お値段はいくらなんだろう？" },
+      { "who": "zundamon", "text": "値段はまだ発表されていないのだ。続報待ちなのだ。", "face": "look" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。イギリスでスマートグラスの規制の話なのだ。", "read": "よんほんめ。イギリスでスマートグラスの規制の話なのだ。" },
+      { "who": "zundamon", "text": "買える人や使える場所を、制限する案を検討中なのだ。" },
+      { "who": "zunko", "text": "どうしてそういう話になったの？", "face": "surprise" },
+      { "who": "zundamon", "text": "録画ランプを隠した、隠し撮りが心配されているのだ。", "face": "surprise" },
+      { "who": "zundamon", "text": "でも、目の不自由な人の役に立つ使い方もあるのだ。" },
+      { "who": "zunko", "text": "便利さと安心、どっちも大事にしてほしいね。" },
+      { "who": "zundamon", "text": "まだ方針は決まっていないのだ。見守るのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "うお座", "comment": "新しい服で気分が上がる日", "lucky": "レースのハンカチ" },
+        { "rank": 2, "sign": "ふたご座", "comment": "友だちとの会話に発見あり", "lucky": "メガネ拭き" },
+        { "rank": 3, "sign": "さそり座", "comment": "やり直しがうまくいく予感", "lucky": "USBケーブル" },
+        { "rank": 4, "sign": "おとめ座", "comment": "こまめな確認が実を結ぶ", "lucky": "付せん" },
+        { "rank": 5, "sign": "しし座", "comment": "堂々とした姿が好印象", "lucky": "スニーカー" },
+        { "rank": 6, "sign": "やぎ座", "comment": "コツコツが報われる一日", "lucky": "マグカップ" },
+        { "rank": 7, "sign": "おひつじ座", "comment": "気になることに挑戦を", "lucky": "赤いペン" },
+        { "rank": 8, "sign": "かに座", "comment": "家でのんびりが吉", "lucky": "ブランケット" },
+        { "rank": 9, "sign": "てんびん座", "comment": "迷ったら直感を信じて", "lucky": "コイン" },
+        { "rank": 10, "sign": "いて座", "comment": "寄り道で楽しい出会いが", "lucky": "地図アプリ" },
+        { "rank": 11, "sign": "みずがめ座", "comment": "早めの休憩でリフレッシュ", "lucky": "ホットココア" },
+        { "rank": 12, "sign": "おうし座", "comment": "甘いもので元気をチャージ", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、うお座ですわ。新しい服で気分が上がる日。", "read": "今日のいちいは、うおざですわ。新しい服で気分が上がる日。", "face": "smile" },
+        { "who": "itako", "text": "2位はふたご座、3位はさそり座ですわ。", "read": "にいはふたござ、さんいはさそりざですわ。" },
+        { "who": "zundamon", "text": "さっきの服のニュースとつながってるのだ！", "face": "surprise" },
+        { "who": "itako", "text": "12位はおうし座。甘いもので元気をチャージですわ。", "read": "じゅうにいは、おうしざ。甘いもので元気をチャージですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅なのだ！最高なのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zunko", "text": "今日も聞いてくれてありがとう。よい週末を！", "face": "smile" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
