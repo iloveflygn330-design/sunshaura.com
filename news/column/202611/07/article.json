@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-07",
+  "title": "VRChat、パブリックインスタンスに「オーナー」導入へほか、今日のVR・AIニュース4本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "今日は、VRChatの開発者向けアップデートで発表された、パブリックインスタンスを作った人がオーナーになる仕様変更からお届けします。あわせて、協力VR強盗ゲーム『PAYDAY: Aces High』の発売とレビュー、ShiftallとTBSが共同開発する配信機器「HOMRA 4K」、MetaのAIアプリ「Muse」の音声会話機能を紹介します。",
+  "items": [
+    {
+      "headline": "VRChat、パブリックの作成者がオーナーに",
+      "category": "VRChat公式",
+      "overview": "VRChatが11月5日（現地時間）に開発者向けアップデート情報を公開し、次のオープンベータ（2026.4.2）から、パブリックインスタンスを作ったユーザーがそのインスタンスのオーナーになると発表しました。オーナーは、ほかのユーザーへの警告やマイクの強制ミュート、キックのほか、コンテンツ設定の変更やインスタンスを閉じる操作ができます。ワールドの作者は、自分のワールドでは引き続きモデレーションの権限を持ちます。フォーラムでは反対の声も多く寄せられており、VRChatは反応を見ながら、元に戻すことも検討するとしています。",
+      "points": [
+        "まずはオープンベータ版（2026.4.2）で始まる予定",
+        "オーナーが退出しても、権限はほかの人に移らない",
+        "クイックメニューやプロフィールの配置も新しくなる",
+        "新しい配色テーマも登場。旧Teal配色に無料で戻せる"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum（Developer Update - 5 November 2026）", "url": "https://ask.vrchat.com/t/developer-update-5-november-2026/49298" },
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/vrchat-dev-update-20261105/" }
+      ]
+    },
+    {
+      "headline": "協力VR強盗『PAYDAY: Aces High』が発売",
+      "category": "その他",
+      "overview": "人気の強盗ゲーム「PAYDAY」シリーズのVR版『PAYDAY: Aces High』が、11月5日に発売されました。開発・販売はFast Travel Gamesで、対応機種はMeta QuestとSteamVR（Steam Frameにも対応）、価格は25ドルです。海外メディアのRoad to VRはレビューで10点中6.5点をつけ、VR向けにしっかり作られていてQuest 3でも見た目が良い一方、敵のAIの動きが物足りないと評価しています。",
+      "points": [
+        "Quest版とSteamVR版があり、価格は25ドル",
+        "Road to VRのレビューは10点中6.5点",
+        "快適さの項目は10点中10点の高評価",
+        "良い仲間と遊べないと、敵AIの弱さが目立つとの指摘"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/payday-aces-high-review-quest-steam-vr/" }
+      ]
+    },
+    {
+      "headline": "ShiftallとTBS、配信機器「HOMRA 4K」を開発",
+      "category": "その他",
+      "overview": "ShiftallとTBSテレビが、低遅延の映像配信デバイス「HOMRA 4K」を共同開発すると発表しました。SDIやHDMIのカメラをつなぐだけで、PCを使わずにYouTube LiveやTwitchなどへ最大4か所に同時配信できます。発売は2027年3月の予定で、価格は約10万円です。Shiftallは、映像の変換処理をPCから切り離せるので、VTuberの配信でPCの負担を減らせるとしています。",
+      "points": [
+        "発売は2027年3月予定、価格は約10万円",
+        "PCなしでカメラから直接配信できる",
+        "配信しながらSDカードに最大4K・60fpsで録画できる",
+        "仕様は開発中のため、変わる可能性がある"
+      ],
+      "sources": [
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/shiftall-tbs-homra-4k/" }
+      ]
+    },
+    {
+      "headline": "MetaのAIアプリ「Muse」、音声会話とアバターに対応",
+      "category": "AI",
+      "overview": "Metaが提供するAIアプリ「Muse」に、声で会話できる機能と、会話に合わせて表情や身ぶりを見せるアバターが追加されました。まずはアメリカで、スマホ・Web・Mac向けに順次提供されています。旅行の計画を声で相談したり、面接やプレゼンの練習をしたりでき、話している途中で割り込むこともできます。今後は、MetaのAIグラスでも音声会話に対応する予定です。",
+      "points": [
+        "音声会話は、まずアメリカから提供開始",
+        "声の種類は数百種類から選べる",
+        "面接やプレゼンの練習相手としても使える",
+        "今後、MetaのAIグラスでも使えるようになる予定"
+      ],
+      "sources": [
+        { "name": "Mogura VR", "url": "https://www.moguravr.com/muse-app-voice-avatar/" }
+      ]
+    }
+  ],
+  "outro": "パブリックインスタンスのオーナー機能は、まずベータ版での試験になります。気になる人は、正式版に来る前に内容をチェックしておきましょう。"
+}

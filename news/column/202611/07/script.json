@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-07",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "こんにちは、ずんだもんなのだ！土曜日のニュースなのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "きりたんです。休日なので、今日はずっと画面の前です。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "それはいつもなのだ。11月7日のニュースは4本なのだ！", "read": "それはいつもなのだ。じゅういちがつなのかのニュースは、よんほんなのだ！", "face": "amazement" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatのパブリックに、オーナーができるのだ！", "read": "いっぽんめ。ブイアールチャットのパブリックに、オーナーができるのだ！", "face": "surprise" },
+      { "who": "kiritan", "text": "オーナーって、誰がなるんですか？", "face": "look" },
+      { "who": "zundamon", "text": "パブリックインスタンスを作った人が、オーナーになるのだ。" },
+      { "who": "zundamon", "text": "警告やミュート、キックができるようになるのだ。" },
+      { "who": "kiritan", "text": "それ、困った人に使われたら大変じゃないですか。", "face": "amazement" },
+      { "who": "zundamon", "text": "ワールドの作者は、自分のワールドでは権限が残るのだ。" },
+      { "who": "zundamon", "text": "反対の声も多くて、元に戻すことも考えるそうなのだ。", "face": "look" },
+      { "who": "zundamon", "text": "まずはベータ版の2026.4.2で試すのだ。", "read": "まずはベータ版の、にせんにじゅうろく、てんよん、てんにで試すのだ。" },
+      { "who": "kiritan", "text": "正式版の前に、様子を見ておきたいですね。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。VRの強盗ゲーム、PAYDAY: Aces Highが発売なのだ。", "read": "にほんめ。ブイアールの強盗ゲーム、ペイデイ、エーシズハイが発売なのだ。" },
+      { "who": "kiritan", "text": "ゲームの話なら、聞かないわけにはいきません。", "face": "smile" },
+      { "who": "zundamon", "text": "QuestとSteamVRで遊べて、値段は25ドルなのだ。", "read": "クエストとスチームブイアールで遊べて、値段はにじゅうごドルなのだ。" },
+      { "who": "zundamon", "text": "海外のレビューでは、10点中6.5点だったのだ。", "read": "海外のレビューでは、じってんちゅう、ろくてんごてんだったのだ。" },
+      { "who": "kiritan", "text": "なかなか辛口ですね。どこが惜しいんですか？", "face": "look" },
+      { "who": "zundamon", "text": "敵の動きが、ちょっと物足りないそうなのだ。" },
+      { "who": "zundamon", "text": "でも、酔いにくさの項目は満点だったのだ！", "face": "smile" },
+      { "who": "kiritan", "text": "上手な仲間と組めれば、楽しめそうです。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。ShiftallとTBSが、配信用の機械を作るのだ。", "read": "さんぼんめ。シフトールとティービーエスが、配信用の機械を作るのだ。" },
+      { "who": "zundamon", "text": "名前はHOMRA 4K。PCなしでカメラから配信できるのだ。", "read": "名前はホムラヨンケー。ピーシーなしでカメラから配信できるのだ。" },
+      { "who": "kiritan", "text": "パソコンの負担が減るのは、ありがたいですね。" },
+      { "who": "zundamon", "text": "VTuberの配信にも使えるそうなのだ。", "read": "ブイチューバーの配信にも使えるそうなのだ。" },
+      { "who": "kiritan", "text": "いつ出るんですか？お値段は？", "face": "look" },
+      { "who": "zundamon", "text": "2027年3月の予定で、約10万円なのだ。", "read": "にせんにじゅうななねんさんがつの予定で、やくじゅうまんえんなのだ。" },
+      { "who": "kiritan", "text": "わたしのお小遣いでは、遠い未来の話です。", "face": "nihilistic" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。MetaのAIアプリMuseが、声で話せるようになったのだ。", "read": "よんほんめ。メタのエーアイアプリ、ミューズが、声で話せるようになったのだ。" },
+      { "who": "zundamon", "text": "表情が変わるアバターも、一緒に出てくるのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "どんなことに使えるんですか？" },
+      { "who": "zundamon", "text": "旅行の相談や、面接の練習ができるのだ。" },
+      { "who": "zundamon", "text": "話している途中で、割り込むこともできるのだ。" },
+      { "who": "zundamon", "text": "まずはアメリカからで、AIグラスにも来る予定なのだ。", "read": "まずはアメリカからで、エーアイグラスにも来る予定なのだ。" },
+      { "who": "kiritan", "text": "人と話す練習相手にも、よさそうですね。", "face": "smile" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "みずがめ座", "comment": "新しい場所で良い出会いあり", "lucky": "ネームプレート" },
+        { "rank": 2, "sign": "てんびん座", "comment": "話し合いがうまくまとまる日", "lucky": "メモ帳" },
+        { "rank": 3, "sign": "おひつじ座", "comment": "気になったことに挑戦しよう", "lucky": "赤いペン" },
+        { "rank": 4, "sign": "いて座", "comment": "遠くの友達から良い知らせ", "lucky": "ポストカード" },
+        { "rank": 5, "sign": "おうし座", "comment": "おいしい物で元気が出る", "lucky": "温かいお茶" },
+        { "rank": 6, "sign": "うお座", "comment": "のんびり過ごすと運気アップ", "lucky": "ブランケット" },
+        { "rank": 7, "sign": "かに座", "comment": "片付けで探し物が見つかる", "lucky": "収納ボックス" },
+        { "rank": 8, "sign": "しし座", "comment": "人を手伝うと感謝される", "lucky": "ハンカチ" },
+        { "rank": 9, "sign": "ふたご座", "comment": "ゲームで新しい発見あり", "lucky": "コントローラー" },
+        { "rank": 10, "sign": "やぎ座", "comment": "早めの休憩が吉", "lucky": "アイマスク" },
+        { "rank": 11, "sign": "おとめ座", "comment": "予定に少し余裕を持とう", "lucky": "腕時計" },
+        { "rank": 12, "sign": "さそり座", "comment": "ゆっくり進めば大丈夫", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ。イタコ、お願いするのだ！", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はみずがめ座。新しい場所で良い出会いがありますわ。", "read": "今日のいちいは、みずがめざ。新しい場所で良い出会いがありますわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はてんびん座、3位はおひつじ座です。", "read": "にいは、てんびんざ。さんいは、おひつじざです。" },
+        { "who": "zundamon", "text": "新しい場所なら、新しいワールドに行ってみるのだ！", "face": "smile" },
+        { "who": "itako", "text": "そして12位はさそり座。ゆっくり進めば大丈夫ですわ。", "read": "そして、じゅうにいは、さそりざ。ゆっくり進めば大丈夫ですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅なのだ。僕にお任せなのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zundamon", "text": "今日も聞いてくれてありがとうなのだ！", "face": "smile" },
+      { "who": "kiritan", "text": "わたしは週末、積みゲーを崩してきます。", "face": "smile" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
