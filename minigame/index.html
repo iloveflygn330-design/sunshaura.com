@@ -343,7 +343,11 @@
                 <p class="dr-shop-sub">スキルボタン <small id="dr-shop-slots-help"></small></p>
                 <div class="dr-shop-slots" id="dr-shop-slots"></div>
               </div>
-              <button type="button" class="dr-menu-btn is-main" id="dr-shop-close" data-dr="shop-close">ゲームにもどる <span class="dr-key">Enter</span></button>
+              <!-- 「購入キャンセル」… このショップで買ったもの・入れ替え・リロールを全部なかったことにする（ショップに入ったときに戻る） -->
+              <div class="dr-menu-btns dr-shop-btns">
+                <button type="button" class="dr-menu-btn" id="dr-shop-undo" data-dr="shop-undo" disabled>購入キャンセル <span class="dr-key">BS</span></button>
+                <button type="button" class="dr-menu-btn is-main" id="dr-shop-close" data-dr="shop-close">ゲームにもどる <span class="dr-key">Enter</span></button>
+              </div>
             </div>
           </div>
 

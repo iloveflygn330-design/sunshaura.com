@@ -488,11 +488,14 @@ function drOnKeyDown(e) {
         if (c === 'Digit1' || c === 'KeyA') drPickSlot(0);
         else if (c === 'Digit2' || c === 'KeyS') drPickSlot(1);
         else if (c === 'Digit3' || c === 'KeyD') drPickSlot(2);
+        else if (c === 'Digit4' || c === 'KeyF') drPickSlot('bench');
+        else if (c === 'Escape' || c === 'Backspace') drPickCancel();
       } else if (c === 'Digit1') drBuy(0);
       else if (c === 'Digit2') drBuy(1);
       else if (c === 'Digit3') drBuy(2);
       else if (c === 'Digit4') drBuy(3);
       else if (c === 'KeyR') drReroll();
+      else if (c === 'Backspace') drShopUndoAll();
       else if (c === 'Enter' || c === 'Escape') drCloseShop();
       break;
     case 'entry':
@@ -545,7 +548,9 @@ function drUiAction(act, el) {
     case 'retry': drStartGame(); break;
     case 'sound': drToggleSound(); break;
     case 'buy': drBuy(+el.dataset.index); break;
-    case 'pick-slot': drPickSlot(+el.dataset.slot); break;
+    case 'pick-slot': drPickSlot(el.dataset.slot === 'bench' ? 'bench' : +el.dataset.slot); break;
+    case 'pick-cancel': drPickCancel(); break;      // スキルのボタン選びをやめる（買う前に戻す）
+    case 'shop-undo': drShopUndoAll(); break;       // 購入キャンセル（ショップに入ったときに戻す）
     case 'swap-slot': drSwapSelect(+el.dataset.slot); break;
     case 'over-next': drAfterResult(); break;
     case 'tab-month': drSetRankTab('month'); break;
@@ -1615,8 +1620,68 @@ function drOpenShop(run) {
   const discount = run.shopCount === 0 ? (DR_CONFIG.firstShopDiscount || 1) : 1;   // 最初のショップだけ割引
   dr.shop = { offers: drMakeOffers(run), sold: [], picking: null, swapSel: null, rerollsLeft: run.rerolls, discount };
   drAfterShop(run);
+  // 「購入キャンセル」で戻すための、ショップに入ったときの状態（drAfterShop のあとに取る＝次のショップの場所などは戻さない）
+  dr.shop.opening = drShopSnapshot(run, dr.shop);
+  dr.shop.changed = false;   // 何か買った・入れ替えた・リロールしたら true（「購入キャンセル」を押せるようになる）
   drSetMode('shop');
   drRenderShop();
+}
+
+/* ---------- ショップの「やりなおし」 ----------
+   買い物の前の状態を写しておき、あとで戻す。使うところは2つ:
+     ・「購入キャンセル」ボタン … ショップに入ったときの状態（dr.shop.opening）に全部戻す
+     ・スキルを買ってボタンを選んでいるときの「キャンセル」 … そのスキルを買う前（dr.shop.pending）に戻す
+   写すもの:
+     ・run の数値・文字・true/false は全部（コイン・ライフ・ジャンプ回数・リロール回数・回復薬など。
+       ショップの間はゲームが止まっているので、ショップ以外で変わるものはない）
+     ・run の中の入れ物は、下の DR_SHOP_UNDO_KEYS に書いたものだけ（中身ごと写す）
+     ・ショップの品ぞろえ・売り切れ・のこりリロール回数
+   ★拡張予定: アイテムの apply() で run の中の「入れ物」（{ } や [ ]）を書き換えるようにしたら、
+     その名前を DR_SHOP_UNDO_KEYS に足す（足さないと「購入キャンセル」で戻らない）。
+     数値（run.xxx = 1 のようなもの）は自動で戻るので、足さなくてよい。 */
+const DR_SHOP_UNDO_KEYS = ['levels', 'skills', 'cooldowns', 'slots', 'bench'];
+
+function drShopSnapshot(run, shop) {
+  const vals = {};
+  Object.keys(run).forEach(k => { const v = run[k]; if (v === null || (typeof v !== 'object' && typeof v !== 'function')) vals[k] = v; });
+  const boxes = {};
+  DR_SHOP_UNDO_KEYS.forEach(k => { boxes[k] = JSON.parse(JSON.stringify(run[k])); });
+  return { vals, boxes, offers: shop.offers.slice(), sold: shop.sold.slice(), rerollsLeft: shop.rerollsLeft };
+}
+
+function drShopRestore(run, shop, snap) {
+  Object.keys(run).forEach(k => {   // あとから増えた数値は消す（写したときになかったもの）
+    const v = run[k];
+    if ((v === null || (typeof v !== 'object' && typeof v !== 'function')) && !(k in snap.vals)) delete run[k];
+  });
+  Object.assign(run, snap.vals);
+  DR_SHOP_UNDO_KEYS.forEach(k => { run[k] = JSON.parse(JSON.stringify(snap.boxes[k])); });
+  shop.offers = snap.offers.slice();
+  shop.sold = snap.sold.slice();
+  shop.rerollsLeft = snap.rerollsLeft;
+  shop.picking = null; shop.pending = null; shop.pickIndex = null; shop.swapSel = null;
+  dr.uiCache = {};   // スキルボタンの表示を作り直す
+}
+
+/* 「購入キャンセル」：ショップに入ったときの状態に戻す（買ったもの・入れ替え・リロールを全部なかったことにする） */
+function drShopUndoAll() {
+  const run = dr.run, shop = dr.shop;
+  if (!run || !shop || !shop.opening || !shop.changed) return;
+  drShopRestore(run, shop, shop.opening);
+  shop.changed = false;
+  drRenderShop();
+  drUpdateHud(true);
+}
+
+/* スキルを買ってボタンを選んでいるときの「キャンセル」：そのスキルを買う前に戻す */
+function drPickCancel() {
+  const run = dr.run, shop = dr.shop;
+  if (!run || !shop || !shop.picking || !shop.pending) return;
+  const changed = shop.pending.changed;
+  drShopRestore(run, shop, shop.pending);
+  shop.changed = changed;
+  drRenderShop();
+  drUpdateHud(true);
 }
 
 /* 品ぞろえを入れ替える（パッシブ「リロール」を持っているときだけ。1回のショップで run.rerolls 回まで） */
@@ -1626,6 +1691,7 @@ function drReroll() {
   shop.rerollsLeft--;
   shop.offers = drMakeOffers(run);
   shop.sold = [];
+  shop.changed = true;
   drSound('reroll');
   drRenderShop();
 }
@@ -1643,6 +1709,9 @@ function drBuy(index) {
   if (!it || shop.sold.includes(index)) return;
   const price = drShopPrice(run, it);
   if (Math.floor(run.wallet) < price) return;
+  // スキルは、ボタンを選ぶところで「キャンセル」できるように、買う前の状態を写しておく
+  if (it.type === 'skill') { shop.pending = drShopSnapshot(run, shop); shop.pending.changed = shop.changed; }
+  shop.changed = true;
   run.wallet -= price;
   run.levels[it.id] = (run.levels[it.id] || 0) + 1;
   shop.sold.push(index);
@@ -1653,26 +1722,29 @@ function drBuy(index) {
     run.cooldowns[it.skill] = 0;
     if (!base.button) {            // button: 'slide' のスキル（急降下）はスライディングボタンに付くので、選ばない
       const empty = run.slots.indexOf(null);
-      shop.picking = it.skill;     // どのボタンに入れるか選んでもらう（空きがあっても選べる）
+      shop.picking = it.skill;     // どのボタンに入れるか選んでもらう（空きがあっても、控えにも入れられる）
       shop.pickDefault = empty;
-    }
+      shop.pickIndex = index;      // このカードの「購入」ボタンが「キャンセル」になる
+    } else shop.pending = null;
   } else if (typeof it.apply === 'function') {
-    const rerollsBefore = run.rerolls;
+    // リロールを買っても、このショップの「のこり」は増やさない（次のショップから使える。drOpenShop で run.rerolls 回になる）
     it.apply(run, it.requires ? run.skills[it.requires] : undefined);
-    shop.rerollsLeft += run.rerolls - rerollsBefore;   // リロールを買ったら、このショップからすぐ使える
   }
   drRenderShop();
   drUpdateHud(true);
 }
 
-/* 覚えたスキルを入れるボタンを選ぶ（入っていたスキルは「控え」に回る） */
+/* 覚えたスキルを入れるボタンを選ぶ（0〜2 がボタン①〜③。入っていたスキルは「控え」に回る。'bench' で控えに入れる） */
 function drPickSlot(slot) {
   const run = dr.run, shop = dr.shop;
   if (!run || !shop || !shop.picking) return;
-  const old = run.slots[slot];
-  if (old) run.bench.push(old);
-  run.slots[slot] = shop.picking;
-  shop.picking = null;
+  if (slot === 'bench') run.bench.push(shop.picking);
+  else {
+    const old = run.slots[slot];
+    if (old) run.bench.push(old);
+    run.slots[slot] = shop.picking;
+  }
+  shop.picking = null; shop.pending = null; shop.pickIndex = null;
   drRenderShop();
 }
 
@@ -1686,6 +1758,7 @@ function drSwapSelect(pos) {
   if (a !== b) {
     const all = run.slots.concat(run.bench);
     const tmp = all[a]; all[a] = all[b]; all[b] = tmp;
+    shop.changed = true;
     run.slots = all.slice(0, 3);
     run.bench = all.slice(3).filter(Boolean);
   }
@@ -1717,9 +1790,19 @@ function drRenderShop() {
       const price = sold ? 0 : drShopPrice(run, it);
       const normal = sold ? 0 : drItemPrice(run, it);   // 割引前の値段（割引中は消し線で出す）
       const max = it.maxLevel || 1;
+      const picking = shop.picking && shop.pickIndex === i;   // いまボタンを選んでいるスキル（購入ボタンが「キャンセル」になる）
       const lvText = it.type === 'skill' ? 'NEW スキル' : it.consumable ? '1回きり' : (sold ? `Lv.${lv} / ${max}` : `Lv.${lv} → ${lv + 1} / ${max}`);
       const icon = it.image ? `<img src="${it.image}" alt="">` : (it.icon || '★');
-      const can = !sold && wallet >= price;
+      const can = !sold && !shop.picking && wallet >= price;
+      if (picking) {
+        return `<div class="dr-card is-picking">
+          <div class="dr-card-icon">${icon}</div>
+          <div class="dr-card-name">${it.name}</div>
+          <div class="dr-card-lv">${lvText}</div>
+          <div class="dr-card-desc">${it.desc || ''}</div>
+          <button type="button" class="dr-card-buy is-cancel" data-dr="pick-cancel"><span class="dr-key">Esc</span>キャンセル</button>
+        </div>`;
+      }
       return `<div class="dr-card${sold ? ' is-sold' : ''}">
           <div class="dr-card-icon">${icon}</div>
           <div class="dr-card-name">${it.name}</div>
@@ -1755,9 +1838,14 @@ function drRenderShop() {
     document.getElementById('dr-shop-pick-btns').innerHTML = run.slots.map((id, i) =>
       `<button type="button" class="dr-pick-btn${i === shop.pickDefault ? ' is-suggest' : ''}" data-dr="pick-slot" data-slot="${i}">
          <span class="dr-key">${'ASD'[i]}</span>${'①②③'[i]}<small>${id ? DR_SKILLS[id].name + 'と入れ替え' : '空き'}</small>
-       </button>`).join('');
+       </button>`).join('')
+      // 控え：ボタンには入れずにしまっておく（あとで下の「スキルボタン」の入れ替えで使える）
+      + `<button type="button" class="dr-pick-btn is-bench" data-dr="pick-slot" data-slot="bench">
+         <span class="dr-key">F</span>控え<small>あとで入れ替え</small>
+       </button>`;
   }
   document.getElementById('dr-shop-close').disabled = !!shop.picking;
+  document.getElementById('dr-shop-undo').disabled = !!shop.picking || !shop.changed;
 }
 
 /* ---------- ゲームオーバー ----------
