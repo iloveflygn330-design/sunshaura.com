@@ -544,7 +544,12 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 .dr-slot-chip.is-empty { color: #8A8FB5; }
 .dr-slot-chip.is-selected { border-color: var(--dr-yellow); color: var(--dr-yellow); }
 .dr-slot-pos { margin-right: 6px; color: var(--dr-mint); }
-#dr-shop-close { margin-top: 14px; }
+.dr-shop-btns { margin-top: 14px; flex-wrap: nowrap; }
+.dr-shop-btns .dr-menu-btn { white-space: nowrap; }
+/* スキルのボタン選び中に「購入」ボタンが変わる「キャンセル」 */
+.dr-card.is-picking { border-color: var(--dr-yellow); }
+.dr-card-buy.is-cancel { background: #50557A; border-color: #fff; }
+.dr-pick-btn.is-bench { background: #50557A; border-color: #8A8FB5; color: #fff; }
 
 /* --- 結果・名前入力 --- */
 .dr-gameover { font-size: 30px; color: var(--dr-pink); letter-spacing: 0.1em; text-shadow: 3px 3px 0 var(--dr-navy); }
@@ -599,6 +604,9 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   .dr-card-lv { grid-area: lv; font-size: 11px; }
   .dr-card-desc { grid-area: desc; font-size: 11px; line-height: 1.4; }
   .dr-card-buy { grid-area: buy; margin: 0; padding: 10px 4px; font-size: 14px; }
+  .dr-card-buy.is-cancel .dr-key { display: none; }   /* 「キャンセル」の文字とキー表示が重ならないように */
+  .dr-shop-btns { gap: 8px; }
+  .dr-shop-btns .dr-menu-btn { min-width: 0; flex: 1; padding: 10px 8px; font-size: 15px; }
 }
 
 /* スマホ横持ちのショップ：高さが少ないので、文字とすき間を小さくする */
@@ -620,7 +628,8 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   .dr-shop-slots-wrap { margin-top: 6px; }
   .dr-shop-sub { font-size: 12px; margin-bottom: 3px; }
   .dr-slot-chip { padding: 2px 8px; font-size: 12px; }
-  #dr-shop-close { margin-top: 6px; padding: 5px 16px; font-size: 14px; }
+  .dr-shop-btns { margin-top: 6px; }
+  .dr-shop-btns .dr-menu-btn { padding: 5px 16px; font-size: 14px; }
   .dr-panel-title { font-size: 16px; }
   /* 結果画面：内訳を2列にして、ボタンを小さく */
   .dr-gameover { font-size: 22px; }
@@ -632,7 +641,7 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
 }
 
 /* スキルをどのボタンに入れるか選んでいる間は、ボタンの入れ替え欄と「ゲームにもどる」を隠す（場所をあけるため） */
-#dr-shop.is-picking .dr-shop-slots-wrap, #dr-shop.is-picking #dr-shop-close { display: none; }
+#dr-shop.is-picking .dr-shop-slots-wrap, #dr-shop.is-picking .dr-shop-btns { display: none; }
 
 /* ヘッダーを隠したとき、ヘッダーの裏にあるページ移動の黒い帯（#loading-bar）が見えてしまうので隠す
    （ページ移動の演出中＝ .reveal が付いているときは出す） */

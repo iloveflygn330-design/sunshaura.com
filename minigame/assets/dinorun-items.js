@@ -98,9 +98,12 @@ const DR_SKILLS = {
      run.invincibleTime … ぶつかったあとの無敵時間（秒）
      run.coinMult       … コインを拾ったときの倍率（1 = ふつう）
      run.magnet         … 磁石の範囲（ドット。0 = 磁石なし）
-     run.rerolls        … 1回のショップで品ぞろえを入れ替えられる回数
+     run.rerolls        … 1回のショップで品ぞろえを入れ替えられる回数（買ったショップでは増えず、次のショップから）
      run.skills.iai.cooldown など … 覚えたスキルの数値（requires を付けたアイテムでだけ使う）
        ↑ 2つ目の引数 skill には、requires で指定したスキルの数値が入っているので、skill.cooldown のように書ける
+
+   apply で run の数値を変えたものは、ショップの「購入キャンセル」で自動で元に戻る。
+   run の中の { } や [ ] を書き換えるときは、dinorun.js の DR_SHOP_UNDO_KEYS にその名前を足す。
 
    ★ 追加するときは、下の一覧の最後（「ここに追加」の上）に1件コピーして書き換える。
    ----------------------------------------------------- */
@@ -203,7 +206,7 @@ const DR_ITEMS = [
 
   /* --- ショップ --- */
   {
-    id: 'reroll', name: 'リロール', desc: 'ショップの品ぞろえを1回入れ替えられる（毎回のショップで使える）', icon: '🔄',
+    id: 'reroll', name: 'リロール', desc: '次のショップから、品ぞろえを1回入れ替えられる（毎回のショップで使える）', icon: '🔄',
     type: 'passive', maxLevel: 2, price: 40, priceUp: 2.0,
     apply(run) { run.rerolls += 1; },
   },
