@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-08",
+  "title": "VRChatでボードゲームの祭典「バーチャルダイスパーティー2026」開幕ほか、今日のVRニュース3本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、VRChatで11月7日に始まったアナログゲームのイベント「バーチャルダイスパーティー2026 with 冒険企画局」からお届けします。あわせて、Meta Questのテスト版に登場した映画館のような視聴モードと、Quest版YouTubeで開発中とみられる新しい画面を紹介します。",
+  "items": [
+    {
+      "headline": "VRChatで「バーチャルダイスパーティー2026」開幕",
+      "category": "イベント",
+      "overview": "VRで遊ぶTRPGやボードゲームのイベント「バーチャルダイスパーティー2026 with 冒険企画局」が、11月7日から15日までの9日間、VRChatで開かれています。主催は株式会社バーチャルパーティーで、冒険企画局が協力しています。今年のテーマは音楽で、にぎやかな「Hot」と落ち着いた「Chill」の会場ワールドに、204団体が出展しています。VRボードゲームの大会「VDCP2026」や、初心者向けの体験会、ステージイベントなども予定されています。",
+      "points": [
+        "入場は無料。VRChatのアカウントがあれば参加できる",
+        "VR機器がなくても、PCやスマホのデスクトップで参加可",
+        "毎日21時〜23時はコアタイムで、全会場が公開される",
+        "ルール説明つきの初心者向け体験会も毎日開催"
+      ],
+      "sources": [
+        { "name": "バーチャルダイスパーティー2026 公式サイト", "url": "https://event.virtualparty.jp/index.html" },
+        { "name": "バーチャルダイスパーティー2026 開催概要", "url": "https://event.virtualparty.jp/about.html" }
+      ]
+    },
+    {
+      "headline": "Meta Quest、映画館のような視聴モードをテスト",
+      "category": "VR機器・技術",
+      "overview": "Meta Questのテスト版OS「Horizon OS 2.10」のPTC（パブリックテストチャンネル）で、大きな仮想スクリーンで動画を見られる「Cinema」モードが試されています。対応する動画アプリの操作バーから選ぶと、ほかのウィンドウが一時的に隠れ、もう一度選ぶと元に戻ります。海外メディアのUploadVRによると、ホームシアター風の部屋が用意され、YouTubeやDisney+、Amazon Prime Videoなどで動作したとのことです。正式版の配信時期はまだ発表されていません。",
+      "points": [
+        "まずはテスト版（PTC）の参加者に順番に配信",
+        "動画を見ている間は、ほかのウィンドウが隠れる",
+        "チャットのアバターでのビデオ通話も追加された",
+        "正式版の配信日は未発表"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/meta-quest-horizon-os-210-ptc-cinema-mode-preview/" },
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/quests-latest-ptc-brings-streamlined-interface-theater-environment/" }
+      ]
+    },
+    {
+      "headline": "Quest版YouTube、新しい画面を開発中か",
+      "category": "VR機器・技術",
+      "overview": "Meta Quest版YouTubeの没入型の表示で、動画を再生しながら別のウィンドウでほかの動画を探せる新しい画面が開発されているようです。UploadVRが最近のアプリの中に隠れた入口を見つけ、まだ開発中の画面を確認しました。新しい操作バーや、大きさを変えられるウィンドウなどが含まれていました。ただし、Googleは配信時期を発表しておらず、このまま公開されるかどうかは決まっていません。",
+      "points": [
+        "再生を止めずに、次の動画を探せるようになるかも",
+        "ウィンドウは動画の縦横比に合わせて大きさを変えられる",
+        "今あるパネルモードとは別の、没入型の表示の話",
+        "開発中のため、内容が変わったり中止になる可能性も"
+      ],
+      "sources": [
+        { "name": "MIXED News", "url": "https://mixed-news.com/en/youtube-quest-immersive-view-redesign-uploadvr-report/" }
+      ]
+    }
+  ],
+  "outro": "週末はVRChatでボードゲームを遊んでみるのもおすすめです。今日もよい一日を。"
+}

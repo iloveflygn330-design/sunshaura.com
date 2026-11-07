@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-08",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "日曜日のVRニュース、始めるのだ！", "read": "にちようびのブイアールニュース、始めるのだ！", "face": "smile" },
+      { "who": "metan", "text": "四国めたんよ。休みの朝くらい、ゆっくりさせなさいよね。", "face": "look" },
+      { "who": "zundamon", "text": "ゆっくり聞けばいいのだ。11月8日のニュースは3本なのだ！", "read": "ゆっくり聞けばいいのだ。じゅういちがつようかのニュースは、さんぼんなのだ！" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatでボードゲームのお祭りが始まったのだ！", "read": "いっぽんめ。ブイアールチャットで、ボードゲームのお祭りが始まったのだ！", "face": "smile" },
+      { "who": "zundamon", "text": "バーチャルダイスパーティー2026、15日まで開催なのだ。", "read": "バーチャルダイスパーティーにせんにじゅうろく、じゅうごにちまで開催なのだ。" },
+      { "who": "metan", "text": "ボードゲームって、VRの中でどうやって遊ぶの？", "read": "ボードゲームって、ブイアールの中でどうやって遊ぶの？", "face": "look" },
+      { "who": "zundamon", "text": "TRPGやボドゲを、VRで集まって遊ぶイベントなのだ。", "read": "ティーアールピージーやボドゲを、ブイアールで集まって遊ぶイベントなのだ。" },
+      { "who": "zundamon", "text": "出展は204団体。大会や初心者向けの体験会もあるのだ！", "read": "しゅってんは、にひゃくよんだんたい。大会や初心者向けの体験会もあるのだ！", "face": "surprise" },
+      { "who": "metan", "text": "で、入場料はおいくら？", "face": "anger" },
+      { "who": "zundamon", "text": "無料なのだ。VR機器がなくても、PCやスマホで入れるのだ。", "read": "無料なのだ。ブイアール機器がなくても、ピーシーやスマホで入れるのだ。", "face": "smile" },
+      { "who": "metan", "text": "無料なら話は別ね。ちょっと覗いてみようかしら。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Meta Questが、映画館モードを試しているのだ。", "read": "にほんめ。メタクエストが、映画館モードを試しているのだ。" },
+      { "who": "zundamon", "text": "テスト版のOSで、大きな画面で動画が見られるのだ。", "read": "テスト版のオーエスで、大きな画面で動画が見られるのだ。" },
+      { "who": "metan", "text": "今までの画面と何が違うの？", "face": "look" },
+      { "who": "zundamon", "text": "見ている間は、ほかのウィンドウが隠れるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "YouTubeやDisney+でも動いたらしいのだ。", "read": "ユーチューブや、ディズニープラスでも動いたらしいのだ。" },
+      { "who": "metan", "text": "映画館の気分を、タダで味わえるってわけね。", "face": "eat" },
+      { "who": "zundamon", "text": "でも正式に配られる日は、まだ決まってないのだ。", "face": "amazement" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Quest版YouTubeの、新しい画面の話なのだ。", "read": "さんぼんめ。クエスト版ユーチューブの、新しい画面の話なのだ。" },
+      { "who": "zundamon", "text": "動画を見ながら、別の窓で次の動画を探せるみたいなのだ。", "face": "surprise" },
+      { "who": "metan", "text": "それ、地味だけどかなり便利じゃない。", "face": "smile" },
+      { "who": "zundamon", "text": "窓の大きさも、自由に変えられるようになるのだ。" },
+      { "who": "metan", "text": "で、いつ使えるようになるのよ？", "face": "look" },
+      { "who": "zundamon", "text": "まだ開発中で、出るかどうかも決まってないのだ。", "face": "amazement", "style": "なみだめ" },
+      { "who": "metan", "text": "期待しすぎないで、気長に待ちましょ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "ふたご座", "comment": "仲間と遊ぶ時間が大吉", "lucky": "サイコロ" },
+        { "rank": 2, "sign": "やぎ座", "comment": "コツコツ続けたことが実る", "lucky": "メモ帳" },
+        { "rank": 3, "sign": "しし座", "comment": "思い切った一歩が吉", "lucky": "赤いペン" },
+        { "rank": 4, "sign": "うお座", "comment": "好きな音楽で気分が上がる", "lucky": "ヘッドホン" },
+        { "rank": 5, "sign": "おとめ座", "comment": "整理整頓で運が開ける", "lucky": "収納ボックス" },
+        { "rank": 6, "sign": "かに座", "comment": "家でのんびりが正解", "lucky": "ブランケット" },
+        { "rank": 7, "sign": "てんびん座", "comment": "人の話をよく聞くと吉", "lucky": "ハーブティー" },
+        { "rank": 8, "sign": "さそり座", "comment": "小さな発見がありそう", "lucky": "ルーペ" },
+        { "rank": 9, "sign": "おひつじ座", "comment": "あせらず深呼吸が大事", "lucky": "温かいスープ" },
+        { "rank": 10, "sign": "みずがめ座", "comment": "早めの準備で安心", "lucky": "カレンダー" },
+        { "rank": 11, "sign": "いて座", "comment": "寄り道に楽しみあり", "lucky": "スニーカー" },
+        { "rank": 12, "sign": "おうし座", "comment": "休むと明日に力が出る", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "お待ちかね、星座占いなのだ。イタコ、よろしくなのだ！", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はふたご座。仲間と遊ぶ時間が大吉ですわ。", "read": "今日のいちいは、ふたござ。仲間と遊ぶ時間が大吉ですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はやぎ座、3位はしし座です。", "read": "にいは、やぎざ。さんいは、ししざです。" },
+        { "who": "zundamon", "text": "仲間と遊ぶなら、ボードゲームにぴったりなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はおうし座。よく休めば明日に力が出ますわ。", "read": "じゅうにいは、おうしざ。よく休めば明日に力が出ますわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅なのだ。食べて休むのだ！", "face": "smile" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "無料のイベント、ちゃんと覚えておくわ。" },
+      { "who": "zundamon", "text": "今日も聞いてくれてありがとうなのだ。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
