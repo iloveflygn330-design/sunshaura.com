@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-09",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！月曜日のVRニュースなのだ。", "read": "おはようなのだ！げつようびのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはよう、ずんだもん。今週もよろしくね。", "face": "smile" },
+      { "who": "zundamon", "text": "11月9日のニュースは3本なのだ。", "read": "じゅういちがつここのかのニュースは、さんぼんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。横須賀市のVRChatで、ライブがあるのだ。", "read": "いっぽんめ。よこすかしのブイアールチャットで、ライブがあるのだ。" },
+      { "who": "zunko", "text": "市がVRChatでライブを？", "read": "しがブイアールチャットでライブを？", "face": "surprise" },
+      { "who": "zundamon", "text": "新しいワールドのライブハウスができたのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "11月13日の夜9時半から、無料で見られるのだ。", "read": "じゅういちがつじゅうさんにちの、よるくじはんから、無料で見られるのだ。" },
+      { "who": "zunko", "text": "誰が出るの？" },
+      { "who": "zundamon", "text": "バンドや朗読のアーティスト、4組なのだ。", "read": "バンドや朗読のアーティスト、よんくみなのだ。" },
+      { "who": "zundamon", "text": "ただしPCVR限定で、人数にも上限があるのだ。", "read": "ただしピーシーブイアール限定で、人数にも上限があるのだ。", "face": "look" },
+      { "who": "zunko", "text": "グループに入っておくと安心だね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Steam Frameのベータ版の話なのだ。", "read": "にほんめ。スチームフレームのベータ版の話なのだ。" },
+      { "who": "zundamon", "text": "部屋を映すRoom Viewが、パワーアップしたのだ。", "read": "部屋を映すルームビューが、パワーアップしたのだ。" },
+      { "who": "zunko", "text": "前は何が困ってたの？" },
+      { "who": "zundamon", "text": "オンにすると、PCの画面が消えちゃってたのだ。", "read": "オンにすると、ピーシーの画面が消えちゃってたのだ。", "face": "surprise" },
+      { "who": "zundamon", "text": "今は部屋を見ながら、PCの画面が使えるのだ。", "read": "今は部屋を見ながら、ピーシーの画面が使えるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "対応ゲームなら、部屋とゲームを重ねられるのだ。" },
+      { "who": "zunko", "text": "飲み物を取るときも便利そう！", "face": "smile" },
+      { "who": "zundamon", "text": "PCとヘッドセット、両方ベータにするのだ。", "read": "ピーシーとヘッドセット、両方ベータにするのだ。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。アプリのvrOSが、バージョン3になったのだ。", "read": "さんぼんめ。アプリのブイアールオーエスが、バージョンスリーになったのだ。" },
+      { "who": "zundamon", "text": "Steam Frameに、PCの画面を浮かべられるのだ。", "read": "スチームフレームに、ピーシーの画面を浮かべられるのだ。" },
+      { "who": "zunko", "text": "それってSteam Linkとは違うの？", "read": "それってスチームリンクとは違うの？", "face": "look" },
+      { "who": "zundamon", "text": "PCでSteamVRを起動しなくていいのだ。", "read": "ピーシーでスチームブイアールを起動しなくていいのだ。" },
+      { "who": "zundamon", "text": "画面やウィンドウを、好きな場所に並べられるのだ。", "face": "smile" },
+      { "who": "zunko", "text": "大きな画面でお料理の動画を見たいなあ。", "face": "smile" },
+      { "who": "zundamon", "text": "今はWindows PCだけ対応の有料アプリなのだ。", "read": "今はウィンドウズピーシーだけ対応の有料アプリなのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おとめ座", "comment": "ていねいな準備が大成功に", "lucky": "付せん" },
+        { "rank": 2, "sign": "さそり座", "comment": "久しぶりの友達と話がはずむ", "lucky": "マグカップ" },
+        { "rank": 3, "sign": "おひつじ座", "comment": "新しいことに挑戦すると吉", "lucky": "カメラ" },
+        { "rank": 4, "sign": "てんびん座", "comment": "部屋の片づけで気分すっきり", "lucky": "観葉植物" },
+        { "rank": 5, "sign": "みずがめ座", "comment": "ひらめきがどんどんわく日", "lucky": "シャープペン" },
+        { "rank": 6, "sign": "ふたご座", "comment": "おしゃべりで運気アップ", "lucky": "ハンカチ" },
+        { "rank": 7, "sign": "かに座", "comment": "のんびり過ごすと心が軽く", "lucky": "クッション" },
+        { "rank": 8, "sign": "いて座", "comment": "遠くの景色を見ると元気に", "lucky": "双眼鏡" },
+        { "rank": 9, "sign": "しし座", "comment": "笑顔が周りを明るくする", "lucky": "リップクリーム" },
+        { "rank": 10, "sign": "やぎ座", "comment": "早めの休けいで調子が戻る", "lucky": "ホットミルク" },
+        { "rank": 11, "sign": "おうし座", "comment": "好きな音楽でリフレッシュ", "lucky": "イヤホン" },
+        { "rank": 12, "sign": "うお座", "comment": "あわてずゆっくりが正解", "lucky": "枝豆" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、おとめ座ですわ。準備が実を結びます。", "read": "今日のいちいは、おとめざですわ。準備が実を結びます。", "face": "smile" },
+        { "who": "itako", "text": "2位はさそり座、3位はおひつじ座ですわ。", "read": "にいはさそりざ、さんいはおひつじざですわ。" },
+        { "who": "zundamon", "text": "おとめ座のみんな、おめでとうなのだ！", "read": "おとめざのみんな、おめでとうなのだ！" },
+        { "who": "itako", "text": "12位はうお座。今日はゆっくり進めるのが正解ですわ。", "read": "じゅうにいはうおざ。今日はゆっくり進めるのが正解ですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムは枝豆なのだ。ずんだの元なのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zunko", "text": "今日も聞いてくれてありがとう。", "face": "smile" },
+      { "who": "zundamon", "text": "今週も元気にいくのだ。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-09",
+  "title": "横須賀市のVRChatライブハウスで11月13日に無料ライブほか、今日のVRニュース3本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "週末はVRChatやVR機器の大きな発表が少なめでしたが、注目の話題を3本まとめました。横須賀市のVRChat新ワールドで開かれる記念ライブと、Steam Frameで使えるようになった2つの新機能を紹介します。",
+  "items": [
+    {
+      "headline": "横須賀市のVRChatライブハウスで記念ライブ",
+      "category": "イベント",
+      "overview": "横須賀市の「メタバースヨコスカ」が、VRChatの新しいワールド「DOBUITA PUMPKIN LIVE HOUSE」のオープン記念ライブ「LIGHT UP THE PUMPKIN」を、11月13日（金）21時30分から開催すると発表しました。メタバースヨコスカの3周年記念企画のひとつで、参加は無料です。出演は、PHANTOM、93poetry、ばけNeko、不眠症女の4組です。VRChatの「メタバースヨコスカ」グループに参加し、20時50分ごろに開くグループインスタンスから入場します。",
+      "points": [
+        "11月13日（金）21:30〜23:30ごろ開催、参加は無料",
+        "PCVR限定のイベントで、入場できる人数に上限あり",
+        "VRChatグループ「メタバースヨコスカ」への参加が必要",
+        "メタバースヨコスカのVRChatワールドはこれで3つめ"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/162243" }
+      ]
+    },
+    {
+      "headline": "Steam Frame、PC配信中も周りが見えるように",
+      "category": "VR機器・技術",
+      "overview": "ValveがSteam Frame向けのベータ版「SteamOS 0.5.8 Beta」を公開しました。これまでは周りの部屋を映す「Room View」をオンにすると、PCから配信している画面が消えていましたが、今回から部屋を見ながらPCのデスクトップやゲーム画面を使えるようになりました。複合現実（MR）に対応したPC VRゲームでは、ゲームの映像と現実の部屋を重ねて表示することもできます。あわせて「SteamVR 2.19.2」のベータ版も出ており、前の版で起きていた不具合が直されています。",
+      "points": [
+        "部屋を見ながら、PCの画面や配信中のゲームを使える",
+        "MRに対応したPC VRゲームは、現実の部屋と重ねて遊べる",
+        "ヘッドセットとPCの両方をベータ版にする必要がある",
+        "視線トラッキングの自動調整なども改善された"
+      ],
+      "sources": [
+        { "name": "Steam Frame（Steamのお知らせ）", "url": "https://store.steampowered.com/news/app/4165890/view/694277107352601013" },
+        { "name": "Gaming On Steam", "url": "https://gamingonsteam.com/2026/11/08/steam-frame-news-room-view-beta-steamvr-frame-cinema" }
+      ]
+    },
+    {
+      "headline": "アプリ「vrOS 3」、Steam FrameにPCの画面を表示",
+      "category": "VR機器・技術",
+      "overview": "PCの画面をVRの中に表示するSteamのアプリ「vrOS」がバージョン3になり、Steam Frameに対応しました。Steam FrameとWindows PCをつなぐと、PCでSteamVRを起動しなくても、PCの画面やウィンドウをSteam Frameのホームに浮かべて操作できます。PC VRゲームの配信にも対応していますが、こちらはPC側でSteamVRを使います。いまはWindows PCとSteam Frameの組み合わせだけで、Linuxやほかのヘッドセットへの対応は今後の予定です。",
+      "points": [
+        "Steam Linkを使わずに、PCの画面をSteam Frameで使える",
+        "画面やウィンドウを増やして、好きな位置に並べられる",
+        "Steamで販売中の有料アプリ（早期アクセス）",
+        "メニューなどは日本語にも対応"
+      ],
+      "sources": [
+        { "name": "MIXED", "url": "https://mixed-news.com/en/vros-3-steam-frame-windows-desktop-panels-pc-vr/" },
+        { "name": "vrOS（Steamストア）", "url": "https://store.steampowered.com/app/3873610/" }
+      ]
+    }
+  ],
+  "outro": "Steam Frameは週末にも新しい機能が続々と増えています。横須賀のライブはPCVR限定なので、参加する人は準備をお忘れなく。"
+}
