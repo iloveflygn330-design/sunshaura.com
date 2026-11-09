@@ -794,17 +794,18 @@ function drRpgDepth(ctx, x0, y0, back, side, draw) {
 /* 背景。back … カメラがどれだけ手前にいるか（床の線が流れて、近づいていくように見える）。
    tilt … カメラの傾き。傾いているときは、画面のすみが空かないように、空と床を画面より広く描く
    side … カメラの横のずれ。ずれているあいだだけ、奥へのびる床の線をうすく出して、横に動いているのが分かるようにする
-   runX … 走ってきた距離（背景を流す）。省くといまのバトルのもの。バトルのあと、ノーマルに戻るフェードチェンジ（dinorun.js）でも使う */
-function drRpgDrawBg(ctx, back, tilt, side, runX) {
-  const W = DR_CONFIG.width, H = DR_CONFIG.height, F = DR_RPG_FLOOR;
+   runX … 走ってきた距離（背景を流す）。省くといまのバトルのもの。バトルのあと、ノーマルに戻るフェードチェンジ（dinorun.js）でも使う
+   floorY … 床の上の端（地平線）の高さ。省くといつもの DR_RPG_FLOOR。フェードチェンジでは、ノーマルの地面の高さまで下げていく */
+function drRpgDrawBg(ctx, back, tilt, side, runX, floorY) {
+  const W = DR_CONFIG.width, H = DR_CONFIG.height, F = floorY == null ? DR_RPG_FLOOR : floorY;
   const img = drImage(DR_RPG.bgImage);
   if (runX == null) runX = (drRpg && drRpg.runX) || 0;
   if (img) {   // 背景の PNG は近づいても大きさを変えない（遠くの景色なので）。傾いているときだけ、すみが空かないように少し大きく描く
     const z = 1 + Math.abs(tilt || 0) * 2.5;
     if (tilt) { ctx.drawImage(img, W / 2 - W * z / 2, H / 2 - H * z / 2, W * z, H * z); return; }
     // 走っているので、横にくり返して流す（左はしと右はしがつながる絵にする。設計書「素材のルール」）
-    const ox = -((runX * 0.5) % W);
-    ctx.drawImage(img, ox, 0, W, H); ctx.drawImage(img, ox + W, 0, W, H);
+    const ox = -((runX * 0.5) % W), oy = F - DR_RPG_FLOOR;   // 床の高さを変えるときは、絵ごと上下にずらす
+    ctx.drawImage(img, ox, oy, W, H); ctx.drawImage(img, ox + W, oy, W, H);
     return;
   }
   const X0 = tilt ? -W : 0, XW = tilt ? W * 3 : W, Y0 = tilt ? -H : 0, YB = tilt ? H * 2 : H;   // 描く範囲

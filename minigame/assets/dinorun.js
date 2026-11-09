@@ -2565,12 +2565,13 @@ function drRender() {
   ctx.restore();
   // RPGフェイズからのフェードチェンジ（勝ったあと）。
   //   バトルの背景（床の模様も）を上にかさねて、だんだん透明にする → 下のノーマルフェイズの背景・地面が見えてくる。
+  //   バトルの床の境目（地平線）も、ノーマルの地面の高さ（DR_CONFIG.groundY）まで下がっていく。
   //   恐竜君は走りつづけたまま、バトルでの位置・大きさ（DR_RPG_PLAYER_X・FEET、48 ドット）から、ノーマルの位置・大きさ（24 ドット）へ動く
   if (dr.phaseBlend && dr.run) {
     const B = dr.phaseBlend, q0 = Math.min(1, B.t / B.dur), q = q0 * q0 * (3 - 2 * q0);
     ctx.save();
     ctx.globalAlpha = 1 - q;
-    drRpgDrawBg(ctx, 0, 0, 0, B.runX);
+    drRpgDrawBg(ctx, 0, 0, 0, B.runX, DR_RPG_FLOOR + (C.groundY - DR_RPG_FLOOR) * q);   // 床の境目も、ノーマルの地面の高さまで下がる
     ctx.globalAlpha = 1;
     ctx.imageSmoothingEnabled = false;
     const size = 48 + (24 - 48) * q;
