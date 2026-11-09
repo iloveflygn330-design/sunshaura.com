@@ -34,22 +34,35 @@
 
 公式または公開されている情報のみを使う。WebSearch と WebFetch で取得する。
 
-| 情報源 | 確認先 | 主な内容 |
-|---|---|---|
-| VRChat公式（Steamのお知らせ） | WebSearch で「VRChat Steam announcement」「Steam VRChat お知らせ」等を検索し、見つかった個別のお知らせページ（steamcommunity.com/games/vrchat/announcements/detail/…）を WebFetch で読む | アップデート告知 |
-| VRChat公式ブログ | https://hello.vrchat.com/blog | 公式のお知らせ・特集 |
-| VRChatリリースノート | https://docs.vrchat.com/docs/latest-release | クライアント更新内容 |
-| VRChatステータス | https://status.vrchat.com | 障害・メンテナンス |
-| VRChat公式X | WebSearch で「VRChat 公式 告知」等を検索（X本体は取得しない） | 告知 |
-| Mogura VR | https://www.moguravr.com/ | 国内VRニュース |
-| PANORA | https://panora.tokyo/ | 国内VRニュース |
-| Vket（バーチャルマーケット） | https://www.vket.com/ | イベント情報 |
-| WebSearch | 「VRChat ニュース」「VRChat アップデート」「ソーシャルVR」など、日付を付けて検索 | 上記以外の話題 |
-| AI関連（補充用） | WebSearch で「AI ニュース 今日」「生成AI 発表」など | AI関連の補充 |
+### 取得のしかた（重要）
+
+- **WebFetch で開くURLは、必ず先に WebSearch の検索結果に出てきたものにする。**
+  このファイルに書いたURLや、WebFetch で読んだページの中にあったURLを直接開こうとすると、
+  「このURLを開いてよいか」の確認がシャウラに送られる。定期実行中は誰も答えられないので、時間切れで開けない。
+- そのため、下の表の「確認先」は **検索語** で書いてある。まず WebSearch で検索し、結果に出たURLを WebFetch で開く。
+  - 例：「site:moguravr.com VRChat」で検索 → 結果に出た https://www.moguravr.com/category/metaverse-live/vrchat/ を WebFetch で開く
+- 一覧ページで見つけた個別記事を読みたいときも、記事のタイトルや英語の見出しで WebSearch してから開く。
+- 表の「目印のURL」は、検索結果のどれを開けばよいかを見分けるためのもの（直接は開かない）。
+
+| 情報源 | 確認先（WebSearch の検索語） | 目印のURL | 主な内容 |
+|---|---|---|---|
+| VRChat公式（Steamのお知らせ） | 「VRChat Steam announcement」「Steam VRChat お知らせ」 | steamcommunity.com/games/vrchat/announcements/detail/… の個別ページ | アップデート告知 |
+| VRChat公式ブログ | 「site:hello.vrchat.com blog」「VRChat blog」 | hello.vrchat.com/blog | 公式のお知らせ・特集 |
+| VRChatリリースノート | 「VRChat latest release docs」「site:docs.vrchat.com release」 | docs.vrchat.com/docs/latest-release | クライアント更新内容 |
+| VRChat開発者アップデート | 「VRChat Developer Update」＋日付 | ask.vrchat.com/t/developer-update-… | 開発中の機能・予定 |
+| VRChatステータス | 「VRChat Status」 | status.vrchat.com | 障害・メンテナンス |
+| VRChat公式X | 「VRChat 公式 告知」等（X本体は取得しない） | — | 告知 |
+| Mogura VR | 「site:moguravr.com VRChat」「MoguLive VRChat」 | moguravr.com/category/metaverse-live/vrchat/ | 国内VRニュース |
+| PANORA | 「site:panora.tokyo VRChat」「PANORA VRChat」 | panora.tokyo（トップ）・panora.tokyo/archives/… | 国内VRニュース |
+| Vket（バーチャルマーケット） | 「Vket 最新情報」「バーチャルマーケット 2026」等 | vket.com | イベント情報 |
+| 海外VRニュース | 「Top VR News vrdb」「Road to VR」「UploadVR」「MIXED VR news」 | vrdb.app/news（各サイトの新着がまとまっている）・roadtovr.com・uploadvr.com・mixed-news.com | 海外のVR機器・ゲーム |
+| WebSearch | 「VRChat ニュース」「VRChat アップデート」「ソーシャルVR」など、日付を付けて検索 | — | 上記以外の話題 |
+| AI関連（補充用） | 「AI ニュース 今日」「生成AI 発表」など | — | AI関連の補充 |
 
 <!--
   ★拡張予定: 情報源を追加する手順
-    1. 上の表に1行追加する（情報源名 / 確認先URLまたは検索語 / 主な内容）
+    1. 上の表に1行追加する（情報源名 / WebSearch の検索語 / 目印のURL / 主な内容）
+       URLを直接開こうとすると定期実行では開けないので、「確認先」には必ず検索語を書く（「取得のしかた」を参照）
     2. 追加してよいのは、公式サイト・RSS・公開APIなど、自動取得が規約で禁止されていないものだけ
     3. 以下は追加しない
        - X（旧Twitter）、Instagram、BOOTH などの直接取得（スクレイピングは規約違反）
