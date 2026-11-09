@@ -136,6 +136,11 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   opacity: 0; pointer-events: none;
 }
 #dr-banner small { display: block; font-size: 0.55em; color: var(--dr-mint); letter-spacing: 0.2em; }
+/* ワールドの特徴（dinorun-design.js の feature）。ワールド名の下に小さく出す */
+#dr-banner .dr-banner-feat {
+  display: table; margin: 0.3em auto 0; padding: 0.15em 0.8em; border-radius: 999px;
+  background: rgba(18, 22, 58, 0.72); color: var(--dr-yellow); font-size: 0.45em; text-shadow: none;
+}
 #dr-banner.is-show { animation: drBanner 2.4s ease forwards; }
 @keyframes drBanner {
   0% { opacity: 0; transform: translateX(-30px); }

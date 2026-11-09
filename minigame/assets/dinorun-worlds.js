@@ -5,7 +5,7 @@
    ここにあるもの:
      DR_PALETTE   … 仮のドット絵で使う色（1文字 = 1色）
      DR_OBSTACLES … ★拡張予定: 障害物の一覧（地面に置くもの・空を飛ぶもの）
-     DR_WORLDS    … ★拡張予定: ワールドの一覧（走った距離で順番に切り替わる。最後まで行ったら最初に戻る）
+     DR_WORLDS    … ★拡張予定: ワールドの見た目の一覧（どのワールドが出るか・障害物の出やすさは dinorun-design.js）
      DR_BONUS_WORLD … ボーナスステージの見た目
      DR_TUTORIAL  … ★拡張予定: 走り始めのチュートリアル（説明の文と、出す障害物・コイン）
      DR_PICKUPS   … コインとショップアイコンの見た目
@@ -75,7 +75,8 @@ const DR_PALETTE = {
        weight: 1,               // （任意）出やすさ。大きいほど出やすい
        sprite: { pixels: [...] },  // 絵（上の「絵の書き方」を参照）
      }
-   追加したら、出したいワールドの obstacles に id を書く。
+   追加したら、dinorun-design.js の DR_DESIGN.worlds の、出したいワールドの obstacles に「id: 出やすさ」を書く
+   （設計書のスプレッドシート「障害物の出やすさ」にも1行足す）。
    ----------------------------------------------------- */
 /* 天井から下がっている障害物の絵を作る（ひも＋下の板）。
      w … 幅、panel … 下の板の絵（行の配列。幅は w に合わせる）、rope … ひもの色の文字
@@ -427,7 +428,9 @@ const DR_OBSTACLES = [
 ];
 
 /* -----------------------------------------------------
-   ★拡張予定: ワールド（走った距離で順番に切り替わる。DR_CONFIG.worldLength m ごと）
+   ★拡張予定: ワールドの見た目（DR_CONFIG.worldLength m ごとに切り替わる）
+     どのワールドが何番目に出るか（ワールド1は固定、2からは抽選）、特徴の文、障害物の出やすさは
+     dinorun-design.js の DR_DESIGN（設計書の写し）で決める。ここは見た目だけ。
 
    1件の書き方:
      {
@@ -442,10 +445,9 @@ const DR_OBSTACLES = [
        bgImage: '',                      // （任意）遠くの景色を絵にするとき。横にくり返して流れる。高さ 216 ドットの PNG
        groundImage: '',                  // （任意）地面を絵にするとき。横にくり返して流れる。高さ 32 ドットの PNG
                                           //   どちらも minigame/ から見た場所（例: 'dinorun/worlds/home_bg.png'）。書くと style より優先
-       obstacles: ['pedestal', 'drone'], // このワールドに出る障害物（DR_OBSTACLES の id）
        bgm: '',                          // （任意）このワールドで流す BGM（dinorun-config.js の DR_SOUNDS の id）
      }
-   ★ 新しいワールドは、下の一覧の好きな位置に1件足す（並び順 = 出てくる順番）。
+   ★ 新しいワールドは、下の一覧に1件足して、dinorun-design.js の DR_DESIGN.worlds にも同じ id で1件足す。
    ----------------------------------------------------- */
 const DR_WORLDS = [
   {
@@ -454,7 +456,6 @@ const DR_WORLDS = [
     far: { style: 'hills', color: '#8FCBEF', color2: '#B9E1F7' },
     ground: { style: 'grid', color: '#7BC96F', line: '#5DAE53' },
     bgImage: '', groundImage: '',
-    obstacles: ['pedestal', 'collider', 'penlight', 'drone', 'menu', 'screen', 'pit'],
     bgm: '',
   },
   {
@@ -463,7 +464,14 @@ const DR_WORLDS = [
     far: { style: 'pillars', color: '#BFB4E8', color2: '#E3DCFA' },
     ground: { style: 'tile', color: '#C9C2E6', line: '#A79ED2' },
     bgImage: '', groundImage: '',
-    obstacles: ['mirror', 'collider', 'pedestal', 'drone', 'menu', 'screen', 'banner', 'pit'],
+    bgm: '',
+  },
+  {
+    id: 'chill', name: 'チルワールド',
+    sky: ['#FFB38A', '#FFE9CF'],
+    far: { style: 'hills', color: '#F29E7E', color2: '#F8C9A6' },
+    ground: { style: 'plain', color: '#E9B486', line: '#D89A68' },
+    bgImage: '', groundImage: '',
     bgm: '',
   },
   {
@@ -472,7 +480,6 @@ const DR_WORLDS = [
     far: { style: 'city', color: '#1E2453', color2: '#FFD84A' },
     ground: { style: 'stripe', color: '#2C3166', line: '#3B4280' },
     bgImage: '', groundImage: '',
-    obstacles: ['penlight', 'portal', 'pedestal', 'drone', 'nameplate', 'banner', 'screen', 'pit'],
     bgm: '',
   },
   {
@@ -481,7 +488,6 @@ const DR_WORLDS = [
     far: { style: 'stars', color: '#FFFFFF', color2: '#FFE9A8' },
     ground: { style: 'grid', color: '#4B2380', line: '#7FFFD4' },
     bgImage: '', groundImage: '',
-    obstacles: ['portal', 'mirror', 'collider', 'menu', 'nameplate', 'drone', 'screen', 'banner', 'pit'],
     bgm: '',
   },
 ];

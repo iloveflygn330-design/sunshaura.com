@@ -218,9 +218,14 @@ function drSetup() {
 /* データの書き間違いを見つけたら、ブラウザの開発者ツール（Console）に出す */
 function drCheckData() {
   const obIds = new Set(DR_OBSTACLES.map(o => o.id));
-  DR_WORLDS.forEach(w => (w.obstacles || []).forEach(id => {
-    if (!obIds.has(id)) console.warn(`[dinorun] ワールド「${w.name}」の障害物 ${id} が DR_OBSTACLES にありません`);
-  }));
+  // 設計書の写し（dinorun-design.js）のワールドと障害物が、見た目（dinorun-worlds.js）にあるか
+  Object.keys(DR_DESIGN.worlds).forEach(id => {
+    if (!DR_WORLDS.some(w => w.id === id)) console.warn(`[dinorun] DR_DESIGN.worlds の ${id} が DR_WORLDS にありません`);
+    Object.keys(DR_DESIGN.worlds[id].obstacles || {}).forEach(ob => {
+      if (!obIds.has(ob)) console.warn(`[dinorun] DR_DESIGN.worlds.${id} の障害物 ${ob} が DR_OBSTACLES にありません`);
+    });
+  });
+  if (!DR_DESIGN.worlds[DR_DESIGN.firstWorld]) console.warn(`[dinorun] DR_DESIGN.firstWorld の ${DR_DESIGN.firstWorld} が DR_DESIGN.worlds にありません`);
   DR_ITEMS.forEach(it => {
     if (it.type === 'skill' && !DR_SKILLS[it.skill]) console.warn(`[dinorun] アイテム ${it.id} のスキル ${it.skill} が DR_SKILLS にありません`);
     if (it.requires && !DR_SKILLS[it.requires]) console.warn(`[dinorun] アイテム ${it.id} の requires ${it.requires} が DR_SKILLS にありません`);
@@ -669,7 +674,8 @@ function drNewRun() {
     nextShopAt: DR_CONFIG.tutorial ? Infinity : DR_CONFIG.shopFirstMeter,   // チュートリアルがあるときは、最初のショップはチュートリアルが出す
     groupSeq: 0,           // つながって出た障害物をまとめる番号
     shopCount: 0,
-    worldIndex: 0,
+    worldIndex: 0,         // いま何ワールド目か（0 から。画面の「WORLD 1」は worldIndex + 1）
+    worldId: DR_DESIGN.firstWorld,   // いまのワールド（DR_WORLDS / DR_DESIGN.worlds の id）
     nextWorldAt: DR_CONFIG.worldLength,
     worldFx: null,         // ワールド移動の演出中
     calmT: 0,              // 障害物を出さない残り時間
@@ -685,7 +691,7 @@ function drStartGame() {
   dr.jumpHeld.clear();
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
   drBgm(drWorld(dr.run).bgm);
-  drShowBanner(drWorld(dr.run).name, 'WORLD 1');
+  drShowBanner(drWorld(dr.run).name, 'WORLD 1', drWorldFeature(dr.run));
   drUpdateHud(true);
   drStartReady('play');
 }
@@ -746,14 +752,43 @@ function drLoop(now) {
 }
 
 /* ---------- ゲームの計算 ---------- */
-function drWorld(run) { return run.bonus ? DR_BONUS_WORLD : DR_WORLDS[run.worldIndex % DR_WORLDS.length]; }
+function drWorld(run) { return run.bonus ? DR_BONUS_WORLD : (DR_WORLDS.find(w => w.id === run.worldId) || DR_WORLDS[0]); }
+/* いまのワールドの設計（dinorun-design.js の DR_DESIGN.worlds の1件） */
+function drWorldDesign(run) { return DR_DESIGN.worlds[run.worldId] || DR_DESIGN.worlds[DR_DESIGN.firstWorld] || {}; }
+/* いまのワールドの特徴の文（ワールド名と一緒に出す） */
+function drWorldFeature(run) { return run.bonus ? '' : (drWorldDesign(run).feature || ''); }
+/* いまのワールドの番号の決まり（DR_DESIGN.progression の1行。最後の行は、それより先のワールドすべてに使う） */
+function drProgress(run) { const P = DR_DESIGN.progression; return P[Math.min(run.worldIndex, P.length - 1)]; }
+/* 次のワールドを抽選で決める（ワールド2から）。
+   DR_DESIGN.worlds の中から、from がこのワールドの番号以下で、weight が 0 より大きく、いまのワールドとちがうものを、weight の重みで選ぶ */
+function drPickNextWorld(run) {
+  const no = run.worldIndex + 1;   // これから入るワールドの番号（worldIndex を増やしたあとに呼ぶ）
+  const all = Object.keys(DR_DESIGN.worlds).map(id => ({ id, weight: DR_DESIGN.worlds[id].weight || 0, from: DR_DESIGN.worlds[id].from || 2 }))
+    .filter(x => x.weight > 0 && DR_WORLDS.some(w => w.id === x.id));
+  let cands = all.filter(x => x.from <= no && x.id !== run.worldId);
+  if (!cands.length) cands = all.filter(x => x.id !== run.worldId);
+  if (!cands.length) return run.worldId;
+  return drPickWeighted(cands).id;
+}
+/* 新しいワールドに入ったときの「ライフ+1」（DR_DESIGN.lifeUpWorlds のワールドだけ）。
+   減っていれば1回復、満タンならハートの枠が1つ増えて回復する */
+function drWorldLifeUp(run) {
+  if (!(DR_DESIGN.lifeUpWorlds || []).includes(run.worldIndex + 1)) return;
+  const full = run.lives >= run.maxLives;
+  if (full) run.maxLives++;
+  run.lives = Math.min(run.maxLives, run.lives + 1);
+  drFloatText(run, full ? 'MAX LIFE +1' : 'LIFE +1', drPX(run) - 4, DR_CONFIG.groundY - run.y - 40, '#FF5A7A');
+  run.effects[run.effects.length - 1].life = 2;   // ワールド名の演出と重なるので、ふつうより長く出す
+  drSparkle(run, drPX(run) + 12, DR_CONFIG.groundY - run.y - 12, '#FF5A7A', 10);
+  drSound('potion');
+  drUpdateHud(true);
+}
 function drMeters(run) { return run.dist / DR_CONFIG.pxPerMeter; }
 function drScore(run) {
   const C = DR_CONFIG;
   return Math.floor(drMeters(run)) + run.coinsPicked * C.scoreCoin + run.kills * C.scoreKill
     + run.grazes * C.scoreGraze + run.slides * C.scoreSlide + (run.bossScore || 0);
 }
-function drDifficulty(run) { return Math.min(1, (run.speed - DR_CONFIG.speedStart) / (DR_CONFIG.speedMax - DR_CONFIG.speedStart)); }
 function drLerp(a, b, t) { return a + (b - a) * t; }
 function drRand(a, b) { return a + Math.random() * (b - a); }
 function drPickWeighted(list) {
@@ -866,10 +901,12 @@ function drUpdate(run, dt) {
       } else {
         if (run.bonus) { run.bonus = false; run.marks = []; }
         run.worldIndex++;
+        run.worldId = drPickNextWorld(run);   // ワールド2からは抽選（dinorun-design.js）
         drRollEncounter(run);
+        drWorldLifeUp(run);
       }
       const w = drWorld(run);
-      drShowBanner(w.name, run.bonus ? 'BONUS STAGE' : 'WORLD ' + (run.worldIndex + 1));
+      drShowBanner(w.name, run.bonus ? 'BONUS STAGE' : 'WORLD ' + (run.worldIndex + 1), drWorldFeature(run));
       drBgm(w.bgm);
     }
     if (run.worldFx.t >= run.worldFx.dur) run.worldFx = null;
@@ -888,9 +925,7 @@ function drUpdate(run, dt) {
   if (run.nextObstacleIn <= 0) {
     let extra = 0;   // 長い障害物（スキルの区画）を出したら、その長さのぶん次をあける
     if (run.calmT <= 0 && !shopSoon && !run.bonus && !tutorial) extra = drSpawnObstacle(run) || 0;
-    const d = drDifficulty(run);
-    const gap = drRand(drLerp(C.gapStartMin, C.gapEndMin, d), drLerp(C.gapStartMax, C.gapEndMax, d));
-    run.nextObstacleIn = gap * run.speed + extra;
+    run.nextObstacleIn = drObstacleGap(run) * run.speed + extra;
   }
   run.nextCoinIn -= move;
   if (run.nextCoinIn <= 0) {
@@ -1134,6 +1169,15 @@ function drOverlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
+/* 次の障害物までの間隔（秒）。ワールドの番号ごとの「8分音符いくつ」（DR_DESIGN.progression）を、
+   そのワールドの BPM で秒に直す。ワールドの gapMult（チルワールドは広い など）もかける */
+function drObstacleGap(run) {
+  const p = drProgress(run);
+  const n = p.gapMin + Math.floor(Math.random() * (p.gapMax - p.gapMin + 1));   // 8分音符いくつ（整数）
+  const eighth = 30 / p.bpm;                                                    // 8分音符の長さ（秒）
+  return Math.max(1, Math.round(n * (drWorldDesign(run).gapMult || 1))) * eighth;
+}
+
 /* 障害物を1つ出す（長いものを出したときは、その長さを返す） */
 function drSpawnObstacle(run) {
   const C = DR_CONFIG;
@@ -1153,12 +1197,13 @@ function drSpawnObstacle(run) {
       if (len) { run.nextHardAt = meters + drRand(C.hardGapMin, C.hardGapMax); return len; }
     }
   }
-  const ids = drWorld(run).obstacles || [];
-  const cands = DR_OBSTACLES.filter(o => ids.includes(o.id)
+  // 出る障害物と出やすさは、ワールドごとに dinorun-design.js（設計書「障害物の出やすさ」）で決める
+  const table = drWorldDesign(run).obstacles || {};
+  const cands = DR_OBSTACLES.filter(o => table[o.id] > 0
     && (o.minMeter || 0) <= meters
-    && (!o.fly || meters >= C.flyingFromMeter));
+    && (!o.fly || meters >= C.flyingFromMeter)).map(o => ({ def: o, weight: table[o.id] }));
   if (!cands.length) return;
-  const def = drPickWeighted(cands);
+  const def = drPickWeighted(cands).def;
   const x0 = DR_CONFIG.width + 6;
   const group = ++run.groupSeq;
   if (def.pit) { const o = drAddPit(run, def, x0, group); return o.w; }
@@ -1169,7 +1214,7 @@ function drSpawnObstacle(run) {
   }
   // 地面のもの：小さいものは、ときどき2〜3個つながって出る
   let count = 1;
-  if (def.h <= 24 && Math.random() < DR_CONFIG.clusterChanceMax * drDifficulty(run) + 0.08) count = Math.random() < 0.4 ? 3 : 2;
+  if (def.h <= 24 && Math.random() < drProgress(run).cluster) count = Math.random() < 0.4 ? 3 : 2;   // 確率は DR_DESIGN.progression
   for (let i = 0; i < count; i++) {
     run.obstacles.push(drMakeObstacle(def, x0 + i * (def.w + 2), DR_CONFIG.groundY - def.h, group));
   }
@@ -2204,10 +2249,11 @@ function drUpdateCount() {
 }
 
 /* ワールド名の帯（ワールド移動のとき） */
-function drShowBanner(name, sub) {
+function drShowBanner(name, sub, feature) {
   const el = document.getElementById('dr-banner');
   if (!el) return;
-  el.innerHTML = `<small>${sub}</small>${drEscape(name)}`;
+  // feature … ワールドの特徴（dinorun-design.js の feature）。ワールド名の下に小さく出す
+  el.innerHTML = `<small>${sub}</small>${drEscape(name)}${feature ? `<span class="dr-banner-feat">${drEscape(feature)}</span>` : ''}`;
   el.classList.remove('is-show');
   void el.offsetWidth;    // アニメーションをやり直すため
   el.classList.add('is-show');
@@ -2711,12 +2757,15 @@ function drUpdateDemo(dt) {
   d.t += dt;
   const move = d.speed * dt;
   d.dist += move;
-  if (d.dist / C.pxPerMeter > 400) { d.dist = 0; d.worldIndex++; }
+  if (d.dist / C.pxPerMeter > 400) {   // 見本は 400m ごとに、ワールドを順番に見せる
+    d.dist = 0; d.worldIndex++;
+    d.worldId = DR_WORLDS[d.worldIndex % DR_WORLDS.length].id;
+  }
   d.nextObstacleIn -= move;
   if (d.nextObstacleIn <= 0) {
-    const ids = drWorld(d).obstacles || [];
-    const cands = DR_OBSTACLES.filter(o => ids.includes(o.id) && !o.fly && !o.pit);
-    if (cands.length) { const def = drPickWeighted(cands); d.obstacles.push(drMakeObstacle(def, C.width + 6, C.groundY - def.h)); }
+    const table = drWorldDesign(d).obstacles || {};
+    const cands = DR_OBSTACLES.filter(o => table[o.id] > 0 && !o.fly && !o.pit).map(o => ({ def: o, weight: table[o.id] }));
+    if (cands.length) { const def = drPickWeighted(cands).def; d.obstacles.push(drMakeObstacle(def, C.width + 6, C.groundY - def.h)); }
     d.nextObstacleIn = drRand(1.2, 2.2) * d.speed;
   }
   d.obstacles.forEach(o => { o.x -= move; });

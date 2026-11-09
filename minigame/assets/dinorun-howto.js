@@ -36,7 +36,7 @@ const DR_HOWTO_PAGES = [
   },
   {
     tab: 'basic', title: 'ハート', image: 'dinorun/howto/heart.webp',
-    text: 'ハートは最初2つ。ぶつかると1つへって、少しのあいだ無敵になるよ。0になったらゲームオーバー。',
+    text: 'ハートは最初2つ。ぶつかると1つへって、少しのあいだ無敵に。0でゲームオーバー。5ワールド目までは、新しいワールドに入ると<b>ハート+1</b>！',
   },
   {
     tab: 'basic', title: 'スコアとボーナス', image: 'dinorun/howto/score.webp',
