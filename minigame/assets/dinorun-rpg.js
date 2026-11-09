@@ -7,7 +7,7 @@
      close（イナズマの線がすれちがい、黒い画面が上下から迫って暗転）
      → intro（暗転と逆の動きでバトル用のカメラに切りかわり、カメラが手前から恐竜君たちのところまで、だんだんゆっくり進む）
      → fight（「FIGHT!」）→ battle（リアルタイムのバトル）
-     → win（勝ち。結果の画面を DR_DESIGN.rpgPhase.resultTime 秒 → ズームアウトしてノーマルフェイズへ → RPGエリア）
+     → win（勝ち。結果の画面を DR_DESIGN.rpgPhase.resultTime 秒 → 走りつづけたまま、フェードチェンジでノーマルフェイズへ → RPGエリア）
        / lose（負け。ゲームオーバー）/ escaped（逃げた。ノーマルフェイズへ）
    走りながら戦う: intro〜win のあいだ、背景（床の線・雲）が流れて、恐竜君とボスは走っている。
      距離（スコア）は進むが、ワールドは進まない（dinorun.js の drPhaseRunForward）。
@@ -334,7 +334,7 @@ function drRpgWin() {
 
 function drRpgShowResult() {
   const R = drRpg, rw = R.reward, b = R.b;
-  // DR_DESIGN.rpgPhase.resultTime 秒たつと自動でノーマルフェイズへ（ズームアウト → RPGエリア）
+  // DR_DESIGN.rpgPhase.resultTime 秒たつと自動でノーマルフェイズへ（フェードチェンジ → RPGエリア）
   drShowPhaseResult('VICTORY!',
     `${drEscape(b.name)}を たおした！<br>`
     + `ボーナス ${b.def.score.toLocaleString()}<br>`
@@ -793,11 +793,12 @@ function drRpgDepth(ctx, x0, y0, back, side, draw) {
 
 /* 背景。back … カメラがどれだけ手前にいるか（床の線が流れて、近づいていくように見える）。
    tilt … カメラの傾き。傾いているときは、画面のすみが空かないように、空と床を画面より広く描く
-   side … カメラの横のずれ。ずれているあいだだけ、奥へのびる床の線をうすく出して、横に動いているのが分かるようにする */
-function drRpgDrawBg(ctx, back, tilt, side) {
+   side … カメラの横のずれ。ずれているあいだだけ、奥へのびる床の線をうすく出して、横に動いているのが分かるようにする
+   runX … 走ってきた距離（背景を流す）。省くといまのバトルのもの。バトルのあと、ノーマルに戻るフェードチェンジ（dinorun.js）でも使う */
+function drRpgDrawBg(ctx, back, tilt, side, runX) {
   const W = DR_CONFIG.width, H = DR_CONFIG.height, F = DR_RPG_FLOOR;
   const img = drImage(DR_RPG.bgImage);
-  const runX = (drRpg && drRpg.runX) || 0;   // 走ってきた距離（背景を流す）
+  if (runX == null) runX = (drRpg && drRpg.runX) || 0;
   if (img) {   // 背景の PNG は近づいても大きさを変えない（遠くの景色なので）。傾いているときだけ、すみが空かないように少し大きく描く
     const z = 1 + Math.abs(tilt || 0) * 2.5;
     if (tilt) { ctx.drawImage(img, W / 2 - W * z / 2, H / 2 - H * z / 2, W * z, H * z); return; }

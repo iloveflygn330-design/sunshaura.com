@@ -693,7 +693,7 @@ function drStartGame() {
   drCleanupPhase();
   dr.run = drNewRun();
   dr.jumpHeld.clear();
-  dr.zoomOut = null; dr.phaseResultT = 0;
+  dr.phaseBlend = null; dr.phaseResultT = 0;
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
   drBgm(drWorld(dr.run).bgm);
   drShowBanner(drWorld(dr.run).name, 'WORLD 1', drWorldFeature(dr.run));
@@ -738,8 +738,11 @@ function drLoop(now) {
     dr.phaseResultT -= dt;
     if (dr.phaseResultT <= 0) drEndPhase('win');
   }
-  // ノーマルフェイズに戻るときのズームアウト（drEndPhase）
-  if (dr.zoomOut && dr.mode === 'play') { dr.zoomOut.t += dt; if (dr.zoomOut.t >= dr.zoomOut.dur) dr.zoomOut = null; }
+  // RPGフェイズからノーマルフェイズへのフェードチェンジ（drEndPhase）。バトルの背景も走ったぶん流しつづける
+  if (dr.phaseBlend && dr.mode === 'play' && dr.run) {
+    dr.phaseBlend.t += dt; dr.phaseBlend.runX += dr.run.speed * dt;
+    if (dr.phaseBlend.t >= dr.phaseBlend.dur) dr.phaseBlend = null;
+  }
   else if (dr.mode === 'ready') {
     dr.readyT -= dt;
     if (dr.readyT <= 0) drSetMode(dr.readyNext);
@@ -1699,13 +1702,8 @@ function drStartPhase(enc, obstacle) {
 function drEndPhase(outcome) {
   const run = dr.run, C = DR_CONFIG;
   if (!run || !dr.phase) return;
-  // 勝ったときは、ズームアウトに使うため、いまのバトルの画面を写しておく
-  let snap = null;
-  if (outcome === 'win' && dr.canvas) {
-    snap = document.createElement('canvas');
-    snap.width = dr.canvas.width; snap.height = dr.canvas.height;
-    snap.getContext('2d').drawImage(dr.canvas, 0, 0);
-  }
+  // 勝ったときは、フェードチェンジでバトルの背景を流しつづけるため、走ってきた距離を覚えておく
+  const runX = (typeof drRpg !== 'undefined' && drRpg && drRpg.runX) || 0;
   drCleanupPhase();
   if (outcome === 'lose') {
     drBgm(null);
@@ -1724,11 +1722,13 @@ function drEndPhase(outcome) {
   run.slideT = 0; run.ducking = false;
   dr.phaseResultT = 0;
   if (outcome === 'win') {
-    // 勝ち：RPGエリアが始まる。バトルの画面からズームアウトして、カウントダウンなしでそのまま走る
+    // 勝ち：RPGエリアが始まる。恐竜君は走りつづけたまま、背景・床・恐竜君の位置と大きさが
+    // フェードでノーマルフェイズのものに変わって、カウントダウンなしでそのままノーマルのゲームに戻る（境目をなくす）
     drStartRpgArea(run);
     drBgm(drRunBgm(run));
     drUpdateHud(true);
-    dr.zoomOut = snap ? { t: 0, dur: DR_DESIGN.rpgPhase.zoomOutTime || 1.2, snap } : null;
+    run.y = 0; run.vy = 0; run.onGround = true;
+    dr.phaseBlend = typeof drRpgDrawBg === 'function' ? { t: 0, dur: DR_DESIGN.rpgPhase.blendTime || 1.5, runX } : null;
     drSetMode('play');
     return;
   }
@@ -2519,7 +2519,7 @@ function drRender() {
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
     for (let i = 0; i < 3; i++) ctx.fillRect(drPX(run) + 6 + i * 6, C.groundY - run.y - 40 - i * 4, 1, 16);
   }
-  if (dr.run) drDrawPlayer(ctx, run);
+  if (dr.run) { if (!dr.phaseBlend) drDrawPlayer(ctx, run); }   // フェードチェンジ中は、あとで位置と大きさを動かしながら描く
   else drDrawPlayer(ctx, run, true);
   // 居合切りの軌跡
   if (run.slashT > 0) drDrawSlash(ctx, run);
@@ -2563,17 +2563,22 @@ function drRender() {
   if (dr.debug) drDrawDebug(ctx, run);
   if (tilted) ctx.restore();
   ctx.restore();
-  // バトルの画面からのズームアウト（勝ったあと）。写しておいたバトルの画面が、恐竜君のところへ小さくなって消える
-  if (dr.zoomOut && dr.run) {
-    const z = dr.zoomOut, q = Math.min(1, z.t / z.dur), e = q * q * (3 - 2 * q);
-    const s = 1 - e * 0.92, W = C.width, H = C.height;
-    const fx = drPX(run) + 12, fy = C.groundY - 12;   // 縮んでいく先（恐竜君）
+  // RPGフェイズからのフェードチェンジ（勝ったあと）。
+  //   バトルの背景（床の模様も）を上にかさねて、だんだん透明にする → 下のノーマルフェイズの背景・地面が見えてくる。
+  //   恐竜君は走りつづけたまま、バトルでの位置・大きさ（DR_RPG_PLAYER_X・FEET、48 ドット）から、ノーマルの位置・大きさ（24 ドット）へ動く
+  if (dr.phaseBlend && dr.run) {
+    const B = dr.phaseBlend, q0 = Math.min(1, B.t / B.dur), q = q0 * q0 * (3 - 2 * q0);
     ctx.save();
-    ctx.globalAlpha = q < 0.6 ? 1 : Math.max(0, 1 - (q - 0.6) / 0.4);
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(z.snap, (1 - s) * fx, (1 - s) * fy, W * s, H * s);
-    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2;
-    ctx.strokeRect((1 - s) * fx, (1 - s) * fy, W * s, H * s);
+    ctx.globalAlpha = 1 - q;
+    drRpgDrawBg(ctx, 0, 0, 0, B.runX);
+    ctx.globalAlpha = 1;
+    ctx.imageSmoothingEnabled = false;
+    const size = 48 + (24 - 48) * q;
+    const cx = DR_RPG_PLAYER_X + (drPX(run) + 12 - DR_RPG_PLAYER_X) * q;
+    const feet = DR_RPG_PLAYER_FEET + (C.groundY - run.y - DR_RPG_PLAYER_FEET) * q;
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';   // 影
+    ctx.beginPath(); ctx.ellipse(cx, DR_RPG_PLAYER_FEET + (C.groundY - DR_RPG_PLAYER_FEET) * q, size / 3, size / 12, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.drawImage(drRpgPlayerImage(!run.onGround, Math.floor(B.runX / 9)), Math.round(cx - size / 2), Math.round(feet - size), Math.round(size), Math.round(size));
     ctx.restore();
   }
 }
