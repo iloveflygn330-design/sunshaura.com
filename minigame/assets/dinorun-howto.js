@@ -17,7 +17,7 @@
        image: 'dinorun/howto/run.webp',    // 絵（minigame/ からの場所）。絵のかわりにアイコンを並べるときは icons を書く
        icons: [{ icon: '🗡', name: '居合切り', text: '目の前を切る' }, ...],   // （任意）アイコンのカード。image より優先
        text: '説明（短く、2〜3行まで）。<b>…</b> で黄色くできる',
-       key: 'PC：Space / ↑',                // （任意）キーボードの操作。説明の下に小さく出る
+       key: 'PC：Space',                    // （任意）キーボードの操作。説明の下に小さく出る
      },
    文が長いとスマホでスクロールが出るので、1ページの説明は2〜3行におさめる。 */
 const DR_HOWTO_TABS = [
@@ -46,7 +46,7 @@ const DR_HOWTO_PAGES = [
   {
     tab: 'control', title: 'ジャンプ', image: 'dinorun/howto/jump.webp',
     text: '障害物や<b>穴</b>を飛びこえよう。穴に落ちかけても、すぐジャンプすれば出られるよ。',
-    key: 'PC：Space / ↑',
+    key: 'PC：Space',
   },
   {
     tab: 'control', title: 'スライディング', image: 'dinorun/howto/slide.webp',
@@ -56,7 +56,7 @@ const DR_HOWTO_PAGES = [
   {
     tab: 'control', title: 'スキルボタン', image: 'dinorun/howto/skills.webp',
     text: 'お店で覚えた技は、上の3つのボタンで使えるよ。ボタンのバーがたまると、また使える。',
-    key: 'PC：A・S・D　一時停止 P',
+    key: 'PC：← ↑ → か A・S・D　一時停止 P',
   },
   {
     tab: 'control', title: 'タップでそうさ（スマホ）', image: 'dinorun/howto/tap.webp',
