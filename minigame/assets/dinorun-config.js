@@ -216,11 +216,16 @@ const DR_CONFIG = {
      breath … ボスのほのおのブレス / boom … ボスが爆発した（倒した）
      oops … クールタイム中のスキルを使おうとして「おっとと」とよろけた
      world … ワールド移動 / bonus … ボーナスステージに入った / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
+     beat / beatTop … テスト用のメトロノーム（URL に &drbeat を付けたときだけ。4分音符ごと、小節の頭は beatTop）
 
    BGM（ワールドごとに変えたいとき）:
      dinorun-worlds.js の各ワールドの bgm に、下の id を書く（例: bgm: 'bgm_home'）。
      ここに bgm_home: { src: 'dinorun/sounds/bgm_home.mp3', volume: 0.4, loop: true }, のように1行足す。
      loop: true を付けた音はくり返し流れ、ワールドが変わると切り替わる（BGM は電子音なし）。
+     BGM は設計書の「素材のルール」にそろえる（拍の始まり 0.1 秒・テンポ一定・ちょうどの小節数）。
+       くり返すときは、拍の始まり（0.1 秒）から最後までをくり返す（頭の無音はくり返さない）。
+       ゲームは BGM の拍に、障害物やボスの攻撃のタイミングを合わせる（BPM は dinorun-design.js）。
+       拍の始まりが 0.1 秒でない曲は beatStart: 0.25 のように書く。
    ----------------------------------------------------- */
 const DR_SOUNDS = {
   jump:       { src: '', volume: 0.5, tone: { wave: 'square', freq: 330, to: 660, dur: 0.09 } },
@@ -265,5 +270,7 @@ const DR_SOUNDS = {
   bonus:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[784, 0.08], [988, 0.08], [1175, 0.08], [1568, 0.25]] } },
   gameover:   { src: '', volume: 0.6, tone: { wave: 'square', notes: [[392, 0.15], [330, 0.15], [262, 0.35]] } },
   select:     { src: '', volume: 0.3, tone: { wave: 'square', freq: 880, dur: 0.04 } },
+  beat:       { src: '', volume: 0.25, tone: { wave: 'square', freq: 1200, dur: 0.03 } },
+  beatTop:    { src: '', volume: 0.35, tone: { wave: 'square', freq: 1800, dur: 0.04 } },
   start:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[523, 0.08], [784, 0.08], [1047, 0.14]] } },
 };

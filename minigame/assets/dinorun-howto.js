@@ -114,7 +114,7 @@ const DR_HOWTO_PAGES = [
   },
   {
     tab: 'sp2', title: 'バトルのコツ', image: 'dinorun/howto/tips.webp',
-    text: 'ジャンプボタンでふみつけ。ボスが<b>3回光ったら</b>、4回目に合わせてスライディングボタンで防御！',
+    text: 'ジャンプボタンでふみつけ。ボスが光ったら、リズムに合わせて<b>次の拍</b>でスライディングボタン防御！（ふつうは3回、強い技は速く6回光る）',
   },
   {
     tab: 'sp2', title: 'ほかにも…？！', image: 'dinorun/howto/more.webp',

@@ -16,7 +16,7 @@
      技のボタン（1・2・3… / ← ↑ → は左から1〜3番目） … 居合切り・火の玉・スピン・回復魔法（溜めのときは強くなる）
      回復薬（Q）・にげる（X）
      会心の一撃 … どの攻撃にもある。麻痺 … 磁石を持っているとき、ふみつけ・バタ足で
-     ボス … 通常攻撃・強攻撃は3回光ってから4拍目に当たる（防御できる）。スキル攻撃は技名を出して当たる（防御できない）
+     ボス … 通常攻撃は4分音符で3回光って4回目、強攻撃は8分音符で6回光って7回目に当たる（防御できる。dinorun-design.js の rhythm）。スキル攻撃は技名を出して当たる（防御できない）
             スキル攻撃は、スピンで回っているあいだに受けると軽くなる
 
    画面（384 × 216 ドット）:
@@ -211,7 +211,8 @@ function drRpgBattle(dt) {
   } else {
     const a = b.act, prev = a.t;
     a.t += dt;
-    if (a.atk.type !== 'skill') for (let i = 1; i < 3; i++) if (prev < i * a.beat && a.t >= i * a.beat) drSound('warn');
+    // 予告の音：光るたびに鳴らす（0 回目〜 warns - 1 回目。拍の頭で光る）
+    if (a.atk.type !== 'skill') for (let i = 0; i < a.warns; i++) if (prev < i * a.beat && a.t >= i * a.beat) drSound('warn');
     // 当たる少し前から出すエフェクト（ブレスの炎など。DR_RPG_EFFECTS の lead）
     const fx = drRpgBossFx(a.atk), lead = ((typeof DR_RPG_EFFECTS !== 'undefined' && DR_RPG_EFFECTS[fx]) || {}).lead || 0;
     if (lead && !a.fxShown && a.t >= a.hitAt - lead) { a.fxShown = true; drRpgBossEffect(fx); }
@@ -229,10 +230,16 @@ function drRpgBossStart() {
     drSound('encounter');
     return;
   }
-  const beat = 60 / (atk.bpm || 120);
-  b.act = { atk, t: 0, beat, hitAt: beat * 3 };
+  // 通常攻撃・強攻撃：設計書（dinorun-design.js の DR_DESIGN.rhythm.bossAttacks）のリズムで、warns 回光って、次の拍で当たる。
+  //   音符の長さは RPGフェイズの BPM（DR_DESIGN.rhythm.rpgBpm）で決まる。
+  //   光り始めは、拍の時計（dr.run.beat）の次の音符の頭にそろえる（それまで t はマイナスで待つ）
+  const rh = (DR_DESIGN.rhythm.bossAttacks || {})[atk.type] || { note: 4, warns: 3 };
+  const note = rh.note || 4, warns = rh.warns || 3;
+  const beat = 240 / note / DR_DESIGN.rhythm.rpgBpm;                  // 1音符の長さ（秒）
+  const now = ((dr.run && dr.run.beat) || 0) * note / 4;              // いま何音符目か
+  const wait = (Math.ceil(now + 0.001) - now) * beat;                 // 次の音符の頭まで
+  b.act = { atk, t: -wait, beat, warns, hitAt: beat * warns };
   drRpgMsg(`${b.name}の ${atk.name}！`);
-  drSound('warn');
 }
 
 function drRpgBossHit() {
@@ -842,15 +849,15 @@ function drRpgDrawBoss(ctx, offX) {
   } else if (a && a.atk.type === 'skill') {   // スキル攻撃の前（赤くふるえる）
     ctx.globalAlpha = a0 * (0.3 + 0.3 * Math.sin(R.time * 30));
     ctx.drawImage(drRpgTint(img, '#C7305A'), Math.round(x + drRand(-1, 1)), Math.round(y), w, h);
-  } else if (a) {                // 技の予告（3回光る。強攻撃はオレンジ）
+  } else if (a) {                // 技の予告（warns 回光る。強攻撃はオレンジ）
     const idx = Math.floor(a.t / a.beat);
-    if (idx < 3 && a.t - idx * a.beat < 0.15) {
+    if (a.t >= 0 && idx < a.warns && a.t - idx * a.beat < Math.min(0.15, a.beat * 0.6)) {
       ctx.globalAlpha = a0 * 0.85;
       ctx.drawImage(drRpgTint(img, a.atk.type === 'strong' ? '#FF9A3C' : '#FFFFFF'), Math.round(x), Math.round(y), w, h);
     }
     ctx.globalAlpha = a0;
     // 何回光ったか（「!」の数）
-    const marks = Math.min(3, idx + 1);
+    const marks = a.t < 0 ? 0 : Math.min(a.warns, idx + 1);
     const col = a.atk.type === 'strong' ? '#FF5A7A' : '#FFFFFF';
     for (let i = 0; i < marks; i++) {
       ctx.save(); ctx.translate(Math.round(x + w * 0.2 + i * 10), Math.round(y - 4)); ctx.scale(2, 2);
