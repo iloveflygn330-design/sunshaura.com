@@ -12,7 +12,8 @@
      5ワールド目からは、ときどき「入り口の敵」も出る。触れると別の遊び（フェイズ）に切りかわる（いまは RPG のバトル。dinorun-rpg.js）。ライフが 0 になったらゲームオーバー → 名前（英字3文字）を入れてランキングへ。
 
    操作:
-     PC     … Space / ↑ ジャンプ（バタ足ジャンプを覚えたら、長押しで空中に浮く）、↓ スライディング（急降下を覚えたら、空中では急降下）、A / S / D スキル①②③、P / Esc 一時停止
+     PC     … Space ジャンプ（バタ足ジャンプを覚えたら、長押しで空中に浮く）、↓ スライディング（急降下を覚えたら、空中では急降下）、
+              ← ↑ → または A / S / D スキル①②③、P / Esc 一時停止（W・K でもジャンプ、J でもスライディング）
               ボタンをクリックしても操作できる
      スマホ … 画面下のボタンをタップ（横持ちのときは左右どちらにも同じボタンが出る）
 
@@ -449,7 +450,7 @@ function drOnKeyDown(e) {
   const c = e.code;
   const gameKeys = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
   if (gameKeys.includes(c)) e.preventDefault();   // ページがスクロールしないように
-  if (e.repeat && c !== 'ArrowUp' && c !== 'ArrowDown') return;
+  if (e.repeat && c !== 'ArrowDown') return;   // 押しっぱなしのキーリピートは、スライディング（↓）だけ通す
 
   switch (dr.mode) {
     case 'title':
@@ -457,21 +458,25 @@ function drOnKeyDown(e) {
       else if (c === 'KeyR') drShowRanking();
       break;
     case 'play':
-      if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW' || c === 'KeyK') {
+      // 方向キー：← スキル①、↑ スキル②、→ スキル③、↓ スライディング（ジャンプは Space）
+      if (c === 'Space' || c === 'KeyW' || c === 'KeyK') {
         if (!dr.jumpHeld.has('k' + c)) drPress('jump', 'k' + c);   // 押しっぱなしのキーリピートでは跳ばない
       }
       else if (c === 'ArrowDown' || c === 'KeyJ') drPress('slide');
-      else if (c === 'KeyA') drPress('skill0');
-      else if (c === 'KeyS') drPress('skill1');
-      else if (c === 'KeyD') drPress('skill2');
+      else if (c === 'KeyA' || c === 'ArrowLeft') drPress('skill0');
+      else if (c === 'KeyS' || c === 'ArrowUp') drPress('skill1');
+      else if (c === 'KeyD' || c === 'ArrowRight') drPress('skill2');
       else if (c === 'KeyQ') drUsePotion();
       else if (c === 'KeyB' && dr.debug) drDebugBattle();   // テスト用：URL に &drdebug を付けると B キーでバトルを始められる
       else if (c === 'KeyP' || c === 'Escape') drPause();
       break;
     case 'phase':
-      // フェイズ中のキー（ジャンプ・スライディングは走るときと同じキー。Q 回復薬、X 逃げる、1〜6 スキル）
-      if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW' || c === 'KeyK') drPress('jump');
+      // フェイズ中のキー（走るときと同じ並び。Space ふみつけ、↓ 防御、← ↑ → 技の1〜3番目、1〜6 技、Q 回復薬、X 逃げる）
+      if (c === 'Space' || c === 'KeyW' || c === 'KeyK') drPress('jump');
       else if (c === 'ArrowDown' || c === 'KeyJ') drPress('slide');
+      else if (c === 'ArrowLeft') drPress('pskill0');
+      else if (c === 'ArrowUp') drPress('pskill1');
+      else if (c === 'ArrowRight') drPress('pskill2');
       else if (c === 'KeyQ') drPress('potion');
       else if (c === 'KeyX') drPress('escape');
       else if (/^(Digit|Numpad)[1-9]$/.test(c)) drPress('pskill' + (+c.slice(-1) - 1));
