@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-10",
+  "title": "Gentle MonsterのAndroid XRメガネが12月発売へほか、今日のVR・AIニュース4本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "今日は、韓国のメガネブランドGentle MonsterによるAndroid XRメガネの発売時期の発表を中心に、4本のニュースをお届けします。Metaのサブスクリプションの新しい画面の流出や、PC VRで遊べる無料Modの話題、AIのキャラクターと会話するQuest向けゲームの発売日も紹介します。",
+  "items": [
+    {
+      "headline": "Gentle MonsterのAndroid XRメガネ、12月発売へ",
+      "category": "VR機器・技術",
+      "overview": "韓国のメガネブランドGentle Monsterが、SamsungとGoogleと組んで作るAndroid XR対応のスマートグラスについて「コレクションは12月に発売」と発表しました。俳優ホアキン・フェニックスさんが出演する短編映画の予告も公開され、本編は11月中旬に公開される予定です。同社の米国サイトには「11月12日予約開始」の表示があり、ニューヨークでは先行展示も行われると報じられています。価格はまだ発表されていません。",
+      "points": [
+        "画面のない音声タイプのメガネで、カメラとスピーカーを内蔵",
+        "GoogleのAI「Gemini」との会話や翻訳などに対応する見込み",
+        "Samsungの発表では、ケース込みで長時間使えるバッテリー",
+        "価格や日本での発売は未発表"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/gentle-monster-android-xr-joaquin-phoenix-trailer/" },
+        { "name": "VR.org", "url": "https://vr.org/articles/gentle-monster-december-launch-preorder-november-12-android-xr-glasses-2026" }
+      ]
+    },
+    {
+      "headline": "Meta「Horizon+」が「Meta VR+」に？画面が流出",
+      "category": "VR機器・技術",
+      "overview": "Questのサブスクリプション「Meta Horizon+」が「Meta VR Plus」という名前に変わり、3D映画が見放題になる可能性を示す画面が、データマイナーによってXに投稿されました。画面にはディズニー、ソニー・ピクチャーズ、Amazon MGMの作品のポスターが並んでいます。Metaはこの件についてコメントしておらず、正式な発表ではありません。料金や開始時期も画面には書かれていません。",
+      "points": [
+        "現時点では流出した画面のみで、Metaは未発表",
+        "MetaはConnectで毎月新しい3D映画を届けると予告していた",
+        "名前の表記も「VR Plus」と「VR+」で揺れている",
+        "正式な発表があるまでは続報待ち"
+      ],
+      "sources": [
+        { "name": "VR.org", "url": "https://vr.org/articles/meta-vr-plus-leak-3d-movies-subscription-disney-sony-amazon-2026" }
+      ]
+    },
+    {
+      "headline": "『Metro Exodus』をVRで遊べる無料Modが公開",
+      "category": "その他",
+      "overview": "PCゲーム『Metro Exodus』のメインストーリーを、PC VRで最後まで遊べるようにする無料のModのベータ版が公開されました。作者は『Quake 3 Arena』のVR化も手がけたRippeR37さんです。武器のリロードやガスマスクのフィルター交換などを、自分の手で行えるようになっています。遊ぶにはSteam版の本編（スタンダードエディション）が必要です。",
+      "points": [
+        "Mod自体は無料。ゲーム本編は別に購入が必要",
+        "座っても立っても遊べ、左手での操作にも対応",
+        "Epic版・GOG版や追加ストーリーには未対応",
+        "ベータ版のため、不具合の修正が続いている"
+      ],
+      "sources": [
+        { "name": "VR.org", "url": "https://vr.org/articles/metro-exodus-vr-mod-ripper37-free-pc-vr-beta-how-to-play-2026" }
+      ]
+    },
+    {
+      "headline": "AIの住人と話す『Fabula Rasa』、12月3日発売に",
+      "category": "AI",
+      "overview": "ブラジルのスタジオArvoreが作るQuest向けゲーム『Fabula Rasa』の発売日が、11月12日から12月3日に変更されました。プレイヤーは檻に入れられた状態から、町の住人9人と会話して味方につけ、王様が来る前に助かることを目指します。住人のセリフは台本ではなく、AIの大規模言語モデルが生み出します。価格はまだストアに表示されていません。",
+      "points": [
+        "住人の会話はAIが担当し、毎回違うやり取りになる",
+        "AIはクラウドで動くため、インターネット接続が必要",
+        "ストアの対応言語は今のところ英語のみ",
+        "絵には生成AIを使っていないと開発元は説明"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/fabula-rasa-is-an-interactive-improv-driven-experience-coming-to-quest-in-november/" },
+        { "name": "VR.org", "url": "https://vr.org/articles/fabula-rasa-ai-townsfolk-claude-chatgpt-quest-december-3-2026" }
+      ]
+    }
+  ],
+  "outro": "12月はAndroid XRメガネやQuestの新作など、新しいものが続々と登場しそうです。続報が出たら、またお伝えします。"
+}

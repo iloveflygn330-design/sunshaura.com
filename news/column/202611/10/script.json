@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-10",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！火曜日のVRニュースなのだ。", "read": "おはようなのだ！かようびのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "おはようございます。朝はまだ眠いです。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "11月10日のニュースは4本なのだ。", "read": "じゅういちがつとおかのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。メガネブランドのGentle Monsterの話なのだ。", "read": "いっぽんめ。メガネブランドの、ジェントルモンスターの話なのだ。" },
+      { "who": "zundamon", "text": "Android XRのメガネを、12月に出すと発表したのだ。", "read": "アンドロイドエックスアールのメガネを、じゅうにがつに出すと発表したのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "画面が見えるメガネですか？", "face": "look" },
+      { "who": "zundamon", "text": "画面はなくて、カメラとスピーカー付きなのだ。", "face": "normal" },
+      { "who": "zundamon", "text": "AIと話したり、翻訳したりできるみたいなのだ。", "read": "エーアイと話したり、翻訳したりできるみたいなのだ。" },
+      { "who": "zundamon", "text": "アメリカのサイトには、11月12日予約開始とあるのだ。", "read": "アメリカのサイトには、じゅういちがつじゅうににち予約開始とあるのだ。" },
+      { "who": "kiritan", "text": "お値段は？そこが一番大事です。" },
+      { "who": "zundamon", "text": "それがまだ、発表されてないのだ。", "face": "surprise" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Metaのサブスクの画面が流出したのだ。", "read": "にほんめ。メタのサブスクの画面が、流出したのだ。", "face": "look" },
+      { "who": "zundamon", "text": "名前がMeta VR Plusに変わるかもしれないのだ。", "read": "名前が、メタブイアールプラスに変わるかもしれないのだ。" },
+      { "who": "zundamon", "text": "3D映画が見放題になる、という画面だったのだ。", "read": "スリーディー映画が見放題になる、という画面だったのだ。" },
+      { "who": "kiritan", "text": "それ、Metaが発表したんですか？", "read": "それ、メタが発表したんですか？" },
+      { "who": "zundamon", "text": "Metaはまだ何も言ってないのだ。", "read": "メタはまだ、何も言ってないのだ。" },
+      { "who": "kiritan", "text": "じゃあ、正式発表を待ちましょう。", "face": "nihilistic" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Metro ExodusをVRで遊べるModなのだ。", "read": "さんぼんめ。メトロエクソダスを、ブイアールで遊べるモッドなのだ。" },
+      { "who": "kiritan", "text": "あのゲームを丸ごとですか？", "face": "surprise" },
+      { "who": "zundamon", "text": "メインのお話を、最後まで遊べるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "リロードもガスマスクの交換も、自分の手でやるのだ。" },
+      { "who": "zundamon", "text": "Modは無料。でも本編はSteam版が必要なのだ。", "read": "モッドは無料。でも本編は、スチーム版が必要なのだ。", "face": "look" },
+      { "who": "kiritan", "text": "ガスマスク交換、手でやると焦りそうです。", "face": "smile" },
+      { "who": "zundamon", "text": "まだベータ版なので、そこは気をつけるのだ。", "read": "まだベータ版なので、そこは気をつけるのだ。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。Questのゲーム、Fabula Rasaなのだ。", "read": "よんほんめ。クエストのゲーム、ファブララサなのだ。" },
+      { "who": "zundamon", "text": "発売日が、12月3日に変わったのだ。", "read": "発売日が、じゅうにがつみっかに変わったのだ。" },
+      { "who": "zundamon", "text": "町の人9人と話して、味方にするゲームなのだ。", "read": "町の人きゅうにんと話して、味方にするゲームなのだ。" },
+      { "who": "kiritan", "text": "セリフは決まってないんですか？", "face": "look" },
+      { "who": "zundamon", "text": "AIが毎回、その場で考えて話すのだ。", "read": "エーアイが毎回、その場で考えて話すのだ。", "face": "surprise" },
+      { "who": "zundamon", "text": "だからネットにつながってないと遊べないのだ。" },
+      { "who": "kiritan", "text": "話のうまさが試されますね。わたしは苦手かも。", "face": "smile" },
+      { "who": "zundamon", "text": "僕、説得には自信があるのだ！", "face": "smile" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "いて座", "comment": "新しい場所で良い出会いあり", "lucky": "スマートグラス" },
+        { "rank": 2, "sign": "かに座", "comment": "話し合いがうまくまとまる日", "lucky": "温かいお茶" },
+        { "rank": 3, "sign": "みずがめ座", "comment": "ひらめきが形になりやすい", "lucky": "メモ帳" },
+        { "rank": 4, "sign": "おうし座", "comment": "コツコツ続けたことが実る", "lucky": "マフラー" },
+        { "rank": 5, "sign": "うお座", "comment": "好きなことに素直になれる", "lucky": "映画のチケット" },
+        { "rank": 6, "sign": "やぎ座", "comment": "計画を見直すと前進できる", "lucky": "カレンダー" },
+        { "rank": 7, "sign": "ふたご座", "comment": "友達との会話で元気が出る", "lucky": "ワイヤレスイヤホン" },
+        { "rank": 8, "sign": "おとめ座", "comment": "片付けで気分すっきり", "lucky": "収納ボックス" },
+        { "rank": 9, "sign": "てんびん座", "comment": "ゆっくり休むのが吉", "lucky": "ブランケット" },
+        { "rank": 10, "sign": "おひつじ座", "comment": "一呼吸おくとうまくいく", "lucky": "はちみつ" },
+        { "rank": 11, "sign": "さそり座", "comment": "小さな親切が返ってくる", "lucky": "ハンカチ" },
+        { "rank": 12, "sign": "しし座", "comment": "早寝で明日の運気アップ", "lucky": "アイマスク" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、いて座ですわ。", "read": "今日のいちいは、いてざですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はかに座、3位はみずがめ座ですわ。", "read": "にいはかにざ、さんいはみずがめざですわ。" },
+        { "who": "zundamon", "text": "いて座のラッキーアイテムは、スマートグラスなのだ！", "read": "いてざのラッキーアイテムは、スマートグラスなのだ！", "face": "surprise" },
+        { "who": "itako", "text": "12位はしし座。早寝で運気が上がりますわ。", "read": "じゅうにいはししざ。早寝で運気が上がりますわ。" },
+        { "who": "zundamon", "text": "しし座のみんな、今日はゆっくり休むのだ。", "read": "ししざのみんな、今日はゆっくり休むのだ。", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "kiritan", "text": "今日もありがとうございました。二度寝してきます。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "寝坊しないようにするのだ。また明日なのだ！", "read": "寝坊しないようにするのだ。またあしたなのだ！", "face": "smile" }
+    ]}
+  ]
+}
