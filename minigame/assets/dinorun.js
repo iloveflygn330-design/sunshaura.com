@@ -161,6 +161,7 @@ const dr = {
   shop: null,         // ショップを開いている間の状態
   shake: 0,
   debug: /[?&]drdebug\b/.test(location.search),
+  metronome: /[?&]drbeat\b/.test(location.search),   // テスト用：URL に &drbeat を付けると、拍に合わせて「カッ」と鳴る（BGM がないときに拍を確かめる）
   uiCache: {},
   titleSwapT: 0,
 };
@@ -674,6 +675,8 @@ function drNewRun() {
     nextShopAt: DR_CONFIG.tutorial ? Infinity : DR_CONFIG.shopFirstMeter,   // チュートリアルがあるときは、最初のショップはチュートリアルが出す
     groupSeq: 0,           // つながって出た障害物をまとめる番号
     shopCount: 0,
+    beat: 0,               // 走り始めてから何拍目か（4分音符。drBeatTick が進める）
+    nextObsBeat: null,     // 次の障害物が恐竜君のところに着く拍（8分音符の番号。drUpdate が決める）
     worldIndex: 0,         // いま何ワールド目か（0 から。画面の「WORLD 1」は worldIndex + 1）
     worldId: DR_DESIGN.firstWorld,   // いまのワールド（DR_WORLDS / DR_DESIGN.worlds の id）
     nextWorldAt: DR_CONFIG.worldLength,
@@ -725,6 +728,7 @@ function drLoop(now) {
   if (dt < 0) dt = 0;
   dr.clock += dt;
 
+  if (dr.run && (dr.mode === 'play' || dr.mode === 'phase')) drBeatTick(dr.run, dt);   // 拍の時計（止まっている間は進めない）
   if (dr.mode === 'play') drUpdate(dr.run, dt);
   else if (dr.mode === 'phase' && dr.phase) dr.phase.impl.update(dt);
   else if (dr.mode === 'ready') {
@@ -770,6 +774,41 @@ function drPickNextWorld(run) {
   if (!cands.length) return run.worldId;
   return drPickWeighted(cands).id;
 }
+/* ---------- 拍（BPM） ----------
+   run.beat … 走り始めてから何拍目か（4分音符で数える。小数つき）。BPM はそのときの場面で変わる（drBpm）。
+   BGM が鳴っているときは、曲の拍（DR_DESIGN.bgmBeatStart 秒を拍の0とする）に少しずつそろえる。
+   障害物（drUpdate）・ショップ（drSpawnShop）・ボスの攻撃（dinorun-rpg.js）が、この拍にタイミングを合わせる。 */
+function drBpm(run) {
+  if (dr.mode === 'phase') return DR_DESIGN.rhythm.rpgBpm;   // RPGフェイズ
+  return drProgress(run).bpm;                                 // ノーマル（ボーナスステージも、そのワールドと同じ）
+}
+function drBeatTick(run, dt) {
+  const bpm = drBpm(run), before = run.beat || 0;
+  run.beat = before + dt * bpm / 60;
+  const a = drAudio.bgm;
+  if (a && !a.paused && a.readyState >= 2) {
+    const def = DR_SOUNDS[drAudio.bgmId] || {};
+    const start = def.beatStart != null ? def.beatStart : DR_DESIGN.bgmBeatStart;
+    const t = a.currentTime - start;
+    if (t >= 0) {
+      let diff = (t * bpm / 60 - run.beat) % 1;
+      diff -= Math.round(diff);            // -0.5〜0.5 拍のずれ
+      run.beat += diff * 0.2;              // いっぺんに飛ばず、少しずつ合わせる
+    }
+  }
+  // テスト用のメトロノーム（&drbeat）
+  if (dr.metronome && Math.floor(run.beat) > Math.floor(before)) drSound(Math.floor(run.beat) % 4 === 0 ? 'beatTop' : 'beat');
+}
+/* t 秒のあいだに走る距離（px）。走る速さはだんだん上がる（speedAccel）ので、そのぶんも足す（拍とずれないように） */
+function drTravel(run, t) {
+  const C = DR_CONFIG;
+  if (run.bonus || run.speed >= C.speedMax) return run.speed * t;
+  const tUp = Math.min(t, (C.speedMax - run.speed) / C.speedAccel);   // 最高速になるまでの時間
+  return run.speed * t + C.speedAccel * tUp * (t - tUp / 2);
+}
+/* 障害物などが「着いた」とみなす位置（恐竜君の真ん中）。ダッシュで前に出ても動かさない */
+function drArriveX() { return DR_CONFIG.playerX + 12; }
+
 /* 新しいワールドに入ったときの「ライフ+1」（DR_DESIGN.lifeUpWorlds のワールドだけ）。
    減っていれば1回復、満タンならハートの枠が1つ増えて回復する */
 function drWorldLifeUp(run) {
@@ -922,10 +961,20 @@ function drUpdate(run, dt) {
     const steps = DR_TUTORIAL.steps;
     while (run.tutStep < steps.length && drMeters(run) >= steps[run.tutStep].at) drTutorialSpawn(run, steps[run.tutStep++]);
   }
-  if (run.nextObstacleIn <= 0) {
-    let extra = 0;   // 長い障害物（スキルの区画）を出したら、その長さのぶん次をあける
-    if (run.calmT <= 0 && !shopSoon && !run.bonus && !tutorial) extra = drSpawnObstacle(run) || 0;
-    run.nextObstacleIn = drObstacleGap(run) * run.speed + extra;
+  // 障害物は「何拍目（8分音符で数える）に恐竜君のところへ着くか」を先に決めて、ちょうどその拍に着く位置に出す。
+  //   run.nextObsBeat … 次の障害物が着く拍（8分音符の番号）
+  //   run.nextObstacleIn … この距離（px）を走るまでは出さない（ショップの後・バトルの後など）
+  {
+    const note = DR_DESIGN.rhythm.obstacleNote || 8;
+    const unit = 240 / note / drBpm(run);                    // 1音符の長さ（秒）
+    const now = run.beat * note / 4;                          // いま何音符目か
+    if (run.nextObsBeat == null || run.nextObsBeat < now) run.nextObsBeat = Math.ceil(now) + drObstacleGapNotes(run);
+    const lead = drTravel(run, (run.nextObsBeat - now) * unit); // 着くまでに走る距離（px）
+    if (lead <= C.width + 96 - drArriveX()) {                // 画面の外（右）に出せる距離まで来たら出す
+      let extra = 0;   // 長い障害物（スキルの区画）を出したら、その長さのぶん次をあける
+      if (run.nextObstacleIn <= 0 && run.calmT <= 0 && !shopSoon && !run.bonus && !tutorial) extra = drSpawnObstacle(run, drArriveX() + lead) || 0;
+      run.nextObsBeat += drObstacleGapNotes(run) + Math.ceil(extra / run.speed / unit);
+    }
   }
   run.nextCoinIn -= move;
   if (run.nextCoinIn <= 0) {
@@ -1169,31 +1218,31 @@ function drOverlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-/* 次の障害物までの間隔（秒）。ワールドの番号ごとの「8分音符いくつ」（DR_DESIGN.progression）を、
-   そのワールドの BPM で秒に直す。ワールドの gapMult（チルワールドは広い など）もかける */
-function drObstacleGap(run) {
+/* 次の障害物までの間隔（8分音符いくつ）。ワールドの番号ごとの範囲（DR_DESIGN.progression）から選んで、
+   ワールドの gapMult（チルワールドは広い など）をかける。拍にそろえるので整数 */
+function drObstacleGapNotes(run) {
   const p = drProgress(run);
-  const n = p.gapMin + Math.floor(Math.random() * (p.gapMax - p.gapMin + 1));   // 8分音符いくつ（整数）
-  const eighth = 30 / p.bpm;                                                    // 8分音符の長さ（秒）
-  return Math.max(1, Math.round(n * (drWorldDesign(run).gapMult || 1))) * eighth;
+  const n = p.gapMin + Math.floor(Math.random() * (p.gapMax - p.gapMin + 1));
+  return Math.max(1, Math.round(n * (drWorldDesign(run).gapMult || 1)));
 }
 
-/* 障害物を1つ出す（長いものを出したときは、その長さを返す） */
-function drSpawnObstacle(run) {
+/* 障害物を1つ出す（長いものを出したときは、その長さを返す）。
+   cx … 障害物の真ん中を置く位置（ここから走ってきて、ちょうど拍のときに恐竜君の真ん中を通る） */
+function drSpawnObstacle(run, cx) {
   const C = DR_CONFIG;
   const meters = drMeters(run);
   // 入り口の敵（このワールドで出ると決まっていて、その距離まで来たら出す）
   if (run.encounter && meters >= run.encounter.at) {
     const def = drEncounterObstacle(run.encounter.def);
     run.encounter = null;
-    run.obstacles.push(drMakeObstacle(def, C.width + 6, C.groundY - def.h, ++run.groupSeq));
+    run.obstacles.push(drMakeObstacle(def, Math.round(cx - def.w / 2), C.groundY - def.h, ++run.groupSeq));
     return def.w;
   }
   // スキルを使わないと通れない区画（hardFromWorld ワールド目から、hardGapMin〜Max m ごと）
   if (run.worldIndex + 1 >= C.hardFromWorld) {
     if (!run.nextHardAt) run.nextHardAt = meters + drRand(60, 160);
     else if (meters >= run.nextHardAt) {
-      const len = drSpawnGate(run);
+      const len = drSpawnGate(run, cx);
       if (len) { run.nextHardAt = meters + drRand(C.hardGapMin, C.hardGapMax); return len; }
     }
   }
@@ -1204,9 +1253,9 @@ function drSpawnObstacle(run) {
     && (!o.fly || meters >= C.flyingFromMeter)).map(o => ({ def: o, weight: table[o.id] }));
   if (!cands.length) return;
   const def = drPickWeighted(cands).def;
-  const x0 = DR_CONFIG.width + 6;
+  const x0 = Math.round(cx - def.w / 2);
   const group = ++run.groupSeq;
-  if (def.pit) { const o = drAddPit(run, def, x0, group); return o.w; }
+  if (def.pit) { const o = drAddPit(run, def, x0, group); o.x = Math.round(cx - o.w / 2); return o.w; }   // 穴は幅が決まってから真ん中をそろえる
   if (def.fly) {
     const lift = def.fly[Math.floor(Math.random() * def.fly.length)];
     run.obstacles.push(drMakeObstacle(def, x0, DR_CONFIG.groundY - lift - def.h, group));
@@ -1221,13 +1270,13 @@ function drSpawnObstacle(run) {
 }
 /* スキルを使わないと通れない区画：下りているシャッター（gate_roof）の下に、壊せるかべ（gate_wall）。
    居合切り・スピンアタック・火の玉のどれかがスキルボタンに入っていて、かべに着くまでに使えるようになるときだけ出す。
-   出したら長さを返す（出さなかったら 0） */
-function drSpawnGate(run) {
+   出したら長さを返す（出さなかったら 0）。cx … かべの真ん中を置く位置（拍にそろえる） */
+function drSpawnGate(run, cx) {
   const C = DR_CONFIG;
   const roof = DR_OBSTACLES.find(o => o.id === 'gate_roof'), wall = DR_OBSTACLES.find(o => o.id === 'gate_wall');
   if (!roof || !wall) return 0;
-  const x0 = C.width + 6;
-  const wallX = x0 + roof.w - wall.w - 18;
+  const wallX = Math.round(cx - wall.w / 2);
+  const x0 = wallX - (roof.w - wall.w - 18);
   const arrive = (wallX - (drPX(run) + 19)) / run.speed;     // かべに着くまでの秒数
   const ready = run.slots.some(id => id && ['slash', 'spin', 'fire'].includes(run.skills[id].action)
     && (run.cooldowns[id] || 0) <= arrive - 0.5);
@@ -1403,7 +1452,12 @@ function drUpdateTip() {
 function drSpawnShop(run) {
   // 地面に置く（そのまま走って触ると入る。ジャンプで飛び越すとスキップ）
   const y = DR_CONFIG.groundY - DR_PICKUPS.shop.h;
-  run.shopIcon = { x: DR_CONFIG.width + 8, y, baseY: y };
+  // 拍の頭（DR_DESIGN.rhythm.shopNote の音符）で、ショップの真ん中が恐竜君の真ん中に着くように、出す位置を少し右にずらす
+  const note = DR_DESIGN.rhythm.shopNote || 4, unit = 240 / note / drBpm(run);
+  const cx0 = DR_CONFIG.width + 8 + DR_PICKUPS.shop.w / 2;
+  const at = run.beat * note / 4 + (cx0 - drArriveX()) / run.speed / unit;   // そのまま出したら何音符目に着くか（だいたい）
+  const cx = drArriveX() + drTravel(run, (Math.ceil(at) - run.beat * note / 4) * unit);
+  run.shopIcon = { x: Math.round(cx - DR_PICKUPS.shop.w / 2), y, baseY: y };
   // ショップのうしろ（shopClearAfter 秒ぶん）は障害物を出さない（戻ってすぐぶつからないように）
   run.nextObstacleIn = Math.max(run.nextObstacleIn, DR_CONFIG.shopClearAfter * run.speed + DR_PICKUPS.shop.w);
 }
@@ -2847,7 +2901,11 @@ function drBgm(id) {
   if (!def || !def.src) return;
   try {
     const a = new Audio(def.src);
-    a.loop = def.loop !== false;
+    // くり返すときは、拍の始まり（DR_DESIGN.bgmBeatStart。頭の無音のあと）から最後までをくり返す（拍がずれないように）
+    if (def.loop !== false) {
+      const start = def.beatStart != null ? def.beatStart : DR_DESIGN.bgmBeatStart;
+      a.addEventListener('ended', () => { if (drAudio.bgm === a) { a.currentTime = start; a.play().catch(() => {}); } });
+    }
     if (drAudio.muted) { drAudio.bgm = a; return; }
     a.volume = def.volume == null ? 0.5 : def.volume;
     a.play().catch(() => {});

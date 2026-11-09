@@ -163,11 +163,12 @@ const DR_RPG = {
        score: 10000,              // 倒したときのスコア（タイムボーナスは別）
        gapMin: 0.8, gapMax: 1.8,  // 技を出し終わってから、次の技を出すまでの秒数（毎回この範囲でぶれる）
        attacks: [                 // 出す技（weight が大きいほど出やすい）
-         { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0, bpm: 120 },
-         { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2, bpm: 100 },
+         { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0 },
+         { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2 },
        ],
-         // type: 'normal'（通常攻撃）/ 'strong'（強攻撃）… どちらも3回光ってから、4拍目に当たる（防御できる）
-         //        光る間隔は bpm で決まる（120 なら 0.5 秒ごと）。ダメージ = 攻撃力 × power
+         // type: 'normal'（通常攻撃）/ 'strong'（強攻撃）… 何回か光ってから、次の拍で当たる（防御できる）
+         //        何回光るか・光る間隔（4分音符／8分音符）は、設計書の写し dinorun-design.js の DR_DESIGN.rhythm.bossAttacks と
+         //        rpgBpm で決まる（通常攻撃は4分音符で3回光って4回目、強攻撃は8分音符で6回光って7回目に当たる）。ダメージ = 攻撃力 × power
          //       'skill'（スキル攻撃）… 防御できない。技の名前を出して、wind 秒後に当たる
          // fx … 当たるときのエフェクト（DR_RPG_EFFECTS の名前。省くと 通常 claw・強 smash・スキル breath）
          // sound … 当たるときの音（dinorun-config.js の DR_SOUNDS の名前。省くと bosshit。スキル攻撃は breath）
@@ -229,8 +230,8 @@ const DR_BOSSES = [
     hp: 1200, atk: 26, growth: 0.15, score: 10000,
     gapMin: 0.8, gapMax: 1.8,
     attacks: [
-      { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0, bpm: 120, fx: 'claw' },
-      { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2, bpm: 100, fx: 'smash' },
+      { type: 'normal', name: 'ひっかき', weight: 3, power: 1.0, fx: 'claw' },
+      { type: 'strong', name: 'しっぽアタック', weight: 1, power: 2.2, fx: 'smash' },
       { type: 'skill', name: 'ほのおのブレス', weight: 0.7, power: 2.2, wind: 1.2, fx: 'breath', sound: 'breath' },
     ],
     w: 144, h: 120,
