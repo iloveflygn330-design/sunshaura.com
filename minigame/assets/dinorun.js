@@ -675,6 +675,7 @@ function drNewRun() {
     nextShopAt: DR_CONFIG.tutorial ? Infinity : DR_CONFIG.shopFirstMeter,   // チュートリアルがあるときは、最初のショップはチュートリアルが出す
     groupSeq: 0,           // つながって出た障害物をまとめる番号
     shopCount: 0,
+    rpgArea: null,         // RPGエリアの間 { until: このワールド（worldIndex）に入ったらおわり }
     beat: 0,               // 走り始めてから何拍目か（4分音符。drBeatTick が進める）
     nextObsBeat: null,     // 次の障害物が恐竜君のところに着く拍（8分音符の番号。drUpdate が決める）
     worldIndex: 0,         // いま何ワールド目か（0 から。画面の「WORLD 1」は worldIndex + 1）
@@ -692,6 +693,7 @@ function drStartGame() {
   drCleanupPhase();
   dr.run = drNewRun();
   dr.jumpHeld.clear();
+  dr.phaseBlend = null; dr.phaseResultT = 0;
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
   drBgm(drWorld(dr.run).bgm);
   drShowBanner(drWorld(dr.run).name, 'WORLD 1', drWorldFeature(dr.run));
@@ -728,9 +730,19 @@ function drLoop(now) {
   if (dt < 0) dt = 0;
   dr.clock += dt;
 
-  if (dr.run && (dr.mode === 'play' || dr.mode === 'phase')) drBeatTick(dr.run, dt);   // 拍の時計（止まっている間は進めない）
+  if (dr.run && (dr.mode === 'play' || dr.mode === 'phase' || dr.mode === 'phaseResult')) drBeatTick(dr.run, dt);   // 拍の時計（止まっている間は進めない）
   if (dr.mode === 'play') drUpdate(dr.run, dt);
-  else if (dr.mode === 'phase' && dr.phase) dr.phase.impl.update(dt);
+  else if ((dr.mode === 'phase' || dr.mode === 'phaseResult') && dr.phase) dr.phase.impl.update(dt);   // 結果の画面のうしろでも、走りつづける
+  // フェイズの結果の画面：決まった秒数が過ぎたら、自動でノーマルフェイズへ（drShowPhaseResult の autoSec）
+  if (dr.mode === 'phaseResult' && dr.phaseResultT > 0) {
+    dr.phaseResultT -= dt;
+    if (dr.phaseResultT <= 0) drEndPhase('win');
+  }
+  // RPGフェイズからノーマルフェイズへのフェードチェンジ（drEndPhase）。バトルの背景も走ったぶん流しつづける
+  if (dr.phaseBlend && dr.mode === 'play' && dr.run) {
+    dr.phaseBlend.t += dt; dr.phaseBlend.runX += dr.run.speed * dt;
+    if (dr.phaseBlend.t >= dr.phaseBlend.dur) dr.phaseBlend = null;
+  }
   else if (dr.mode === 'ready') {
     dr.readyT -= dt;
     if (dr.readyT <= 0) drSetMode(dr.readyNext);
@@ -779,7 +791,7 @@ function drPickNextWorld(run) {
    BGM が鳴っているときは、曲の拍（DR_DESIGN.bgmBeatStart 秒を拍の0とする）に少しずつそろえる。
    障害物（drUpdate）・ショップ（drSpawnShop）・ボスの攻撃（dinorun-rpg.js）が、この拍にタイミングを合わせる。 */
 function drBpm(run) {
-  if (dr.mode === 'phase') return DR_DESIGN.rhythm.rpgBpm;   // RPGフェイズ
+  if (dr.mode === 'phase' || dr.mode === 'phaseResult' || run.rpgArea) return DR_DESIGN.rhythm.rpgBpm;   // RPGフェイズ・RPGエリア
   return drProgress(run).bpm;                                 // ノーマル（ボーナスステージも、そのワールドと同じ）
 }
 function drBeatTick(run, dt) {
@@ -806,6 +818,39 @@ function drTravel(run, t) {
   const tUp = Math.min(t, (C.speedMax - run.speed) / C.speedAccel);   // 最高速になるまでの時間
   return run.speed * t + C.speedAccel * tUp * (t - tUp / 2);
 }
+/* いま拍に合っているか（RPGエリアのリズム技。DR_DESIGN.rpgArea の note・window） */
+function drOnBeat(run) {
+  const A = DR_DESIGN.rpgArea, note = A.note || 4;
+  const pos = run.beat * note / 4;
+  return Math.abs(pos - Math.round(pos)) * 240 / note / drBpm(run) <= A.window;
+}
+
+/* ---------- RPGエリア（RPGフェイズに勝ったあと。DR_DESIGN.rpgArea） ---------- */
+function drStartRpgArea(run) {
+  run.rpgArea = { until: run.worldIndex + (DR_DESIGN.rpgArea.worlds || 2), from: drMeters(run) };
+  drShowBanner('RPG AREA', 'SPECIAL', DR_DESIGN.rpgArea.feature);
+}
+/* ワールドが切りかわったとき：決めたワールドまで来たら、RPGエリアをおわる */
+function drCheckRpgAreaEnd(run) {
+  if (run.rpgArea && run.worldIndex >= run.rpgArea.until) run.rpgArea = null;
+}
+/* いま流す BGM（RPGエリアの間は RPG の BGM が鳴りつづける） */
+function drRunBgm(run) {
+  return run.rpgArea && typeof DR_RPG !== 'undefined' ? (DR_RPG.bgm || null) : drWorld(run).bgm;
+}
+
+/* フェイズのあいだ、走りつづける（RPGフェイズは走りながら戦う）。距離は進むが、ワールド・ショップ・入り口の敵などの位置は
+   そのぶん先へずらす（＝フェイズのあいだにワールドは進まない）。dinorun-rpg.js の update から呼ぶ */
+function drPhaseRunForward(run, dt) {
+  const move = run.speed * dt, m = move / DR_CONFIG.pxPerMeter;
+  run.dist += move;
+  run.nextWorldAt += m;
+  run.nextShopAt += m;
+  if (run.nextHardAt) run.nextHardAt += m;
+  if (run.encounter) run.encounter.at += m;
+  return move;
+}
+
 /* 障害物などが「着いた」とみなす位置（恐竜君の真ん中）。ダッシュで前に出ても動かさない */
 function drArriveX() { return DR_CONFIG.playerX + 12; }
 
@@ -941,12 +986,13 @@ function drUpdate(run, dt) {
         if (run.bonus) { run.bonus = false; run.marks = []; }
         run.worldIndex++;
         run.worldId = drPickNextWorld(run);   // ワールド2からは抽選（dinorun-design.js）
+        drCheckRpgAreaEnd(run);
         drRollEncounter(run);
         drWorldLifeUp(run);
       }
       const w = drWorld(run);
-      drShowBanner(w.name, run.bonus ? 'BONUS STAGE' : 'WORLD ' + (run.worldIndex + 1), drWorldFeature(run));
-      drBgm(w.bgm);
+      drShowBanner(w.name, run.bonus ? 'BONUS STAGE' : 'WORLD ' + (run.worldIndex + 1) + (run.rpgArea ? '・RPG AREA' : ''), drWorldFeature(run));
+      drBgm(drRunBgm(run));
     }
     if (run.worldFx.t >= run.worldFx.dur) run.worldFx = null;
   }
@@ -1536,8 +1582,14 @@ function drUseSkill(run, slot) {
   const skill = run.skills[id];
   const fn = DR_SKILL_ACTIONS[skill.action];
   if (!fn) return;
-  if (fn(run, skill) === false) return;   // 使えなかった（空振りにしない）
-  run.cooldowns[id] = skill.cooldown;
+  // RPGエリア：拍に合わせて出すと、急降下コンボと同じように強くなる（リズム技）
+  const rhythm = !!run.rpgArea && drOnBeat(run), hadCombo = run.comboT;
+  if (rhythm) run.comboT = Math.max(run.comboT, 0.05);
+  const used = fn(run, skill);
+  if (rhythm && !(hadCombo > 0) && run.comboT > 0) run.comboT = 0;   // 強くするのに使われなかったら、コンボを残さない
+  if (used === false) return;   // 使えなかった（空振りにしない）
+  if (rhythm) { drFloatText(run, 'RHYTHM!', drPX(run) - 4, DR_CONFIG.groundY - run.y - 40, '#FF7AE0'); drSound('charge'); }
+  run.cooldowns[id] = skill.cooldown * (run.rpgArea ? (DR_DESIGN.rpgArea.ctMult || 1) : 1);   // RPGエリアの間はクールタイムが短い
 }
 
 /* クールタイム中（または空き）のスキルを使おうとした：恐竜君が「おっとと」とよろける（見た目だけ。動きは変わらない） */
@@ -1610,6 +1662,7 @@ function drRollEncounter(run) {
   const world = run.worldIndex + 1;
   for (const enc of DR_ENCOUNTERS) {
     if (world < (enc.fromWorld || 1) || !DR_PHASES[enc.phase]) continue;
+    if (run.rpgArea && enc.phase !== 'rpg') continue;   // RPGエリアの間は、RPGフェイズに入るアイコンだけ
     if (Math.random() < enc.chance) {
       const start = run.nextWorldAt - DR_CONFIG.worldLength;   // このワールドが始まった距離（m）
       run.encounter = { def: enc, at: start + DR_CONFIG.worldLength * drRand(0.25, 0.75) };
@@ -1649,6 +1702,8 @@ function drStartPhase(enc, obstacle) {
 function drEndPhase(outcome) {
   const run = dr.run, C = DR_CONFIG;
   if (!run || !dr.phase) return;
+  // 勝ったときは、フェードチェンジでバトルの背景を流しつづけるため、走ってきた距離を覚えておく
+  const runX = (typeof drRpg !== 'undefined' && drRpg && drRpg.runX) || 0;
   drCleanupPhase();
   if (outcome === 'lose') {
     drBgm(null);
@@ -1665,7 +1720,19 @@ function drEndPhase(outcome) {
   run.calmT = Math.max(run.calmT, 3);
   run.nextObstacleIn = Math.max(run.nextObstacleIn, run.speed * 2);
   run.slideT = 0; run.ducking = false;
-  drBgm(drWorld(run).bgm);
+  dr.phaseResultT = 0;
+  if (outcome === 'win') {
+    // 勝ち：RPGエリアが始まる。恐竜君は走りつづけたまま、背景・床・恐竜君の位置と大きさが
+    // フェードでノーマルフェイズのものに変わって、カウントダウンなしでそのままノーマルのゲームに戻る（境目をなくす）
+    drStartRpgArea(run);
+    drBgm(drRunBgm(run));
+    drUpdateHud(true);
+    run.y = 0; run.vy = 0; run.onGround = true;
+    dr.phaseBlend = typeof drRpgDrawBg === 'function' ? { t: 0, dur: DR_DESIGN.rpgPhase.blendTime || 1.5, runX } : null;
+    drSetMode('play');
+    return;
+  }
+  drBgm(drRunBgm(run));
   drUpdateHud(true);
   drStartReady('play', C.resumeCountSec);
 }
@@ -1680,10 +1747,11 @@ function drCleanupPhase() {
   document.querySelectorAll('.dr-battle-row').forEach(el => { el.innerHTML = ''; });
   dr.uiCache = {};
 }
-/* フェイズの結果の画面（「つぎへ」で drEndPhase('win')） */
-function drShowPhaseResult(title, html) {
+/* フェイズの結果の画面（「つぎへ」で drEndPhase('win')）。autoSec を渡すと、その秒数で自動でつぎへ進む */
+function drShowPhaseResult(title, html, autoSec) {
   document.getElementById('dr-pr-title').textContent = title;
   document.getElementById('dr-pr-detail').innerHTML = html;
+  dr.phaseResultT = autoSec || 0;
   drSetMode('phaseResult');
 }
 
@@ -2275,6 +2343,8 @@ function drEffectBars(run) {
     { id: 'spin', label: 'SPIN', left: run.spinT, total: run.spinTotal || 1, color: '#7FFFD4' },
     { id: 'combo', label: 'COMBO', left: run.comboT, total: DR_CONFIG.diveComboTime, color: '#FFD84A' },   // 急降下のあと、技が強くなる残り時間
     { id: 'bonus', label: 'BONUS', left: run.bonus ? Math.max(0, run.nextWorldAt - drMeters(run)) : 0, total: DR_CONFIG.bonusLength, color: '#FF9E5E' },   // ボーナスステージの残り（m）
+    { id: 'rpgArea', label: 'RPG', left: run.rpgArea ? Math.max(0, (run.nextWorldAt + (run.rpgArea.until - run.worldIndex - 1) * DR_CONFIG.worldLength) - drMeters(run)) : 0,
+      total: (DR_DESIGN.rpgArea.worlds || 2) * DR_CONFIG.worldLength, color: '#FF7AE0' },   // RPGエリアの残り（m。だいたい）
     { id: 'flutter', label: 'バタ足', left: run.fluttering ? run.flutterLeft : 0, total: run.flutterTime || 1, color: '#9FE8FF' },   // バタ足で浮いていられる残り時間
   ];
 }
@@ -2449,7 +2519,7 @@ function drRender() {
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
     for (let i = 0; i < 3; i++) ctx.fillRect(drPX(run) + 6 + i * 6, C.groundY - run.y - 40 - i * 4, 1, 16);
   }
-  if (dr.run) drDrawPlayer(ctx, run);
+  if (dr.run) { if (!dr.phaseBlend) drDrawPlayer(ctx, run); }   // フェードチェンジ中は、あとで位置と大きさを動かしながら描く
   else drDrawPlayer(ctx, run, true);
   // 居合切りの軌跡
   if (run.slashT > 0) drDrawSlash(ctx, run);
@@ -2479,9 +2549,39 @@ function drRender() {
     ctx.fillStyle = Math.floor(dr.clock * 20) % 2 ? '#FFD84A' : '#FFFFFF';
     ctx.fillRect(drPX(run) + 2, C.groundY - 1, 20, 2);
   }
+  // RPGエリア：拍ごとに足元がピンクに光る（リズム技のタイミングの目印）
+  if (dr.run && run.rpgArea) {
+    const note = DR_DESIGN.rpgArea.note || 4, pos = run.beat * note / 4, f = pos - Math.floor(pos);
+    const a = Math.max(0, 1 - f * 3);
+    if (a > 0) {
+      ctx.globalAlpha = a;
+      ctx.fillStyle = '#FF7AE0';
+      ctx.fillRect(drPX(run) - 2 - Math.round((1 - a) * 6), C.groundY - 1, 28 + Math.round((1 - a) * 12), 2);
+      ctx.globalAlpha = 1;
+    }
+  }
   if (dr.debug) drDrawDebug(ctx, run);
   if (tilted) ctx.restore();
   ctx.restore();
+  // RPGフェイズからのフェードチェンジ（勝ったあと）。
+  //   バトルの背景（床の模様も）を上にかさねて、だんだん透明にする → 下のノーマルフェイズの背景・地面が見えてくる。
+  //   バトルの床の境目（地平線）も、ノーマルの地面の高さ（DR_CONFIG.groundY）まで下がっていく。
+  //   恐竜君は走りつづけたまま、バトルでの位置・大きさ（DR_RPG_PLAYER_X・FEET、48 ドット）から、ノーマルの位置・大きさ（24 ドット）へ動く
+  if (dr.phaseBlend && dr.run) {
+    const B = dr.phaseBlend, q0 = Math.min(1, B.t / B.dur), q = q0 * q0 * (3 - 2 * q0);
+    ctx.save();
+    ctx.globalAlpha = 1 - q;
+    drRpgDrawBg(ctx, 0, 0, 0, B.runX, DR_RPG_FLOOR + (C.groundY - DR_RPG_FLOOR) * q);   // 床の境目も、ノーマルの地面の高さまで下がる
+    ctx.globalAlpha = 1;
+    ctx.imageSmoothingEnabled = false;
+    const size = 48 + (24 - 48) * q;
+    const cx = DR_RPG_PLAYER_X + (drPX(run) + 12 - DR_RPG_PLAYER_X) * q;
+    const feet = DR_RPG_PLAYER_FEET + (C.groundY - run.y - DR_RPG_PLAYER_FEET) * q;
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';   // 影
+    ctx.beginPath(); ctx.ellipse(cx, DR_RPG_PLAYER_FEET + (C.groundY - DR_RPG_PLAYER_FEET) * q, size / 3, size / 12, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.drawImage(drRpgPlayerImage(!run.onGround, Math.floor(B.runX / 9)), Math.round(cx - size / 2), Math.round(feet - size), Math.round(size), Math.round(size));
+    ctx.restore();
+  }
 }
 
 /* スキルの区画の札（シャッターの注意の板の上に、白い札を下げる） */

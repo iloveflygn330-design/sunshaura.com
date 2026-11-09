@@ -110,7 +110,7 @@ const DR_HOWTO_PAGES = [
   },
   {
     tab: 'sp2', title: 'バトル…？！', image: 'dinorun/howto/battle.webp',
-    text: 'まるで<b>RPG</b>のようなバトルが始まる…？！ 勝てば大きなスコア。負けると…？',
+    text: '走りながら、まるで<b>RPG</b>のようなバトルが始まる…？！ 勝てば大きなスコアと、とくべつなエリアが…？！',
   },
   {
     tab: 'sp2', title: 'バトルのコツ', image: 'dinorun/howto/tips.webp',
