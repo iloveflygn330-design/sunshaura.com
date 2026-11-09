@@ -1,0 +1,63 @@
+/* きょうりゅうラン 素材の投稿ページ（minigame/upload/）の見た目。色はサイト共通（assets/site-common.css）の変数を使う */
+.up-wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+.up-title { font-size: 1.5rem; color: var(--color-main); margin: 0 0 6px; }
+.up-lead { margin: 0 0 18px; }
+.up-card {
+  background: var(--color-white); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(139, 18, 40, 0.08);
+}
+.up-card h2 { font-size: 1.1rem; margin: 0 0 10px; color: var(--color-main-dark); }
+.up-hint { font-size: 0.85rem; color: #6B4A52; margin: 0 0 10px; line-height: 1.6; }
+.up-row { display: flex; gap: 8px; }
+.up-row input { flex: 1; min-width: 0; }
+.up-card input[type="text"], .up-card input[type="password"], .up-card input[type="number"], .up-card select {
+  font: inherit; padding: 8px 10px; border: 2px solid #E8C7CF; border-radius: 8px; background: #FFFBFC; max-width: 100%;
+}
+.up-card input[type="number"] { width: 5em; }
+.up-label { display: flex; flex-direction: column; gap: 4px; margin: 10px 0; font-weight: 700; font-size: 0.9rem; }
+.up-label select, .up-label input { font-weight: 400; }
+.up-btn {
+  font: inherit; font-weight: 700; padding: 8px 16px; border: none; border-radius: 999px; cursor: pointer;
+  background: var(--color-main-pale); color: var(--color-main); border: 2px solid var(--color-main-light);
+}
+.up-btn:disabled { opacity: 0.45; cursor: default; }
+.up-btn-main { background: var(--color-main); color: var(--color-white); margin-top: 8px; padding: 10px 28px; }
+.up-status { min-height: 1.2em; font-size: 0.9rem; margin: 8px 0 0; white-space: pre-line; }
+.up-status.is-ok { color: #1E7A46; }
+.up-status.is-ng { color: var(--color-main); font-weight: 700; }
+.up-status.is-warn { color: #A0620A; font-weight: 700; }
+
+.up-tabs { display: flex; gap: 6px; margin-bottom: 4px; }
+.up-tab {
+  font: inherit; font-weight: 700; padding: 6px 18px; border-radius: 999px; cursor: pointer;
+  border: 2px solid #E8C7CF; background: #FFFBFC; color: #6B4A52;
+}
+.up-tab.is-active { background: var(--color-main); border-color: var(--color-main); color: var(--color-white); }
+
+.up-spec { font-size: 0.9rem; background: #FFF6E0; border-radius: 8px; padding: 8px 12px; line-height: 1.7; }
+.up-spec b { color: var(--color-main-dark); }
+.up-rules { margin-top: 10px; font-size: 0.85rem; line-height: 1.7; }
+.up-rules h3 { font-size: 0.9rem; margin: 0 0 4px; }
+.up-rules ul { margin: 0; padding-left: 1.3em; }
+
+.up-image-opts { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 0.9rem; }
+.up-image-opts[hidden] { display: none; }
+.up-preview { margin-top: 10px; }
+.up-preview canvas, .up-preview img { image-rendering: pixelated; max-width: 100%; background: repeating-conic-gradient(#EEE 0 25%, #FFF 0 50%) 0 0 / 16px 16px; border-radius: 6px; }
+.up-preview audio { width: 100%; }
+.up-beat { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-wrap: wrap; font-size: 0.9rem; }
+.up-beat-dots { display: flex; gap: 6px; }
+.up-beat-dots i { width: 14px; height: 14px; border-radius: 50%; background: #E8C7CF; }
+.up-beat-dots i.is-on { background: var(--color-main); }
+.up-beat-dots i.is-top.is-on { background: #F2A900; }
+
+.up-checklist { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; }
+.up-checklist label { display: flex; gap: 8px; align-items: flex-start; line-height: 1.5; }
+.up-checklist input { margin-top: 0.3em; }
+
+.up-list { font-size: 0.9rem; }
+.up-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px dashed #F0D6DC; }
+.up-item:last-child { border-bottom: none; }
+.up-item span { flex: 1; min-width: 0; word-break: break-all; }
+.up-item small { color: #6B4A52; }
+.up-item .up-btn { padding: 4px 12px; font-size: 0.8rem; }

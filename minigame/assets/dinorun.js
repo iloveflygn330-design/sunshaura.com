@@ -214,6 +214,45 @@ function drSetup() {
 
   // スキル・アイテムの画像（PNG）を指定していれば先に読み込んでおく
   drPreloadImages();
+  // 投稿ページ（minigame/upload/）から入れた素材を読みこむ
+  drLoadAssetManifest();
+}
+
+/* ---------- 投稿された素材（minigame/dinorun/assets.json） ----------
+   素材の投稿ページ（minigame/upload/）で BGM や画像を投稿すると、ファイルが minigame/dinorun/uploads/ に入り、
+   どこに使うかが minigame/dinorun/assets.json に書かれる。ゲームを開いたときにそれを読んで、データに当てはめる。
+   assets.json の中身（どれも、書いていないものは今までどおり）:
+     bgm      … { world1〜world5, rpg, bonus: { src, beatStart, volume } }
+                 world1〜4 はそのワールドの番号のとき、world5 は5以降、rpg はバトルと RPGエリア、bonus はボーナスステージ
+     obstacle … { 障害物の id: { image, frames, fps } }      player … { image }（自機の PNG）
+     worldBg  … { ワールドの id: { image } }（遠くの景色）   ground … { ワールドの id: { image } }（地面）
+     boss     … { ボスの id: { image } }                      rpgBg  … { image }（バトルの背景）
+   ★拡張予定: 投稿できる素材の種類を増やすときは、ここ（drApplyAssetManifest）と、投稿ページ（minigame/upload/upload.js の UP_TARGETS）の両方に足す */
+function drLoadAssetManifest() {
+  fetch('dinorun/assets.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(m => {
+    if (m) { drApplyAssetManifest(m); drPreloadImages(); }
+  }).catch(() => { /* 読めなくてもゲームは続ける（今までどおりの素材で遊べる） */ });
+}
+function drApplyAssetManifest(m) {
+  const bgm = m.bgm || {};
+  Object.keys(bgm).forEach(key => {
+    const b = bgm[key];
+    if (!b || !b.src) return;
+    DR_SOUNDS['bgm_' + key] = { src: b.src, volume: b.volume == null ? 0.5 : b.volume, loop: true, beatStart: b.beatStart };
+  });
+  if (DR_SOUNDS.bgm_rpg && typeof DR_RPG !== 'undefined') DR_RPG.bgm = 'bgm_rpg';
+  if (DR_SOUNDS.bgm_bonus) DR_BONUS_WORLD.bgm = 'bgm_bonus';
+  Object.entries(m.obstacle || {}).forEach(([id, v]) => {
+    const o = DR_OBSTACLES.find(x => x.id === id);
+    if (!o || !v.image) return;
+    o.sprite = Object.assign({}, o.sprite, { image: v.image, frames: v.frames || 1 });
+    if (v.fps) o.sprite.fps = v.fps;
+  });
+  if (m.player && m.player.image) DR_PLAYER.image = m.player.image;
+  Object.entries(m.worldBg || {}).forEach(([id, v]) => { const w = DR_WORLDS.find(x => x.id === id); if (w && v.image) w.bgImage = v.image; });
+  Object.entries(m.ground || {}).forEach(([id, v]) => { const w = DR_WORLDS.find(x => x.id === id); if (w && v.image) w.groundImage = v.image; });
+  if (typeof DR_BOSSES !== 'undefined') Object.entries(m.boss || {}).forEach(([id, v]) => { const b = DR_BOSSES.find(x => x.id === id); if (b && v.image) b.image = v.image; });
+  if (m.rpgBg && m.rpgBg.image && typeof DR_RPG !== 'undefined') DR_RPG.bgImage = m.rpgBg.image;
 }
 
 /* データの書き間違いを見つけたら、ブラウザの開発者ツール（Console）に出す */
@@ -695,7 +734,7 @@ function drStartGame() {
   dr.jumpHeld.clear();
   dr.phaseBlend = null; dr.phaseResultT = 0;
   DRRanking.startSession().then(tok => { if (dr.run) dr.run.token = tok; });
-  drBgm(drWorld(dr.run).bgm);
+  drBgm(drRunBgm(dr.run));
   drShowBanner(drWorld(dr.run).name, 'WORLD 1', drWorldFeature(dr.run));
   drUpdateHud(true);
   drStartReady('play');
@@ -834,9 +873,13 @@ function drStartRpgArea(run) {
 function drCheckRpgAreaEnd(run) {
   if (run.rpgArea && run.worldIndex >= run.rpgArea.until) run.rpgArea = null;
 }
-/* いま流す BGM（RPGエリアの間は RPG の BGM が鳴りつづける） */
+/* いま流す BGM（RPGエリアの間は RPG の BGM が鳴りつづける）。
+   投稿された BGM（assets.json の bgm）は、ワールドの番号ごと（world1〜world5。5は5以降）。BPM が番号ごとに決まっているため */
 function drRunBgm(run) {
-  return run.rpgArea && typeof DR_RPG !== 'undefined' ? (DR_RPG.bgm || null) : drWorld(run).bgm;
+  if (run.rpgArea && typeof DR_RPG !== 'undefined') return DR_RPG.bgm || null;
+  if (run.bonus) return drWorld(run).bgm || null;
+  const stage = 'bgm_world' + Math.min(run.worldIndex + 1, 5);
+  return DR_SOUNDS[stage] ? stage : drWorld(run).bgm;
 }
 
 /* フェイズのあいだ、走りつづける（RPGフェイズは走りながら戦う）。距離は進むが、ワールド・ショップ・入り口の敵などの位置は

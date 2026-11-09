@@ -187,7 +187,9 @@ const DR_CONFIG = {
      いまは、音のファイルがない音は「仮の電子音（tone）」で鳴らしている。
      画面の 🔊 ボタンで、音のオン・オフができる（このブラウザに覚えておく）。
 
-   本物の音に差し替えるには:
+   いちばんかんたんなのは、素材の投稿ページ（https://sunshaura.com/minigame/upload/）から投稿すること。
+     BGM（ワールドの番号ごと・バトル・ボーナス）と画像は、投稿するだけでゲームに入る（minigame/dinorun/assets.json に登録される）。
+   本物の音に差し替えるには（手で入れるとき）:
      1. 音のファイルを minigame/dinorun/sounds/ に置く（.mp3 か .ogg か .wav。フォルダがなければ作る）
      2. 下の該当する行の src に、minigame/ から見た場所を書く
           例: jump: { src: 'dinorun/sounds/jump.mp3', volume: 0.6, tone: ... },

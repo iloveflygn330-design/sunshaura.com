@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 検索エンジンに出さない（素材を投稿するための、シャウラ用のページ） -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- アクセス解析（Google アナリティクス。設定・自分のアクセスを数えない方法は assets/analytics.js） -->
+  <script src="../../assets/analytics.js"></script>
+  <!-- ページ間遷移の到着判定（全ページ共通。説明は assets/page-transition.js） -->
+  <script>try{var t=+sessionStorage.getItem('sun-transition');if(t&&Date.now()-t<15000)document.documentElement.classList.add('is-arriving')}catch(e){}</script>
+  <title>素材の投稿 | sunshaura.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <!-- サイト共通（ヘッダー・フッター・ページ移動の演出） -->
+  <link rel="stylesheet" href="../../assets/site-common.css">
+  <link rel="stylesheet" href="upload.css">
+</head>
+<!--
+  きょうりゅうラン（dinorun）の素材の投稿ページ（minigame/upload/index.html）
+
+  BGM・画像を選んで投稿すると、GitHub のリポジトリに直接入る（main にコミット → 「Deploy site」でサイトに反映）。
+    ファイル … minigame/dinorun/uploads/<種類>/<どこに使うか>.<拡張子>
+    使う場所 … minigame/dinorun/assets.json（ゲームを開いたときに dinorun.js の drLoadAssetManifest が読む）
+  書きこみには GitHub の Fine-grained トークン（Contents: Read and write）がいる。
+  このブラウザの localStorage に保存する（アバターの登録フォームで保存したトークンがあれば、それを使う）。
+  トークンはファイルには書かない（リポジトリは公開されているため）。
+
+  ★拡張予定: 投稿できる素材の種類・決まりを増やすときは upload.js の UP_TARGETS / UP_RULES を書きかえる
+    （ゲーム側は dinorun.js の drApplyAssetManifest に、当てはめ方を足す）
+    素材の決まりは、設計書（Google スプレッドシート「きょうりゅうラン 設計書」の「素材のルール」）と同じにする。
+-->
+<body class="site-page">
+
+  <!-- ヘッダー（中身は assets/site-header.js が全ページ共通で組み立てる） -->
+  <header id="header"></header>
+
+  <!-- ページ間遷移アニメーション用（全ページ共通の構成。動きは assets/page-transition.js） -->
+  <div id="loading-bar" aria-live="polite"><span id="loading-bar-text"></span></div>
+  <div id="loading-panel" aria-hidden="true">
+    <div id="panel-icon"></div><!-- アイコンは assets/page-transition.js が入れる -->
+    <div id="panel-message">ちょっとまってね...</div>
+  </div>
+
+  <main id="body-content" data-transition-body>
+    <div class="up-wrap">
+      <h1 class="up-title">きょうりゅうラン 素材の投稿</h1>
+      <p class="up-lead">BGM や画像を投稿すると、そのままゲームに入ります（数分でサイトに反映）。</p>
+
+      <!-- GitHub のトークン -->
+      <section class="up-card" id="up-token-card">
+        <h2>1. GitHub のトークン</h2>
+        <p class="up-hint">リポジトリに書きこむために使います。このブラウザにだけ保存されます。
+          GitHub → Settings → Developer settings → Fine-grained tokens で、sunshaura.com の「Contents: Read and write」を許可したものを作ってください（アバターの登録フォームと同じトークンで大丈夫です）。</p>
+        <div class="up-row">
+          <input type="password" id="up-token" placeholder="github_pat_..." autocomplete="off">
+          <button type="button" class="up-btn" id="up-token-save">保存</button>
+        </div>
+        <p class="up-status" id="up-token-status"></p>
+      </section>
+
+      <!-- 何を投稿するか -->
+      <section class="up-card">
+        <h2>2. 何を投稿する？</h2>
+        <div class="up-tabs" role="tablist">
+          <button type="button" class="up-tab is-active" data-kind="bgm">BGM</button>
+          <button type="button" class="up-tab" data-kind="image">画像</button>
+        </div>
+        <label class="up-label">どこに使う？
+          <select id="up-target"></select>
+        </label>
+        <div class="up-spec" id="up-spec"></div>
+        <div class="up-rules" id="up-rules"></div>
+      </section>
+
+      <!-- ファイル -->
+      <section class="up-card">
+        <h2>3. ファイルを選ぶ</h2>
+        <input type="file" id="up-file">
+        <div class="up-image-opts" id="up-image-opts" hidden>
+          <label>コマ数 <input type="number" id="up-frames" min="1" max="32" value="1"></label>
+          <label>コマ送りの速さ（1秒に何コマ）<input type="number" id="up-fps" min="1" max="30" value="8"></label>
+        </div>
+        <div class="up-preview" id="up-preview"></div>
+        <p class="up-status" id="up-check"></p>
+        <div class="up-checklist" id="up-checklist"></div>
+        <label class="up-label">メモ（任意。コミットのメッセージに入ります）
+          <input type="text" id="up-memo" maxlength="80" placeholder="例: ホームワールドの曲 / 16小節">
+        </label>
+        <button type="button" class="up-btn up-btn-main" id="up-send" disabled>投稿する</button>
+        <p class="up-status" id="up-send-status"></p>
+      </section>
+
+      <!-- いま入っている素材 -->
+      <section class="up-card">
+        <h2>いま入っている素材</h2>
+        <p class="up-hint">「外す」を押すと、ゲームでは使われなくなります（ファイルは残ります）。</p>
+        <div class="up-list" id="up-list">読みこみ中…</div>
+      </section>
+    </div>
+  </main>
+
+  <!-- フッター（中身は assets/site-header.js の SITE_FOOTER_HTML。全ページ共通） -->
+  <footer class="site-footer" data-site-footer>sunshaura.com</footer>
+
+  <script src="../../assets/page-transition.js"></script>
+  <script src="../../assets/site-header.js"></script>
+  <script>SunHeader.render({ root: '../../', current: 'minigame' });</script>
+  <!-- ゲームのデータ（どこに使うかの一覧・大きさ・BPM を、ゲームと同じものから作る） -->
+  <script src="../assets/dinorun-config.js"></script>
+  <script src="../assets/dinorun-worlds.js"></script>
+  <script src="../assets/dinorun-design.js"></script>
+  <script src="../assets/dinorun-sprites.js"></script>
+  <script src="../assets/dinorun-rpg-data.js"></script>
+  <script src="upload.js"></script>
+</body>
+</html>
