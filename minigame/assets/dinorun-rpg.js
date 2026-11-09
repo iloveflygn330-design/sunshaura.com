@@ -7,7 +7,10 @@
      close（イナズマの線がすれちがい、黒い画面が上下から迫って暗転）
      → intro（暗転と逆の動きでバトル用のカメラに切りかわり、カメラが手前から恐竜君たちのところまで、だんだんゆっくり進む）
      → fight（「FIGHT!」）→ battle（リアルタイムのバトル）
-     → win（勝ち。結果の画面 → ノーマルフェイズへ）/ lose（負け。ゲームオーバー）/ escaped（逃げた。ノーマルフェイズへ）
+     → win（勝ち。結果の画面を DR_DESIGN.rpgPhase.resultTime 秒 → ズームアウトしてノーマルフェイズへ → RPGエリア）
+       / lose（負け。ゲームオーバー）/ escaped（逃げた。ノーマルフェイズへ）
+   走りながら戦う: intro〜win のあいだ、背景（床の線・雲）が流れて、恐竜君とボスは走っている。
+     距離（スコア）は進むが、ワールドは進まない（dinorun.js の drPhaseRunForward）。
 
    バトル（リアルタイム。技ごとのクールタイム（CT）が終われば、いつでも押せる）:
      ジャンプボタン（Space）      … ふみつけ。ジャンプ回数のぶん踏む
@@ -62,6 +65,7 @@ DR_PHASES.rpg = {
       shots: [],               // 飛んでいる火の玉
       fx: [], msg: '', shake: 0, reward: null, shown: false,
       flash: null,             // 画面全体が一瞬光る（drRpgFlash）
+      runX: 0,                 // 走ってきた距離（背景を流すのに使う）
       booms: 0,                // 倒したときの爆発を何回出したか
     };
     drRpgMsg(`${bossDef.name}が あらわれた！`);
@@ -79,6 +83,8 @@ DR_PHASES.rpg = {
     R.fx.forEach(f => { f.t += dt; f.vy = (f.vy || 0) + (f.g || 0) * dt; f.x += (f.vx || 0) * dt; f.y += f.vy * dt; });
     R.fx = R.fx.filter(f => f.t < f.life);
     if (R.flash) { R.flash.t += dt; if (R.flash.t >= R.flash.life) R.flash = null; }
+    // 走りながら戦う：カメラが切りかわってから勝つまで（結果の画面のあいだも）走りつづける。距離は進むが、ワールドは進まない
+    if (['intro', 'fight', 'battle', 'win'].includes(R.st)) R.runX += drPhaseRunForward(R.run, dt);
     // 倒したとき：ボスのあちこちで爆発してから、ファンファーレ
     if (R.st === 'win') {
       const b = R.b;
@@ -328,12 +334,14 @@ function drRpgWin() {
 
 function drRpgShowResult() {
   const R = drRpg, rw = R.reward, b = R.b;
+  // DR_DESIGN.rpgPhase.resultTime 秒たつと自動でノーマルフェイズへ（ズームアウト → RPGエリア）
   drShowPhaseResult('VICTORY!',
     `${drEscape(b.name)}を たおした！<br>`
     + `ボーナス ${b.def.score.toLocaleString()}<br>`
     + `タイムボーナス +${rw.timeBonus.toLocaleString()}（${rw.sec.toFixed(1)}びょう）<br>`
     + `コイン +${rw.coins}<br>`
-    + 'ハートが ぜんかいふく！');
+    + 'ハートが ぜんかいふく！<br>'
+    + `<b>このあと RPGエリア！</b>`, DR_DESIGN.rpgPhase.resultTime || 3);
 }
 
 function drRpgLose() {
@@ -568,22 +576,25 @@ function drRpgTint(src, color) {
 function drRpgBossImage(def) {
   return drImage(def.image) || drPixelCanvas(def.sprite.pixels, def.sprite.palette);
 }
-function drRpgPlayerImage(jumping) {
+/* 自機の絵。jumping … ジャンプの絵、frame … 走るコマ（走りながら戦うので、ふだんは走るコマを送る） */
+function drRpgPlayerImage(jumping, frame) {
   const P = DR_PLAYER;
   const img = drImage(P.image);
+  const a = P.anims[jumping ? 'jump' : 'run'];
+  const f = jumping ? 0 : (frame || 0) % Math.max(1, a.frames || 1);
   if (img) {
-    // PNG のときは、その行の1コマ目を切り出して使う
-    const key = 'rpg-player-' + (jumping ? 'jump' : 'run');
+    // PNG のときは、その行の f コマ目を切り出して使う
+    const key = 'rpg-player-' + (jumping ? 'jump' : 'run') + f;
     let c = drRpgTintCache.get(key);
     if (!c) {
       c = document.createElement('canvas'); c.width = P.frameW; c.height = P.frameH;
-      const a = P.anims[jumping ? 'jump' : 'run'];
-      c.getContext('2d').drawImage(img, 0, a.row * P.frameH, P.frameW, P.frameH, 0, 0, P.frameW, P.frameH);
+      c.getContext('2d').drawImage(img, f * P.frameW, a.row * P.frameH, P.frameW, P.frameH, 0, 0, P.frameW, P.frameH);
       drRpgTintCache.set(key, c);
     }
     return c;
   }
-  return drPixelCanvas((jumping ? P.placeholder.jump : P.placeholder.run)[0]);
+  const frames = jumping ? P.placeholder.jump : P.placeholder.run;
+  return drPixelCanvas(frames[(jumping ? 0 : (frame || 0)) % frames.length]);
 }
 
 function drRpgRender(ctx) {
@@ -786,9 +797,13 @@ function drRpgDepth(ctx, x0, y0, back, side, draw) {
 function drRpgDrawBg(ctx, back, tilt, side) {
   const W = DR_CONFIG.width, H = DR_CONFIG.height, F = DR_RPG_FLOOR;
   const img = drImage(DR_RPG.bgImage);
+  const runX = (drRpg && drRpg.runX) || 0;   // 走ってきた距離（背景を流す）
   if (img) {   // 背景の PNG は近づいても大きさを変えない（遠くの景色なので）。傾いているときだけ、すみが空かないように少し大きく描く
     const z = 1 + Math.abs(tilt || 0) * 2.5;
-    ctx.drawImage(img, W / 2 - W * z / 2, H / 2 - H * z / 2, W * z, H * z);
+    if (tilt) { ctx.drawImage(img, W / 2 - W * z / 2, H / 2 - H * z / 2, W * z, H * z); return; }
+    // 走っているので、横にくり返して流す（左はしと右はしがつながる絵にする。設計書「素材のルール」）
+    const ox = -((runX * 0.5) % W);
+    ctx.drawImage(img, ox, 0, W, H); ctx.drawImage(img, ox + W, 0, W, H);
     return;
   }
   const X0 = tilt ? -W : 0, XW = tilt ? W * 3 : W, Y0 = tilt ? -H : 0, YB = tilt ? H * 2 : H;   // 描く範囲
@@ -800,6 +815,12 @@ function drRpgDrawBg(ctx, back, tilt, side) {
   ctx.fillRect(X0, F, XW, YB - F);
   ctx.fillStyle = '#F2A65A';
   ctx.fillRect(X0, F, XW, 3);
+  // 遠くの雲（ゆっくり流れる。走っているのが分かるように）
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+  for (let i = 0; i < 4; i++) {
+    const span = W + 120, cx = ((i * 131 - runX * 0.15) % span + span) % span - 60, cy = 22 + (i * 37) % 60;
+    ctx.fillRect(Math.round(cx), cy, 44, 8); ctx.fillRect(Math.round(cx) + 10, cy - 6, 22, 6);
+  }
   // 床の奥行きの線（奥行き 0.5 ごとに1本。遠くほどつまって、うすくなる）
   for (let i = 2; i < 80; i++) {
     const y = F + DR_RPG_EYE / (i * 0.5 + (back || 0));
@@ -808,15 +829,17 @@ function drRpgDrawBg(ctx, back, tilt, side) {
     ctx.fillStyle = `rgba(160, 80, 20, ${0.3 * Math.min(1, (y - F - 4) / 24)})`;
     ctx.fillRect(X0, Math.round(y), XW, 1);
   }
-  // 奥へのびる床の線（カメラが横にずれているあいだだけ。まっすぐになるにつれて消える）
-  if (side) {
-    const fade = Math.min(1, Math.abs(side) / Math.max(1, Math.abs(DR_RPG.camSide || 1) * 0.25));
+  // 奥へのびる床の線。走っているので、恐竜君の足元の速さで左へ流れる。
+  // カメラが横にずれているあいだ（intro）は濃く出して、横に動いているのが分かるようにする
+  {
+    const fade = side ? Math.max(0.5, Math.min(1, Math.abs(side) / Math.max(1, Math.abs(DR_RPG.camSide || 1) * 0.25))) : 0.5;
+    const shift = runX % 80;
     ctx.strokeStyle = `rgba(160, 80, 20, ${0.3 * fade})`;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let X = -2400; X <= 2400; X += 80) {
+    for (let X = -2400; X <= 2480; X += 80) {
       ctx.moveTo(W / 2, F + 3);
-      ctx.lineTo(W / 2 + (X - side) * (YB - F) / DR_RPG_EYE, YB);
+      ctx.lineTo(W / 2 + (X - shift - (side || 0)) * (YB - F) / DR_RPG_EYE, YB);
     }
     ctx.stroke();
   }
@@ -829,6 +852,7 @@ function drRpgDrawBoss(ctx, offX) {
   let x = DR_RPG_BOSS_X - w / 2 + offX, y = DR_RPG_BOSS_FEET - h;
   if (b.lunge > 0) x -= Math.sin((b.lunge / 0.3) * Math.PI) * 24;
   if (b.hurtT > 0) x += Math.round(drRand(-2, 2));
+  if (['intro', 'fight', 'battle'].includes(R.st)) y -= Math.round(Math.abs(Math.sin(R.runX / 26)) * 3);   // ボスも走っている（上下にゆれる）
   if (R.st === 'win') {          // 倒れたボスは点滅しながら消える
     if (Math.floor(R.t * 12) % 2) return;
     ctx.globalAlpha *= Math.max(0, 1 - R.t / DR_RPG.winTime);
@@ -908,7 +932,9 @@ function drRpgDrawPlayer(ctx, offX) {
   ctx.fillStyle = 'rgba(0,0,0,0.2)';
   ctx.beginPath(); ctx.ellipse(hx + offX, hy, 16, 4, 0, 0, Math.PI * 2); ctx.fill();
   if (p.hurtT > 0 && Math.floor(p.hurtT * 20) % 2) return;   // ダメージを受けたら点滅
-  const img = drRpgPlayerImage(jumping);
+  // 走りながら戦うので、ふだんは走るコマを送る（ダッシュ・ふみつけ中など、動いているときも）
+  const running = ['intro', 'fight', 'battle', 'win'].includes(R.st);
+  const img = drRpgPlayerImage(jumping, running ? Math.floor(R.runX / 9) : 0);
   const a0 = ctx.globalAlpha;
   // 溜め（黄色い光がちらつく）
   if (p.charged && Math.floor(R.t * 10) % 2) {
