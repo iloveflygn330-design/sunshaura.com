@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-11",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "みんな、おはようなのだ！ずんだもんなのだ！", "face": "smile" },
+      { "who": "metan", "text": "四国めたんよ。今日も手短にお願いね。" },
+      { "who": "zundamon", "text": "11月11日のVRニュースは3本なのだ。", "read": "じゅういちがつじゅういちにちのブイアールニュースは、さんぼんなのだ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatのオープンベータが公開されたのだ。", "read": "いっぽんめ。ブイアールチャットのオープンベータが公開されたのだ。" },
+      { "who": "zundamon", "text": "ワールドにLikeとDislikeのボタンが付いたのだ！", "read": "ワールドに、ライクとディスライクのボタンが付いたのだ！", "face": "smile" },
+      { "who": "metan", "text": "Dislikeって、作った人がへこまないかしら。", "read": "ディスライクって、作った人がへこまないかしら。", "face": "look" },
+      { "who": "zundamon", "text": "Dislikeはほかの人には見えない仕組みなのだ。", "read": "ディスライクは、ほかの人には見えない仕組みなのだ。" },
+      { "who": "zundamon", "text": "Likeは、おすすめを良くするのに使われるのだ。", "read": "ライクは、おすすめを良くするのに使われるのだ。" },
+      { "who": "metan", "text": "ふーん、それなら安心ね。" },
+      { "who": "zundamon", "text": "Live Nowも、テーマ別に混み具合が分かるのだ。", "read": "ライブナウも、テーマべつに混み具合が分かるのだ。" },
+      { "who": "metan", "text": "入る前に雰囲気が分かるのは、地味にうれしいわ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Blenderのアドオン、FaceKeys 2.1なのだ。", "read": "にほんめ。ブレンダーのアドオン、フェイスキーズ、にーてんいちなのだ。" },
+      { "who": "zundamon", "text": "フェイストラッキング用の表情を自動で作るのだ。" },
+      { "who": "metan", "text": "自動で？どのくらい作れるのよ。", "face": "surprise" },
+      { "who": "zundamon", "text": "102種類のうち75種類を、ワンクリックなのだ！", "read": "ひゃくにしゅるいのうち、ななじゅうごしゅるいを、ワンクリックなのだ！", "face": "smile" },
+      { "who": "zundamon", "text": "失敗しても、Undo1回で元に戻せるのだ。", "read": "失敗しても、アンドゥいっかいで元に戻せるのだ。" },
+      { "who": "metan", "text": "それで、お値段はおいくら？", "face": "look" },
+      { "who": "zundamon", "text": "ライト版が1500円、フル版が3000円なのだ。", "read": "ライトばんが、せんごひゃくえん、フルばんが、さんぜんえんなのだ。" },
+      { "who": "metan", "text": "手作業の時間を考えたら、悪くないわね。", "face": "anger" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。QuestAssist 2.0が公開されたのだ。", "read": "さんぼんめ。クエストアシスト、にーてんぜろが公開されたのだ。" },
+      { "who": "zundamon", "text": "PCのアバターを、Quest向けに変換するツールなのだ。", "read": "ピーシーのアバターを、クエスト向けに変換するツールなのだ。" },
+      { "who": "metan", "text": "軽くすると、見た目が崩れたりしないの？", "face": "look" },
+      { "who": "zundamon", "text": "顔や手など、よく見られる所を残すようにしたのだ。" },
+      { "who": "zundamon", "text": "元の形とのずれが、前の約半分になったそうなのだ。", "face": "smile" },
+      { "who": "metan", "text": "しかも無料版もあるのね。助かるわ。", "face": "smile" },
+      { "who": "zundamon", "text": "揺れものも、PC版と同じ動きになるのだ。", "read": "揺れものも、ピーシーばんと同じ動きになるのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おうし座", "comment": "新しい道具が手になじむ日", "lucky": "ペンタブレット" },
+        { "rank": 2, "sign": "しし座", "comment": "思い切った挑戦が実を結ぶ", "lucky": "スニーカー" },
+        { "rank": 3, "sign": "うお座", "comment": "やさしい言葉が広がる日", "lucky": "手紙" },
+        { "rank": 4, "sign": "ふたご座", "comment": "情報集めが役に立つ", "lucky": "付箋" },
+        { "rank": 5, "sign": "やぎ座", "comment": "まじめさが評価される", "lucky": "腕時計" },
+        { "rank": 6, "sign": "さそり座", "comment": "好きなものに集中できる", "lucky": "ヘッドホン" },
+        { "rank": 7, "sign": "おひつじ座", "comment": "朝の散歩で気分が晴れる", "lucky": "水筒" },
+        { "rank": 8, "sign": "かに座", "comment": "家で過ごす時間が充実", "lucky": "クッション" },
+        { "rank": 9, "sign": "みずがめ座", "comment": "整理すると次が見える", "lucky": "ファイル" },
+        { "rank": 10, "sign": "てんびん座", "comment": "迷ったら直感を信じて", "lucky": "コイン" },
+        { "rank": 11, "sign": "おとめ座", "comment": "ひと休みで調子が戻る", "lucky": "ハーブティー" },
+        { "rank": 12, "sign": "いて座", "comment": "のんびり進めば大丈夫", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、おうし座。新しい道具が手になじむ日ですわ。", "read": "今日のいちいは、おうしざ。新しい道具が手になじむ日ですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はしし座、3位はうお座ですわ。", "read": "にいはししざ、さんいはうおざですわ。" },
+        { "who": "zundamon", "text": "1位のおうし座は、アバター作りがはかどりそうなのだ。", "read": "いちいのおうしざは、アバター作りがはかどりそうなのだ。" },
+        { "who": "itako", "text": "12位はいて座。のんびり進めば大丈夫ですよ。", "read": "じゅうにいは、いてざ。のんびり進めば大丈夫ですよ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅！最高なのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "今日も聞いてくれてありがとう。またね。", "face": "smile" },
+      { "who": "zundamon", "text": "また明日も見てほしいのだ！", "face": "smile" }
+    ]}
+  ]
+}

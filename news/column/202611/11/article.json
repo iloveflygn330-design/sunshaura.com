@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-11",
+  "title": "VRChatオープンベータでワールドにLike・Dislike追加ほか、今日のVRニュース3本",
+  "category": "VRChat公式",
+  "thumb": "",
+  "intro": "今日はVRChatのオープンベータ版アップデートと、アバター制作をラクにするツールの新バージョン2本をまとめました。ワールドの評価ボタンやインスタンスの探し方が変わるほか、フェイストラッキング対応やQuest対応の手間を減らす話題です。",
+  "items": [
+    {
+      "headline": "VRChatオープンベータ、ワールドにLike・Dislike",
+      "category": "VRChat公式",
+      "overview": "VRChatのオープンベータ版「2026.4.2」が11月10日に公開されました。ワールドに「Like」と「Dislike」のボタンが付き、Likeは今後のおすすめの精度に使われます。Dislikeは公開されず、制作者を傷つけるためではなく、好みのワールドを見つけやすくするための機能とされています。今いるインスタンスの一覧「Live Now」も作り直され、「新しい人と出会う」「ゲームで遊ぶ」などのテーマ別に、混み具合や言語を確認してから参加できるようになりました。",
+      "points": [
+        "Dislikeはほかの人には見えない仕組み",
+        "Live Nowで混み具合と言語が参加前に分かる",
+        "インスタンス名の設定がVRC+なしでも可能に",
+        "新しい配色が標準、元のTealも「Legacy」で選べる"
+      ],
+      "sources": [
+        { "name": "MoguLive（Mogura VR）", "url": "https://www.moguravr.com/vrchat-2026-4-2-open-beta/" }
+      ]
+    },
+    {
+      "headline": "Blenderアドオン「FaceKeys 2.1」公開",
+      "category": "アバター・制作",
+      "overview": "Meshwrightが、VRChatアバター制作者向けのBlenderアドオン「FaceKeys」のバージョン2.1を11月6日に公開しました。VRChatの標準フェイストラッキングは、決まった名前のシェイプキーがないと表情が割り当てられません。FaceKeys 2.1は、アバターにある形から「Unified Expressions」102種類のうち75種類をワンクリックで作り、VRChat SDKの自動割り当てにそのまま使えます。BOOTHで販売されていて、すでに購入した人は無料でアップデートできます。",
+      "points": [
+        "ARKitの52種類やVRChatの口の形にも対応",
+        "元のメッシュは変更されず、Undo1回で戻せる",
+        "ライト版1,500円、フル版3,000円",
+        "Blender 4.2〜5.2対応、日本語と英語の表示"
+      ],
+      "sources": [
+        { "name": "MoguLive（Mogura VR）", "url": "https://www.moguravr.com/facekeys-2-1-vrchat-face-tracking/" }
+      ]
+    },
+    {
+      "headline": "Quest対応を自動化「QuestAssist 2.0」公開",
+      "category": "アバター・制作",
+      "overview": "NoLogic Labが、PC向けのVRChatアバターをQuestやAndroid向けの軽いアバターに変換するUnityエディタ拡張「QuestAssist」のバージョン2.0を公開しました。ポリゴンの減らし方を見直し、シルエットや色の境目、顔や手など見られやすい部分を残すように判断します。17体のサンプルで試したところ、元のアバターとのずれは前のバージョンの約半分になったとしています。元のアバターは書き換えず、見た目優先・バランス・軽さ優先から選べます。",
+      "points": [
+        "手や指、顔の陰影、髪の束の見た目を改善",
+        "揺れものがPC版とQuest版で同じ動きになる",
+        "無料版、500円の支援版、1,500円のフル版がある",
+        "VRCQuestToolsなど別のツールも必要"
+      ],
+      "sources": [
+        { "name": "MoguLive（Mogura VR）", "url": "https://www.moguravr.com/questassist-2-0-release/" }
+      ]
+    }
+  ],
+  "outro": "オープンベータの新機能は、正式版になる前に変わることもあります。気になる人はベータで試して、フィードバックを送ってみてください。"
+}
