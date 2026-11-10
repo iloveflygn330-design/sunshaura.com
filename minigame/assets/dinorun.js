@@ -309,10 +309,10 @@ function drBuildPads() {
     //   まん中をタップ（長押し）・上へスワイプでジャンプ、下へスワイプでスライディング、左へスワイプでスキル①、右へスワイプでスキル③。まわりの文字は「どっちにスワイプすると何が出るか」
     //   「長押しでバタ足」は、バタ足ジャンプを覚えたら出る（.has-flutter）
     //   .dr-tap-run はふだん、.dr-tap-battle はフェイズ（バトル）中に出る文字
-    html += `<div class="dr-tap-area" role="button" aria-label="タップでジャンプ。スワイプでスライディングとスキル">
+    html += `<div class="dr-tap-area" role="button" aria-label="上へスワイプでジャンプ。ほかのスワイプでスライディングとスキル。空中で長押しでバタ足">
         <span class="dr-tap-hint is-up" data-dir="up">↑ <b><span class="dr-tap-run">ジャンプ</span><span class="dr-tap-battle">ふみつけ</span></b></span>
         <span class="dr-tap-hint is-left" data-dir="left" data-slot="0">← <b class="dr-tap-name dr-tap-run">スキル①</b><b class="dr-tap-battle">技1</b></span>
-        <span class="dr-tap-center"><span class="dr-tap-run">タップで<wbr>ジャンプ<small>長押しでバタ足</small></span><span class="dr-tap-battle">タップで<wbr>ふみつけ</span></span>
+        <span class="dr-tap-center"><span class="dr-tap-run">上へ<wbr>スワイプで<wbr>ジャンプ<small>空中で長押しでバタ足</small></span><span class="dr-tap-battle">上へ<wbr>スワイプで<wbr>ふみつけ</span></span>
         <span class="dr-tap-hint is-right" data-dir="right" data-slot="2"><b class="dr-tap-name dr-tap-run">スキル③</b><b class="dr-tap-battle">技3</b> →</span>
         <span class="dr-tap-hint is-down" data-dir="down">↓ <b><span class="dr-tap-run">スライディング<small class="dr-tap-dive">（空中で急降下）</small></span><span class="dr-tap-battle">防御</span></b></span>
         <span class="dr-jump-count" aria-label="ジャンプ回数"></span>
@@ -384,12 +384,16 @@ function drBindInput() {
      時間は「指を置いた瞬間」（イベントの timeStamp）から数えるので、イベントが遅れて届いても待ちすぎない
    ジャンプしたあと、指を置いたまま大きく動かしたら、そのスワイプも1回だけ使える（ジャンプ → 下へスワイプで急降下 など） */
 function drBindTapArea(pads) {
+  // タップエリアの操作（DR_CONFIG のタップモードの説明も参照）:
+  //   上へスワイプ → ジャンプ（指を置いたままなら、いちばん高いところでバタ足）
+  //   タップ（tapDecideMs 動かさずに置いたまま）→ バタ足だけ（空中のとき）。ジャンプはしない（暴発しないように）
+  //   下へスワイプ → スライディング（空中で急降下）/ 左・右へスワイプ → スキル①・スキル③
   const C = DR_CONFIG;
-  const touches = new Map();   // pointerId → { x, y, state: 'wait' | 'tap' | 'done', t0（指を置いた時刻）, area }
+  const touches = new Map();   // pointerId → { x, y（指を置いた位置）, state: 'wait' | 'hold'（タップ）| 'jump'（ジャンプした）| 'done', t0, area }
   const now = () => performance.now();
-  // 指を置いてから tapDecideMs たっても動いていなければ、ジャンプ（毎フレーム・イベントのたびに呼ぶ）
+  // 指を置いてから tapDecideMs たっても動いていなければ「タップ（長押し）」＝バタ足（毎フレーム・イベントのたびに呼ぶ）
   const check = () => {
-    touches.forEach((t, id) => { if (t.state === 'wait' && now() - t.t0 >= C.tapDecideMs) tap(id, t); });
+    touches.forEach((t, id) => { if (t.state === 'wait' && now() - t.t0 >= C.tapDecideMs) hold(id, t); });
   };
   dr.tapTick = check;
   const actFor = dir => {
@@ -402,10 +406,16 @@ function drBindTapArea(pads) {
     if (!h) return;
     h.classList.remove('is-fired'); void h.offsetWidth; h.classList.add('is-fired');
   };
-  const tap = (id, t) => {
-    t.state = 'tap';
-    t.ax = t.lx; t.ay = t.ly;   // ジャンプしたときの指の位置（ここから大きく動いたらスワイプも使える）
+  const hold = (id, t) => {
+    t.state = 'hold';
     t.area.classList.add('is-held');
+    drPress('flutter', 'p' + id);
+  };
+  const jump = (id, t) => {
+    t.state = 'jump';
+    t.ax = t.lx; t.ay = t.ly;   // ジャンプしたときの指の位置（ここから大きく動いたら、急降下なども使える）
+    t.area.classList.add('is-held');
+    flash(t.area, 'up');
     drPress('jump', 'p' + id);
   };
   pads.addEventListener('pointerdown', e => {
@@ -418,29 +428,27 @@ function drBindTapArea(pads) {
     const t = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, state: 'wait', area, t0: ts };
     t.timer = setTimeout(check, C.tapDecideMs);   // 念のため（ふだんは毎フレームの check が先に動く）
     touches.set(e.pointerId, t);
-    check();   // イベントが遅れて届いて、もう時間が過ぎていたら、すぐジャンプ
   });
   pads.addEventListener('pointermove', e => {
     const t = touches.get(e.pointerId);
     if (!t || t.state === 'done') return;
     t.lx = e.clientX; t.ly = e.clientY;
-    if (t.state === 'wait' && now() - t.t0 >= C.tapDecideMs) { tap(e.pointerId, t); }   // 時間が過ぎてから動いた分は、ジャンプのあとの動きとして扱う
-    const ox = t.state === 'tap' ? t.ax : t.x, oy = t.state === 'tap' ? t.ay : t.y;
+    const ox = t.state === 'jump' ? t.ax : t.x, oy = t.state === 'jump' ? t.ay : t.y;
     const dx = e.clientX - ox, dy = e.clientY - oy, dist = Math.hypot(dx, dy);
     const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
-    // 上へ動いた：すぐにジャンプ（もうジャンプしていたら何もしない）
+    // 上へ動いた：ジャンプ（バタ足で浮いているときは空中ジャンプ）。ジャンプしたあとは何もしない
     if (dir === 'up') {
-      if (t.state === 'wait' && dist >= 4) { clearTimeout(t.timer); flash(t.area, 'up'); tap(e.pointerId, t); }
+      if ((t.state === 'wait' || t.state === 'hold') && dist >= (C.swipeDistJump || 6)) { clearTimeout(t.timer); jump(e.pointerId, t); }
       return;
     }
     // スキル（左右）は、スライディングより大きく・しっかり横向きに動かしたときだけ（暴発しないように）
     const skill = dir === 'left' || dir === 'right';
     const base = skill ? (C.swipeDistSkill || C.swipeDist) : C.swipeDist;
-    const need = t.state === 'tap' ? base * 2.5 : base;   // ジャンプのあとは、大きく動かしたときだけ（急降下など）
+    const need = t.state === 'jump' ? base * 2.5 : base;   // ジャンプのあとは、大きく動かしたときだけ（急降下など）
     if (dist < need) return;
-    if (skill && Math.abs(dx) < Math.abs(dy) * (C.swipeSkillRatio || 1)) return;   // ななめ：まだ決めない（時間が過ぎればジャンプ）
+    if (skill && Math.abs(dx) < Math.abs(dy) * (C.swipeSkillRatio || 1)) return;   // ななめ：まだ決めない
     clearTimeout(t.timer);
-    if (t.state === 'tap') dr.jumpHeld.delete('p' + e.pointerId);   // バタ足もやめる
+    dr.jumpHeld.delete('p' + e.pointerId);   // バタ足もやめる
     t.state = 'done';
     flash(t.area, dir);
     drPress(actFor(dir), 'p' + e.pointerId);
@@ -449,8 +457,7 @@ function drBindTapArea(pads) {
     const t = touches.get(e.pointerId);
     if (!t) return;
     clearTimeout(t.timer);
-    if (t.state === 'wait' && e.type === 'pointerup') tap(e.pointerId, t);   // すぐ離した → ジャンプ
-    dr.jumpHeld.delete('p' + e.pointerId);
+    dr.jumpHeld.delete('p' + e.pointerId);   // すぐ離したタップは何もしない（ジャンプはしない）
     t.area.classList.remove('is-held');
     touches.delete(e.pointerId);
   };
@@ -575,6 +582,11 @@ function drPress(act, src) {
   if (act === 'potion') { drUsePotion(); return; }
   const run = dr.run;
   if (act === 'jump') { if (src) dr.jumpHeld.add(src); drJump(run); }
+  else if (act === 'flutter') {   // タップモードのタップ（長押し）：バタ足だけ（ジャンプはしない）。指を離すまで浮く
+    if (src) dr.jumpHeld.add(src);
+    // 落ちているときはすぐ浮く。上がっているときは、いちばん高いところで浮く（指を置いている間 = dr.jumpHeld）
+    if (!run.onGround && run.vy <= 0 && run.flutterLeft > 0 && !run.fluttering && run.y > 0) drStartFlutter(run);
+  }
   else if (act === 'slide') drSlide(run);
   else if (act.startsWith('skill')) drUseSkill(run, +act.slice(5));
 }
@@ -2497,6 +2509,7 @@ function drRender() {
   if (dr.phase && (['phase', 'phaseResult'].includes(dr.mode) || (dr.mode === 'pause' && dr.pauseFrom === 'phase')
       || (dr.mode === 'ready' && dr.readyNext === 'phase'))) {
     ctx.save(); dr.phase.impl.render(ctx); ctx.restore();
+    drDrawBeatDebug(ctx);
     return;
   }
   const run = dr.run || dr.demo;
@@ -2606,6 +2619,7 @@ function drRender() {
   if (dr.debug) drDrawDebug(ctx, run);
   if (tilted) ctx.restore();
   ctx.restore();
+  drDrawBeatDebug(ctx);
   // RPGフェイズからのフェードチェンジ（勝ったあと）。
   //   バトルの背景（床の模様も）を上にかさねて、だんだん透明にする → 下のノーマルフェイズの背景・地面が見えてくる。
   //   バトルの床の境目（地平線）も、ノーマルの地面の高さ（DR_CONFIG.groundY）まで下がっていく。
@@ -2625,6 +2639,42 @@ function drRender() {
     ctx.drawImage(drRpgPlayerImage(!run.onGround, Math.floor(B.runX / 9)), Math.round(cx - size / 2), Math.round(feet - size), Math.round(size), Math.round(size));
     ctx.restore();
   }
+}
+
+/* テスト用（URL に &drdebug を付けたときだけ）：BPM と拍を画面の右下に出す。
+   「BPM 144」と、小節の中の4拍（いまの拍が光る。1拍目は黄色）、その下に 8分音符の目盛り（障害物がそろう拍）。
+   RPGフェイズのときは「RPG」、RPGエリアのときは「AREA」、BGM が鳴っていて曲の拍に合わせているときは「BGM」と出る */
+function drDrawBeatDebug(ctx) {
+  const run = dr.run;
+  if (!dr.debug || !run || !['play', 'phase', 'phaseResult', 'pause', 'ready'].includes(dr.mode)) return;
+  const W = DR_CONFIG.width, H = DR_CONFIG.height;
+  const bpm = drBpm(run), beat = run.beat || 0, k = Math.floor(beat), f = beat - k;
+  const S = 1.5;                               // スマホでも読めるように、少し大きく描く
+  const x0 = 3, y0 = 3;
+  ctx.save();
+  ctx.translate(W - 86 * S, H - 24 * S);       // 右下
+  ctx.scale(S, S);
+  ctx.globalAlpha = 0.8;
+  ctx.fillStyle = '#12163A';
+  ctx.fillRect(x0 - 3, y0 - 3, 86, 24);
+  ctx.globalAlpha = 1;
+  const tag = (dr.mode === 'phase' || dr.mode === 'phaseResult') ? ' RPG' : run.rpgArea ? ' AREA' : '';
+  const synced = drAudio.bgm && !drAudio.bgm.paused ? ' BGM' : '';
+  drPixelText(ctx, 'BPM ' + bpm + tag + synced, x0, y0, '#FFFFFF');
+  // 4拍（いまの拍が光る。拍の頭で明るく、だんだん暗く）
+  for (let i = 0; i < 4; i++) {
+    const on = k % 4 === i;
+    ctx.fillStyle = on ? (i === 0 ? '#FFD84A' : '#FF7AE0') : '#3A3F7A';
+    ctx.globalAlpha = on ? 1 - f * 0.6 : 1;
+    ctx.fillRect(x0 + i * 10, y0 + 9, 8, 6);
+  }
+  ctx.globalAlpha = 1;
+  // 8分音符の目盛り（1小節 = 8つ）と、いまの位置
+  const e = (beat * 2) % 8;
+  for (let i = 0; i < 8; i++) { ctx.fillStyle = i % 2 ? '#5C6577' : '#9AA4B5'; ctx.fillRect(x0 + 44 + i * 4, y0 + 13, 1, 2); }
+  ctx.fillStyle = '#7FFFD4';
+  ctx.fillRect(x0 + 44 + Math.floor(e * 4), y0 + 9, 1, 6);
+  ctx.restore();
 }
 
 /* スキルの区画の札（シャッターの注意の板の上に、白い札を下げる） */
