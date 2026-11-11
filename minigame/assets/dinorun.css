@@ -248,6 +248,10 @@ body.dr-header-hidden #dr-root { --dr-header-h: 0px; }
   transition: transform 0.06s, border-bottom-width 0.06s;
 }
 #dr-root.dr-tapmode .dr-tap-area { display: grid; }
+/* きょうりゅうランを遊んでいる間は、画面を下に引っぱったときの「ページの再読みこみ」（スマホの Chrome など）と、
+   はしまで行ったときの引っぱり（ゴムのような動き）を止める。下へのスワイプ（スライディング）でページが更新されないように。
+   ページのスクロールそのものはできる。ゲーム選択に戻ると元に戻る（body.dr-active は dinorun.js が付け外しする） */
+html:has(body.dr-active), body.dr-active { overscroll-behavior-y: none; }
 #dr-root.dr-tapmode .dr-jump-btn, #dr-root.dr-tapmode .dr-duck-btn { display: none; }
 #dr-root.dr-tapmode.dr-has-dive { --dr-extra: 0px; }   /* タップエリアは急降下を覚えても高さが変わらない */
 /* タップモードのときは、スキルボタンを低くして（名前とクールタイムのバーが見えるくらい）、そのぶんタップエリアを広くする */
