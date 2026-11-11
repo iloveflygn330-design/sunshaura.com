@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-12",
+  "title": "VRChatで支援やチケット購入ができる「VThanks」β版公開ほか、今日のVRニュース4本",
+  "category": "その他",
+  "thumb": "",
+  "intro": "おはようございます。今日は、VRChatで出会ったクリエイターを支援したり、イベントのチケットを買ったりできる新サービスの話題から始めます。ほかに、VRChatで開かれる小説の発売記念イベント、ソーシャルVR「Somnium Space」のSteam復帰、Quest向けアクションゲームの新アプリをまとめました。",
+  "items": [
+    {
+      "headline": "支援とチケット購入の「VThanks」β版公開",
+      "category": "その他",
+      "overview": "株式会社Vが、VRChatのクリエイターや活動者に向けた決済サービス「VThanks」のβ版を11月9日に始めました。VRChatで出会った人に任意の支援を送ったり、ライブやDJイベントなどのチケットを買ったりできます。クリエイターは自分の活動を紹介する支援ページを、主催者はイベントの内容や参加条件を書いたチケット販売ページを作れます。正式サービスは2026年秋に始まる予定とされています。",
+      "points": [
+        "好きなクリエイターに感謝の気持ちを支援として送れる",
+        "イベント主催者はチケット販売ページを作れる",
+        "支援やチケットの申し込み・決済結果をVThanksで確認できる",
+        "手数料や支払い方法は記事では触れられていない"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/162601" }
+      ]
+    },
+    {
+      "headline": "「家庭科のドラゴン」小説の記念対談がVRChatで",
+      "category": "イベント",
+      "overview": "学校の裁縫セットなどでおなじみのキャラクターを原作にした『小説 家庭科のドラゴン（上）』が、講談社青い鳥文庫から11月11日に発売されました。これを記念して、11月13日（金）20時からVRChatで対談イベントが開かれます。会場はサンワードの公式ワールド「とびだせ！サンワード学園」で、著者のもえぎ桃さん、講談社の編集担当、サンワードの担当者が制作の裏話を語ります。大きなネタバレはなく、ワールド内では本の試し読みもできるそうです。",
+      "points": [
+        "11月13日（金）19時50分開場、20時開始",
+        "サンワードのVRChatグループから参加できる",
+        "YouTubeでも配信されるのでVR機器がなくても見られる",
+        "ワールド内で小説の試し読みができる"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/162667" }
+      ]
+    },
+    {
+      "headline": "ソーシャルVR「Somnium Space」がSteamに復帰へ",
+      "category": "VR機器・技術",
+      "overview": "18歳以上向けのソーシャルVR「Somnium Space」が、2026年12月にSteamへ戻ってくることが分かりました。Steamのページが再び公開され、基本プレイ無料の早期アクセスとして12月の配信予定になっています。Somnium Spaceは仮想の土地をNFTとして販売していたため、暗号資産やNFTを扱うゲームを禁止したValveの方針により、Steamから姿を消していました。Steam版はブロックチェーンの機能なしで提供され、クリエイターにお金を送る「Tip Jar」もSteam版では使えないとされています。",
+      "points": [
+        "12月に基本プレイ無料の早期アクセスで配信予定",
+        "18歳以上向けで、年齢確認が必須",
+        "Steam版にはNFTなどのブロックチェーン機能がない",
+        "クリエイターへの投げ銭「Tip Jar」はSteam版で使えない"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/adults-only-virtual-world-somnium-space-is-returning-to-steam/" },
+        { "name": "VR.org", "url": "https://vr.org/articles/somnium-space-steam-return-december-tip-jar-not-on-steam-2026" }
+      ]
+    },
+    {
+      "headline": "弓で戦う『In Death』の防衛モードが単体アプリに",
+      "category": "VR機器・技術",
+      "overview": "Quest向けの弓アクション『In Death: Unchained』の開発元Superbrightが、ウェーブ防衛モードを単体アプリ『In Death: Siege of Heaven』としてHorizon Storeで11.99ドルで発売しました。このモードは2020年からUnchainedの中で無料で遊べましたが、Questでは存在がほとんど知られていなかったため、専用のストアページを作ったと説明しています。単体版は90Hzへの対応や3Dのロビー、ウェーブに合わせて変わる音楽などが追加されました。Unchained内のモードはこれまでどおり無料で遊べます。",
+      "points": [
+        "単体版の価格は11.99ドルで、Quest 3と3Sに対応",
+        "Unchainedを持っている人は今までどおり無料で遊べる",
+        "単体版は90Hz対応や新しいロビーなどを追加",
+        "ランキングはシーズン1としてリセットされた"
+      ],
+      "sources": [
+        { "name": "VR.org", "url": "https://vr.org/articles/in-death-siege-of-heaven-standalone-11-99-quest-superbright-2026" }
+      ]
+    }
+  ],
+  "outro": "VRChatで生まれた出会いを、支援やチケットという形でつなぐサービスが増えてきました。今日も良い一日をお過ごしください。"
+}

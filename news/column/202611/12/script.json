@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-12",
+  "speed": 1.15,
+  "guest": "ankomon",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのVRニュースの時間なのだ。", "read": "おはようなのだ！ずんだもんのブイアールニュースの時間なのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "今日はあんこもんも来てやったもん。", "face": "point" },
+      { "who": "zundamon", "text": "来てくれてうれしいのだ、あんこもん。", "face": "smile" },
+      { "who": "zundamon", "text": "11月12日のニュースは4本なのだ。", "read": "じゅういちがつじゅうににちのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VThanksというサービスのベータ版が始まったのだ。", "read": "いっぽんめ。ブイサンクスというサービスの、ベータ版が始まったのだ。" },
+      { "who": "zundamon", "text": "VRChatで出会ったクリエイターを、支援できるのだ。", "read": "ブイアールチャットで出会ったクリエイターを、支援できるのだ。" },
+      { "who": "ankomon", "text": "支援って、お金を送るってことだもん？", "face": "think" },
+      { "who": "zundamon", "text": "そうなのだ。感謝の気持ちを形にして届けるのだ。" },
+      { "who": "zundamon", "text": "ライブやDJイベントのチケットも買えるのだ。", "read": "ライブやディージェーイベントのチケットも買えるのだ。" },
+      { "who": "ankomon", "text": "主催する人も、販売ページを作れるの？" },
+      { "who": "zundamon", "text": "作れるのだ。正式サービスは秋に始まる予定なのだ。" },
+      { "who": "ankomon", "text": "あんこ好きのイベントにも使えそうだもん。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。家庭科のドラゴンが小説になったのだ。", "read": "にほんめ。かていかのドラゴンが、小説になったのだ。" },
+      { "who": "ankomon", "text": "裁縫セットで見たことあるやつだもん！", "face": "surprise" },
+      { "who": "zundamon", "text": "その記念の対談が、VRChatで開かれるのだ。", "read": "その記念の対談が、ブイアールチャットで開かれるのだ。" },
+      { "who": "zundamon", "text": "11月13日、金曜の夜8時からなのだ。", "read": "じゅういちがつじゅうさんにち、金曜の夜はちじからなのだ。" },
+      { "who": "zundamon", "text": "著者さんや編集さんが、制作の裏話を話すのだ。" },
+      { "who": "ankomon", "text": "VRを持ってない人はどうするの？", "read": "ブイアールを持ってない人はどうするの？", "face": "think" },
+      { "who": "zundamon", "text": "YouTubeでも配信されるから安心なのだ。", "read": "ユーチューブでも配信されるから安心なのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "試し読みもできるなんて、気が利いてるもん。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Somnium SpaceがSteamに戻ってくるのだ。", "read": "さんぼんめ。ソムニウムスペースが、スチームに戻ってくるのだ。" },
+      { "who": "ankomon", "text": "戻ってくるって、前はいなくなってたの？", "face": "look" },
+      { "who": "zundamon", "text": "土地をNFTで売っていて、Steamを離れていたのだ。", "read": "土地をエヌエフティーで売っていて、スチームを離れていたのだ。" },
+      { "who": "zundamon", "text": "12月に、基本無料の早期アクセスで出る予定なのだ。", "read": "じゅうにがつに、基本無料の早期アクセスで出る予定なのだ。" },
+      { "who": "zundamon", "text": "18歳以上向けで、年齢確認が必要なのだ。", "read": "じゅうはっさい以上向けで、年齢確認が必要なのだ。" },
+      { "who": "ankomon", "text": "Steam版で使えないものもあるんだもん？", "read": "スチーム版で使えないものもあるんだもん？", "face": "think" },
+      { "who": "zundamon", "text": "投げ銭のTip Jarは使えないそうなのだ。", "read": "投げ銭のチップジャーは使えないそうなのだ。" },
+      { "who": "ankomon", "text": "条件つきでも、帰ってこれてよかったね。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。弓で戦うIn Deathのモードが単体アプリになったのだ。", "read": "よんほんめ。弓で戦うインデスのモードが、単体アプリになったのだ。" },
+      { "who": "zundamon", "text": "Questで11.99ドルなのだ。", "read": "クエストで、じゅういってんきゅうきゅうドルなのだ。" },
+      { "who": "ankomon", "text": "そのモード、前は無料じゃなかったの？", "face": "surprise" },
+      { "who": "zundamon", "text": "今も本編の中なら無料で遊べるのだ。" },
+      { "who": "zundamon", "text": "存在があまり知られてなくて、専用ページを作ったのだ。" },
+      { "who": "ankomon", "text": "知られてないのは、つらいもん…。", "face": "think" },
+      { "who": "zundamon", "text": "単体版は90Hz対応や、新しいロビーも入ったのだ。", "read": "単体版はきゅうじゅうヘルツ対応や、新しいロビーも入ったのだ。" },
+      { "who": "ankomon", "text": "目立つって大事なんだもん。", "face": "point" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "さそり座", "comment": "応援の気持ちが届く日", "lucky": "手書きのメッセージカード" },
+        { "rank": 2, "sign": "おとめ座", "comment": "読書で新しい発見あり", "lucky": "しおり" },
+        { "rank": 3, "sign": "やぎ座", "comment": "久しぶりの再会が吉", "lucky": "あんこの和菓子" },
+        { "rank": 4, "sign": "みずがめ座", "comment": "ひらめきを書き留めて", "lucky": "付せん" },
+        { "rank": 5, "sign": "おひつじ座", "comment": "体を動かすと気分爽快", "lucky": "スニーカー" },
+        { "rank": 6, "sign": "かに座", "comment": "身の回りの整理が吉", "lucky": "収納ボックス" },
+        { "rank": 7, "sign": "ふたご座", "comment": "会話がはずむ一日に", "lucky": "マグカップ" },
+        { "rank": 8, "sign": "いて座", "comment": "小さな挑戦がうまくいく", "lucky": "ボールペン" },
+        { "rank": 9, "sign": "てんびん座", "comment": "ゆっくり過ごすと吉", "lucky": "温かいお茶" },
+        { "rank": 10, "sign": "うお座", "comment": "音楽で気分を整えて", "lucky": "ヘッドホン" },
+        { "rank": 11, "sign": "おうし座", "comment": "早めの準備で安心", "lucky": "カレンダー" },
+        { "rank": 12, "sign": "しし座", "comment": "ひと休みで運気回復", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、さそり座。応援の気持ちが届く日ですわ。", "read": "今日のいちいは、さそりざ。応援の気持ちが届く日ですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はおとめ座、3位はやぎ座です。", "read": "にいはおとめざ、さんいはやぎざです。" },
+        { "who": "zundamon", "text": "やぎ座のラッキーアイテムは、あんこの和菓子なのだ。", "read": "やぎざのラッキーアイテムは、あんこの和菓子なのだ。", "face": "look" },
+        { "who": "itako", "text": "12位はしし座。ひと休みすれば運気が戻りますわ。", "read": "じゅうにいはししざ。ひと休みすれば運気が戻りますわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅なのだ！食べて元気になるのだ。", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "ankomon", "text": "今日はあんこが出てきたから、あんこもんの勝ちだもん。", "face": "point", "style": "つよつよ" },
+      { "who": "zundamon", "text": "ずんだ餅も出てきたから引き分けなのだ。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
