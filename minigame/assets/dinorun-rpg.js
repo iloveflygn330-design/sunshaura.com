@@ -42,7 +42,7 @@ DR_PHASES.rpg = {
     // 暗転の前の画面（走っていたところ）を写しておく
     const snap = document.createElement('canvas');
     snap.width = DR_CONFIG.width; snap.height = DR_CONFIG.height;
-    snap.getContext('2d').drawImage(dr.canvas, 0, 0);
+    snap.getContext('2d').drawImage(dr.canvas, 0, 0, snap.width, snap.height);   // 画面は細かく描いているので、384 × 216 に縮めて写す
     drRpg = {
       run, enc, lv, snap,
       st: 'close', t: 0,
