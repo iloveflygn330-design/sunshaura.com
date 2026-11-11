@@ -25,6 +25,19 @@ const DR_CONFIG = {
   groundY: 184,            // 地面の高さ（上から何ドット目が地面の表面か）
   playerX: 44,             // 自機の左端の位置
 
+  /* --- 画面の細かさと、速くなったときのズームアウト ---
+       ゲームは 384 × 216 ドットで計算して、renderScale 倍の細かさで描く（ズームアウトしてもドット絵がつぶれないように）。
+       走る速さが zoomFromSpeed をこえると、だんだんズームアウトして（前が広く見える）、zoomFullSpeed で zoomMin 倍になる。
+       zoomMin を 1 にするとズームアウトしない。0.75 なら、前が 1.33 倍遠くまで見える */
+  renderScale: 3,
+  zoomFromSpeed: 200,
+  zoomFullSpeed: 320,
+  zoomMin: 0.75,
+
+  /* --- 壊せない障害物の縁取り（breakable: false のもの。スキルで壊そうとして事故にならないように目立たせる） --- */
+  unbreakableOutline: '#8E0F2A',   // 縁取りの色（黒っぽい赤）。'' にすると縁取りなし
+  unbreakableOutline2: '#1B1B2F',  // その外側の色（黒）。'' にすると外側なし
+
   /* --- スピード（px/秒） --- */
   speedStart: 140,         // 走り始めの速さ
   speedMax: 440,           // いちばん速いとき
@@ -49,7 +62,7 @@ const DR_CONFIG = {
   tapDecideMs: 60,
   swipeDistJump: 6,        // ジャンプ（上へのスワイプ）は、この距離を動いたらすぐ（ジャンプは早く出したいので小さめ）
   swipeDist: 10,
-  swipeDistSkill: 16,      // スキル（左右のスワイプ）は、この距離を動いたら（スライディングより少し大きく。暴発しないように）
+  swipeDistSkill: 26,      // スキル（左右のスワイプ）は、この距離を動いたら（スライディングより少し大きく。暴発しないように）
   swipeSkillRatio: 1.4,    // スキルは「横に動いた量 ÷ たてに動いた量」がこれ以上のときだけ（ななめはスキルにしない）
   stumbleTime: 0.45,       // クールタイム中のスキルを使おうとしたときに「おっとと」とよろける時間（秒）
   // バタ足ジャンプ（パッシブ。浮いていられる秒数は dinorun-items.js の flutter アイテムで決める）
@@ -219,7 +232,8 @@ const DR_CONFIG = {
      breath … ボスのほのおのブレス / boom … ボスが爆発した（倒した）
      oops … クールタイム中のスキルを使おうとして「おっとと」とよろけた
      world … ワールド移動 / bonus … ボーナスステージに入った / gameover … ゲームオーバー / select … ボタン / start … ゲーム開始
-     beat / beatTop … テスト用のメトロノーム（URL に &drbeat を付けたときだけ。4分音符ごと、小節の頭は beatTop）
+     beat / beatTop … テスト用のメトロノーム（URL に &drdebug か &drbeat を付けたときだけ。4分音符ごと、小節の頭は beatTop）
+     note … テスト用のノーツの音（&drdebug のとき。障害物・ショップの真ん中が恐竜君の真ん中を通った瞬間に鳴る）
 
    BGM（ワールドごとに変えたいとき）:
      dinorun-worlds.js の各ワールドの bgm に、下の id を書く（例: bgm: 'bgm_home'）。
@@ -273,6 +287,7 @@ const DR_SOUNDS = {
   bonus:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[784, 0.08], [988, 0.08], [1175, 0.08], [1568, 0.25]] } },
   gameover:   { src: '', volume: 0.6, tone: { wave: 'square', notes: [[392, 0.15], [330, 0.15], [262, 0.35]] } },
   select:     { src: '', volume: 0.3, tone: { wave: 'square', freq: 880, dur: 0.04 } },
+  note:       { src: '', volume: 0.4, tone: { wave: 'triangle', freq: 660, dur: 0.05 } },
   beat:       { src: '', volume: 0.25, tone: { wave: 'square', freq: 1200, dur: 0.03 } },
   beatTop:    { src: '', volume: 0.35, tone: { wave: 'square', freq: 1800, dur: 0.04 } },
   start:      { src: '', volume: 0.5, tone: { wave: 'square', notes: [[523, 0.08], [784, 0.08], [1047, 0.14]] } },

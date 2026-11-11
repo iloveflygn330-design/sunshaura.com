@@ -45,23 +45,20 @@ const DR_SKILL_ACTIONS = {
        ダッシュ切りのときは、天井から下がっているもの（障害物の dashCut: true）も切れる） */
   slash(run, skill) {
     const dash = drTryDash(run);
-    run.dashCut = dash > 0;
-    run.slashT = 0.28;
-    run.slashRange = skill.range + dash;
-    const p = drPlayerBox(run);
-    // 自機のうしろの端から、前の端＋range（＋ダッシュ）まで。重なっているものも、目の前のものも全部切れる
-    const area = { x: p.x, y: DR_CONFIG.groundY - skill.height, w: p.w - 2 + skill.range + dash, h: skill.height };
-    run.obstacles.forEach(o => {
-      if (!o.dead && drCanCut(run, o) && drOverlap(area, drObstacleBox(o))) { drKillObstacle(run, o); drDropCoins(run, o); }
-    });
-    drSound('slash');
+    drSlashCut(run, skill, dash);
+    // RPGエリアのリズム技：拍に合わせて、あと slashCount - 1 回切る（drUpdate が拍ごとに切る）
+    if (run.rhythmBoost) {
+      const A = DR_DESIGN.rpgArea, note = A.slashNote || 4;
+      run.rhythmSlash = { left: Math.max(0, (A.slashCount || 3) - 1), note, next: Math.round(run.beat * note / 4) + 1, skill, dash: dash || DR_CONFIG.dashDistance };
+    }
   },
   /* スピンアタック：duration 秒のあいだ回転。ぶつかった障害物を壊し、ダメージを受けない
      （急降下のすぐあとなら、回転しながら本当に前へ spinRushMeters m 進む＝画面が一気に流れる） */
   spin(run, skill) {
-    if (run.comboT > 0) { run.comboT = 0; drStartRush(run, DR_CONFIG.spinRushMeters, DR_CONFIG.spinRushTime); }
-    run.spinT = skill.duration;
-    run.spinTotal = skill.duration;
+    const k = run.rhythmBoost ? (DR_DESIGN.rpgArea.spinMult || 1) : 1;   // RPGエリアのリズム技：長く回って、遠くまで進む
+    if (run.comboT > 0) { run.comboT = 0; drStartRush(run, DR_CONFIG.spinRushMeters * k, DR_CONFIG.spinRushTime * k); }
+    run.spinT = skill.duration * k;
+    run.spinTotal = skill.duration * k;
     drSound('spin');
   },
   /* 急降下：空中から一気に着地する（地面にいるときは使えない）。ショップの「急降下 Lv2」でクールタイムが 0 になる。
@@ -78,7 +75,7 @@ const DR_SKILL_ACTIONS = {
   },
   /* コイン吸引：画面に出ているコインを全部、自機に吸い寄せる */
   vacuum(run, skill) {
-    run.coins.forEach(c => { if (c.x < DR_CONFIG.width) c.vac = true; });
+    run.coins.forEach(c => { if (c.x < drViewW(run)) c.vac = true; });
     run.vacuumFx = 0.35;
     drSound('vacuum');
   },
@@ -90,15 +87,44 @@ const DR_SKILL_ACTIONS = {
     if (blue) run.comboT = 0;
     const p = drPlayerBox(run);
     const r = skill.radius + (blue ? 2 : 0);
-    run.shots.push({
-      x: p.x + p.w + r - 2, y: Math.min(p.y + 7, DR_CONFIG.groundY - r - 1), r, blue, t: 0, dist: 0,
-      speed: blue ? skill.blueSpeed : skill.speed,
-      range: blue ? Infinity : skill.range,
-      pierce: skill.pierce, hit: new Set(),
-    });
+    // RPGエリアのリズム技：fireWays 方向に飛ばす（まっすぐ＋上へ fireAngle 度ずつ。下は地面なので、上へ広げる）
+    const ways = run.rhythmBoost ? Math.max(1, DR_DESIGN.rpgArea.fireWays || 3) : 1;
+    for (let i = 0; i < ways; i++) {
+      const ang = i * (DR_DESIGN.rpgArea.fireAngle || 14) * Math.PI / 180;
+      const speed = blue ? skill.blueSpeed : skill.speed;
+      run.shots.push({
+        x: p.x + p.w + r - 2, y: Math.min(p.y + 7, DR_CONFIG.groundY - r - 1), r, blue, t: 0, dist: 0,
+        speed: speed * Math.cos(ang), vy: -speed * Math.sin(ang),
+        range: blue ? Infinity : skill.range,
+        pierce: skill.pierce, hit: new Set(),
+      });
+    }
     drSound(blue ? 'bluefire' : 'fire');
   },
 };
+
+/* 居合切りの1回ぶん：自機から前へ range（＋ダッシュの距離 dash）の先までにある、切れる障害物を全部切る */
+function drSlashCut(run, skill, dash) {
+  run.dashCut = dash > 0;
+  run.slashT = 0.28;
+  run.slashRange = skill.range + dash;
+  const p = drPlayerBox(run);
+  // 自機のうしろの端から、前の端＋range（＋ダッシュ）まで。重なっているものも、目の前のものも全部切れる
+  const area = { x: p.x, y: DR_CONFIG.groundY - skill.height, w: p.w - 2 + skill.range + dash, h: skill.height };
+  run.obstacles.forEach(o => {
+    if (!o.dead && drCanCut(run, o) && drOverlap(area, drObstacleBox(o))) { drKillObstacle(run, o); drDropCoins(run, o); }
+  });
+  drSound('slash');
+}
+
+/* 画面に見えている幅（ドット）。ズームアウトしているときは広い。障害物・コインは、この右の外に出す */
+function drViewW(run) { return DR_CONFIG.width / ((run && run.zoom) || 1); }
+/* 走る速さから決まるズーム（1 = ふつう。DR_CONFIG.zoomMin まで小さくなる） */
+function drZoomFor(speed) {
+  const C = DR_CONFIG;
+  const q = Math.max(0, Math.min(1, (speed - C.zoomFromSpeed) / Math.max(1, C.zoomFullSpeed - C.zoomFromSpeed)));
+  return 1 + ((C.zoomMin || 1) - 1) * q * q * (3 - 2 * q);
+}
 
 /* 居合切りで切れるか（ふつうは breakable のものだけ。ダッシュ切りなら dashCut のものも） */
 function drCanCut(run, o) { return !o.def.pit && !o.def.encounter && (o.def.breakable !== false || (run.dashCut && o.def.dashCut)); }
@@ -195,8 +221,9 @@ function dinorunStop() {
 function drSetup() {
   dr.ready = true;
   dr.canvas = document.getElementById('dr-canvas');
-  dr.canvas.width = DR_CONFIG.width;
-  dr.canvas.height = DR_CONFIG.height;
+  // DR_CONFIG.renderScale 倍の細かさで描く（drRender のはじめに、その倍率をかけている。描く処理は 384 × 216 のまま書ける）
+  dr.canvas.width = DR_CONFIG.width * (DR_CONFIG.renderScale || 1);
+  dr.canvas.height = DR_CONFIG.height * (DR_CONFIG.renderScale || 1);
   dr.ctx = dr.canvas.getContext('2d');
   dr.ctx.imageSmoothingEnabled = false;
 
@@ -209,7 +236,9 @@ function drSetup() {
   // テスト用：URL に &drdebug を付けて開いたときだけ、一時停止ボタンの横に「⚔」ボタン（押すとすぐバトル。スマホでも試せる）
   if (dr.debug) {
     const pause = document.querySelector('#dr-hud [data-dr="pause"]');
-    if (pause) pause.insertAdjacentHTML('beforebegin', '<button type="button" class="dr-pause-btn dr-debug-btn" data-dr="debug-battle" aria-label="バトルを始める（テスト用）">⚔</button>');
+    if (pause) pause.insertAdjacentHTML('beforebegin', '<button type="button" class="dr-pause-btn dr-debug-btn" id="dr-debug-note" data-dr="debug-note" aria-label="拍とノーツの音（テスト用）">♪</button>'
+      + '<button type="button" class="dr-pause-btn dr-debug-btn" data-dr="debug-battle" aria-label="バトルを始める（テスト用）">⚔</button>');
+    dr.noteSound = true;   // テスト用：拍（メトロノーム）とノーツの音。♪ボタンで切りかえ
   }
 
   // スキル・アイテムの画像（PNG）を指定していれば先に読み込んでおく
@@ -624,6 +653,7 @@ function drUiAction(act, el) {
     case 'potion': drUsePotion(); break;
     case 'phase-next': if (dr.mode === 'phaseResult') drEndPhase('win'); break;
     case 'debug-battle': drDebugBattle(); break;
+    case 'debug-note': dr.noteSound = !dr.noteSound; if (el) el.style.opacity = dr.noteSound ? '' : '0.4'; break;   // テスト用：拍とノーツの音のオン・オフ
   }
 }
 
@@ -860,7 +890,7 @@ function drBeatTick(run, dt) {
     }
   }
   // テスト用のメトロノーム（&drbeat）
-  if (dr.metronome && Math.floor(run.beat) > Math.floor(before)) drSound(Math.floor(run.beat) % 4 === 0 ? 'beatTop' : 'beat');
+  if ((dr.metronome || dr.noteSound) && Math.floor(run.beat) > Math.floor(before)) drSound(Math.floor(run.beat) % 4 === 0 ? 'beatTop' : 'beat');
 }
 /* t 秒のあいだに走る距離（px）。走る速さはだんだん上がる（speedAccel）ので、そのぶんも足す（拍とずれないように） */
 function drTravel(run, t) {
@@ -1052,6 +1082,32 @@ function drUpdate(run, dt) {
     if (run.worldFx.t >= run.worldFx.dur) run.worldFx = null;
   }
 
+  // --- ズームアウト（速くなると、前が広く見える） ---
+  run.zoom = drZoomFor(run.speed);
+
+  // --- RPGエリア：いつもコンボの状態。リズム技の居合切りは、拍ごとにあと何回か切る ---
+  if (run.rpgArea) run.comboT = C.diveComboTime;
+  if (run.rhythmSlash) {
+    const rs = run.rhythmSlash;
+    if (rs.left <= 0) run.rhythmSlash = null;
+    else if (run.beat * rs.note / 4 >= rs.next) { rs.next++; rs.left--; drSlashCut(run, rs.skill, rs.dash); }
+  }
+
+  // --- テスト用：ノーツの音（障害物・ショップの真ん中が、恐竜君の真ん中を通った瞬間に鳴らす。♪ボタン） ---
+  if (dr.noteSound) {
+    const ax = drArriveX();
+    for (const o of run.obstacles) {
+      if (o.noted || o.def.id === 'gate_roof') continue;
+      if (o.x + o.w / 2 <= ax) {
+        o.noted = true;
+        if (run.notedGroup !== o.group) { run.notedGroup = o.group; drSound('note'); dr.noteFlash = 0.12; }
+      }
+    }
+    const sh = run.shopIcon;
+    if (sh && !sh.noted && sh.x + DR_PICKUPS.shop.w / 2 <= ax) { sh.noted = true; drSound('note'); dr.noteFlash = 0.12; }
+  }
+  if (dr.noteFlash > 0) dr.noteFlash -= dt;
+
   // --- 出現 ---
   run.nextObstacleIn -= move;
   // ショップの手前（shopClearBefore 秒ぶん）は障害物を出さない
@@ -1071,7 +1127,7 @@ function drUpdate(run, dt) {
     const now = run.beat * note / 4;                          // いま何音符目か
     if (run.nextObsBeat == null || run.nextObsBeat < now) run.nextObsBeat = Math.ceil(now) + drObstacleGapNotes(run);
     const lead = drTravel(run, (run.nextObsBeat - now) * unit); // 着くまでに走る距離（px）
-    if (lead <= C.width + 96 - drArriveX()) {                // 画面の外（右）に出せる距離まで来たら出す
+    if (lead <= drViewW(run) + 96 - drArriveX()) {                // 画面の外（右）に出せる距離まで来たら出す
       let extra = 0;   // 長い障害物（スキルの区画）を出したら、その長さのぶん次をあける
       if (run.nextObstacleIn <= 0 && run.calmT <= 0 && !shopSoon && !run.bonus && !tutorial) extra = drSpawnObstacle(run, drArriveX() + lead) || 0;
       run.nextObsBeat += drObstacleGapNotes(run) + Math.ceil(extra / run.speed / unit);
@@ -1278,6 +1334,7 @@ function drUpdateShots(run, dt) {
   for (const s of run.shots) {
     const step = s.speed * dt;
     s.x += step; s.dist += step; s.t += dt;
+    if (s.vy) s.y += s.vy * dt;   // ななめに飛ぶ火の玉（リズム技の 3way）
     const box = { x: s.x - s.r, y: s.y - s.r, w: s.r * 2, h: s.r * 2 };
     for (const o of run.obstacles) {
       if (o.dead || o.def.pit || o.def.encounter || s.hit.has(o) || !drOverlap(box, drObstacleBox(o))) continue;
@@ -1288,7 +1345,7 @@ function drUpdateShots(run, dt) {
       if (--s.pierce <= 0) { s.done = true; break; }
     }
     if (s.blue && Math.random() < 0.9) run.effects.push({ type: 'dot', x: s.x - s.r, y: s.y + drRand(-s.r, s.r), vx: -40, t: 0, life: 0.25, color: '#9FE8FF' });
-    if (s.dist > s.range || s.x - s.r > DR_CONFIG.width) s.done = true;
+    if (s.dist > s.range || s.x - s.r > drViewW(run) || s.y + s.r < DR_CONFIG.height - DR_CONFIG.height / (run.zoom || 1)) s.done = true;
     if (s.done) drSparkle(run, s.x, s.y, s.blue ? '#9FE8FF' : '#FF9A3C', 5);
   }
   run.shots = run.shots.filter(s => !s.done);
@@ -1415,12 +1472,12 @@ function drSpawnCoins(run) {
   const n = Math.floor(drRand(C.coinRowMin, C.coinRowMax + 1));
   const style = Math.random();
   if (style < 0.35) {   // 山なり：ジャンプしたときに通る道すじに並べる（速いほど横に広がる）
-    drArcCoins(run, C.width + 6 + drArcWidth(run) / 2, Math.max(4, n));
+    drArcCoins(run, drViewW(run) + 6 + drArcWidth(run) / 2, Math.max(4, n));
     return;
   }
   const baseLift = [6, 30, 54][Math.floor(Math.random() * 3)];
   for (let i = 0; i < n; i++) {
-    run.coins.push({ x: C.width + 6 + i * 13, y: C.groundY - baseLift - DR_PICKUPS.coin.h, taken: false });
+    run.coins.push({ x: drViewW(run) + 6 + i * 13, y: C.groundY - baseLift - DR_PICKUPS.coin.h, taken: false });
   }
 }
 
@@ -1443,7 +1500,8 @@ function drArcCoins(run, cx, n) {
    次のコインを出すまでの長さ（px）を返す */
 function drSpawnBonusCoins(run) {
   const C = DR_CONFIG, ch = DR_PICKUPS.coin.h, s = run.scroll;
-  let x = C.width + 6;
+  const xStart = drViewW(run) + 6;
+  let x = xStart;
   const n = Math.floor(drRand(C.bonusTrailMin, C.bonusTrailMax + 1));
   for (let i = 0; i < n; i++) run.coins.push({ x: x + i * 12, y: C.groundY - 4 - ch, taken: false });
   x += n * 12 + 30;
@@ -1463,7 +1521,7 @@ function drSpawnBonusCoins(run) {
     const lift = p.y + 10;                                  // 自機の体のまん中の高さ
     run.coins.push({ x: x + s * tt - 10, y: C.groundY - lift - ch / 2, taken: false });
   }
-  return (x - (C.width + 6)) + s * total + drRand(30, 70);
+  return (x - xStart) + s * total + drRand(30, 70);
 }
 
 /* ジャンプの道すじ（ボーナスステージのコインを並べるのに使う）。[{ t: 秒, y: 足の高さ }] を返す
@@ -1501,7 +1559,7 @@ function drTutorialTip(run) {
 }
 function drTutorialSpawn(run, st) {
   const C = DR_CONFIG;
-  const x0 = C.width + 6;
+  const x0 = drViewW(run) + 6;
   let cx = null;              // コインを並べる目安（最初の障害物のまん中）
   const list = st.obstacle ? (Array.isArray(st.obstacle) ? st.obstacle : [st.obstacle]) : [];
   list.forEach((item, i) => {
@@ -1555,7 +1613,7 @@ function drSpawnShop(run) {
   const y = DR_CONFIG.groundY - DR_PICKUPS.shop.h;
   // 拍の頭（DR_DESIGN.rhythm.shopNote の音符）で、ショップの真ん中が恐竜君の真ん中に着くように、出す位置を少し右にずらす
   const note = DR_DESIGN.rhythm.shopNote || 4, unit = 240 / note / drBpm(run);
-  const cx0 = DR_CONFIG.width + 8 + DR_PICKUPS.shop.w / 2;
+  const cx0 = drViewW(run) + 8 + DR_PICKUPS.shop.w / 2;
   const at = run.beat * note / 4 + (cx0 - drArriveX()) / run.speed / unit;   // そのまま出したら何音符目に着くか（だいたい）
   const cx = drArriveX() + drTravel(run, (Math.ceil(at) - run.beat * note / 4) * unit);
   run.shopIcon = { x: Math.round(cx - DR_PICKUPS.shop.w / 2), y, baseY: y };
@@ -1637,11 +1695,13 @@ function drUseSkill(run, slot) {
   const skill = run.skills[id];
   const fn = DR_SKILL_ACTIONS[skill.action];
   if (!fn) return;
-  // RPGエリア：拍に合わせて出すと、急降下コンボと同じように強くなる（リズム技）
-  const rhythm = !!run.rpgArea && drOnBeat(run), hadCombo = run.comboT;
-  if (rhythm) run.comboT = Math.max(run.comboT, 0.05);
+  // RPGエリア：いつもコンボの状態（drUpdate）。さらに、拍に合わせて出すと、もう1段強くなる（リズム技。
+  //   居合切りは拍ごとに3回、火の玉は 3way、スピンは長く遠く。数値は DR_DESIGN.rpgArea。動きは DR_SKILL_ACTIONS が run.rhythmBoost を見て変える）
+  const rhythm = !!run.rpgArea && drOnBeat(run);
+  if (run.rpgArea) run.comboT = Math.max(run.comboT, 0.05);
+  run.rhythmBoost = rhythm;
   const used = fn(run, skill);
-  if (rhythm && !(hadCombo > 0) && run.comboT > 0) run.comboT = 0;   // 強くするのに使われなかったら、コンボを残さない
+  run.rhythmBoost = false;
   if (used === false) return;   // 使えなかった（空振りにしない）
   if (rhythm) { drFloatText(run, 'RHYTHM!', drPX(run) - 4, DR_CONFIG.groundY - run.y - 40, '#FF7AE0'); drSound('charge'); }
   run.cooldowns[id] = skill.cooldown * (run.rpgArea ? (DR_DESIGN.rpgArea.ctMult || 1) : 1);   // RPGエリアの間はクールタイムが短い
@@ -2483,6 +2543,37 @@ function drPreloadImages() {
   srcs.filter(Boolean).forEach(drImage);
 }
 
+/* 壊せない障害物の縁取り。いまのコマの形（透明でないところ）を色でぬりつぶしたものを、まわりにずらして描く。
+   内側（1ドット）は DR_CONFIG.unbreakableOutline、その外側（もう1ドット）は unbreakableOutline2 */
+const drOutlineCache = new Map();
+function drDrawOutline(ctx, o) {
+  const C = DR_CONFIG, d = o.def, sp = d.sprite;
+  if (!sp) return;
+  const t = dr.clock + o.t0, fps = sp.fps || 0;
+  const img = drImage(sp.image);
+  const n = img ? (sp.frames || 1) : (Array.isArray(sp.pixels[0]) ? sp.pixels.length : 1);
+  const f = fps ? Math.floor(t * fps) % n : 0;
+  const key = d.id + ':' + f + ':' + (img ? 'i' : 'p');
+  let sil = drOutlineCache.get(key);
+  if (!sil) {
+    // このコマを描いて、色でぬりつぶした形（2色ぶん）を作る
+    const base = document.createElement('canvas'); base.width = d.w; base.height = d.h;
+    const bx = base.getContext('2d'); bx.imageSmoothingEnabled = false;
+    drDrawSprite(bx, sp, d.w, d.h, 0, 0, fps ? (f + 0.5) / fps : 0);
+    const tint = col => {
+      const c = document.createElement('canvas'); c.width = d.w; c.height = d.h;
+      const x = c.getContext('2d'); x.drawImage(base, 0, 0);
+      x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, d.w, d.h);
+      return c;
+    };
+    sil = { a: tint(C.unbreakableOutline), b: C.unbreakableOutline2 ? tint(C.unbreakableOutline2) : null };
+    drOutlineCache.set(key, sil);
+  }
+  const x = Math.round(o.x), y = Math.round(o.y);
+  if (sil.b) for (const [dx, dy] of [[-2, 0], [2, 0], [0, -2], [0, 2], [-1, -1], [1, -1], [-1, 1], [1, 1]]) ctx.drawImage(sil.b, x + dx, y + dy);
+  for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) ctx.drawImage(sil.a, x + dx, y + dy);
+}
+
 /* 絵（sprite）を描く。t は秒（コマ送り用） */
 function drDrawSprite(ctx, sprite, w, h, x, y, t) {
   if (!sprite) return;
@@ -2505,6 +2596,10 @@ function drDrawSprite(ctx, sprite, w, h, x, y, t) {
 function drRender() {
   const ctx = dr.ctx, C = DR_CONFIG;
   if (!ctx) return;
+  // 画面は renderScale 倍の細かさ。ここで倍率をかけるので、このあとの描く処理は 384 × 216 のつもりで書ける
+  const rs = C.renderScale || 1;
+  ctx.setTransform(rs, 0, 0, rs, 0, 0);
+  ctx.imageSmoothingEnabled = false;
   // フェイズ中（一時停止・結果の画面・再開のカウントダウンも）は、そのフェイズが画面を描く
   if (dr.phase && (['phase', 'phaseResult'].includes(dr.mode) || (dr.mode === 'pause' && dr.pauseFrom === 'phase')
       || (dr.mode === 'ready' && dr.readyNext === 'phase'))) {
@@ -2518,6 +2613,10 @@ function drRender() {
   if (dr.shake > 0) ctx.translate(Math.round(drRand(-2, 2)), Math.round(drRand(-2, 2)));
   const world = drWorld(run);
   drDrawSky(ctx, world);
+  // ズームアウト：空以外を、画面の左下を中心に縮めて描く（右と上が広く見える。地面と恐竜君は左下に残る）
+  const zoom = (dr.run && run.zoom) || 1;
+  const zExtra = zoom < 1 ? Math.ceil(C.width / zoom - C.width) + 2 : 0;   // 右にはみ出して描く幅
+  if (zoom < 1) { ctx.translate(0, C.height); ctx.scale(zoom, zoom); ctx.translate(0, -C.height); }
   // ボーナスステージ（下り坂）では、空以外を自機の足元を中心に傾けて描く
   const tilt = (run.tilt || 0) * Math.PI / 180;
   const tilted = Math.abs(tilt) > 0.001;
@@ -2529,10 +2628,10 @@ function drRender() {
     ctx.rotate(tilt);
     ctx.translate(-(C.playerX + 12), -C.groundY);
   }
-  drDrawFar(ctx, world, run.dist, tilted ? 90 : 0);
+  drDrawFar(ctx, world, run.dist, (tilted ? 90 : 0) + zExtra);
   // ワールド移動の光（背景だけを白くする。自機・地面・障害物はこのあとに描くので隠れない）
   if (run.worldFx) drDrawWorldFlash(ctx, run.worldFx);
-  drDrawGround(ctx, world, run.dist, tilted ? 90 : 0);
+  drDrawGround(ctx, world, run.dist, (tilted ? 90 : 0) + zExtra);
   // 落下穴（地面の上に穴を描く）
   run.obstacles.forEach(o => { if (o.def.pit) drDrawPit(ctx, o); });
   // ボーナスステージのジャンプの目印
@@ -2550,6 +2649,8 @@ function drRender() {
   run.obstacles.forEach(o => {
     if (o.def.pit) return;
     if (o.dead) ctx.globalAlpha = Math.max(0, 1 - o.deadT / 0.4);
+    // 壊せないもの（breakable: false）は、黒っぽい赤で縁取りして目立たせる（スキルの区画のシャッターは別の見た目なので付けない）
+    if (o.def.breakable === false && !o.def.encounter && !/^gate_/.test(o.def.id) && C.unbreakableOutline) drDrawOutline(ctx, o);
     drDrawSprite(ctx, o.def.sprite, o.def.w, o.def.h, o.x, o.y, dr.clock + o.t0);
     const lb = o.def.label;   // 絵の上の文字（スキルの区画の「SKILL!」など）。点滅させる
     if (lb && Math.floor(dr.clock * 4) % 2) {
@@ -2564,7 +2665,7 @@ function drRender() {
     ctx.fillStyle = 'rgba(255,255,255,0.55)';
     for (let i = 0; i < 9; i++) {
       const ly = 20 + Math.floor(drHash(i + Math.floor(dr.clock * 30)) * (C.groundY - 30));
-      const lx = Math.floor(drHash(i * 3 + Math.floor(dr.clock * 30)) * C.width);
+      const lx = Math.floor(drHash(i * 3 + Math.floor(dr.clock * 30)) * C.width / zoom);
       ctx.fillRect(lx, ly, 26 + (i % 3) * 10, 1);
     }
   }
@@ -2617,6 +2718,11 @@ function drRender() {
     }
   }
   if (dr.debug) drDrawDebug(ctx, run);
+  // テスト用：ノーツが鳴る位置（恐竜君の真ん中）の線。鳴った瞬間に光る
+  if (dr.run && dr.noteSound) {
+    ctx.fillStyle = dr.noteFlash > 0 ? '#FFD84A' : 'rgba(255,255,255,0.35)';
+    ctx.fillRect(drArriveX(), C.groundY - 60, 1, 60);
+  }
   if (tilted) ctx.restore();
   ctx.restore();
   drDrawBeatDebug(ctx);
@@ -2631,11 +2737,13 @@ function drRender() {
     drRpgDrawBg(ctx, 0, 0, 0, B.runX, DR_RPG_FLOOR + (C.groundY - DR_RPG_FLOOR) * q);   // 床の境目も、ノーマルの地面の高さまで下がる
     ctx.globalAlpha = 1;
     ctx.imageSmoothingEnabled = false;
-    const size = 48 + (24 - 48) * q;
-    const cx = DR_RPG_PLAYER_X + (drPX(run) + 12 - DR_RPG_PLAYER_X) * q;
-    const feet = DR_RPG_PLAYER_FEET + (C.groundY - run.y - DR_RPG_PLAYER_FEET) * q;
+    // ノーマルでの位置・大きさ（ズームアウトしているときは、そのぶん小さく・下になる）
+    const zx = x => x * zoom, zy = y => C.height - (C.height - y) * zoom;
+    const size = 48 + (24 * zoom - 48) * q;
+    const cx = DR_RPG_PLAYER_X + (zx(drPX(run) + 12) - DR_RPG_PLAYER_X) * q;
+    const feet = DR_RPG_PLAYER_FEET + (zy(C.groundY - run.y) - DR_RPG_PLAYER_FEET) * q;
     ctx.fillStyle = 'rgba(0,0,0,0.2)';   // 影
-    ctx.beginPath(); ctx.ellipse(cx, DR_RPG_PLAYER_FEET + (C.groundY - DR_RPG_PLAYER_FEET) * q, size / 3, size / 12, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, DR_RPG_PLAYER_FEET + (zy(C.groundY) - DR_RPG_PLAYER_FEET) * q, size / 3, size / 12, 0, 0, Math.PI * 2); ctx.fill();
     ctx.drawImage(drRpgPlayerImage(!run.onGround, Math.floor(B.runX / 9)), Math.round(cx - size / 2), Math.round(feet - size), Math.round(size), Math.round(size));
     ctx.restore();
   }
@@ -2730,7 +2838,7 @@ function drDrawWorldFlash(ctx, fx) {
   const C = DR_CONFIG;
   const p = fx.t / fx.dur;
   const a = p < 0.5 ? p * 2 : (1 - p) * 2;
-  const r = (p < 0.5 ? p * 2 : 1) * C.width * 0.75;
+  const r = (p < 0.5 ? p * 2 : 1) * C.width * 1.1;   // ズームアウトしていても画面をおおう大きさ
   ctx.globalAlpha = Math.min(1, a * 1.1);
   ctx.fillStyle = '#FFFFFF';
   ctx.beginPath(); ctx.arc(C.width / 2, C.height / 2, r, 0, Math.PI * 2); ctx.fill();
@@ -2891,9 +2999,10 @@ function drDrawFar(ctx, w, dist, extra) {
   } else if (f.style === 'city') {
     // 星
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    for (let i = 0; i < 30; i++) ctx.fillRect(Math.floor(drHash(i) * C.width), Math.floor(drHash(i + 50) * 90), 1, 1);
+    for (let k = 0; k * C.width < C.width + extra; k++)   // はみ出して描くときは、同じ星をもう1回右に並べる
+      for (let i = 0; i < 30; i++) ctx.fillRect(Math.floor(drHash(i) * C.width) + k * C.width, Math.floor(drHash(i + 50) * 90), 1, 1);
     const bw = 22, start = Math.floor(off / bw);
-    for (let i = start - 1; i < start + C.width / bw + 2; i++) {
+    for (let i = start - 1 - Math.ceil(extra / bw); i < start + (C.width + extra) / bw + 2; i++) {
       const bh = 30 + Math.floor(drHash(i) * 60);
       const x = Math.round(i * bw - off);
       ctx.fillStyle = f.color;
@@ -2910,7 +3019,7 @@ function drDrawFar(ctx, w, dist, extra) {
       const sx = (drHash(i) * C.width * 2 - off * 0.3 * (0.5 + drHash(i + 9))) % C.width;
       const tw = Math.sin(dr.clock * 3 + i) > 0.6 ? 2 : 1;
       ctx.fillStyle = i % 7 === 0 ? f.color2 : f.color;
-      ctx.fillRect(Math.round((sx + C.width) % C.width), Math.floor(drHash(i + 99) * 150), tw, tw);
+      for (let k = 0; k * C.width < C.width + extra; k++) ctx.fillRect(Math.round((sx + C.width) % C.width) + k * C.width, Math.floor(drHash(i + 99) * 150), tw, tw);
     }
     ctx.fillStyle = f.color2;
     ctx.beginPath(); ctx.arc(310, 40, 14, 0, Math.PI * 2); ctx.fill();
@@ -2918,12 +3027,13 @@ function drDrawFar(ctx, w, dist, extra) {
     ctx.beginPath(); ctx.arc(316, 36, 12, 0, Math.PI * 2); ctx.fill();
   } else if (f.style === 'pillars') {
     const pw = 64, start = Math.floor(off / pw);
-    for (let i = start - 1; i < start + C.width / pw + 2; i++) {
+    for (let i = start - 1 - Math.ceil(extra / pw); i < start + (C.width + extra) / pw + 2; i++) {
       const x = Math.round(i * pw - off);
       ctx.fillStyle = f.color;
-      ctx.fillRect(x, 20, 14, C.groundY - 20);
+      const top = extra ? -80 : 20;   // ズームアウトで上が見えるときは、柱を上までのばす
+      ctx.fillRect(x, top, 14, C.groundY - top);
       ctx.fillStyle = f.color2;
-      ctx.fillRect(x + 2, 20, 3, C.groundY - 20);
+      ctx.fillRect(x + 2, top, 3, C.groundY - top);
       ctx.fillStyle = f.color;
       ctx.fillRect(x - 3, 16, 20, 6);
     }
