@@ -492,6 +492,9 @@ function drBindTapArea(pads) {
   };
   pads.addEventListener('pointerup', end);
   pads.addEventListener('pointercancel', end);
+  // 念のため：タップエリアの上で指を動かしても、ページがスクロール・再読みこみしないようにする
+  // （CSS の touch-action: none と overscroll-behavior が効かないブラウザ向け。passive: false でないと止められない）
+  pads.addEventListener('touchmove', e => { if (e.target.closest('.dr-tap-area')) e.preventDefault(); }, { passive: false });
 }
 
 /* 操作のしかた（'tap' … タップモード / 'button' … ボタンモード）。save = true ならこのブラウザに覚えておく */
