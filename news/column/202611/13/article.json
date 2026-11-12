@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-13",
+  "title": "URLを貼るだけで写真を飾れるVRChatギミック発売ほか、今日のVRニュース3本",
+  "category": "ワールド",
+  "thumb": "",
+  "intro": "今日は、VRChatのワールドに写真を飾れるギミックの発売と、VR機器の新しい動きをまとめました。SamsungとGoogleのスマートグラスは予約が始まり、価格も明らかになっています。",
+  "items": [
+    {
+      "headline": "URLで写真を飾れる「CatsUdon Image デコレーター」",
+      "category": "ワールド",
+      "overview": "VRChatのワールドに、画像のURLを貼るだけで額入りの写真を飾れるギミック「CatsUdon Image デコレーター」がBOOTHで発売されました。額を持って壁に当てると、壁に沿って貼り付きます。インスタンスのマスターは展示を保存して、次回に復元することもできます。価格は1,760円で、11月15日23時59分まで20%オフのセール中です。",
+      "points": [
+        "ワールド内で完結し、Unityでの作り直しは不要",
+        "飾れる人を「マスターだけ・指定者・誰でも」から選べる",
+        "額は48枚と128枚の2構成。VRとDesktopの両方に対応",
+        "VRChatの制限で、画像の読み込みは5秒に1枚・2048pxまで"
+      ],
+      "sources": [{ "name": "MoguLive", "url": "https://www.moguravr.com/catsudon-image-decorator/" }]
+    },
+    {
+      "headline": "SamsungとGoogleのスマートグラス、予約開始",
+      "category": "VR機器・技術",
+      "overview": "SamsungとGoogleが、メガネブランドのWarby Parker、Gentle Monsterと作ったAndroid XR対応のスマートグラスの予約が、11月12日に始まりました。価格はWarby Parkerのモデルが395ドルから、Gentle Monsterのモデルが449〜489ドルです。発売は12月10日の予定で、対象はアメリカと韓国です。画面はなく、カメラとスピーカーを使ってGoogleのAI「Gemini」と話すタイプのメガネです。",
+      "points": [
+        "重さは約41グラム、1回の充電で最大9時間使える",
+        "1200万画素カメラで、見ている物の質問や翻訳ができる",
+        "iPhoneや一部のPixel・Galaxyのスマホで使える",
+        "写り込んだ周りの人の顔は、AIに送る前にぼかされる"
+      ],
+      "sources": [
+        { "name": "Android Central", "url": "https://www.androidcentral.com/wearables/google-and-samsungs-smart-glasses-are-here-and-theyre-cheaper-than-metas" },
+        { "name": "The Next Web", "url": "https://thenextweb.com/news/google-samsung-smart-glasses-preorders-warby-parker-gentle-monster" }
+      ]
+    },
+    {
+      "headline": "Pimax「Dream Air」用コンフォートキットを発表",
+      "category": "VR機器・技術",
+      "overview": "Pimaxが、超軽量VRヘッドセット「Dream Air」シリーズ専用の「光ファイバーケーブル付きコンフォートキット」を正式に発表しました。重さを頭全体に分散させるハードストラップと、5メートルの光ファイバーケーブルなどがセットになっています。価格は60,000円で、予約を受け付けており、2027年1月から順次出荷される予定です。",
+      "points": [
+        "山羊革のハードストラップに、ヘッドホンが一体化",
+        "シリコン製ガスケットと、厚さ違いの額パッド3種類付き",
+        "光で信号を送るケーブルで、ノイズに強い有線接続",
+        "予約は全額前払いだが、出荷前ならキャンセルで全額返金"
+      ],
+      "sources": [{ "name": "PANORA", "url": "https://panora.tokyo/archives/162790" }]
+    }
+  ],
+  "outro": "ワールドの飾りつけから、毎日かけるメガネまで、VRの楽しみ方がまた少し広がりそうです。今日もよい一日を。"
+}

@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-13",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！金曜日のVRニュースなのだ。", "read": "おはようなのだ！金曜日のブイアールニュースなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "ずんだもん、おはよう。今日もよろしくね。", "face": "smile" },
+      { "who": "zundamon", "text": "よろしくなのだ、ずん子。" },
+      { "who": "zundamon", "text": "11月13日のニュースは3本なのだ。", "read": "じゅういちがつじゅうさんにちのニュースは、さんぼんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。ワールドに写真を飾れるギミックが出たのだ。", "read": "いっぽんめ。ワールドに写真を飾れるギミックが出たのだ。" },
+      { "who": "zundamon", "text": "画像のURLを貼るだけで、額に入った写真が出るのだ。", "read": "画像のユーアールエルを貼るだけで、額に入った写真が出るのだ。" },
+      { "who": "zunko", "text": "額は、自分で好きな場所に置けるの？", "face": "look" },
+      { "who": "zundamon", "text": "持って壁に当てると、ぴたっと貼り付くのだ。" },
+      { "who": "zundamon", "text": "展示を保存して、次の回に戻すこともできるのだ。" },
+      { "who": "zunko", "text": "誰でも飾れちゃうと、ちょっと心配かも。", "face": "surprise" },
+      { "who": "zundamon", "text": "飾れる人は、マスターだけなどに絞れるのだ。" },
+      { "who": "zundamon", "text": "15日まで、20%オフのセール中なのだ。", "read": "じゅうごにちまで、にじゅっパーセントオフのセール中なのだ。" },
+      { "who": "zunko", "text": "ずんだ餅の写真ギャラリー、作ってみたいな。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。SamsungとGoogleのメガネの予約が始まったのだ。", "read": "にほんめ。サムスンとグーグルのメガネの予約が始まったのだ。" },
+      { "who": "zundamon", "text": "値段は395ドルからなのだ。", "read": "値段は、さんびゃくきゅうじゅうごドルからなのだ。" },
+      { "who": "zunko", "text": "メガネの中に、画面が出るの？", "face": "look" },
+      { "who": "zundamon", "text": "画面はなくて、カメラと声でAIと話すのだ。", "read": "画面はなくて、カメラと声でエーアイと話すのだ。" },
+      { "who": "zundamon", "text": "見ている物を聞いたり、翻訳したりできるのだ。" },
+      { "who": "zunko", "text": "周りの人が写っちゃうのは、大丈夫なのかな。", "face": "surprise" },
+      { "who": "zundamon", "text": "周りの人の顔は、ぼかしてから送るそうなのだ。" },
+      { "who": "zundamon", "text": "発売は12月10日、アメリカと韓国なのだ。", "read": "発売はじゅうにがつとおか、アメリカと韓国なのだ。" },
+      { "who": "zunko", "text": "日本でも使える日が来るといいね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。PimaxのDream Air用キットが発表されたのだ。", "read": "さんぼんめ。パイマックスのドリームエア用キットが発表されたのだ。" },
+      { "who": "zunko", "text": "どんなものがセットになってるの？" },
+      { "who": "zundamon", "text": "重さを頭全体に分ける、かたいストラップなのだ。" },
+      { "who": "zundamon", "text": "ヘッドホンと、5mの光ファイバーケーブルも付くのだ。", "read": "ヘッドホンと、ごメートルの光ファイバーケーブルも付くのだ。" },
+      { "who": "zunko", "text": "長い時間つけても、疲れにくくなりそうね。", "face": "smile" },
+      { "who": "zundamon", "text": "値段は6万円で、出荷は2027年1月からなのだ。", "read": "値段はろくまんえんで、出荷はにせんにじゅうななねんいちがつからなのだ。" },
+      { "who": "zunko", "text": "予約してから、ちょっと待つんだね。", "face": "look" },
+      { "who": "zundamon", "text": "僕はその間に、お小遣いをためるのだ…。", "face": "surprise", "style": "なみだめ" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おうし座", "comment": "飾りつけのセンスが光る", "lucky": "写真立て" },
+        { "rank": 2, "sign": "しし座", "comment": "新しい出会いにつながる日", "lucky": "メガネふき" },
+        { "rank": 3, "sign": "うお座", "comment": "ゆったり休むと運気上昇", "lucky": "クッション" },
+        { "rank": 4, "sign": "かに座", "comment": "身近な人との会話が吉", "lucky": "温かいお茶" },
+        { "rank": 5, "sign": "てんびん座", "comment": "計画どおりに進む一日", "lucky": "手帳" },
+        { "rank": 6, "sign": "いて座", "comment": "遠くの景色に元気をもらえる", "lucky": "双眼鏡" },
+        { "rank": 7, "sign": "みずがめ座", "comment": "小さな工夫がうまくいく", "lucky": "マスキングテープ" },
+        { "rank": 8, "sign": "おひつじ座", "comment": "朝のひと仕事がはかどる", "lucky": "目覚まし時計" },
+        { "rank": 9, "sign": "ふたご座", "comment": "好きな音楽で気分アップ", "lucky": "ヘッドホン" },
+        { "rank": 10, "sign": "さそり座", "comment": "片づけで気持ちすっきり", "lucky": "小さなかご" },
+        { "rank": 11, "sign": "やぎ座", "comment": "あせらず一歩ずつが吉", "lucky": "スニーカー" },
+        { "rank": 12, "sign": "おとめ座", "comment": "ひと休みで調子が戻る", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、おうし座。飾りつけのセンスが光りますわ。", "read": "今日のいちいは、おうしざ。飾りつけのセンスが光りますわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はしし座、3位はうお座でしてよ。", "read": "にいはししざ、さんいはうおざでしてよ。" },
+        { "who": "zundamon", "text": "1位は写真立てがラッキーアイテムなのだ。", "read": "いちいは、写真立てがラッキーアイテムなのだ。" },
+        { "who": "itako", "text": "12位はおとめ座。ひと休みで調子が戻りますわ。", "read": "じゅうにいは、おとめざ。ひと休みで調子が戻りますわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムは、ずんだ餅なのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zunko", "text": "今日も聞いてくれて、ありがとうございました。", "face": "smile" },
+      { "who": "zundamon", "text": "よい週末を過ごすのだ。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
