@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-14",
+  "title": "着るVR「bHaptics」、秋葉原で国内初の店頭体験展示ほか、今日のVRニュース3本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "今日は、VRの「さわる感覚」を店頭で試せる展示、バーチャルキャラクターの撮影技術、話題のVRシューターの続編と、3本のニュースをお届けします。どれもVRの体験を広げる話題です。",
+  "items": [
+    {
+      "headline": "bHaptics、ツクモ秋葉原店で国内初の店頭体験展示",
+      "category": "VR機器・技術",
+      "overview": "VR用の触覚デバイス「bHaptics」の日本法人が、東京のツクモ秋葉原店で製品の体験展示を始めました。店舗での体験展示は日本で初めてとされています。展示されているのは、振動で体に感覚を伝えるベスト型の「TactSuit PRO」です。VRのゲームで弾が当たった位置や爆発の衝撃を感じたり、VRChatなどのソーシャルVRでハグされた感覚を味わったりできる製品です。",
+      "points": [
+        "これまでネットでしか分からなかった装着感を、お店で試せる",
+        "VRChatでのふれあいにも使える「着るVR」",
+        "展示の期間や時間は記事では明らかにされていない"
+      ],
+      "sources": [{ "name": "PANORA", "url": "https://panora.tokyo/archives/162977" }]
+    },
+    {
+      "headline": "キヤノンとI-Pairs、バーチャルキャラの多視点撮影を実験",
+      "category": "VR機器・技術",
+      "overview": "キヤノンとI-Pairsは、実在の人とバーチャルキャラクターが一緒に出るライブ映像を、複数のカメラで撮りやすくする実証実験を11月5日に行いました。キヤノンの「Multi-Camera Orchestration」が複数のカメラの構図を自動で調整し、カメラごとの追跡装置なしで現実とCGのカメラを合わせます。I-Pairsのモーションキャプチャ補正ソフト「n-Links Retarget」が、演者の動きをCGキャラクターに反映します。実験では、人とバーチャルキャラクターがじゃんけんをする様子を複数の角度から撮影しました。",
+      "points": [
+        "カメラごとに追跡装置を付けなくてよくなる",
+        "バーチャルキャラがその場にいるような映像表現をめざす",
+        "11月18〜20日の「Inter BEE 2026」キヤノンブースで展示予定"
+      ],
+      "sources": [{ "name": "PANORA", "url": "https://panora.tokyo/archives/163042" }]
+    },
+    {
+      "headline": "VRシューター『H3VR2』、Meta Questで発売",
+      "category": "VR機器・技術",
+      "overview": "Rust Ltd.が開発したVRシューター『Hot Dogs, Horseshoes & Hand Grenades 2』（H3VR2）が、11月12日にMeta Quest向けに発売されました。価格は39.99ドルです。自動で作られる施設を探索して脱出をめざすモードや、自由に射撃を楽しめるエリアがあり、細かな装填の操作が特徴です。PC VR版は2027年に予定されています。",
+      "points": [
+        "銃の装填操作まで細かく再現した、こだわりの続編",
+        "移動や回転の方法など、酔い対策の設定も選べる",
+        "PCのVRで遊びたい人は2027年まで待つことに"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/hot-dogs-horseshoes-hand-grenades-2-review-some-sense-of-humor-required/" },
+        { "name": "VR.org", "url": "https://vr.org/articles/this-week-in-vr-2026-11-13" }
+      ]
+    }
+  ],
+  "outro": "触覚、撮影、ゲームと、VRの楽しみ方はまだまだ広がっています。週末はVRでゆっくり過ごしてみてはいかがでしょうか。"
+}

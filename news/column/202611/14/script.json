@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-14",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！土曜日のVRニュースなのだ。", "read": "おはようなのだ！土曜日のブイアールニュースなのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "おはようございます。まだ眠いですけど、付き合います。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "きりたん、今日もよろしくなのだ。" },
+      { "who": "zundamon", "text": "11月14日のニュースは3本なのだ。", "read": "じゅういちがつじゅうよっかのニュースは、さんぼんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。着るVRのbHapticsが、お店で試せるのだ。", "read": "いっぽんめ。着るブイアールのビーハプティクスが、お店で試せるのだ。" },
+      { "who": "zundamon", "text": "場所はツクモ秋葉原店。お店での展示は国内初なのだ。", "read": "場所はツクモあきはばらてん。お店での展示は、こくないはつなのだ。" },
+      { "who": "kiritan", "text": "着るって、服みたいなものですか？", "face": "look" },
+      { "who": "zundamon", "text": "ベスト型で、振動で体に感覚を伝えるのだ。" },
+      { "who": "zundamon", "text": "ゲームで弾が当たった場所が、体で分かるのだ。" },
+      { "who": "kiritan", "text": "負けたときの痛みまで分かるのは、ちょっと嫌ですね。", "face": "amazement" },
+      { "who": "zundamon", "text": "VRChatでハグされた感覚も味わえるのだ。", "read": "ブイアールチャットでハグされた感覚も味わえるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "展示の期間は、まだ書かれていないのだ。" },
+      { "who": "kiritan", "text": "買う前に試せるのは、ありがたいです。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。キヤノンとI-Pairsが撮影の実験をしたのだ。", "read": "にほんめ。キヤノンとアイペアーズが撮影の実験をしたのだ。" },
+      { "who": "zundamon", "text": "人とバーチャルキャラを、いろんな角度から撮るのだ。" },
+      { "who": "kiritan", "text": "それ、今までは大変だったんですか？", "face": "look" },
+      { "who": "zundamon", "text": "カメラごとに、位置を測る装置が必要だったのだ。" },
+      { "who": "zundamon", "text": "新しい仕組みは、構図も自動で合わせてくれるのだ。" },
+      { "who": "zundamon", "text": "実験では、人とキャラがじゃんけんをしたのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "キャラが本当にそこにいるように見えそうですね。" },
+      { "who": "zundamon", "text": "18日からのInter BEEで展示されるのだ。", "read": "じゅうはちにちからのインタービーで展示されるのだ。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。VRシューターのH3VR2が発売されたのだ。", "read": "さんぼんめ。ブイアールシューターの、エイチスリーブイアールツーが発売されたのだ。" },
+      { "who": "kiritan", "text": "それは聞き逃せません。どこで遊べるんですか？", "face": "surprise" },
+      { "who": "zundamon", "text": "今はMeta Quest向けで、39.99ドルなのだ。", "read": "今はメタクエスト向けで、さんじゅうきゅうてんきゅうきゅうドルなのだ。" },
+      { "who": "zundamon", "text": "銃の弾を込める操作まで、細かく作られているのだ。" },
+      { "who": "kiritan", "text": "手順を覚えるのが、楽しいタイプのゲームですね。", "face": "smile" },
+      { "who": "zundamon", "text": "施設を探索して、脱出をめざすモードもあるのだ。" },
+      { "who": "zundamon", "text": "PC版は2027年の予定なのだ。", "read": "ピーシー版は、にせんにじゅうななねんの予定なのだ。" },
+      { "who": "kiritan", "text": "PC派のわたしは、もう少し待ちます。", "read": "ピーシー派のわたしは、もう少し待ちます。", "face": "nihilistic" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "さそり座", "comment": "やりたいことに一歩近づく日", "lucky": "手袋" },
+        { "rank": 2, "sign": "ふたご座", "comment": "友だちとの会話から発見あり", "lucky": "マグカップ" },
+        { "rank": 3, "sign": "やぎ座", "comment": "コツコツ続けたことが実る", "lucky": "ノート" },
+        { "rank": 4, "sign": "おひつじ座", "comment": "思い切った挑戦が吉", "lucky": "スニーカー" },
+        { "rank": 5, "sign": "みずがめ座", "comment": "新しい道具が気分を上げる", "lucky": "USBケーブル" },
+        { "rank": 6, "sign": "かに座", "comment": "家でのんびりが運を呼ぶ", "lucky": "ブランケット" },
+        { "rank": 7, "sign": "おうし座", "comment": "おいしい物で元気チャージ", "lucky": "おにぎり" },
+        { "rank": 8, "sign": "うお座", "comment": "音楽で心が整う日", "lucky": "ヘッドホン" },
+        { "rank": 9, "sign": "しし座", "comment": "片付けで頭がすっきり", "lucky": "収納ボックス" },
+        { "rank": 10, "sign": "おとめ座", "comment": "早めの行動で余裕が出る", "lucky": "腕時計" },
+        { "rank": 11, "sign": "てんびん座", "comment": "ゆっくり休むと調子が戻る", "lucky": "ハーブティー" },
+        { "rank": 12, "sign": "いて座", "comment": "深呼吸すれば明日は上向き", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、さそり座ですわ。手袋が幸運を呼びます。", "read": "今日のいちいは、さそりざですわ。てぶくろが幸運を呼びます。", "face": "smile" },
+        { "who": "itako", "text": "2位はふたご座、3位はやぎ座です。", "read": "にいはふたござ、さんいはやぎざです。" },
+        { "who": "zundamon", "text": "寒くなってきたし、手袋はぴったりなのだ。" },
+        { "who": "itako", "text": "12位はいて座。深呼吸すれば、明日は上向きですわ。", "read": "じゅうにいはいてざ。深呼吸すれば、明日は上向きですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅なのだ！僕も食べたいのだ。", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "kiritan", "text": "今日はここまでです。週末はゲーム三昧ですね。", "face": "smile" },
+      { "who": "zundamon", "text": "みんな、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
