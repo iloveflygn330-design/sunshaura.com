@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-15",
+  "title": "雪に沈む街のVRChatワールド「さよならの、その先で。」ほか、今日のVRニュース4本",
+  "category": "ワールド",
+  "thumb": "",
+  "intro": "今日は、雪に包まれた廃墟の街を描いたVRChatワールドの紹介から始まり、AppleのvisionOSへの姿勢、PlayStation VR2向けの新作2本と、4本のニュースをお届けします。冬らしい話題からゲームの話題まで、まとめてチェックしてみてください。",
+  "items": [
+    {
+      "headline": "雪に沈む廃墟の街、VRChatワールド「さよならの、その先で。」",
+      "category": "ワールド",
+      "overview": "Mogura VRの連載「映えるVRChatワールド」で、ゆうりさんが制作したワールド「-yuuri-さよならの、その先で。」が紹介されました。崩れた大都市の一角が雪に埋もれた、終末後の世界を描いたワールドです。崩れた建物の1階にはソファや暖炉のある住まいがあり、外にはがれきの通りや放置された車、バス停が残っています。モノクロの景色の中に、オレンジ色の街灯や水たまりの映り込みが温かみを添えています。",
+      "points": [
+        "冷たさと温かさが同居する、冬らしい雰囲気のワールド",
+        "リスポーン地点が建物の中にあり、拠点として過ごしやすい",
+        "記事ではPCが必要と案内されている"
+      ],
+      "sources": [{ "name": "Mogura VR", "url": "https://www.moguravr.com/photogenic-vrchat-world-2026-1114/" }]
+    },
+    {
+      "headline": "Apple「visionOSに引き続き力を入れる」と発言",
+      "category": "VR機器・技術",
+      "overview": "Appleは開発者向けの配信イベント「Meet with Apple」で、空間コンピューティングのOS「visionOS」に今後も取り組む姿勢を示しました。同社の担当者は、手術や医療、教育、訓練などの分野で利用が広がっていると説明しています。イベントでは、イマーシブ映像のライブ制作を、2027年前半にはパートナー企業のツールだけで行えるようにする計画も語られました。一方で、次のヘッドセットについては触れられていません。",
+      "points": [
+        "Vision Proの今後を心配する声に、Appleが答えた形",
+        "イマーシブ映像のライブ配信は、外部のツールで作れる方向へ",
+        "次のVision Proの発売時期は、公式には発表されていない"
+      ],
+      "sources": [
+        { "name": "Road to VR", "url": "https://roadtovr.com/apple-still-committed-visionos-platform-vision-pro/" },
+        { "name": "VR.org", "url": "https://vr.org/articles/apple-live-immersive-partner-toolchain-early-2027-visionos-committed-2026" }
+      ]
+    },
+    {
+      "headline": "ローグライト『Mothergunship: Forge』がPS VR2で突然発売",
+      "category": "VR機器・技術",
+      "overview": "自分で銃を組み立てて戦うVRのローグライト『Mothergunship: Forge』が、PlayStation VR2向けに発表と同時に発売されました。VRの人気作をPS VR2に移植する取り組み「Unlock the Vault」の1本です。PS VR2版には、これまでに追加されたコンテンツや、毎日挑戦できるデイリーランも入っています。ネイティブ120fps、視線追跡を使った描画、ヘッドセットの振動、アダプティブトリガーにも対応しています。",
+      "points": [
+        "発表したその日に遊べる、サプライズ発売",
+        "QuestやSteamで評価の高いゲームが、PS VR2でも遊べる",
+        "PS VR2ならではの機能をしっかり使っている"
+      ],
+      "sources": [{ "name": "UploadVR", "url": "https://www.uploadvr.com/mothergunship-forge-is-available-now-on-playstation-vr2/" }]
+    },
+    {
+      "headline": "ロボット対戦『Iron Rebellion』、年内にPS VR2へ",
+      "category": "VR機器・技術",
+      "overview": "Black Beach Studioは、ロボット（メカ）に乗って戦う対戦VRゲーム『Iron Rebellion』を、年内にPlayStation VR2で発売する予定だと明らかにしました。PlayStation Storeでは、すでにウィッシュリストに登録できます。あわせて、1人や協力プレイで遊べる新モード「Faction Wars」のテストを行っており、クリスマス前の配信をめざしています。このゲームはQuestとPC VR向けに配信されていて、最大8対8の対戦に対応しています。",
+      "points": [
+        "これまでQuestとPCだけだった作品が、PS VR2にも来る",
+        "対戦が苦手な人向けに、1人・協力プレイのモードも準備中",
+        "PS VR2版の正確な発売日はまだ発表されていない"
+      ],
+      "sources": [{ "name": "UploadVR", "url": "https://www.uploadvr.com/pvp-mech-battler-iron-rebellion-playstation-vr2-launch-expected-by-end-of-year/" }]
+    }
+  ],
+  "outro": "寒くなってきたこの季節、雪のワールドでのんびりするのも、ゲームで体を動かすのもよさそうです。よい日曜日をお過ごしください。"
+}

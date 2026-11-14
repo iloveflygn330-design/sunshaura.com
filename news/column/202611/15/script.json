@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-15",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！日曜日のVRニュースなのだ。", "read": "おはようなのだ！日曜日のブイアールニュースなのだ。", "face": "smile" },
+      { "who": "metan", "text": "おはよう。日曜の朝から元気ね、ずんだもん。", "face": "smile" },
+      { "who": "zundamon", "text": "めたん、今日もよろしくなのだ。" },
+      { "who": "zundamon", "text": "11月15日のニュースは4本なのだ。", "read": "じゅういちがつじゅうごにちのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。雪の街のVRChatワールドの紹介なのだ。", "read": "いっぽんめ。雪の街のブイアールチャットワールドの紹介なのだ。" },
+      { "who": "zundamon", "text": "名前は「さよならの、その先で。」なのだ。" },
+      { "who": "metan", "text": "なんだか切ない名前ね。どんな場所なの？", "face": "look" },
+      { "who": "zundamon", "text": "崩れた大きな街が、雪に埋もれているのだ。" },
+      { "who": "zundamon", "text": "建物の中には、ソファや暖炉のお部屋があるのだ。" },
+      { "who": "metan", "text": "廃墟なのに、ちょっと暖かそうじゃない。" },
+      { "who": "zundamon", "text": "オレンジの街灯が、雪景色を照らしているのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "遊ぶには、PCが必要と書かれているのだ。", "read": "遊ぶには、ピーシーが必要と書かれているのだ。" },
+      { "who": "metan", "text": "暖房代がかからない冬の家、いいわね。", "face": "eat" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。AppleがvisionOSに力を入れると話したのだ。", "read": "にほんめ。アップルが、ビジョンオーエスに力を入れると話したのだ。" },
+      { "who": "metan", "text": "Vision Proのこと？最近静かだったわよね。", "read": "ビジョンプロのこと？最近静かだったわよね。", "face": "look" },
+      { "who": "zundamon", "text": "医療や教育で、使う場面が増えているそうなのだ。" },
+      { "who": "zundamon", "text": "立体映像の生中継も、他の会社の道具で作れるようになるのだ。" },
+      { "who": "zundamon", "text": "2027年の前半を目標にしているのだ。", "read": "にせんにじゅうななねんの前半を目標にしているのだ。" },
+      { "who": "metan", "text": "で、新しいヘッドセットはどうなの？", "face": "surprise" },
+      { "who": "zundamon", "text": "それについては、何も話さなかったのだ。", "face": "amazement" },
+      { "who": "metan", "text": "そこが一番知りたいのに、もったいぶるわね。", "face": "anger" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Mothergunship: ForgeがPS VR2で出たのだ。", "read": "さんぼんめ。マザーガンシップフォージが、ピーエスブイアールツーで出たのだ。" },
+      { "who": "zundamon", "text": "発表したその日に、いきなり発売されたのだ！", "face": "surprise" },
+      { "who": "metan", "text": "サプライズ発売ってやつね。どんなゲーム？" },
+      { "who": "zundamon", "text": "自分で銃を組み立てて戦う、ローグライトなのだ。" },
+      { "who": "zundamon", "text": "毎日挑戦できるデイリーランも入っているのだ。" },
+      { "who": "zundamon", "text": "PS VR2の振動やトリガーの機能にも対応なのだ。", "read": "ピーエスブイアールツーの振動やトリガーの機能にも対応なのだ。" },
+      { "who": "metan", "text": "銃を組み立てる…わたくしの中二心がうずくわ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。ロボット対戦のIron RebellionがPS VR2に来るのだ。", "read": "よんほんめ。ロボット対戦のアイアンリベリオンが、ピーエスブイアールツーに来るのだ。" },
+      { "who": "zundamon", "text": "年内の発売を予定しているのだ。" },
+      { "who": "metan", "text": "ロボットに乗って戦うの？かっこいいじゃない。", "face": "smile" },
+      { "who": "zundamon", "text": "最大8対8で戦える、対戦ゲームなのだ。", "read": "さいだい、はったいはちで戦える、対戦ゲームなのだ。" },
+      { "who": "zundamon", "text": "1人や協力で遊べる、新しいモードも準備中なのだ。", "read": "ひとりや協力で遊べる、新しいモードも準備中なのだ。" },
+      { "who": "metan", "text": "対戦が苦手な人にも、うれしい話ね。" },
+      { "who": "zundamon", "text": "クリスマス前の配信をめざしているのだ。", "face": "smile" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おとめ座", "comment": "丁寧な準備が大成功を呼ぶ", "lucky": "マフラー" },
+        { "rank": 2, "sign": "かに座", "comment": "身近な人の一言が力になる", "lucky": "ホットココア" },
+        { "rank": 3, "sign": "うお座", "comment": "ひらめきがどんどん湧く日", "lucky": "スケッチブック" },
+        { "rank": 4, "sign": "いて座", "comment": "遠くへのお出かけが吉", "lucky": "リュック" },
+        { "rank": 5, "sign": "しし座", "comment": "笑顔が周りを明るくする", "lucky": "手鏡" },
+        { "rank": 6, "sign": "おうし座", "comment": "好きな物に囲まれて満足", "lucky": "クッション" },
+        { "rank": 7, "sign": "てんびん座", "comment": "迷ったら直感で選んでよし", "lucky": "しおり" },
+        { "rank": 8, "sign": "やぎ座", "comment": "ひと休みで効率アップ", "lucky": "緑茶" },
+        { "rank": 9, "sign": "ふたご座", "comment": "新しい趣味のヒントあり", "lucky": "カードゲーム" },
+        { "rank": 10, "sign": "みずがめ座", "comment": "早寝が明日の元気のもと", "lucky": "アイマスク" },
+        { "rank": 11, "sign": "おひつじ座", "comment": "あせらず一歩ずつで大丈夫", "lucky": "ボールペン" },
+        { "rank": 12, "sign": "さそり座", "comment": "温かい物で心もほっこり", "lucky": "湯たんぽ" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、おとめ座ですわ。マフラーが幸運を呼びます。", "read": "今日のいちいは、おとめざですわ。マフラーが幸運を呼びます。", "face": "smile" },
+        { "who": "itako", "text": "2位はかに座、3位はうお座です。", "read": "にいはかにざ、さんいはうおざです。" },
+        { "who": "zundamon", "text": "雪のワールドにも、マフラーは似合いそうなのだ。" },
+        { "who": "itako", "text": "12位はさそり座。温かい物で、心もほっこりしますわ。", "read": "じゅうにいはさそりざ。温かい物で、心もほっこりしますわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムは湯たんぽ…ぬくぬくなのだ。", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "今日はここまで。いい日曜日にしなさいよね。", "face": "smile" },
+      { "who": "zundamon", "text": "みんな、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
