@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-20",
+  "title": "「バーチャルマーケット2026 Winter」企業ブース第1弾を発表ほか、今日のVRニュース3本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、12月5日から始まるVRChatのイベント「バーチャルマーケット2026 Winter」の企業ブース第1弾の発表を中心にお届けします。ほかに、デスクトップマスコットアプリ「Desktop Mate」の新DLCと、街づくりゲーム『Outlanders』のVR版の発売日の話題もまとめました。",
+  "items": [
+    {
+      "headline": "Vket2026 Winter、企業ブース第1弾を公開",
+      "category": "イベント",
+      "overview": "株式会社HIKKYは、12月5日から20日まで開催する「バーチャルマーケット2026 Winter」の企業ブース第1弾を発表しました。会場はVRChat内の特設会場で、参加は無料、会期中は24時間いつでも来場できます。第1弾では、アース製薬が入浴剤「きき湯」の大浴場でモンスターを退治するゲームを、青山商事が服を集めて森を育てる陣取りゲームを出展します。ほかにシュア・ジャパン、静岡県焼津市、群馬電機など、企業や自治体のブースが並びます。",
+      "points": [
+        "会期は12月5日〜20日の16日間、参加は無料",
+        "アース製薬はアバター用バスタオル衣装を先行で無料配布",
+        "群馬電機は「呼び込み君」のVRChat用3Dモデルを出展",
+        "前回の2026年夏は延べ154万人以上が来場"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/163701" }
+      ]
+    },
+    {
+      "headline": "Desktop Mateに「OИE」のDLC、11月26日発売",
+      "category": "その他",
+      "overview": "株式会社インフィニットループは、パソコンの画面上にキャラクターを表示できるデスクトップマスコットアプリ「Desktop Mate」向けに、バーチャルアーティスト「OИE（オネ）」のDLCを11月26日に発売すると発表しました。価格は2,200円（税込）で、Steamで配信されます。公式の3Dモデルとモーション、VoiSona Talk「OИE TALK」によるキャラクターボイスが収録されています。Steamのストアページは公開済みで、ウィッシュリストに登録できます。",
+      "points": [
+        "発売は11月26日、価格は2,200円（税込）",
+        "別売のIA DLCがあれば、IAと同時に表示できる",
+        "Windows版に加え、オープンベータ中のMac版にも対応",
+        "複数キャラクターの同時表示はMac版では使えない"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/163667" },
+        { "name": "PR TIMES（株式会社インフィニットループ）", "url": "https://prtimes.jp/main/html/rd/p/000000119.000045461.html" }
+      ]
+    },
+    {
+      "headline": "街づくりゲーム『Outlanders VR』、12月10日発売",
+      "category": "VR機器・技術",
+      "overview": "街づくり戦略ゲーム『Outlanders』のVR版「Outlanders VR」が、Meta QuestとPC VR向けに12月10日に発売されることが発表されました。開発はMucho Gamesで、元のゲームを手がけたPomelo Gamesがパブリッシャーを務めます。小さな集落の住人を導き、建物の配置や資源の管理をしながら町を大きくしていく内容です。住人の労働時間や食料の配給を決める「Decrees」という仕組みもあり、住人の幸福度とのバランスが求められます。",
+      "points": [
+        "Meta QuestとPC VR（Steam）向けに12月10日発売",
+        "ミッション形式のキャンペーンで、進むほど戦略性が増す",
+        "PC VR向けの無料体験版がSteamで配信中",
+        "SteamとQuestでウィッシュリストに登録できる"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/town-building-strategy-game-outlanders-comes-to-quest-pc-vr-in-december/" },
+        { "name": "MIXED", "url": "https://mixed-news.com/en/outlanders-vr-december-release-quest-steam-free-demo/" }
+      ]
+    }
+  ],
+  "outro": "Vketの続報も出てきそうなので、気になる方は公式の発表をチェックしてみてください。今日も良い一日を。"
+}

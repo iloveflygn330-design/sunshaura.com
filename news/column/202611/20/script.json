@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-20",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！金曜日のVRニュースなのだ。", "read": "おはようなのだ！きんようびのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはよう、ずんだもん。今週もあと少しだね。", "face": "smile" },
+      { "who": "zundamon", "text": "11月20日のニュースは3本なのだ。", "read": "じゅういちがつはつかのニュースは、さんぼんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目はバーチャルマーケットの話なのだ。", "read": "いっぽんめは、バーチャルマーケットの話なのだ。" },
+      { "who": "zundamon", "text": "2026 Winterの企業ブース第1弾が出たのだ。", "read": "にせんにじゅうろく、ウィンターの企業ブース、だいいちだんが出たのだ。" },
+      { "who": "zunko", "text": "どんな会社が出るの？", "face": "look" },
+      { "who": "zundamon", "text": "アース製薬は、きき湯の大浴場なのだ。", "read": "アースせいやくは、ききゆの大浴場なのだ。" },
+      { "who": "zundamon", "text": "肩こりをモンスターにして退治するゲームなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "お風呂でモンスター退治？ちょっと楽しそう！", "face": "surprise" },
+      { "who": "zundamon", "text": "青山商事は服を集めて森を育てるゲームなのだ。", "read": "あおやましょうじは、服を集めて森を育てるゲームなのだ。" },
+      { "who": "zundamon", "text": "会期は12月5日から20日、参加は無料なのだ。", "read": "かいきは、じゅうにがつ、いつかから、はつか。参加は無料なのだ。" },
+      { "who": "zunko", "text": "16日間もあるなら、ゆっくり回れそうだね。", "read": "じゅうろくにちかんもあるなら、ゆっくり回れそうだね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目はDesktop Mateの新しいDLCなのだ。", "read": "にほんめは、デスクトップメイトの新しい、ディーエルシーなのだ。" },
+      { "who": "zundamon", "text": "パソコンの画面にキャラクターがいるアプリなのだ。" },
+      { "who": "zunko", "text": "今度は誰が来るの？", "face": "look" },
+      { "who": "zundamon", "text": "バーチャルアーティストのOИEなのだ。", "read": "バーチャルアーティストの、オネなのだ。" },
+      { "who": "zundamon", "text": "11月26日発売で、2,200円なのだ。", "read": "じゅういちがつにじゅうろくにち発売で、にせんにひゃくえんなのだ。" },
+      { "who": "zunko", "text": "声もちゃんと入っているのかな？" },
+      { "who": "zundamon", "text": "入っているのだ。IAと一緒に出すこともできるのだ。", "read": "入っているのだ。イアと一緒に出すこともできるのだ。", "face": "smile" },
+      { "who": "zunko", "text": "画面の中がにぎやかになりそうだね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目は街づくりゲームのVR版なのだ。", "read": "さんぼんめは、まちづくりゲームの、ブイアールばんなのだ。" },
+      { "who": "zundamon", "text": "Outlanders VRが12月10日に出るのだ。", "read": "アウトランダーズ ブイアールが、じゅうにがつとおかに出るのだ。" },
+      { "who": "zunko", "text": "どの機械で遊べるの？" },
+      { "who": "zundamon", "text": "Meta QuestとPC VRなのだ。", "read": "メタクエストと、ピーシーブイアールなのだ。" },
+      { "who": "zundamon", "text": "住人を導いて、小さな村を町にしていくのだ。" },
+      { "who": "zundamon", "text": "働く時間や食べ物の配給も決められるのだ。", "face": "look" },
+      { "who": "zunko", "text": "住んでいる人が幸せかも大事なんだね。", "face": "smile" },
+      { "who": "zundamon", "text": "PC向けの体験版はもう遊べるのだ。", "read": "ピーシー向けの体験版は、もう遊べるのだ。", "face": "smile" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "うお座", "comment": "思いきった挑戦が実を結ぶ日", "lucky": "温泉の入浴剤" },
+        { "rank": 2, "sign": "ふたご座", "comment": "久しぶりの連絡がうれしい知らせに", "lucky": "マグカップ" },
+        { "rank": 3, "sign": "やぎ座", "comment": "コツコツ続けたことが評価される", "lucky": "付せん" },
+        { "rank": 4, "sign": "おうし座", "comment": "おいしい物で元気が出る日", "lucky": "あんぱん" },
+        { "rank": 5, "sign": "かに座", "comment": "身の回りを整えると運気アップ", "lucky": "ハンドクリーム" },
+        { "rank": 6, "sign": "さそり座", "comment": "集中力が冴えて作業がはかどる", "lucky": "黒いペン" },
+        { "rank": 7, "sign": "しし座", "comment": "人に頼ると物事がスムーズに", "lucky": "スニーカー" },
+        { "rank": 8, "sign": "てんびん座", "comment": "新しい音楽との出会いがありそう", "lucky": "イヤホン" },
+        { "rank": 9, "sign": "おひつじ座", "comment": "早めの行動で余裕が生まれる", "lucky": "腕時計" },
+        { "rank": 10, "sign": "みずがめ座", "comment": "ひと休みが良いアイデアを呼ぶ", "lucky": "ハーブティー" },
+        { "rank": 11, "sign": "いて座", "comment": "予定は少なめが吉", "lucky": "手帳" },
+        { "rank": 12, "sign": "おとめ座", "comment": "あたたかくして過ごせば安心", "lucky": "ブランケット" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ。イタコ、よろしくなのだ！", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はうお座。挑戦が実を結ぶ日ですわ。", "read": "今日のいちいは、うおざ。挑戦が実を結ぶ日ですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はふたご座、3位はやぎ座ですわね。", "read": "にいは、ふたござ。さんいは、やぎざですわね。" },
+        { "who": "zundamon", "text": "うお座のラッキーアイテムは入浴剤なのだ！", "read": "うおざのラッキーアイテムは、にゅうよくざいなのだ！", "face": "surprise" },
+        { "who": "itako", "text": "12位はおとめ座。あたたかくして過ごしてくださいな。", "read": "じゅうにいは、おとめざ。あたたかくして過ごしてくださいな。" },
+        { "who": "zundamon", "text": "ブランケットにくるまれば大丈夫なのだ。", "face": "smile" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zundamon", "text": "今日のニュースはここまでなのだ。" },
+      { "who": "zunko", "text": "週末もVRを楽しんでね。またね！", "read": "しゅうまつも、ブイアールを楽しんでね。またね！", "face": "smile" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
