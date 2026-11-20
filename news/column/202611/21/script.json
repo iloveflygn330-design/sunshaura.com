@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-21",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！土曜日のVRニュースなのだ。", "read": "おはようなのだ！どようびのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "おはようございます。わたしはさっきまでゲームしてました。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "それは、おはようじゃなくておやすみなのだ…。", "face": "amazement" },
+      { "who": "zundamon", "text": "11月21日のニュースは4本なのだ。", "read": "じゅういちがつにじゅういちにちのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目は、VRChat初の公式ポップアップストアなのだ！", "read": "いっぽんめは、ブイアールチャット初の、公式ポップアップストアなのだ！", "face": "smile" },
+      { "who": "zundamon", "text": "場所は京都髙島屋S.C.の6階なのだ。", "read": "場所は、きょうとたかしまや、エスシーの、ろっかいなのだ。" },
+      { "who": "kiritan", "text": "現実のお店ですか。いつからです？", "face": "look" },
+      { "who": "zundamon", "text": "12月5日から、1月5日までなのだ。", "read": "じゅうにがつ、いつかから、いちがつ、いつかまでなのだ。" },
+      { "who": "zundamon", "text": "VRChatの中の人と同じゲームで遊べる筐体があるのだ。", "read": "ブイアールチャットの中の人と、同じゲームで遊べる、きょうたいがあるのだ。" },
+      { "who": "kiritan", "text": "現実とVRで一緒に遊べる…それは気になります。", "read": "現実とブイアールで一緒に遊べる…それは気になります。", "face": "surprise" },
+      { "who": "zundamon", "text": "入場は無料だけど、整理券がいるのだ。" },
+      { "who": "zundamon", "text": "新作の公式グッズも先に買えるのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "冬休みに行けたらいいですね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目は、VRChatの開発者アップデートなのだ。", "read": "にほんめは、ブイアールチャットの、開発者アップデートなのだ。" },
+      { "who": "zundamon", "text": "Unity 6に対応したSDKがベータになったのだ。", "read": "ユニティシックスに対応した、エスディーケーが、ベータになったのだ。" },
+      { "who": "kiritan", "text": "ワールドやアバターを作る人向けの話ですね。" },
+      { "who": "zundamon", "text": "更新の前には、バックアップを取るように、なのだ。", "face": "look" },
+      { "who": "zundamon", "text": "売上の受け取りに、銀行振込も使えるようになったのだ。", "read": "うりあげの受け取りに、ぎんこうふりこみも使えるようになったのだ。" },
+      { "who": "kiritan", "text": "13の国で、PayPalがなくてもよくなったんですね。", "read": "じゅうさんの国で、ペイパルがなくてもよくなったんですね。" },
+      { "who": "zundamon", "text": "次回は「良い知らせ」があると予告していたのだ！", "read": "じかいは、よい知らせがあると予告していたのだ！", "face": "smile" },
+      { "who": "kiritan", "text": "もったいぶりますね。気になります。", "face": "nihilistic" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目は、VRChat向けの支援サービスなのだ。", "read": "さんぼんめは、ブイアールチャット向けの、支援サービスなのだ。" },
+      { "who": "zundamon", "text": "VThanksが、11月20日に始まったのだ。", "read": "ブイサンクスが、じゅういちがつはつかに始まったのだ。" },
+      { "who": "kiritan", "text": "何ができるサービスなんですか？", "face": "look" },
+      { "who": "zundamon", "text": "クリエイターや演者を、お金で応援できるのだ。" },
+      { "who": "zundamon", "text": "イベントのチケットも売ったり買ったりできるのだ。" },
+      { "who": "kiritan", "text": "カードの情報を相手に教えなくていいのは安心です。" },
+      { "who": "zundamon", "text": "売上の大部分は、クリエイターに届くのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "好きな人を応援しやすくなりますね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目は、Metaのスマホアプリの話なのだ。", "read": "よんほんめは、メタの、スマホアプリの話なのだ。" },
+      { "who": "zundamon", "text": "Horizonアプリの最初の画面が、VRストアになったのだ。", "read": "ホライゾンアプリの最初の画面が、ブイアールストアになったのだ。" },
+      { "who": "kiritan", "text": "Worldsはどこに行ったんですか？", "read": "ワールズは、どこに行ったんですか？", "face": "surprise" },
+      { "who": "zundamon", "text": "検索やプロフィールからしか見られないのだ。", "face": "look" },
+      { "who": "zundamon", "text": "Horizon Createという別のアプリに移る予定なのだ。", "read": "ホライゾンクリエイトという、別のアプリに移る予定なのだ。" },
+      { "who": "kiritan", "text": "名前もMeta VRに変わるかもしれない、と。", "read": "名前も、メタブイアールに変わるかもしれない、と。" },
+      { "who": "zundamon", "text": "まだ正式発表ではないのだ。続報を待つのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おとめ座", "comment": "ていねいな準備が大成功に", "lucky": "ノート" },
+        { "rank": 2, "sign": "さそり座", "comment": "好きなことに没頭できる日", "lucky": "ゲームのコントローラー" },
+        { "rank": 3, "sign": "おひつじ座", "comment": "思いつきのお出かけが吉", "lucky": "電車の切符" },
+        { "rank": 4, "sign": "みずがめ座", "comment": "新しい友だちができそう", "lucky": "缶バッジ" },
+        { "rank": 5, "sign": "しし座", "comment": "ほめ言葉が自信につながる", "lucky": "手鏡" },
+        { "rank": 6, "sign": "うお座", "comment": "のんびり過ごすと心が整う", "lucky": "クッション" },
+        { "rank": 7, "sign": "てんびん座", "comment": "迷ったら直感を信じて", "lucky": "コイン" },
+        { "rank": 8, "sign": "かに座", "comment": "家族との会話がはずむ日", "lucky": "みかん" },
+        { "rank": 9, "sign": "いて座", "comment": "小さな発見が楽しい一日", "lucky": "カメラ" },
+        { "rank": 10, "sign": "ふたご座", "comment": "早寝で明日が元気に", "lucky": "アイマスク" },
+        { "rank": 11, "sign": "やぎ座", "comment": "あせらず一歩ずつが吉", "lucky": "温かいお茶" },
+        { "rank": 12, "sign": "おうし座", "comment": "ひと工夫で気分が上向き", "lucky": "お気に入りの靴下" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ。イタコ、お願いするのだ！", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はおとめ座。準備が大成功につながりますわ。", "read": "今日のいちいは、おとめざ。準備が大成功につながりますわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はさそり座、3位はおひつじ座です。", "read": "にいは、さそりざ。さんいは、おひつじざです。" },
+        { "who": "zundamon", "text": "おひつじ座は、お出かけが吉なのだ。京都もありなのだ！", "read": "おひつじざは、お出かけが吉なのだ。きょうともありなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はおうし座。ひと工夫で気分が上向きますわ。", "read": "じゅうにいは、おうしざ。ひと工夫で気分が上向きますわ。" },
+        { "who": "zundamon", "text": "お気に入りの靴下をはいて、元気を出すのだ。" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "kiritan", "text": "今日もありがとうございました。わたしはそろそろ寝ます。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "ちゃんと寝るのだ！みんな、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

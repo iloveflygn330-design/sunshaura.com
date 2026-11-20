@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-21",
+  "title": "VRChat初の公式ポップアップストアが京都に12月登場ほか、今日のVRニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、VRChatが初めて開く公式ポップアップストアの話題を中心にお届けします。ほかに、VRChatの開発者アップデートでのUnity 6対応SDKのオープンベータ開始、VRChat向けの支援サービス「VThanks」の正式スタート、MetaのHorizonスマホアプリの変化をまとめました。",
+  "items": [
+    {
+      "headline": "VRChat初の公式ポップアップストア、京都で開催",
+      "category": "イベント",
+      "overview": "VRChat Inc.は、初の公式ポップアップストア「VRChat Real Instance」を、京都髙島屋S.C. 6階の「京都 IP書店」で開くと発表しました。期間は2026年12月5日から2027年1月5日までです。会場では、VRChat内のプレイヤーと同じゲームを遊べるアーケード筐体や、人気ワールドの体験コーナー、フォトスポットが用意されます。釣部東京がデザインした新作の公式グッズも先行販売されます。",
+      "points": [
+        "入場は無料、ただし整理券が必要（配布方法は後日発表）",
+        "bironist氏のワールドを使った筐体ゲームで現実とVRChatがつながる",
+        "VRCatのソフビやロングTシャツなどの新作グッズを先行販売",
+        "1月1日・2日は休み、12月31日は18時閉店"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/163851" },
+        { "name": "MoguLive", "url": "https://www.moguravr.com/vrchat-real-instance-kyoto-popup/" }
+      ]
+    },
+    {
+      "headline": "VRChat開発者アップデート、Unity 6対応SDKがベータに",
+      "category": "VRChat公式",
+      "overview": "VRChatは11月19日（現地時間）の開発者アップデートで、Unity 6に対応したSDK「3.11.0-beta.1」をオープンベータとして公開したと伝えました。レンダリングは引き続きBuilt-in Render Pipelineで、更新前にプロジェクトのバックアップを取るよう呼びかけています。クリエイターエコノミーでは、売上の受け取り方法として13の国で銀行振込が使えるようになり、PayPalが必須ではなくなりました。グループのネームプレートに表示するバナーの新しい枠も、まもなく公開される予定です。",
+      "points": [
+        "Unity 6対応SDKはオープンベータ。更新前にバックアップを",
+        "オープンベータでPersistenceのデータが失われる不具合があった",
+        "大晦日イベント「NYE2027」の素材の応募締切は12月4日",
+        "次回の開発者アップデートで「良い知らせ」があると予告"
+      ],
+      "sources": [
+        { "name": "VRChat Ask Forum（Developer Update - 19 November 2026）", "url": "https://ask.vrchat.com/t/developer-update-19-november-2026/49409" }
+      ]
+    },
+    {
+      "headline": "VRChat向けの支援サービス「VThanks」が開始",
+      "category": "その他",
+      "overview": "株式会社Vは11月20日、VRChatのクリエイターや演者、イベント主催者を支援できるWebサービス「VThanks（ブイサンクス）」の正式提供を始めました。クリエイターは活動を紹介する支援ページを、主催者はイベントのチケット販売ページを作れます。利用者はVRChat内で案内されたリンクからVThanksのサイトに移り、支援や支払いを行います。VRChat Inc.とのライセンス契約にもとづく運営で、売上の大部分がクリエイターに届く仕組みです。",
+      "points": [
+        "支援する人と受け取る人が、カードや口座の情報をやり取りしなくてよい",
+        "イベントのチケットの販売・購入にも使える",
+        "支払いの記録はあとからVThanksで確認できる",
+        "提供は株式会社Vで、VRChat Inc.が運営するサービスではない"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/163906" },
+        { "name": "MoguLive", "url": "https://www.moguravr.com/vthanks-vrchat/" }
+      ]
+    },
+    {
+      "headline": "MetaのHorizonスマホアプリ、Worlds色が薄まる",
+      "category": "VR機器・技術",
+      "overview": "UploadVRによると、MetaのスマホアプリHorizonの最近の更新で、一部のユーザーからWorlds中心のフィードが消え、VRストアが最初の画面になりました。Worldsは検索やプロフィールのページなどからしか見られなくなっています。アプリ内の文字列には、現在のアプリを「Meta VRアプリ」と呼ぶものや、スマホ版WorldsをHorizon Createという新しいアプリへ移すことを示すものが見つかりました。Metaは以前から、スマホアプリをVR中心にし、WorldsをHorizon Createへ移す方針を示しています。",
+      "points": [
+        "スマホアプリの最初の画面はVRストアに",
+        "名前が「Meta VR」に変わる可能性がある（正式発表ではない）",
+        "Horizon CreateはAIツール付きのスマホ向けゲーム制作アプリ",
+        "Meta VR Glassesの設定動画もアプリ内から見つかった"
+      ],
+      "sources": [
+        { "name": "UploadVR", "url": "https://www.uploadvr.com/meta-begins-removing-worlds-from-the-horizon-mobile-app-may-rebrand-it-as-meta-vr/" }
+      ]
+    }
+  ],
+  "outro": "京都のポップアップストアは年末年始をまたいで開かれるので、お出かけの予定に入れてみてはいかがでしょうか。整理券の配布方法は、京都 IP書店のサイトで後日案内されます。"
+}
