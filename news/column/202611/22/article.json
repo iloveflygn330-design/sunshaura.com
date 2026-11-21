@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-22",
+  "title": "VRChatライブ後夜祭をGugenkaが技術支援ほか、今日のVRニュース4本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、VRChatで開かれるライブの後夜祭を支える技術の話題からお届けします。あわせて、ValveのSteamVRとSteam Frameのベータ更新、Meta Quest 3SとXboxコントローラーのセット販売も紹介します。",
+  "items": [
+    {
+      "headline": "VRChatのライブ後夜祭で、Gugenkaが配信技術を提供",
+      "category": "イベント",
+      "overview": "Gugenkaは、VRChatで開かれる「アイマリンプロジェクト＋＋ VR LIVE 2026 vol.2」の後夜祭に技術を提供すると発表しました。ライブ本編は11月21日・22日の2日間で、2日目の後夜祭は11月22日22時からワールド「CLUB深海」で行われます。メインのインスタンスの演者の映像と音声を、複数の「サテライトインスタンス」に同時に届ける仕組みを使い、より多くの人が参加できるようにします。",
+      "points": [
+        "後夜祭は11月22日22時から、参加は無料",
+        "PC版VRChatのみ対応（スマホ・単体Questは不可）",
+        "別のインスタンスからも演者の映像と音声を楽しめる",
+        "入場方法はアーティストのXアカウントで案内"
+      ],
+      "sources": [
+        { "name": "PANORA", "url": "https://panora.tokyo/archives/163901" },
+        { "name": "PR TIMES（Gugenka）", "url": "https://prtimes.jp/main/html/rd/p/000000399.000074603.html" }
+      ]
+    },
+    {
+      "headline": "SteamVR 2.19.4ベータ、PCVR配信が安定",
+      "category": "VR機器・技術",
+      "overview": "ValveはSteamVRのベータ版2.19.4を公開しました。NVIDIAとAMDの両方のグラフィックボードで、PCからヘッドセットへの配信がより安定するよう改善されています。グラフィックが2つあるゲーミングノートPCでは、Steam Linkが高性能なGPUを自動で選ぶようになりました。VRChatでの移動時などに起きていたスカイボックスの表示の不具合も修正されています。",
+      "points": [
+        "通信が一時的に悪くなっても配信が戻りやすくなった",
+        "ノートPCでは高性能なGPUを自動で使う",
+        "VRChatの移動時の背景表示の不具合を修正",
+        "Quest向けSteam Linkは指定した色の部分に部屋が見える機能に対応"
+      ],
+      "sources": [
+        { "name": "MIXED", "url": "https://mixed-news.com/en/steamvr-2194-beta-quest-streaming-gaming-laptop-gpu/" }
+      ]
+    },
+    {
+      "headline": "Steam Frameのベータ更新、ゲームごとに振動を調整",
+      "category": "VR機器・技術",
+      "overview": "ValveのVRヘッドセット「Steam Frame」向けに、システムソフトのベータ版SteamOS 0.5.10が公開されました。コントローラーの振動の強さを、ゲームごとに設定できるようになっています。画面のくっきり具合を調整する設定も加わり、初期状態ではオンになっています。PCからの配信では、映像の処理が速くなり、標準の配信解像度が上がりました。",
+      "points": [
+        "振動の強さをゲームごとに変えられる",
+        "画面のシャープさ調整は最初からオン",
+        "PCからの配信の標準解像度が向上",
+        "試すには本体の設定で更新チャンネルをベータにする"
+      ],
+      "sources": [
+        { "name": "Steam（Steam Frameのお知らせ）", "url": "https://store.steampowered.com/news/app/4165890/view/694278269818634528" },
+        { "name": "MIXED", "url": "https://mixed-news.com/en/steam-frame-steamos-0510-beta-controller-haptics-streaming-sharpness/" }
+      ]
+    },
+    {
+      "headline": "Quest 3SとXbox Nanoコントローラーのセット販売",
+      "category": "VR機器・技術",
+      "overview": "Metaは、Meta Quest 3S（128GB）とXboxの小型コントローラー「Xbox Nano」、Xbox Game Pass Ultimate 2か月分をセットにした商品を発表しました。価格は399.98ドルで、アメリカとカナダで販売されます。Game Passのクラウドゲームを、ヘッドセットの中の大きな仮想画面で遊べます。ただし、Game Passの無料期間は、これまでに利用したことがない新規の人だけが対象です。",
+      "points": [
+        "価格は399.98ドル、販売は米国・カナダ",
+        "Game Pass Ultimate 2か月分は新規利用者のみ",
+        "クラウドで遊ぶため、インターネット接続が必要",
+        "Xbox本体は含まれない"
+      ],
+      "sources": [
+        { "name": "Meta公式ブログ", "url": "https://www.meta.com/blog/meta-quest-3s-xbox-nano-controller-bundle/" },
+        { "name": "MIXED", "url": "https://mixed-news.com/en/meta-quest-3s-xbox-nano-bundle-game-pass-ultimate-terms/" }
+      ]
+    }
+  ],
+  "outro": "今夜はVRChatで後夜祭もあります。PCVRの環境を整えて、日曜の夜を楽しんでみてはいかがでしょうか。"
+}

@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-22",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのVRニュースなのだ。", "read": "おはようなのだ！ずんだもんのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "metan", "text": "おはよう。日曜なのに早起きね。", "face": "smile" },
+      { "who": "zundamon", "text": "11月22日のニュースは4本なのだ。", "read": "じゅういちがつにじゅうににちのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatのライブの後夜祭の話なのだ。", "read": "いっぽんめ。ブイアールチャットのライブの後夜祭の話なのだ。" },
+      { "who": "zundamon", "text": "グゲンカが、後夜祭の技術を手伝うのだ。" },
+      { "who": "metan", "text": "後夜祭って、いつやるの？", "face": "look" },
+      { "who": "zundamon", "text": "今夜22時から、ワールド「CLUB深海」なのだ。", "read": "こんや、にじゅうにじから、ワールド、クラブしんかいなのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "演者の映像と声を、別の部屋にも同時に届けるのだ。" },
+      { "who": "metan", "text": "満員でも入れないってことが減るのね。" },
+      { "who": "zundamon", "text": "参加は無料。ただしPC版だけなのだ。", "read": "参加は無料。ただしピーシー版だけなのだ。" },
+      { "who": "metan", "text": "無料なのは、わたくし的にとても大事よ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。SteamVRのベータ版の更新なのだ。", "read": "にほんめ。スチームブイアールのベータ版の更新なのだ。" },
+      { "who": "zundamon", "text": "PCからの配信が、前より安定するのだ。", "read": "ピーシーからの配信が、前より安定するのだ。" },
+      { "who": "metan", "text": "ワイヤレスでVRをするときの話ね。", "read": "ワイヤレスでブイアールをするときの話ね。" },
+      { "who": "zundamon", "text": "ノートPCでは、強いGPUを自動で選ぶのだ。", "read": "ノートピーシーでは、強いジーピーユーを自動で選ぶのだ。" },
+      { "who": "zundamon", "text": "VRChatの背景の表示の不具合も直ったのだ。", "read": "ブイアールチャットの背景の表示の不具合も直ったのだ。", "face": "smile" },
+      { "who": "metan", "text": "地味だけど、うれしい直し方じゃない。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Steam Frameのベータ更新なのだ。", "read": "さんぼんめ。スチームフレームのベータ更新なのだ。" },
+      { "who": "zundamon", "text": "コントローラーの振動を、ゲームごとに変えられるのだ。" },
+      { "who": "metan", "text": "ゲームによって、強すぎたりするものね。", "face": "look" },
+      { "who": "zundamon", "text": "画面をくっきりさせる設定も増えたのだ。" },
+      { "who": "zundamon", "text": "PCからの配信の解像度も上がったのだ。", "read": "ピーシーからの配信の解像度も上がったのだ。", "face": "smile" },
+      { "who": "metan", "text": "ベータだから、試すなら自己責任ね。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。Quest 3Sのセット販売なのだ。", "read": "よんほんめ。クエストスリーエスのセット販売なのだ。" },
+      { "who": "zundamon", "text": "Xboxの小さいコントローラーが付いてくるのだ。", "read": "エックスボックスの小さいコントローラーが付いてくるのだ。" },
+      { "who": "metan", "text": "それで、お値段はいくらなの？", "face": "look" },
+      { "who": "zundamon", "text": "399.98ドル。アメリカとカナダで売るのだ。", "read": "さんびゃくきゅうじゅうきゅうてんきゅうはちドル。アメリカとカナダで売るのだ。" },
+      { "who": "zundamon", "text": "ゲームパスの2か月分も付いているのだ。", "read": "ゲームパスの、にかげつぶんも付いているのだ。" },
+      { "who": "zundamon", "text": "でも無料期間は、初めての人だけなのだ。" },
+      { "who": "metan", "text": "前に使った人は対象外なの？ケチね。", "face": "anger", "style": "ツンツン" },
+      { "who": "zundamon", "text": "条件は、よく確かめてから買うのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "ふたご座", "comment": "仲間との時間が輝く日", "lucky": "ペンライト" },
+        { "rank": 2, "sign": "やぎ座", "comment": "設定の見直しで快適に", "lucky": "USBケーブル" },
+        { "rank": 3, "sign": "うお座", "comment": "夜のお出かけが楽しい", "lucky": "ホットココア" },
+        { "rank": 4, "sign": "しし座", "comment": "思い切った一歩が吉", "lucky": "赤いペン" },
+        { "rank": 5, "sign": "おうし座", "comment": "のんびり過ごすと好調", "lucky": "ブランケット" },
+        { "rank": 6, "sign": "てんびん座", "comment": "整理整頓で気分すっきり", "lucky": "ケーブルクリップ" },
+        { "rank": 7, "sign": "さそり座", "comment": "好きな音楽で元気に", "lucky": "ヘッドホン" },
+        { "rank": 8, "sign": "おとめ座", "comment": "ていねいな作業が実る", "lucky": "メモ帳" },
+        { "rank": 9, "sign": "かに座", "comment": "家族との会話が吉", "lucky": "おにぎり" },
+        { "rank": 10, "sign": "いて座", "comment": "新しい場所に縁あり", "lucky": "スニーカー" },
+        { "rank": 11, "sign": "みずがめ座", "comment": "早めの準備で安心", "lucky": "充電器" },
+        { "rank": 12, "sign": "おひつじ座", "comment": "ひと休みで運が上向く", "lucky": "ずんだ餅" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、ふたご座ですわ。仲間との時間が輝きます。", "read": "今日のいちいは、ふたござですわ。仲間との時間が輝きます。", "face": "smile" },
+        { "who": "itako", "text": "2位はやぎ座、3位はうお座です。", "read": "にいはやぎざ、さんいはうおざです。" },
+        { "who": "zundamon", "text": "ふたご座の人は、今夜の後夜祭にぴったりなのだ。" },
+        { "who": "itako", "text": "12位はおひつじ座。ひと休みすれば運が上向きますわ。", "read": "じゅうにいはおひつじざ。ひと休みすれば運が上向きますわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはずんだ餅！最高なのだ！", "face": "smile", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "今日はここまで。ゆっくり休みなさいよね。", "face": "smile" },
+      { "who": "zundamon", "text": "みんな、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
