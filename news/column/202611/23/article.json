@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-23",
+  "title": "VRChatに「MF文庫Jライブラリー」が開館ほか、今日のVRニュース3本",
+  "category": "ワールド",
+  "thumb": "",
+  "intro": "おはようございます。今日は、VRChatのサンリオのテーマパークに登場したライトノベルの図書館を中心に、VRニュースを3本お届けします。Steam Frameの対応ゲーム数や、無料になったPC VRゲームの話題もあります。",
+  "items": [
+    {
+      "headline": "VRChatに「MF文庫Jライブラリー」が開館",
+      "category": "ワールド",
+      "overview": "VRChat上のテーマパーク「Virtual Sanrio Puroland」に、KADOKAWAのライトノベルレーベル「MF文庫J」の図書館ワールドが11月20日に公開されました。制作はGugenkaです。幻想的な図書館の中で、MF文庫Jの人気作品の試し読みができます。作品にちなんだミニゲームや、クロミによる特別ライブも用意されています。",
+      "points": [
+        "図書館の中でMF文庫Jの作品を無料で試し読みできる",
+        "ミニゲームで作品にちなんだ「モチポリ」がもらえる",
+        "スマートフォンからも参加でき、VR機器がなくても楽しめる"
+      ],
+      "sources": [
+        {
+          "name": "MoguLive",
+          "url": "https://www.moguravr.com/mf-bunko-j-library-vrchat/"
+        }
+      ]
+    },
+    {
+      "headline": "Steam Frameの単体動作確認済みゲームが300本超に",
+      "category": "VR機器・技術",
+      "overview": "ValveのVRヘッドセット「Steam Frame」で、ヘッドセット単体で動くことが確認された「Standalone Verified」のゲームが300本を超えました。GamingOnLinuxによると、11月19日時点でSteamDB上の確認済みタイトルは312本です。ただしそのうちVRのタグが付いているのは101本で、残りは大きな仮想スクリーンで遊ぶ通常のPCゲームです。数は確認が進むにつれて変わっていきます。",
+      "points": [
+        "確認済みは312本、そのうちVRゲームは101本",
+        "残りの多くは仮想スクリーンで遊ぶ通常のゲーム",
+        "「単体動作」はPCからの配信なしでヘッドセットだけで動くという意味"
+      ],
+      "sources": [
+        {
+          "name": "MIXED",
+          "url": "https://mixed-news.com/en/steam-frame-300-standalone-verified-games-flat-screen-vr/"
+        },
+        {
+          "name": "GamingOnLinux",
+          "url": "https://www.gamingonlinux.com/2026/11/steam-frame-hits-over-300-standalone-verified-games/"
+        }
+      ]
+    },
+    {
+      "headline": "PC VRアクション『Fighting Moore』がリマスターで無料に",
+      "category": "その他",
+      "overview": "PC VR向けのアクションゲーム『Fighting Moore』が、全面的なリマスター版としてSteamで無料公開されました。開発者が11月20日のSteamの更新で発表しています。ハンマーや弓、隕石などを使って戦う1人用のファンタジーアクションで、5つのチャプターがあります。PC VR専用のため、Meta QuestではLinkやVirtual DesktopなどでPCにつなぐ必要があります。",
+      "points": [
+        "Steamで無料で遊べるPC VR専用のアクションゲーム",
+        "Questで遊ぶにはVR対応のPCが必要",
+        "立っても座っても遊べ、酔い対策の設定もある",
+        "読み込みが遅くなるため、開発者はSSDを強く推奨"
+      ],
+      "sources": [
+        {
+          "name": "MIXED",
+          "url": "https://mixed-news.com/en/fighting-moore-free-remastered-steam-vr-quest-pc-required/"
+        }
+      ]
+    }
+  ],
+  "outro": "祝日の今日は、図書館ワールドでのんびり試し読みをするのもよさそうです。それでは、よい一日を。"
+}

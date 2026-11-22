@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-23",
+  "speed": 1.15,
+  "guest": "zunko",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのVRニュースなのだ。", "read": "おはようなのだ！ずんだもんのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "zunko", "text": "おはよう、ずんだもん。今日は祝日だね。", "face": "smile" },
+      { "who": "zundamon", "text": "11月23日のニュースは3本なのだ。", "read": "じゅういちがつにじゅうさんにちのニュースは、さんぼんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatに図書館のワールドができたのだ。", "read": "いっぽんめ。ブイアールチャットに図書館のワールドができたのだ。" },
+      { "who": "zundamon", "text": "サンリオのバーチャルピューロランドの中なのだ。" },
+      { "who": "zunko", "text": "図書館？どんな本が読めるの？", "face": "surprise" },
+      { "who": "zundamon", "text": "MF文庫Jのラノベを、無料で試し読みできるのだ。", "read": "エムエフぶんこジェイのラノベを、無料で試し読みできるのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "ミニゲームや、クロミのライブもあるのだ。" },
+      { "who": "zunko", "text": "VRの機械がなくても入れるのかな？", "read": "ブイアールの機械がなくても入れるのかな？", "face": "look" },
+      { "who": "zundamon", "text": "スマホからでも参加できるのだ！" },
+      { "who": "zunko", "text": "それなら、おやつを食べながら読めそうだね。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Steam Frameの話なのだ。", "read": "にほんめ。スチームフレームの話なのだ。" },
+      { "who": "zundamon", "text": "単体で動く確認済みゲームが、300本を超えたのだ。", "read": "単体で動く確認済みゲームが、さんびゃっぽんを超えたのだ。", "face": "surprise" },
+      { "who": "zunko", "text": "すごい！それって全部VRのゲーム？", "read": "すごい！それって全部ブイアールのゲーム？" },
+      { "who": "zundamon", "text": "312本のうち、VRは101本なのだ。", "read": "さんびゃくじゅうにほんのうち、ブイアールは、ひゃくいっぽんなのだ。", "face": "look" },
+      { "who": "zundamon", "text": "残りは、大きな画面で遊ぶふつうのゲームなのだ。" },
+      { "who": "zunko", "text": "なるほど、映画館みたいに遊ぶんだね。" },
+      { "who": "zundamon", "text": "VRの数がもっと増えてほしいのだ。", "read": "ブイアールの数がもっと増えてほしいのだ。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。PCのVRゲームが無料になったのだ。", "read": "さんぼんめ。ピーシーのブイアールゲームが無料になったのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "『ファイティング・ムーア』のリマスター版なのだ。" },
+      { "who": "zunko", "text": "どんなゲームなの？" },
+      { "who": "zundamon", "text": "ハンマーや弓で戦う、ファンタジーのアクションなのだ。" },
+      { "who": "zundamon", "text": "でもQuestだけでは動かないのだ。", "read": "でもクエストだけでは動かないのだ。", "face": "surprise" },
+      { "who": "zunko", "text": "じゃあ、PCにつないで遊ぶんだね。", "read": "じゃあ、ピーシーにつないで遊ぶんだね。" },
+      { "who": "zundamon", "text": "SSDに入れるのがおすすめなのだ。", "read": "エスエスディーに入れるのがおすすめなのだ。" },
+      { "who": "zunko", "text": "無料なら、気軽に試せていいね。", "face": "smile" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "おとめ座", "comment": "新しい本との出会いが吉", "lucky": "しおり" },
+        { "rank": 2, "sign": "かに座", "comment": "のんびり過ごすと運気アップ", "lucky": "あたたかいお茶" },
+        { "rank": 3, "sign": "みずがめ座", "comment": "ひらめきが冴える一日", "lucky": "青いペン" },
+        { "rank": 4, "sign": "てんびん座", "comment": "友だちとの会話が楽しい日", "lucky": "マグカップ" },
+        { "rank": 5, "sign": "いて座", "comment": "ちょっとした遠出が吉", "lucky": "スニーカー" },
+        { "rank": 6, "sign": "さそり座", "comment": "片付けがはかどる日", "lucky": "収納ボックス" },
+        { "rank": 7, "sign": "おひつじ座", "comment": "体を動かすと気分すっきり", "lucky": "タオル" },
+        { "rank": 8, "sign": "ふたご座", "comment": "ゆっくり休むのが大切", "lucky": "クッション" },
+        { "rank": 9, "sign": "しし座", "comment": "小さな目標を一つ決めよう", "lucky": "手帳" },
+        { "rank": 10, "sign": "うお座", "comment": "好きな音楽で元気チャージ", "lucky": "ヘッドホン" },
+        { "rank": 11, "sign": "おうし座", "comment": "甘いものでひと休み", "lucky": "クッキー" },
+        { "rank": 12, "sign": "やぎ座", "comment": "早めの就寝で明日に期待", "lucky": "ブランケット" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、よろしくなのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はおとめ座。新しい本との出会いが吉ですわ。", "read": "今日のいちいは、おとめざ。新しい本との出会いが吉ですわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はかに座、3位はみずがめ座です。", "read": "にいはかにざ、さんいはみずがめざです。" },
+        { "who": "zundamon", "text": "図書館ワールドに行くと、いいことありそうなのだ。" },
+        { "who": "itako", "text": "12位はやぎ座。早めに寝ると、明日はきっと上向きですわ。", "read": "じゅうにいは、やぎざ。早めに寝ると、明日はきっと上向きですわ。" },
+        { "who": "zundamon", "text": "やぎ座のみんな、今夜はゆっくり休むのだ。", "read": "やぎざのみんな、今夜はゆっくり休むのだ。", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "zunko", "text": "今日も聞いてくれて、ありがとうございました。", "face": "smile" },
+      { "who": "zundamon", "text": "よい祝日を過ごすのだ。また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
