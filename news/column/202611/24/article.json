@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-24",
+  "title": "Bigscreen Beyond 2がブラックフライデーで最大179ドル引きほか、今日のVRニュース4本",
+  "category": "VR機器・技術",
+  "thumb": "",
+  "intro": "おはようございます。今日は、VRChat向けモデルもあるPC VRヘッドセット「Bigscreen Beyond 2」のセールを中心に、VRニュースを4本お届けします。12月のVRゲームの賞とSteamのお祭り、PS VR2版のピンボール、ミニゴルフの新コースの話題もあります。",
+  "items": [
+    {
+      "headline": "Bigscreen Beyond 2、ブラックフライデーで最大179ドル引き",
+      "category": "VR機器・技術",
+      "overview": "Bigscreenが、PC VRヘッドセット「Beyond 2」と「Beyond 2e」のブラックフライデーセールを11月23日から30日まで行っています。コード「BF2026」を使うと、最大129ドル相当のオーディオストラップか、顔に合わせて作るクッションが無料で付きます。「Beyond 2e VRChat Edition」は、コード「VRC2026」でさらに50ドル引きとなり、合計で最大179ドルお得になります。一部のアクセサリーも、コードなしで25%引きです。",
+      "points": [
+        "セール期間は11月23日から30日まで",
+        "VRChat Editionは追加で50ドル引き、合計で最大179ドルお得",
+        "通常価格はBeyond 2が959ドルから、Beyond 2eが1,159ドルから",
+        "PCにつないで使う機器で、SteamVRのベースステーションは別売り"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/bigscreen-beyond-2-discounted-up-to-179-off-for-black-friday-sale/"
+        }
+      ]
+    },
+    {
+      "headline": "「VR Forever Awards」が12月に開催、Steamでお祭りも",
+      "category": "イベント",
+      "overview": "VRゲームの賞「VR Forever Awards」が、今年も12月に開かれることになりました。あわせて、12月3日から9日までSteamでVRゲームのお祭りが行われ、約150の開発者による220本以上のゲームが参加します。新しい体験版の配信や、『Half-Life: Alyx』『Gorilla Tag』などの値引きが予定されています。賞は「ゲーム・オブ・ザ・イヤー」など6部門で、主催はCreatureとFuture Friends Gamesです。",
+      "points": [
+        "Steamのお祭りは12月3日から9日まで",
+        "220本以上のVRゲームが参加し、体験版や値引きがある",
+        "賞は「隠れた名作」「マルチプレイ」など6部門"
+      ],
+      "sources": [
+        {
+          "name": "Road to VR",
+          "url": "https://roadtovr.com/vr-forever-awards-steam-discounts-dec-2026/"
+        },
+        {
+          "name": "9to5Google",
+          "url": "https://9to5google.com/2026/11/23/the-vr-forever-gaming-awards-return-in-december-with-tons-of-demos-and-discounts/"
+        }
+      ]
+    },
+    {
+      "headline": "『Pinball FX VR』、11月26日にPS VR2版が登場",
+      "category": "その他",
+      "overview": "Zen Studiosが、VRピンボールゲーム『Pinball FX VR』のPlayStation VR2版を11月26日に発売します。基本の価格は9.99ドルで、3つの台が入っており、ほかの台は別売りです。Meta QuestやSteam Frame版で買ったものは、PS VR2版には引き継げません。PlayStationで同じ台を持っている人には、VR版の台を安く提供する方針ですが、無料にはならないとしています。",
+      "points": [
+        "PS VR2版は11月26日発売、基本価格は9.99ドル",
+        "QuestやSteam Frame版の購入分は引き継げない",
+        "発売時点では複合現実（MR）には対応しない"
+      ],
+      "sources": [
+        {
+          "name": "MIXED",
+          "url": "https://mixed-news.com/en/pinball-fx-vr-psvr-2-november-26-tables-transfer/"
+        }
+      ]
+    },
+    {
+      "headline": "『Walkabout Mini Golf』新コースが12月3日配信",
+      "category": "その他",
+      "overview": "VRミニゴルフゲーム『Walkabout Mini Golf』の追加コース「Valhalla Splash」が、12月3日にQuest、PC VR、PS VR2向けに配信されます。開発のMighty Coconutによると、2026年の追加コースはこれが最後です。あわせて、Picoのヘッドセットへの対応を終えることも発表されました。Picoでは10月のコースが最後の新コースとなりますが、それまでのコースは引き続き遊べます。",
+      "points": [
+        "新コースはQuest・PC VR・PS VR2で12月3日配信",
+        "2026年の追加コースはこれが最後",
+        "Pico向けは新コースの追加が終わるが、今までのコースは遊べる"
+      ],
+      "sources": [
+        {
+          "name": "UploadVR",
+          "url": "https://www.uploadvr.com/walkabout-mini-golf-valhalla-splash-dlc-drops-next-week/"
+        }
+      ]
+    }
+  ],
+  "outro": "セールやお祭りが続く季節です。気になるものは、期間を確かめてからチェックしてみてください。それでは、よい一日を。"
+}

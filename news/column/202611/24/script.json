@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-24",
+  "speed": 1.15,
+  "guest": "kiritan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今日もVRニュースの時間なのだ。", "read": "おはようなのだ！今日もブイアールニュースの時間なのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "おはようございます。わたしは徹夜明けです。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "きりたん、ちゃんと寝るのだ…。", "face": "amazement" },
+      { "who": "zundamon", "text": "11月24日のニュースは4本なのだ。", "read": "じゅういちがつにじゅうよっかのニュースは、よんほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。Bigscreen Beyond 2のセールなのだ。", "read": "いっぽんめ。ビッグスクリーン、ビヨンドツーのセールなのだ。" },
+      { "who": "zundamon", "text": "ブラックフライデーで、11月30日までなのだ。", "read": "ブラックフライデーで、じゅういちがつさんじゅうにちまでなのだ。" },
+      { "who": "kiritan", "text": "どのくらい安くなるんですか？", "face": "look" },
+      { "who": "zundamon", "text": "コードを使うと、付属品が無料でもらえるのだ。" },
+      { "who": "zundamon", "text": "VRChat向けモデルは、さらに50ドル引きなのだ！", "read": "ブイアールチャット向けモデルは、さらにごじゅうドル引きなのだ！", "face": "surprise" },
+      { "who": "kiritan", "text": "合計で最大179ドル。それは大きいですね。", "read": "合計で最大ひゃくななじゅうきゅうドル。それは大きいですね。", "face": "surprise" },
+      { "who": "zundamon", "text": "ただ、PCとベースステーションが必要なのだ。", "read": "ただ、ピーシーとベースステーションが必要なのだ。" },
+      { "who": "kiritan", "text": "本体だけでは遊べない、と。お財布と相談ですね。", "face": "nihilistic" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。VRゲームの賞が12月にあるのだ。", "read": "にほんめ。ブイアールゲームの賞が、じゅうにがつにあるのだ。" },
+      { "who": "zundamon", "text": "名前はVR Forever Awardsなのだ。", "read": "名前は、ブイアール、フォーエバー、アワーズなのだ。" },
+      { "who": "zundamon", "text": "12月3日から9日まで、Steamでお祭りもあるのだ。", "read": "じゅうにがつみっかからここのかまで、スチームでお祭りもあるのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "お祭りって、何ができるんですか？", "face": "look" },
+      { "who": "zundamon", "text": "220本以上のゲームが参加するのだ。", "read": "にひゃくにじゅっぽん以上のゲームが参加するのだ。" },
+      { "who": "zundamon", "text": "体験版や値引きもあるのだ。" },
+      { "who": "kiritan", "text": "体験版を全部遊ぶには、一週間じゃ足りません。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。VRのピンボールが、PS VR2に来るのだ。", "read": "さんぼんめ。ブイアールのピンボールが、ピーエス、ブイアールツーに来るのだ。" },
+      { "who": "zundamon", "text": "Pinball FX VRで、発売は11月26日なのだ。", "read": "ピンボール、エフエックス、ブイアールで、発売は、じゅういちがつにじゅうろくにちなのだ。" },
+      { "who": "kiritan", "text": "値段はどのくらいですか？" },
+      { "who": "zundamon", "text": "9.99ドルで、台が3つ入っているのだ。", "read": "きゅうてんきゅうきゅうドルで、台がみっつ入っているのだ。" },
+      { "who": "zundamon", "text": "でもQuest版で買った台は、引き継げないのだ。", "read": "でもクエスト版で買った台は、引き継げないのだ。", "face": "surprise" },
+      { "who": "kiritan", "text": "機種ごとに買い直し。よくある話ですね。", "face": "amazement" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。VRのミニゴルフに新しいコースなのだ。", "read": "よんほんめ。ブイアールのミニゴルフに新しいコースなのだ。" },
+      { "who": "zundamon", "text": "12月3日に、QuestやPS VR2で遊べるのだ。", "read": "じゅうにがつみっかに、クエストや、ピーエス、ブイアールツーで遊べるのだ。", "face": "smile" },
+      { "who": "kiritan", "text": "今年はあといくつ出るんですか？" },
+      { "who": "zundamon", "text": "今年の追加コースは、これで最後なのだ。" },
+      { "who": "zundamon", "text": "それと、Picoへの対応は終わるそうなのだ。", "read": "それと、ピコへの対応は終わるそうなのだ。", "face": "look" },
+      { "who": "kiritan", "text": "今までのコースは遊べるなら、ひと安心です。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "しし座", "comment": "思い切った決断がうまくいく", "lucky": "腕時計" },
+        { "rank": 2, "sign": "うお座", "comment": "お得な情報が舞い込む日", "lucky": "メモ帳" },
+        { "rank": 3, "sign": "おひつじ座", "comment": "新しい遊びに挑戦すると吉", "lucky": "ゲームのコントローラー" },
+        { "rank": 4, "sign": "やぎ座", "comment": "コツコツ続けたことが実る", "lucky": "ボールペン" },
+        { "rank": 5, "sign": "ふたご座", "comment": "友だちとの約束が楽しい日", "lucky": "スマホスタンド" },
+        { "rank": 6, "sign": "かに座", "comment": "家でゆっくりが運気アップ", "lucky": "ルームソックス" },
+        { "rank": 7, "sign": "おうし座", "comment": "おいしいものでひと息", "lucky": "ホットココア" },
+        { "rank": 8, "sign": "みずがめ座", "comment": "ふとしたひらめきを大切に", "lucky": "付せん" },
+        { "rank": 9, "sign": "いて座", "comment": "散歩で気分をリフレッシュ", "lucky": "マフラー" },
+        { "rank": 10, "sign": "おとめ座", "comment": "整理整頓で気持ちすっきり", "lucky": "ファイル" },
+        { "rank": 11, "sign": "さそり座", "comment": "早めの行動で余裕が生まれる", "lucky": "目覚まし時計" },
+        { "rank": 12, "sign": "てんびん座", "comment": "ひと休みで明日は上向き", "lucky": "ハンドクリーム" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位はしし座。思い切った決断がうまくいきますわ。", "read": "今日のいちいは、ししざ。思い切った決断がうまくいきますわ。", "face": "smile" },
+        { "who": "itako", "text": "2位はうお座、3位はおひつじ座です。", "read": "にいはうおざ、さんいはおひつじざです。" },
+        { "who": "zundamon", "text": "うお座は、セール情報に強そうなのだ。", "read": "うおざは、セール情報に強そうなのだ。", "face": "look" },
+        { "who": "itako", "text": "12位はてんびん座。ひと休みすれば明日は上向きですわ。", "read": "じゅうにいは、てんびんざ。ひと休みすれば、明日は上向きですわ。" },
+        { "who": "zundamon", "text": "てんびん座のみんな、無理せずいくのだ。", "read": "てんびんざのみんな、無理せずいくのだ。", "style": "あまあま" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "kiritan", "text": "以上です。わたしはこれから寝ます。", "face": "nihilistic" },
+      { "who": "zundamon", "text": "おやすみなのだ…じゃなくて、また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
