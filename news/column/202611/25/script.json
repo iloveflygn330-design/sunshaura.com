@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-25",
+  "speed": 1.15,
+  "guest": "metan",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！ずんだもんのVRニュースなのだ。", "read": "おはようなのだ！ずんだもんのブイアールニュースなのだ。", "face": "smile" },
+      { "who": "metan", "text": "おはよう。今日はわたくしが付き合ってあげるわ。", "face": "smile" },
+      { "who": "zundamon", "text": "めたん、よろしくなのだ。" },
+      { "who": "zundamon", "text": "11月25日のニュースは5本なのだ。", "read": "じゅういちがつにじゅうごにちのニュースは、ごほんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。Vketに青山商事が出展するのだ。", "read": "いっぽんめ。ブイケットに、あおやましょうじが出展するのだ。" },
+      { "who": "zundamon", "text": "会期は12月5日から20日までなのだ。", "read": "会期は、じゅうにがついつかから、はつかまでなのだ。" },
+      { "who": "metan", "text": "スーツのお店が、バーチャルで何をするのよ？", "face": "look" },
+      { "who": "zundamon", "text": "古着を集めて、木を育てるゲームなのだ。", "face": "smile" },
+      { "who": "zundamon", "text": "最大4人で、陣地を取り合うのだ。", "read": "最大よにんで、陣地を取り合うのだ。" },
+      { "who": "zundamon", "text": "LINE登録で、アバター用のコートももらえるのだ。", "read": "ライン登録で、アバター用のコートももらえるのだ。" },
+      { "who": "metan", "text": "タダでコート？それは見逃せないわね。", "face": "surprise" },
+      { "who": "zundamon", "text": "入場も無料だから、気軽に行けるのだ。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。すてきなVRChatワールドの紹介なのだ。", "read": "にほんめ。すてきなブイアールチャットワールドの紹介なのだ。" },
+      { "who": "zundamon", "text": "名前はWEATHER STATIONなのだ。", "read": "名前は、ウェザーステーションなのだ。" },
+      { "who": "zundamon", "text": "草原にぽつんと建つ、小さな観測所なのだ。" },
+      { "who": "metan", "text": "観測所って、何か観測できるの？", "face": "look" },
+      { "who": "zundamon", "text": "タブレットで天気を変えて、雷も落とせるのだ！", "face": "surprise" },
+      { "who": "metan", "text": "雷を自分で？ちょっと面白そうじゃない。", "face": "smile" },
+      { "who": "zundamon", "text": "夕暮れの雷雨が、おすすめだそうなのだ。" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。VRMモデルがデスクトップで動くアプリなのだ。", "read": "さんぼんめ。ブイアールエムモデルが、デスクトップで動くアプリなのだ。" },
+      { "who": "zundamon", "text": "VRM Mateで、11月30日にSteamで発売なのだ。", "read": "ブイアールエムメイトで、じゅういちがつさんじゅうにちに、スチームで発売なのだ。" },
+      { "who": "zundamon", "text": "ウィンドウに座ったり、マウスを追いかけたりするのだ。", "face": "smile" },
+      { "who": "metan", "text": "それで、お値段はいくらなの？", "face": "anger" },
+      { "who": "zundamon", "text": "2200円で、発売記念で20%オフなのだ。", "read": "にせんにひゃくえんで、発売記念で、にじゅっパーセントオフなのだ。" },
+      { "who": "zundamon", "text": "ただ、キャラクターは付いてこないのだ。", "face": "look" },
+      { "who": "metan", "text": "自分の好きなモデルを呼べるなら、悪くないわ。" }
+    ]},
+    { "type": "news", "item": 3, "lines": [
+      { "who": "zundamon", "text": "4本目。Questの画面を映すアプリが強化されたのだ。", "read": "よんほんめ。クエストの画面を映すアプリが、強化されたのだ。" },
+      { "who": "zundamon", "text": "Virtual Displayというアプリなのだ。", "read": "バーチャルディスプレイというアプリなのだ。" },
+      { "who": "zundamon", "text": "ヘッドセットのカメラやマイクを、PCで使えるのだ。", "read": "ヘッドセットのカメラやマイクを、ピーシーで使えるのだ。" },
+      { "who": "metan", "text": "被ったまま、ビデオ通話もできるってこと？", "face": "surprise" },
+      { "who": "zundamon", "text": "そうなのだ。USBケーブルでもつなげるのだ。", "read": "そうなのだ。ユーエスビーケーブルでもつなげるのだ。" },
+      { "who": "zundamon", "text": "Wi-Fiが弱い場所でも、安心なのだ。", "read": "ワイファイが弱い場所でも、安心なのだ。", "face": "smile" },
+      { "who": "metan", "text": "地味だけど、毎日使う人にはうれしい話ね。" }
+    ]},
+    { "type": "news", "item": 4, "lines": [
+      { "who": "zundamon", "text": "5本目。ダンジョンゲームがPS VR2に来たのだ。", "read": "ごほんめ。ダンジョンゲームが、ピーエス、ブイアールツーに来たのだ。" },
+      { "who": "zundamon", "text": "One More Delveというゲームなのだ。", "read": "ワン、モア、デルブというゲームなのだ。" },
+      { "who": "zundamon", "text": "剣や弓、魔法で戦うのだ。最大3人で協力できるのだ。", "read": "剣や弓、魔法で戦うのだ。最大さんにんで協力できるのだ。", "face": "smile" },
+      { "who": "metan", "text": "3人で潜るなんて、わくわくするじゃない。", "read": "さんにんで潜るなんて、わくわくするじゃない。", "face": "smile" },
+      { "who": "zundamon", "text": "ただ、オンラインにはPS Plusが要るのだ。", "read": "ただ、オンラインにはピーエスプラスが要るのだ。", "face": "look" },
+      { "who": "metan", "text": "またお金がかかるのね…。", "face": "anger" },
+      { "who": "zundamon", "text": "ひとりでも遊べるから、大丈夫なのだ。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "かに座", "comment": "身近な人の一言がヒントに", "lucky": "マグカップ" },
+        { "rank": 2, "sign": "いて座", "comment": "遠くへ出かけると良い発見", "lucky": "スニーカー" },
+        { "rank": 3, "sign": "おとめ座", "comment": "丁寧な作業がほめられる日", "lucky": "シャープペンシル" },
+        { "rank": 4, "sign": "ふたご座", "comment": "おしゃべりで運気が上がる", "lucky": "のど飴" },
+        { "rank": 5, "sign": "みずがめ座", "comment": "新しい機能を試すと吉", "lucky": "USBケーブル" },
+        { "rank": 6, "sign": "しし座", "comment": "人に任せるとうまくいく", "lucky": "クッション" },
+        { "rank": 7, "sign": "さそり座", "comment": "好きなことに集中できる日", "lucky": "ヘッドホン" },
+        { "rank": 8, "sign": "おひつじ座", "comment": "朝のひと工夫で一日快適", "lucky": "温かいお茶" },
+        { "rank": 9, "sign": "てんびん座", "comment": "景色を眺めて気分転換", "lucky": "カメラ" },
+        { "rank": 10, "sign": "うお座", "comment": "小さな片づけで気分が軽く", "lucky": "小物入れ" },
+        { "rank": 11, "sign": "おうし座", "comment": "ゆっくり進めば大丈夫", "lucky": "手袋" },
+        { "rank": 12, "sign": "やぎ座", "comment": "早めに休めば明日は好調", "lucky": "ブランケット" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、かに座ですわ。身近な人の一言がヒントに。", "read": "今日のいちいは、かにざですわ。身近な人のひとことがヒントに。", "face": "smile" },
+        { "who": "itako", "text": "2位はいて座、3位はおとめ座です。", "read": "にいは、いてざ、さんいは、おとめざです。" },
+        { "who": "zundamon", "text": "かに座のみんな、おめでとうなのだ！", "read": "かにざのみんな、おめでとうなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はやぎ座。早めに休めば、明日は好調ですわ。", "read": "じゅうにいは、やぎざ。早めに休めば、明日は好調ですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムはブランケットなのだ。ぬくぬくするのだ。", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "metan", "text": "今日はここまで。また付き合ってあげてもいいわよ。", "face": "smile" },
+      { "who": "zundamon", "text": "また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}

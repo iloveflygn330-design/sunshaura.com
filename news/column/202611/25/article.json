@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-25",
+  "title": "青山商事がVket2026 Winterで資源循環ゲームを展開ほか、今日のVRニュース5本",
+  "category": "イベント",
+  "thumb": "",
+  "intro": "今日は、12月に開かれる「バーチャルマーケット2026 Winter」の企業出展の話題からお届けします。ほかにも、雷を自分で落とせるVRChatワールドの紹介や、VRMモデルをデスクトップで動かせるアプリ、Questの画面ミラーリング機能の強化、PS VR2向けの協力型ダンジョンゲームと、全5本をまとめました。",
+  "items": [
+    {
+      "headline": "青山商事、Vket2026 Winterで服を集めて木を育てるゲーム",
+      "category": "イベント",
+      "overview": "「洋服の青山」などを展開する青山商事が、12月5日から20日まで開かれる「バーチャルマーケット2026 Winter」に出展すると発表しました。ブースでは、1〜4人で遊べる陣取りゲーム「服を集めて、森をもりもり！ゲーム」を用意します。集めた古着を回収ボックスに入れると自分の色のマスに木が育ち、スコアに応じて動物や紙吹雪などの演出が楽しめます。会場はVRChatで、PCまたはPCにつないだVR機器から無料で入場できます。",
+      "points": [
+        "会期は12月5日〜20日の16日間、期間中は24時間入場できる",
+        "実際の衣類回収・植林の取り組みと連動した内容",
+        "公式LINEの友だち登録で、アバター用のコートが無料でもらえる",
+        "12月15日20時からスタッフの座談会も予定"
+      ],
+      "sources": [{ "name": "PANORA", "url": "https://panora.tokyo/archives/164220" }]
+    },
+    {
+      "headline": "映えるVRChatワールド「WEATHER STATION」が紹介",
+      "category": "ワールド",
+      "overview": "MoguLiveの連載「映えるVRChatワールド」で、worm_sanさんが制作したワールド「WEATHER STATION」が紹介されました。どこまでも続く草原にぽつんと建つ観測所で、室内はワンルームほどの広さに本棚やスクリーンが置かれています。中のタブレットを操作すると、晴れから雨まで天気を切り替えたり、雷を自分で落としたりできます。時間も自動で移り変わるため、日の出や夕暮れを待って眺めることもできます。",
+      "points": [
+        "天気の切り替えや落雷を、タブレットで自分で操作できる",
+        "記事のおすすめは、夕暮れどきの雷雨の設定",
+        "重いと感じたら草の描画設定を調整できる",
+        "PC向けのワールド"
+      ],
+      "sources": [{ "name": "MoguLive", "url": "https://www.moguravr.com/photogenic-vrchat-world-2026-1124/" }]
+    },
+    {
+      "headline": "VRMモデルを動かすデスクトップアプリ「VRM Mate」発売へ",
+      "category": "アバター・制作",
+      "overview": "インフィニットループが、VRMモデルをパソコンのデスクトップで動かせるマスコットアプリ「VRM Mate」を11月30日にSteamで発売すると発表しました。VRoid Hubのモデルを読み込み、キャラクターがウィンドウの上に座ったり、マウスカーソルを追いかけたりします。なでたりクリックしたりすると反応し、アラーム時には手を振って知らせてくれます。価格は2,200円（税込）で、12月14日まで20%オフの発売記念セールを行います。",
+      "points": [
+        "VRoid Hubのモデルを使うため、pixivアカウントが必要",
+        "キャラクターは同梱されず、全年齢向けのモデルのみ使える",
+        "モーションは「おしとやか」「クール」の2種類",
+        "対応はWindows 10（21H1以降）と11"
+      ],
+      "sources": [{ "name": "PANORA", "url": "https://panora.tokyo/archives/164213" }]
+    },
+    {
+      "headline": "QuestのVirtual Display、カメラやUSB接続に対応",
+      "category": "VR機器・技術",
+      "overview": "Meta Questでパソコンの画面を映すアプリ「Virtual Display」が、マイクロソフトとの協力でいくつかの機能強化を受けたとUploadVRが伝えました。ヘッドセットのカメラやマイクを、Windows側のビデオ入力・音声入力として使えるようになっています。また、Wi-Fiが不安定な場所でも使えるように、USBケーブルでの有線接続にも対応しました。さらに、パソコンのマウスとキーボードでヘッドセット側も操作できる設定が見つかっています。",
+      "points": [
+        "Discordなどのビデオ通話で、Metaアバターを映像として使える",
+        "USB接続は、初回もQRコードやPINの入力が不要",
+        "PCのマウス・キーボード操作は「Computer Inputs」設定で切り替え",
+        "WindowsとMacの両方に対応するアプリ"
+      ],
+      "sources": [{ "name": "UploadVR", "url": "https://www.uploadvr.com/quests-virtual-display-gets-camera-microphone-usb-input-upgrades/" }]
+    },
+    {
+      "headline": "協力型ダンジョン『One More Delve』がPS VR2に登場",
+      "category": "VR機器・技術",
+      "overview": "PC VRとQuestで配信中のダンジョン探索ゲーム『One More Delve』が、PS VR2向けにも配信されました。毎回形の変わるダンジョンに挑み、手に入れた装備やクラフトした道具で次の探索に備える内容です。剣や斧、弓、マスケット銃、魔法を使い、物理演算による斬る・防ぐ・受け流すといった戦いができます。ひとりでも、最大3人のオンライン協力プレイでも遊べます。",
+      "points": [
+        "座って・立って・ルームスケールのどれでも遊べる",
+        "オンラインで遊ぶにはPlayStation Plusが必要",
+        "PCやQuest版とのクロスプレイは未確認"
+      ],
+      "sources": [{ "name": "MIXED", "url": "https://mixed-news.com/en/one-more-delve-psvr2-release-three-player-vr-dungeon-crawler/" }]
+    }
+  ],
+  "outro": "Vket2026 Winterの開幕まで、あと10日ほどです。今日もよいVRライフを！"
+}
