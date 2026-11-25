@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-26",
+  "speed": 1.15,
+  "guest": "ankomon",
+  "sections": [
+    { "type": "opening", "lines": [
+      { "who": "zundamon", "text": "おはようなのだ！今日もVRニュースの時間なのだ。", "read": "おはようなのだ！今日もブイアールニュースの時間なのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "今日はあんこもんが来てやったもん。", "face": "point" },
+      { "who": "zundamon", "text": "あんこもん、よろしくなのだ。" },
+      { "who": "zundamon", "text": "11月26日のニュースは3本なのだ。", "read": "じゅういちがつにじゅうろくにちのニュースは、さんぼんなのだ。" }
+    ]},
+    { "type": "news", "item": 0, "lines": [
+      { "who": "zundamon", "text": "1本目。VRChatの最新アップデートが来たのだ！", "read": "いっぽんめ。ブイアールチャットの最新アップデートが来たのだ！", "face": "smile" },
+      { "who": "zundamon", "text": "バージョンは2026.4.2なのだ。", "read": "バージョンは、にーぜろにーろく、てん、よん、てん、になのだ。" },
+      { "who": "zundamon", "text": "Live Nowのページが、テーマごとの棚に変わったのだ。", "read": "ライブナウのページが、テーマごとの棚に変わったのだ。" },
+      { "who": "ankomon", "text": "棚？お店みたいになったってことか？", "face": "think" },
+      { "who": "zundamon", "text": "そうなのだ。混み具合や言語も見られるのだ。" },
+      { "who": "zundamon", "text": "部屋の名前付けも、VRC+なしでできるのだ。", "read": "部屋の名前付けも、ブイアールシープラスなしでできるのだ。" },
+      { "who": "zundamon", "text": "ワールドにいいね、よくないねも付けられるのだ。" },
+      { "who": "ankomon", "text": "あんこのワールドなら、いいねだらけだもん。", "face": "point" },
+      { "who": "zundamon", "text": "よくないねは非公開で、おすすめ改善に使うのだ。" },
+      { "who": "zundamon", "text": "デスクトップで腕を動かす試験機能もあるのだ。" }
+    ]},
+    { "type": "news", "item": 1, "lines": [
+      { "who": "zundamon", "text": "2本目。Vketにサンセイ R&Dが出展するのだ。", "read": "にほんめ。ブイケットに、サンセイ、アールアンドディーが出展するのだ。" },
+      { "who": "zundamon", "text": "牙狼の新機種を使ったゲームが遊べるのだ。", "read": "ガロの新機種を使ったゲームが遊べるのだ。" },
+      { "who": "ankomon", "text": "どんなゲームなんだもん？", "face": "think" },
+      { "who": "zundamon", "text": "剣を振って、ホラーと戦うのだ！", "face": "surprise" },
+      { "who": "zundamon", "text": "アンケートに答えると、剣の3Dモデルがもらえるのだ。", "read": "アンケートに答えると、剣のスリーディーモデルがもらえるのだ。" },
+      { "who": "ankomon", "text": "剣があれば、ずんだもんに勝てるかもしれないもん。", "face": "point", "style": "つよつよ" },
+      { "who": "zundamon", "text": "会期は12月5日から20日、入場無料なのだ。", "read": "会期は、じゅうにがついつかから、はつか、入場無料なのだ。", "face": "smile" }
+    ]},
+    { "type": "news", "item": 2, "lines": [
+      { "who": "zundamon", "text": "3本目。Live2Dのイベント、alive 2026の続報なのだ。", "read": "さんぼんめ。ライブツーディーのイベント、アライブにーぜろにーろくの続報なのだ。" },
+      { "who": "zundamon", "text": "12月11日に、秋葉原で開かれるのだ。", "read": "じゅうにがつじゅういちにちに、あきはばらで開かれるのだ。" },
+      { "who": "zundamon", "text": "講演の第2弾が発表されたのだ。", "read": "講演の、だいにだんが発表されたのだ。" },
+      { "who": "ankomon", "text": "絵を動かす人たちのお祭りってことか？", "face": "think" },
+      { "who": "zundamon", "text": "そうなのだ。クリエイターマーケットも2年ぶりに復活なのだ。", "read": "そうなのだ。クリエイターマーケットも、にねんぶりに復活なのだ。" },
+      { "who": "zundamon", "text": "学生は、入場だけなら無料なのだ。", "face": "smile" },
+      { "who": "ankomon", "text": "作る人たちの話、ちょっと聞いてみたいもん。" }
+    ]},
+    { "type": "fortune",
+      "ranking": [
+        { "rank": 1, "sign": "うお座", "comment": "新しい場所で良い出会い", "lucky": "マフラー" },
+        { "rank": 2, "sign": "おうし座", "comment": "コツコツ作業がはかどる日", "lucky": "温かいお茶" },
+        { "rank": 3, "sign": "しし座", "comment": "思い切った挑戦が吉", "lucky": "赤いペン" },
+        { "rank": 4, "sign": "さそり座", "comment": "友達の一言がヒントに", "lucky": "ヘッドホン" },
+        { "rank": 5, "sign": "かに座", "comment": "整理整頓で気分すっきり", "lucky": "小さな箱" },
+        { "rank": 6, "sign": "おひつじ座", "comment": "早起きで良いことあり", "lucky": "目覚まし時計" },
+        { "rank": 7, "sign": "ふたご座", "comment": "おしゃべりが楽しい日", "lucky": "のど飴" },
+        { "rank": 8, "sign": "やぎ座", "comment": "ていねいな作業が光る", "lucky": "定規" },
+        { "rank": 9, "sign": "みずがめ座", "comment": "ひらめきをメモしよう", "lucky": "ふせん" },
+        { "rank": 10, "sign": "いて座", "comment": "寄り道で小さな発見", "lucky": "スニーカー" },
+        { "rank": 11, "sign": "おとめ座", "comment": "休けいをこまめにとろう", "lucky": "クッション" },
+        { "rank": 12, "sign": "てんびん座", "comment": "あわてず一歩ずつで大丈夫", "lucky": "あんこのおやつ" }
+      ],
+      "lines": [
+        { "who": "zundamon", "text": "最後は星座占いなのだ！イタコ、お願いするのだ。", "face": "smile" },
+        { "who": "itako", "text": "今日の1位は、うお座ですわ。新しい場所で良い出会いが。", "read": "今日のいちいは、うおざですわ。新しい場所で良い出会いが。", "face": "smile" },
+        { "who": "itako", "text": "2位はおうし座、3位はしし座ですわ。", "read": "にいはおうしざ、さんいはししざですわ。" },
+        { "who": "zundamon", "text": "上位のみんな、おめでとうなのだ！", "face": "smile" },
+        { "who": "itako", "text": "12位はてんびん座。あわてず一歩ずつで大丈夫ですわ。", "read": "じゅうにいは、てんびんざ。あわてず一歩ずつで大丈夫ですわ。" },
+        { "who": "zundamon", "text": "ラッキーアイテムは、あんこのおやつなのだ…。", "face": "amazement", "style": "ヘロヘロ" }
+      ]
+    },
+    { "type": "ending", "lines": [
+      { "who": "ankomon", "text": "今日はあんこの勝ちだもん。また来てやるもん。", "face": "point" },
+      { "who": "zundamon", "text": "占いは勝ち負けじゃないのだ！また明日なのだ！", "face": "smile" }
+    ]}
+  ]
+}
